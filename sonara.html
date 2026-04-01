@@ -978,7 +978,7 @@ function doQ(){
   G.ans=false;
   var dur=Math.max(8,G.td-Math.floor(G.cq/3)*2);
   $('gqc').textContent=G.cq+1;$('gqt').textContent=G.qs.length;
-  var ani=$('ani');ani.value='';ani.disabled=false;ani.className='ani';
+  var ani=$('ani');ani.value='';ani.disabled=false;ani.className='ani';ani.placeholder='Artiste ou titre… 🎵';
   $('vbtn').disabled=true;
   G.foundA=false;G.foundT=false;
   var ft=$('found-tags');if(ft)ft.innerHTML='';
@@ -1094,31 +1094,37 @@ function tryGuess(v,byUser){
   // ── Match titre (Levenshtein) ──
   var matchT=!G.foundT&&lev(v,q.t)<=tolT;
 
-  // ── Détection combinée : "artiste titre" ou "titre artiste" ──
-  // Fonctionne si ni l'artiste ni le titre n'est encore trouvé
-  if(!matchA&&!matchT&&!G.foundA&&!G.foundT){
-    var aNorm=normalize(q.a);
-    var tNorm=normalize(q.t);
-    // Prendre le premier artiste seulement (avant ft)
-    var mainArtist=normalize(q.a.split(/ft|feat/i)[0].trim());
-    // Vérifier si la saisie contient l'artiste ET le titre (dans n'importe quel ordre)
-    var hasArtist = vNorm.indexOf(mainArtist)>=0 && mainArtist.length>2;
-    var hasTitle  = vNorm.indexOf(tNorm)>=0 && tNorm.length>2;
-    // Ou si les mots principaux sont présents
-    if(!hasArtist){
-      var aWords=mainArtist.split(' ').filter(function(w){return w.length>2});
-      hasArtist=aWords.length>0&&aWords.every(function(w){return vNorm.indexOf(w)>=0});
+  // ── Détection combinée : "artiste titre" ou "titre artiste" (avec fautes) ──
+  if(!G.foundA&&!G.foundT&&!matchA&&!matchT&&v.trim().indexOf(' ')>=0){
+    // Essayer de splitter la saisie en deux parties et tester chaque combinaison
+    var words = v.trim().split(/\s+/);
+    // Tester toutes les coupures possibles
+    for(var sp=1;sp<words.length;sp++){
+      var part1 = words.slice(0,sp).join(' ');
+      var part2 = words.slice(sp).join(' ');
+      var p1matchA = lev(part1,q.a)<=Math.max(2,Math.min(4,Math.floor(q.a.length/4)));
+      var p1matchT = lev(part1,q.t)<=Math.max(2,Math.min(4,Math.floor(q.t.length/4)));
+      var p2matchA = lev(part2,q.a)<=Math.max(2,Math.min(4,Math.floor(q.a.length/4)));
+      var p2matchT = lev(part2,q.t)<=Math.max(2,Math.min(4,Math.floor(q.t.length/4)));
+      // Aussi vérifier avec les artistes feat
+      if(!p1matchA&&q.a.match(/ft|feat/i)){
+        var arts=q.a.split(/ft\.?|feat\.?/i).map(function(s){return s.trim()});
+        p1matchA=arts.some(function(a){return a.length>1&&lev(part1,a)<=Math.max(2,Math.floor(a.length/4));});
+      }
+      if(!p2matchA&&q.a.match(/ft|feat/i)){
+        var arts=q.a.split(/ft\.?|feat\.?/i).map(function(s){return s.trim()});
+        p2matchA=arts.some(function(a){return a.length>1&&lev(part2,a)<=Math.max(2,Math.floor(a.length/4));});
+      }
+      if((p1matchA&&p2matchT)||(p1matchT&&p2matchA)){
+        matchA=true;matchT=true;break;
+      }
+      // Si une partie matche artiste ou titre seul → valider cette partie
+      if(p1matchA&&!matchA){matchA=true;}
+      if(p1matchT&&!matchT){matchT=true;}
+      if(p2matchA&&!matchA){matchA=true;}
+      if(p2matchT&&!matchT){matchT=true;}
     }
-    if(!hasTitle){
-      var tWords=tNorm.split(' ').filter(function(w){return w.length>2});
-      hasTitle=tWords.length>0&&tWords.every(function(w){return vNorm.indexOf(w)>=0});
-    }
-    if(hasArtist&&hasTitle){matchA=true;matchT=true;}
   }
-
-  // ── Détection combinée si l'un est déjà trouvé ──
-  // Ex: artiste déjà trouvé → taper le titre suffit (déjà géré par matchT)
-  // Ex: titre déjà trouvé → taper l'artiste suffit (déjà géré par matchA)
   var closeA=!G.foundA&&!matchA&&isClose(v,q.a);
   var closeT=!G.foundT&&!matchT&&isClose(v,q.t);
 
@@ -1131,16 +1137,22 @@ function tryGuess(v,byUser){
     updateFoundScore('both');
   } else if(matchA){
     G.foundA=true;
-    addChatMsg(G.ps+' a trouvé l\'artiste 🎤','found');
+    addChatMsg(G.ps+' a trouvé l\'artiste 🎤 — maintenant le titre !','found');
     sfxOk();
     addFoundTag('🎤 '+q.a,'artist');
-    if(G.foundT){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}updateFoundScore(G.foundT?'both':'artist');
+    if(G.foundT){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}
+    updateFoundScore(G.foundT?'both':'artist');
+    // Vider le champ pour retaper le titre
+    if(byUser&&!G.foundT){var ani=$('ani');ani.value='';ani.placeholder='Maintenant le titre… 🎵';ani.focus();}
   } else if(matchT){
     G.foundT=true;
-    addChatMsg(G.ps+' a trouvé le titre 🎵','found');
+    addChatMsg(G.ps+' a trouvé le titre 🎵 — maintenant l\'artiste !','found');
     sfxOk();
     addFoundTag('🎵 '+q.t,'title');
-    if(G.foundA){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}updateFoundScore(G.foundA?'both':'title');
+    if(G.foundA){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}
+    updateFoundScore(G.foundA?'both':'title');
+    // Vider le champ pour retaper l'artiste
+    if(byUser&&!G.foundA){var ani=$('ani');ani.value='';ani.placeholder='Maintenant l\'artiste… 🎤';ani.focus();}
   } else if(closeA||closeT){
     addChatMsg('"'+v+'" est proche de la bonne réponse !','close');
   } else if(byUser&&v.trim().length>2){
