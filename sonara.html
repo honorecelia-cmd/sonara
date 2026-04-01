@@ -691,16 +691,6 @@ var BNS=['ZoukMaster','TiMarie','SocaKing','KaribSound','AntilaVibe','RacinWou']
 var G={page:'landing',ps:'',av:'🌴',theme:'Mix Caribéen',ic:'🌴',dq:'kassav zouk',
   gmode:'qcm',amode:'qcm',pool:[],qs:[],cq:0,sc:0,cb:0,mx:1,nq:10,td:20,ti:null,tl:20,ans:false,foundA:false,foundT:false,pl:[],res:[],opts:[]};
 
-// Générer les modals maintenant que launchFromModal est définie
-genModals();
-// Câbler les boutons
-document.querySelectorAll('.launch-btn').forEach(function(btn){
-  btn.addEventListener('click',function(e){e.preventDefault();launchFromModal(btn);});
-});
-document.querySelectorAll('.pseudo-inp').forEach(function(inp){
-  inp.addEventListener('keydown',function(e){if(e.key==='Enter'){var btn=inp.closest('.modal').querySelector('.launch-btn');if(btn)launchFromModal(btn);}});
-});
-
 // ── LIVE COUNTER ────────────────────────────────────
 var lc=247;
 setInterval(function(){lc=Math.max(180,Math.min(400,lc+Math.floor(Math.random()*5)-2));$('ltxt').textContent=lc+' en ligne'},5500);
@@ -1390,6 +1380,17 @@ function doShare(){
   else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(function(){notif('✓ Copié!')});
   else alert(txt);
 }
+
+// ── INIT : générer modals et câbler boutons ──
+genModals();
+document.querySelectorAll('.launch-btn').forEach(function(btn){
+  btn.addEventListener('click',function(e){e.preventDefault();launchFromModal(btn);});
+});
+document.querySelectorAll('.pseudo-inp').forEach(function(inp){
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){var b=inp.closest('.modal-bg').querySelector('.launch-btn');if(b)launchFromModal(b);}
+  });
+});
 </script>
 
 <!-- ═══ PAGE DIAGNOSTIC ═══ -->
