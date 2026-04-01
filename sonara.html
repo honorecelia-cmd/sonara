@@ -557,33 +557,28 @@ var THEMES = {
   ]},
 };
 
-// Générer les modals dynamiquement
-Object.keys(THEMES).forEach(function(key) {
-  var t = THEMES[key];
-  var div = document.createElement('div');
-  div.className = 'modal-bg';
-  div.id = 'modal-' + key;
-  div.innerHTML =
-    '<div class="modal">' +
-      '<div class="mhandle"></div>' +
-      '<div class="mhead">' +
-        '<div class="mico">' + t.ic + '</div>' +
-        '<div><div class="mname">' + t.n + '</div><div class="msub">Extraits Deezer · 10 questions</div></div>' +
-      '</div>' +
-      '<label class="flbl">Ton pseudo</label>' +
-      '<input class="finp pseudo-inp" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" autocomplete="off" data-theme="' + key + '">' +
-      <!-- mode texte libre uniquement -->
-      '<button class="bgo launch-btn" data-theme="' + key + '">Jouer →</button>' +
-      '<a class="bback" href="#landing">Annuler</a>' +
-    '</div>';
-  document.body.appendChild(div);
-  // Câbler directement — plus fiable que la délégation
-  var btn = div.querySelector('.launch-btn');
-  var inp = div.querySelector('.pseudo-inp');
-  var k = key;
-  if(btn) btn.addEventListener('click', function(e){ e.preventDefault(); launchFromModal(btn); });
-  if(inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') launchFromModal(btn); });
-});
+// Générer les modals — appelé après chargement
+function genModals(){
+  Object.keys(THEMES).forEach(function(key) {
+    var t = THEMES[key];
+    var div = document.createElement('div');
+    div.className = 'modal-bg';
+    div.id = 'modal-' + key;
+    div.innerHTML =
+      '<div class="modal">' +
+        '<div class="mhandle"></div>' +
+        '<div class="mhead">' +
+          '<div class="mico">' + t.ic + '</div>' +
+          '<div><div class="mname">' + t.n + '</div><div class="msub">Extraits Deezer · 10 questions</div></div>' +
+        '</div>' +
+        '<label class="flbl">Ton pseudo</label>' +
+        '<input class="finp pseudo-inp" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" autocomplete="off" data-theme="' + key + '">' +
+        '<button class="bgo launch-btn" data-theme="' + key + '">Jouer →</button>' +
+        '<a class="bback" href="#landing">Annuler</a>' +
+      '</div>';
+    document.body.appendChild(div);
+  });
+}
 </script>
 
 <!-- ═══ LOADING ═══ -->
@@ -695,6 +690,16 @@ var AVS=['🦜','🌺','🌴','🎺','🥁','🐠','🦋','🌊','🦈','🌸','
 var BNS=['ZoukMaster','TiMarie','SocaKing','KaribSound','AntilaVibe','RacinWou'];
 var G={page:'landing',ps:'',av:'🌴',theme:'Mix Caribéen',ic:'🌴',dq:'kassav zouk',
   gmode:'qcm',amode:'qcm',pool:[],qs:[],cq:0,sc:0,cb:0,mx:1,nq:10,td:20,ti:null,tl:20,ans:false,foundA:false,foundT:false,pl:[],res:[],opts:[]};
+
+// Générer les modals maintenant que launchFromModal est définie
+genModals();
+// Câbler les boutons
+document.querySelectorAll('.launch-btn').forEach(function(btn){
+  btn.addEventListener('click',function(e){e.preventDefault();launchFromModal(btn);});
+});
+document.querySelectorAll('.pseudo-inp').forEach(function(inp){
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter'){var btn=inp.closest('.modal').querySelector('.launch-btn');if(btn)launchFromModal(btn);}});
+});
 
 // ── LIVE COUNTER ────────────────────────────────────
 var lc=247;
