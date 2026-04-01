@@ -577,6 +577,12 @@ Object.keys(THEMES).forEach(function(key) {
       '<a class="bback" href="#landing">Annuler</a>' +
     '</div>';
   document.body.appendChild(div);
+  // Câbler directement — plus fiable que la délégation
+  var btn = div.querySelector('.launch-btn');
+  var inp = div.querySelector('.pseudo-inp');
+  var k = key;
+  if(btn) btn.addEventListener('click', function(e){ e.preventDefault(); launchFromModal(btn); });
+  if(inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') launchFromModal(btn); });
 });
 </script>
 
