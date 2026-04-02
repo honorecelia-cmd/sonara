@@ -862,7 +862,7 @@ function launchFromModal(btn) {
   // Fermer la modal
   history.pushState(null,'','#s-load');
   showPage('s-load');
-  $('ldt').textContent = 'Chargement des extraits Deezer…';
+  $('ldt').textContent = 'Chargement…';
   $('lds').textContent = t.ic + ' ' + t.n;
 
   var done = false;
@@ -875,7 +875,7 @@ function launchFromModal(btn) {
     Object.keys(THEMES).forEach(function(k){
       if(k !== 'mix' && THEMES[k].tracks){
         THEMES[k].tracks.forEach(function(t){
-          allTracks.push({t:t.t, a:t.a, e:t.e, preview:'', cover:''});
+          allTracks.push({t:t.t, a:t.a, e:t.e, preview:t.preview||'', cover:t.cover||''});
         });
       }
     });
@@ -894,7 +894,8 @@ function launchFromModal(btn) {
   if(fixedTracks && fixedTracks.length>=10){
     // 1. Copier le pool complet
     G.pool = fixedTracks.map(function(t){
-      return {t:t.t, a:t.a, e:t.e, preview:'', cover:''};
+      // Garder le preview local s'il existe
+      return {t:t.t, a:t.a, e:t.e, preview:t.preview||'', cover:t.cover||''};
     });
     // 2. Sélectionner 10 titres aléatoires
     buildQs();
@@ -1119,9 +1120,9 @@ function doQ(){
 function playPR(url,cb){
   var el=$('aud');clearInterval(window._apIv);$('apfill').style.width='0%';$('astatus').textContent='';
   if(!url){setEq(false);if(cb)setTimeout(cb,0);return;}
+  var isLocal = url.indexOf('/audio/') === 0;
   el.src=url;el.volume=.82;
-  // Démarrer à 60s pour éviter les intros
-  el.currentTime=0; // sera mis à 60 après le chargement
+  el.currentTime=0;
   el.load();
   var played=false;
   var safe=setTimeout(function(){
@@ -1129,16 +1130,24 @@ function playPR(url,cb){
   },5000);
   el.oncanplaythrough=function(){
     if(played)return;played=true;clearTimeout(safe);
-    // Sauter à 60s uniquement pour les streams Deezer (pas les MP3 locaux)
-    if(!isLocal && el.duration && el.duration > 75) el.currentTime=0;
-    el.play().then(function(){
+    var p=el.play();
+    if(p!==undefined){
+      p.then(function(){
+        setEq(true);
+        var t0=Date.now();
+        window._apIv=setInterval(function(){var pct=Math.min(100,(Date.now()-t0)/30000*100);$('apfill').style.width=pct+'%';if(pct>=100)clearInterval(window._apIv)},350);
+        if(cb)cb();
+      }).catch(function(){
+        // Play échoué mais on lance quand même le jeu
+        setEq(false);
+        if(cb)cb();
+      });
+    } else {
       setEq(true);
-      var t0=Date.now();
-      window._apIv=setInterval(function(){var p=Math.min(100,(Date.now()-t0)/30000*100);$('apfill').style.width=p+'%';if(p>=100)clearInterval(window._apIv)},350);
       if(cb)cb();
-    }).catch(function(){if(!played){played=true;clearTimeout(safe);if(cb)cb();}});
+    }
   };
-  el.onerror=function(){if(!played){played=true;clearTimeout(safe);setEq(false);if(cb)cb();}};
+  el.onerror=function(){played=true;clearTimeout(safe);setEq(false);if(cb)cb();};
 }
 function stopA(){clearInterval(window._apIv);var el=$('aud');el.pause();el.src='';$('apfill').style.width='0%';$('astatus').textContent='';setEq(false)}
 function setEq(on){document.querySelectorAll('.eqb').forEach(function(b){b.classList.toggle('off',!on)})}
