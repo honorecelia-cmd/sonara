@@ -750,7 +750,7 @@ function showPage(id){
   // Masquer toutes les pages
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');p.style.display='none'});
   // Masquer toutes les modals
-  document.querySelectorAll('.modal-bg').forEach(function(m){m.style.display='none'});
+  document.querySelectorAll('.modal-bg').forEach(function(m){m.classList.remove('open');m.style.display=''});
   // Afficher la page cible
   var el=$(id);
   if(el){el.style.display='flex';el.classList.add('on');}
@@ -1483,7 +1483,7 @@ function doHome(){
   G.ans=false;G.foundA=false;G.foundT=false;
   // Afficher landing, masquer tout le reste
   document.querySelectorAll('.page').forEach(function(p){p.style.display='none'});
-  document.querySelectorAll('.modal-bg').forEach(function(m){m.style.display='none'});
+  document.querySelectorAll('.modal-bg').forEach(function(m){m.classList.remove('open');m.style.display=''});
   document.getElementById('landing').style.display='flex';
   history.pushState(null,'','#landing');
   G.page='landing';
