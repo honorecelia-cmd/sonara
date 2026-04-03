@@ -78,7 +78,7 @@ a.tc:hover .tn{color:var(--ac,var(--grn))}
   background:rgba(0,0,0,.85);backdrop-filter:blur(14px);
   z-index:500;align-items:flex-end;justify-content:center;
 }
-.modal-bg:target{display:flex}
+.modal-bg:target{display:flex}.modal-bg.open{display:flex}
 @media(min-width:540px){.modal-bg{align-items:center;padding:20px}}
 .modal{background:var(--s1);border:1px solid var(--bd2);border-radius:24px 24px 0 0;padding:26px 22px 44px;width:100%;max-width:440px}
 @media(min-width:540px){.modal{border-radius:20px}}
@@ -796,31 +796,27 @@ setInterval(function(){lc=Math.max(180,Math.min(400,lc+Math.floor(Math.random()*
 
 // ── CÂBLAGE EVENTS (tout par addEventListener) ──────
 document.addEventListener('click', function(e) {
-  // Carte thème → ouvrir modal + masquer landing
+  // Carte thème → ouvrir modal via JS pur
   var tc = e.target.closest('.tc');
   if(tc) {
+    e.preventDefault();
     var href = tc.getAttribute('href');
     if(href) {
-      setTimeout(function(){
-        var id = href.replace('#','');
-        var modal = document.getElementById(id);
-        if(modal) {
-          // Garder le pseudo s'il existe déjà
-          var inp = modal.querySelector('.pseudo-inp');
-          if(inp) {
-            if(!inp.value && G.ps) inp.value = G.ps; // pré-remplir avec pseudo existant
-            inp.style.borderColor = '';
-            inp.focus();
-          }
-        }
-      }, 100);
+      document.querySelectorAll('.modal-bg').forEach(function(m){ m.classList.remove('open'); });
+      var modal = document.getElementById(href.replace('#',''));
+      if(modal) {
+        modal.classList.add('open');
+        var inp = modal.querySelector('.pseudo-inp');
+        if(inp) { if(!inp.value && G.ps) inp.value = G.ps; inp.style.borderColor=''; setTimeout(function(){ inp.focus(); },50); }
+      }
     }
     return;
   }
   // Annuler / retour landing
   var bback = e.target.closest('.bback');
   if(bback) {
-    document.getElementById('landing').style.display = 'flex';
+    e.preventDefault();
+    document.querySelectorAll('.modal-bg').forEach(function(m){ m.classList.remove('open'); });
     return;
   }
   // Bouton lancer dans une modal
