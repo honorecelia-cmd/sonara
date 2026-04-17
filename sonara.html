@@ -748,7 +748,7 @@ function sfxCd(){tn(440,'sine',.11,.18)}
 var AVS=['🦜','🌺','🌴','🎺','🥁','🐠','🦋','🌊','🦈','🌸','🎵','⭐'];
 var BNS=['ZoukMaster','TiMarie','SocaKing','KaribSound','AntilaVibe','RacinWou'];
 var G={page:'landing',ps:'',av:'🌴',theme:'Mix Caribéen',ic:'🌴',dq:'kassav zouk',
-  gmode:'qcm',amode:'qcm',pool:[],qs:[],cq:0,sc:0,cb:0,mx:1,nq:10,td:20,ti:null,tl:20,ans:false,foundA:false,foundT:false,pl:[],res:[],opts:[]};
+  gmode:'qcm',amode:'qcm',pool:[],qs:[],cq:0,sc:0,cb:0,mx:1,nq:10,td:25,ti:null,tl:25,ans:false,foundA:false,foundT:false,pl:[],res:[],opts:[]};
 
 // ── LIVE COUNTER ────────────────────────────────────
 var lc=247;
@@ -1419,6 +1419,7 @@ function doQuit(){
 function doHome(){
   sfxC();
   clearInterval(G.ti);stopA();
+  var cf=$('cfbox');if(cf)cf.innerHTML='';
   // Reset état jeu
   G.ans=false;G.foundA=false;G.foundT=false;
   // Afficher landing, masquer tout le reste
