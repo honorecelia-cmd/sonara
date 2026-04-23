@@ -1724,8 +1724,11 @@ function connectWS(code) {
     if (msg.type === 'player_joined' || msg.type === 'player_left') {
       renderLobbyPlayers(msg.players);
     }
-    if (msg.type === 'game_start') { G_MULTI._pendingStart = true; }
-    if (msg.type === 'sync_pool') { launchMultiGame(msg.pool); }
+    if (msg.type === 'game_start') {
+      var basePool = buildPool(G_MULTI.theme);
+      var orderedPool = msg.order ? msg.order.map(function(i){ return basePool[i]; }).filter(Boolean) : basePool;
+      launchMultiGame(orderedPool);
+    }
     if (msg.type === 'score_update') {
       G.pl = msg.players.map(function(p) {
         return { n: p.name, s: p.score, me: p.id === G_MULTI.playerId, av: 'person', ans: false };
