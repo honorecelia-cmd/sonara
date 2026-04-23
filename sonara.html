@@ -1724,9 +1724,8 @@ function connectWS(code) {
     if (msg.type === 'player_joined' || msg.type === 'player_left') {
       renderLobbyPlayers(msg.players);
     }
-    if (msg.type === 'game_start') {
-      launchMultiGame();
-    }
+    if (msg.type === 'game_start') { G_MULTI._pendingStart = true; }
+    if (msg.type === 'sync_pool') { launchMultiGame(msg.pool); }
     if (msg.type === 'score_update') {
       G.pl = msg.players.map(function(p) {
         return { n: p.name, s: p.score, me: p.id === G_MULTI.playerId, av: 'person', ans: false };
@@ -1767,16 +1766,13 @@ function renderLobbyPlayers(players) {
 function startMultiGame() {
   if (WS && WS.readyState === 1) {
     WS.send(JSON.stringify({ type: 'start' }));
-    launchMultiGame();
+    launchMultiGame(null);
   }
 }
 
-function launchMultiGame() {
-  var key = G_MULTI.theme;
+function buildPool(key) {
   var t = THEMES[key];
-  if (!t) return;
-  G.theme = t.n; G.ic = t.ic; G.dq = t.dq;
-  G.gmode = 'free'; G.amode = 'free';
+  if (!t) return [];
   if (key === 'mix') {
     var allTracks = [];
     Object.keys(THEMES).forEach(function(k) {
@@ -1790,11 +1786,25 @@ function launchMultiGame() {
       var j = Math.floor(Math.random()*(i+1));
       var tmp = allTracks[i]; allTracks[i] = allTracks[j]; allTracks[j] = tmp;
     }
-    G.pool = allTracks;
+    return allTracks;
+  }
+  return t.tracks.map(function(tr) {
+    return { t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'' };
+  });
+}
+function launchMultiGame(sharedPool) {
+  var key = G_MULTI.theme;
+  var t = THEMES[key];
+  if (!t) return;
+  G.theme = t.n; G.ic = t.ic; G.dq = t.dq;
+  G.gmode = 'free'; G.amode = 'free';
+  if (sharedPool) {
+    G.pool = sharedPool;
   } else {
-    G.pool = t.tracks.map(function(tr) {
-      return { t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'' };
-    });
+    G.pool = buildPool(key);
+    if (WS && WS.readyState === 1) {
+      WS.send(JSON.stringify({ type: 'sync_pool', pool: G.pool }));
+    }
   }
   G.pl = [{ n: G.ps, av: 'person', s: 0, c: 0, me: true, ans: false }];
   G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false;
