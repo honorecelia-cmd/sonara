@@ -263,6 +263,23 @@ button.rb.s{background:var(--s1);border:1.5px solid var(--bd);color:var(--txt)}
 .multi-choice-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--s1);border:1px solid var(--bd2);border-radius:20px;padding:32px 16px;cursor:pointer;transition:transform .18s,border-color .18s;text-align:center;font-family:inherit}
 .multi-choice-card:hover{transform:translateY(-4px);border-color:var(--pur);box-shadow:0 0 24px rgba(167,139,250,.15)}
 .tc.selected{border-color:var(--grn) !important;box-shadow:0 0 20px rgba(179,255,83,.2)}
+
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:480px;padding:0 16px;margin-top:8px}
+.mode-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--s1);border:1px solid var(--bd2);border-radius:20px;padding:32px 16px;cursor:pointer;transition:transform .18s,border-color .18s;text-align:center;font-family:inherit}
+.mode-card:hover{transform:translateY(-4px)}
+.mode-solo{border-color:var(--grn)}
+.mode-solo:hover{box-shadow:0 0 24px rgba(179,255,83,.15)}
+.mode-multi{border-color:var(--pur)}
+.mode-multi:hover{box-shadow:0 0 24px rgba(167,139,250,.15)}
+.mode-ic{font-size:44px;display:block}
+.mode-title{font-family:Syne,sans-serif;font-size:18px;font-weight:800;color:var(--txt);display:block}
+.mode-sub{font-size:12px;color:var(--mut);display:block}
+.btn-back{background:none;border:none;color:var(--mut);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;padding:8px;width:80px;text-align:left}
+.btn-back:hover{color:var(--txt)}
+.multi-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:480px;padding:0 16px;margin-top:8px}
+.multi-choice-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--s1);border:1px solid var(--bd2);border-radius:20px;padding:32px 16px;cursor:pointer;transition:transform .18s,border-color .18s;text-align:center;font-family:inherit}
+.multi-choice-card:hover{transform:translateY(-4px);border-color:var(--pur);box-shadow:0 0 24px rgba(167,139,250,.15)}
+.tc.selected{border-color:var(--grn) !important;box-shadow:0 0 20px rgba(179,255,83,.2)}
 </style>
 </head>
 <body>
@@ -291,6 +308,27 @@ button.rb.s{background:var(--s1);border:1.5px solid var(--bd);color:var(--txt)}
       <span class="mode-title">Multijoueur</span>
       <span class="mode-sub">Joue avec tes amis</span>
     </button>
+  </div>
+</section>
+
+<!-- ═══ SOLO — CHOIX UNIVERS ═══ -->
+<section class="page" id="s-solo">
+  <nav>
+    <button class="btn-back" onclick="showPage('landing')">← Retour</button>
+    <a class="logo" href="#landing">SON<em>A</em>RA</a>
+    <div style="width:80px"></div>
+  </nav>
+  <div class="slbl" style="margin-top:24px">Choisis ton univers</div>
+  <div class="tgrid">
+    <a class="tc t-mix" onclick="selectSoloTheme('mix')">      <div class="glow"></div><span class="ic">🌴</span><span class="tn">Mix Caribéen</span><span class="ts">Tous styles</span></a>
+    <a class="tc t-zouk" onclick="selectSoloTheme('zouk')">      <div class="glow"></div><span class="ic">🎺</span><span class="tn">Zouk</span><span class="ts">Gwadloup · Matinik</span></a>
+    <a class="tc t-kompa" onclick="selectSoloTheme('kompa')">      <div class="glow"></div><span class="ic">🥁</span><span class="tn">Kompa</span><span class="ts">Haïti</span></a>
+    <a class="tc t-reggae" onclick="selectSoloTheme('reggae')">      <div class="glow"></div><span class="ic">☮️</span><span class="tn">Reggae</span><span class="ts">Jamaïque</span></a>
+    <a class="tc t-dancehall" onclick="selectSoloTheme('dancehall')">      <div class="glow"></div><span class="ic">🎤</span><span class="tn">Dancehall</span><span class="ts">Jamaica</span></a>
+    <a class="tc t-soca" onclick="selectSoloTheme('soca')">      <div class="glow"></div><span class="ic">🎸</span><span class="tn">Soca</span><span class="ts">Trinidad &amp; Tobago</span></a>
+    <a class="tc t-shatta" onclick="selectSoloTheme('shatta')">      <div class="glow"></div><span class="ic">⚡</span><span class="tn">Shatta</span><span class="ts">Antilles · Afrique</span></a>
+    <a class="tc t-trap" onclick="selectSoloTheme('trap')">      <div class="glow"></div><span class="ic">🔥</span><span class="tn">Trap Antillais</span><span class="ts">Urban kréyol</span></a>
+    <a class="tc t-rap" onclick="selectSoloTheme('rap')">      <div class="glow"></div><span class="ic">🎙️</span><span class="tn">Rap Caribéen</span><span class="ts">Flow antillais</span></a>
   </div>
 </section>
 
@@ -1750,6 +1788,27 @@ function launchMultiGame() {
     <div id="lobby-guest-msg" style="display:none;text-align:center;color:var(--mut);font-size:14px;margin-top:20px">
       ⏳ En attente que le host lance la partie...
     </div>
+  </div>
+</section>
+
+<!-- ═══ SOLO — PSEUDO ═══ -->
+<section class="page" id="s-pseudo">
+  <nav>
+    <button class="btn-back" id="pseudo-back" onclick="showPage('s-solo')">← Retour</button>
+    <a class="logo" href="#landing">SON<em>A</em>RA</a>
+    <div style="width:80px"></div>
+  </nav>
+  <div style="width:100%;max-width:440px;padding:24px 16px 40px">
+    <div id="pseudo-theme-info" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--bd2);border-radius:16px;padding:16px;margin-bottom:24px">
+      <span id="pseudo-theme-ic" style="font-size:32px">🌴</span>
+      <div>
+        <div id="pseudo-theme-name" style="font-family:Syne,sans-serif;font-weight:800;font-size:16px">Mix Caribéen</div>
+        <div style="font-size:12px;color:var(--mut)">10 questions</div>
+      </div>
+    </div>
+    <label class="flbl">Ton pseudo</label>
+    <input class="finp" id="solo-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:24px" autocomplete="off">
+    <button class="bgo" onclick="launchSolo()">Jouer →</button>
   </div>
 </section>
 </body>
