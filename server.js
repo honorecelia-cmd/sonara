@@ -134,7 +134,7 @@ server.on('upgrade', function(req, socket) {
       const msg = JSON.parse(frame.payload);
       if (msg.type === 'start' && rooms[code].host === playerId) {
         rooms[code].started = true;
-        broadcastAll(code, { type: 'game_start', theme: rooms[code].theme });
+        broadcastAll(code, { type: 'game_start', theme: rooms[code].theme, pool: msg.pool });
       }
       if (msg.type === 'answer') {
         const pl = rooms[code].players.find(function(x){ return x.id === playerId; });
