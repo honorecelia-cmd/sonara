@@ -280,31 +280,137 @@ button.rb.s{background:var(--s1);border:1.5px solid var(--bd);color:var(--txt)}
 .multi-choice-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--s1);border:1px solid var(--bd2);border-radius:20px;padding:32px 16px;cursor:pointer;transition:transform .18s,border-color .18s;text-align:center;font-family:inherit}
 .multi-choice-card:hover{transform:translateY(-4px);border-color:var(--pur);box-shadow:0 0 24px rgba(167,139,250,.15)}
 .tc.selected{border-color:var(--grn) !important;box-shadow:0 0 20px rgba(179,255,83,.2)}
+
+/* ── REDESIGN 2025 ─────────────────────────────────── */
+
+/* Mode cards (landing) */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:480px;padding:0 16px;margin-top:8px}
+.mode-card{display:flex;flex-direction:column;gap:12px;background:var(--s1);border-radius:16px;padding:22px 18px;cursor:pointer;border:1px solid var(--s2);transition:transform .18s,border-color .2s;text-align:left;font-family:inherit}
+.mode-card:hover{transform:translateY(-3px)}
+.mode-card.mode-solo{border-color:rgba(255,159,67,.25);background:rgba(255,159,67,.04)}
+.mode-card.mode-solo:hover{border-color:rgba(255,159,67,.5)}
+.mode-card.mode-multi{border-color:rgba(167,139,250,.25);background:rgba(167,139,250,.04)}
+.mode-card.mode-multi:hover{border-color:rgba(167,139,250,.5)}
+.mode-bar{width:36px;height:3px;border-radius:2px}
+.mode-title{font-family:Syne,sans-serif;font-size:18px;font-weight:800;color:var(--txt)}
+.mode-sub{font-size:12px;color:var(--mut);line-height:1.5}
+
+/* Bouton retour */
+.btn-back{background:none;border:none;color:var(--mut);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;padding:8px 0;width:80px;text-align:left}
+.btn-back:hover{color:var(--txt)}
+
+/* Theme cards redesign */
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:480px;padding:0 16px}
+.tc{display:flex;flex-direction:column;gap:6px;border-radius:14px;padding:18px 16px;cursor:pointer;border:1px solid transparent;transition:transform .15s,border-color .15s;text-decoration:none}
+.tc:hover{transform:translateY(-2px)}
+.tc .glow{display:none}
+.tc .ic{display:none}
+.tc .tn{font-family:Syne,sans-serif;font-size:16px;font-weight:800;line-height:1.2;display:block}
+.tc .ts{font-size:11px;color:var(--mut);margin-top:2px;display:block}
+.tc.selected{transform:scale(1.02)}
+
+.t-mix{background:rgba(255,159,67,.06);border-color:rgba(255,159,67,.2) !important}
+.t-mix .tn{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.t-mix:hover{border-color:rgba(255,159,67,.5) !important}
+
+.t-zouk{background:rgba(167,139,250,.06);border-color:rgba(167,139,250,.2) !important}
+.t-zouk .tn{color:var(--pur)}
+.t-zouk:hover{border-color:rgba(167,139,250,.5) !important}
+
+.t-kompa{background:rgba(255,159,67,.06);border-color:rgba(255,159,67,.2) !important}
+.t-kompa .tn{color:var(--ora)}
+.t-kompa:hover{border-color:rgba(255,159,67,.5) !important}
+
+.t-reggae{background:rgba(83,255,212,.06);border-color:rgba(83,255,212,.2) !important}
+.t-reggae .tn{color:var(--teal)}
+.t-reggae:hover{border-color:rgba(83,255,212,.5) !important}
+
+.t-dancehall{background:rgba(255,78,106,.06);border-color:rgba(255,78,106,.2) !important}
+.t-dancehall .tn{color:var(--red)}
+.t-dancehall:hover{border-color:rgba(255,78,106,.5) !important}
+
+.t-soca{background:rgba(96,165,250,.06);border-color:rgba(96,165,250,.2) !important}
+.t-soca .tn{color:var(--blu)}
+.t-soca:hover{border-color:rgba(96,165,250,.5) !important}
+
+.t-shatta{background:rgba(255,159,67,.06);border-color:rgba(255,78,106,.2) !important}
+.t-shatta .tn{color:var(--ora)}
+.t-shatta:hover{border-color:rgba(255,78,106,.5) !important}
+
+.t-trap{background:rgba(255,78,106,.06);border-color:rgba(255,78,106,.2) !important}
+.t-trap .tn{color:var(--red)}
+.t-trap:hover{border-color:rgba(255,78,106,.5) !important}
+
+.t-rap{background:rgba(167,139,250,.06);border-color:rgba(167,139,250,.2) !important}
+.t-rap .tn{color:var(--pur)}
+.t-rap:hover{border-color:rgba(167,139,250,.5) !important}
+
+/* Bouton principal — dégradé */
+.bgo{width:100%;padding:16px;border-radius:12px;border:none;background:var(--grad);color:#fff;font-family:Syne,sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:opacity .15s;letter-spacing:.3px}
+.bgo:hover{opacity:.9}
+.bgo:disabled{opacity:.4;pointer-events:none}
+
+/* Input */
+.finp{width:100%;background:var(--s1);border:1px solid var(--s2);border-radius:12px;padding:15px 16px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:15px;box-sizing:border-box;transition:border-color .15s}
+.finp:focus{outline:none;border-color:var(--ora)}
+
+/* Timer */
+#timer-display{font-family:Syne,sans-serif;font-size:52px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;line-height:1}
+
+/* Progress bar */
+#pbar-fill{background:var(--grad) !important}
+
+/* Bouton valider */
+.vbtn{background:var(--grad) !important;color:#fff !important;font-weight:800 !important;font-size:15px !important;border:none !important;border-radius:12px !important;padding:15px 24px !important;cursor:pointer;font-family:Syne,sans-serif !important}
+
+/* Skip button */
+#skipbtn{background:none;border:1px solid var(--s2);color:var(--mut);border-radius:12px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;width:100%;margin-top:8px;transition:border-color .15s}
+#skipbtn:hover{border-color:var(--mut)}
+
+/* Multi choice cards */
+.multi-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:480px;padding:0 16px;margin-top:8px}
+.multi-choice-card{display:flex;flex-direction:column;align-items:flex-start;gap:12px;background:var(--s1);border:1px solid var(--s2);border-radius:16px;padding:22px 18px;cursor:pointer;transition:transform .15s,border-color .2s;font-family:inherit}
+.multi-choice-card:hover{transform:translateY(-3px);border-color:rgba(167,139,250,.4)}
+
+/* Lobby code */
+#lobby-code{font-family:Syne,sans-serif;font-size:52px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:10px;text-align:center;margin:8px 0}
+
+/* Score results */
+.res-score{font-family:Syne,sans-serif;font-size:72px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;line-height:1}
+
+/* Pill */
+.pill{background:rgba(255,159,67,.1) !important;border:1.5px solid rgba(255,159,67,.35) !important;color:var(--ora) !important}
+.ldot{background:var(--ora) !important}
+#ltxt{color:var(--ora) !important}
+
+/* Hero */
+h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo em{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 </style>
 </head>
 <body>
 <canvas id="bg"></canvas>
 <div class="cfbox" id="cfbox"></div>
 
-<!-- ═══ LANDING — CHOIX MODE ═══ -->
+<!-- ═══ LANDING ═══ -->
 <section class="page" id="landing">
   <nav>
     <a class="logo" href="#landing">SON<em>A</em>RA</a>
     <div class="pill"><div class="ldot"></div><span id="ltxt">En ligne</span></div>
   </nav>
   <div class="hero">
-    <div class="eyebrow">ES OU KONET SA ?</div>
+    <div class="eyebrow">Es ou konet sa ?</div>
     <h1>Le blind test <span class="hi">caribéen</span></h1>
     <p class="hero-sub">Choisis ton mode de jeu.</p>
   </div>
   <div class="mode-grid">
     <button class="mode-card mode-solo" onclick="showPage('s-solo')">
-      <span class="mode-ic">🎧</span>
+      <div class="mode-bar" style="background:var(--grad)"></div>
       <span class="mode-title">Solo</span>
       <span class="mode-sub">Joue seul, à ton rythme</span>
     </button>
     <button class="mode-card mode-multi" onclick="showPage('s-multi')">
-      <span class="mode-ic">👥</span>
+      <div class="mode-bar" style="background:var(--pur)"></div>
       <span class="mode-title">Multijoueur</span>
       <span class="mode-sub">Joue avec tes amis</span>
     </button>
