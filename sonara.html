@@ -246,34 +246,72 @@ button.rb.s{background:var(--s1);border:1.5px solid var(--bd);color:var(--txt)}
 @keyframes fadeOut{from{opacity:1}to{opacity:0;transform:translate(-50%,-50%) scale(1.2)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:480px){.rtblh,.rtblr{grid-template-columns:24px 26px 1fr 52px}.rtblh span:last-child,.rct{display:none}.qcmg{grid-template-columns:1fr}}
+
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:480px;padding:0 16px;margin-top:8px}
+.mode-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--s1);border:1px solid var(--bd2);border-radius:20px;padding:32px 16px;cursor:pointer;transition:transform .18s,border-color .18s;text-align:center;font-family:inherit}
+.mode-card:hover{transform:translateY(-4px)}
+.mode-solo{border-color:var(--grn)}
+.mode-solo:hover{box-shadow:0 0 24px rgba(179,255,83,.15)}
+.mode-multi{border-color:var(--pur)}
+.mode-multi:hover{box-shadow:0 0 24px rgba(167,139,250,.15)}
+.mode-ic{font-size:44px;display:block}
+.mode-title{font-family:Syne,sans-serif;font-size:18px;font-weight:800;color:var(--txt);display:block}
+.mode-sub{font-size:12px;color:var(--mut);display:block}
+.btn-back{background:none;border:none;color:var(--mut);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;padding:8px;width:80px;text-align:left}
+.btn-back:hover{color:var(--txt)}
+.multi-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:480px;padding:0 16px;margin-top:8px}
+.multi-choice-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--s1);border:1px solid var(--bd2);border-radius:20px;padding:32px 16px;cursor:pointer;transition:transform .18s,border-color .18s;text-align:center;font-family:inherit}
+.multi-choice-card:hover{transform:translateY(-4px);border-color:var(--pur);box-shadow:0 0 24px rgba(167,139,250,.15)}
+.tc.selected{border-color:var(--grn) !important;box-shadow:0 0 20px rgba(179,255,83,.2)}
 </style>
 </head>
 <body>
 <canvas id="bg"></canvas>
 <div class="cfbox" id="cfbox"></div>
 
-<!-- ═══ LANDING ═══ -->
+<!-- ═══ LANDING — CHOIX MODE ═══ -->
 <section class="page" id="landing">
   <nav>
     <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div class="pill"><div class="ldot"></div><span id="ltxt">247 en ligne</span></div>
+    <div class="pill"><div class="ldot"></div><span id="ltxt">En ligne</span></div>
   </nav>
   <div class="hero">
     <div class="eyebrow">ES OU KONET SA ?</div>
     <h1>Le blind test <span class="hi">caribéen</span></h1>
-    <p class="hero-sub">Choisis un univers. Écoute. Prouve que tu connais mieux que tout moun.</p>
+    <p class="hero-sub">Choisis ton mode de jeu.</p>
   </div>
-  <div class="slbl">Choisis ton univers</div>
+  <div class="mode-grid">
+    <button class="mode-card mode-solo" onclick="showPage('s-solo')">
+      <span class="mode-ic">🎧</span>
+      <span class="mode-title">Solo</span>
+      <span class="mode-sub">Joue seul, à ton rythme</span>
+    </button>
+    <button class="mode-card mode-multi" onclick="showPage('s-multi')">
+      <span class="mode-ic">👥</span>
+      <span class="mode-title">Multijoueur</span>
+      <span class="mode-sub">Joue avec tes amis</span>
+    </button>
+  </div>
+</section>
+
+<!-- ═══ SOLO — CHOIX UNIVERS ═══ -->
+<section class="page" id="s-solo">
+  <nav>
+    <button class="btn-back" onclick="showPage('landing')">← Retour</button>
+    <a class="logo" href="#landing">SON<em>A</em>RA</a>
+    <div style="width:80px"></div>
+  </nav>
+  <div class="slbl" style="margin-top:24px">Choisis ton univers</div>
   <div class="tgrid">
-    <a class="tc t-mix"      href="#modal-mix">      <div class="glow"></div><span class="ic">🌴</span><span class="tn">Mix Caribéen</span><span class="ts">Tous styles</span></a>
-    <a class="tc t-zouk"     href="#modal-zouk">     <div class="glow"></div><span class="ic">🎺</span><span class="tn">Zouk</span><span class="ts">Gwadloup · Matinik</span></a>
-    <a class="tc t-kompa"    href="#modal-kompa">    <div class="glow"></div><span class="ic">🥁</span><span class="tn">Kompa</span><span class="ts">Haïti</span></a>
-    <a class="tc t-reggae"   href="#modal-reggae">   <div class="glow"></div><span class="ic">☮️</span><span class="tn">Reggae</span><span class="ts">Jamaïque</span></a>
-    <a class="tc t-dancehall"href="#modal-dancehall"><div class="glow"></div><span class="ic">🎤</span><span class="tn">Dancehall</span><span class="ts">Jamaica</span></a>
-    <a class="tc t-soca"     href="#modal-soca">     <div class="glow"></div><span class="ic">🎸</span><span class="tn">Soca</span><span class="ts">Trinidad &amp; Tobago</span></a>
-    <a class="tc t-shatta"   href="#modal-shatta">   <div class="glow"></div><span class="ic">⚡</span><span class="tn">Shatta</span><span class="ts">Antilles · Afrique</span></a>
-    <a class="tc t-trap"     href="#modal-trap">     <div class="glow"></div><span class="ic">🔥</span><span class="tn">Trap Antillais</span><span class="ts">Urban kréyol</span></a>
-    <a class="tc t-rap"      href="#modal-rap">      <div class="glow"></div><span class="ic">🎙️</span><span class="tn">Rap Caribéen</span><span class="ts">Flow antillais</span></a>
+    <a class="tc t-mix"       href="#modal-mix">      <div class="glow"></div><span class="ic">🌴</span><span class="tn">Mix Caribéen</span><span class="ts">Tous styles</span></a>
+    <a class="tc t-zouk"      href="#modal-zouk">     <div class="glow"></div><span class="ic">🎺</span><span class="tn">Zouk</span><span class="ts">Gwadloup · Matinik</span></a>
+    <a class="tc t-kompa"     href="#modal-kompa">    <div class="glow"></div><span class="ic">🥁</span><span class="tn">Kompa</span><span class="ts">Haïti</span></a>
+    <a class="tc t-reggae"    href="#modal-reggae">   <div class="glow"></div><span class="ic">☮️</span><span class="tn">Reggae</span><span class="ts">Jamaïque</span></a>
+    <a class="tc t-dancehall" href="#modal-dancehall"><div class="glow"></div><span class="ic">🎤</span><span class="tn">Dancehall</span><span class="ts">Jamaica</span></a>
+    <a class="tc t-soca"      href="#modal-soca">     <div class="glow"></div><span class="ic">🎸</span><span class="tn">Soca</span><span class="ts">Trinidad &amp; Tobago</span></a>
+    <a class="tc t-shatta"    href="#modal-shatta">   <div class="glow"></div><span class="ic">⚡</span><span class="tn">Shatta</span><span class="ts">Antilles · Afrique</span></a>
+    <a class="tc t-trap"      href="#modal-trap">     <div class="glow"></div><span class="ic">🔥</span><span class="tn">Trap Antillais</span><span class="ts">Urban kréyol</span></a>
+    <a class="tc t-rap"       href="#modal-rap">      <div class="glow"></div><span class="ic">🎙️</span><span class="tn">Rap Caribéen</span><span class="ts">Flow antillais</span></a>
   </div>
 </section>
 
@@ -1465,6 +1503,254 @@ window.addEventListener('load', function(){
     });
   });
 });
+
+// ── MULTIJOUEUR ───────────────────────────────────────
+var WS = null;
+var G_MULTI = { code: null, playerId: null, isHost: false, theme: null };
+
+function genPlayerId() {
+  return 'p' + Math.random().toString(36).substr(2, 9);
+}
+
+function selectMultiTheme(key, el) {
+  G_MULTI.theme = key;
+  document.querySelectorAll('#create-theme-grid .tc').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  var btn = document.getElementById('btn-create-room');
+  if(btn){ btn.style.opacity='1'; btn.style.pointerEvents='auto'; }
+}
+
+function createRoom() {
+  var pseudo = document.getElementById('multi-pseudo').value.trim();
+  if (!pseudo) { document.getElementById('multi-pseudo').style.borderColor='var(--red)'; return; }
+  if (!G_MULTI.theme) { return; }
+  G_MULTI.playerId = genPlayerId();
+  G_MULTI.isHost = true;
+  G.ps = pseudo;
+  fetch('/room/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ theme: G_MULTI.theme, playerId: G_MULTI.playerId })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    G_MULTI.code = data.code;
+    document.getElementById('lobby-code').textContent = data.code;
+    showPage('s-lobby');
+    document.getElementById('lobby-host-actions').style.display = 'block';
+    document.getElementById('lobby-guest-msg').style.display = 'none';
+    connectWS(data.code);
+  })
+  .catch(function() { alert('Erreur lors de la création de la salle'); });
+}
+
+function joinRoom() {
+  var pseudo = document.getElementById('join-pseudo').value.trim();
+  var code = document.getElementById('join-code').value.trim().toUpperCase();
+  if (!pseudo) { document.getElementById('join-pseudo').style.borderColor='var(--red)'; return; }
+  if (code.length !== 4) { document.getElementById('join-code').style.borderColor='var(--red)'; return; }
+  G_MULTI.playerId = genPlayerId();
+  G_MULTI.isHost = false;
+  G_MULTI.code = code;
+  G.ps = pseudo;
+  fetch('/room/info?code=' + code)
+  .then(function(r) {
+    if (!r.ok) throw new Error('introuvable');
+    return r.json();
+  })
+  .then(function(data) {
+    G_MULTI.theme = data.theme;
+    document.getElementById('lobby-code').textContent = code;
+    showPage('s-lobby');
+    document.getElementById('lobby-host-actions').style.display = 'none';
+    document.getElementById('lobby-guest-msg').style.display = 'block';
+    connectWS(code);
+  })
+  .catch(function() { alert('Salle introuvable — vérifie le code'); });
+}
+
+function connectWS(code) {
+  var proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  var wsUrl = proto + '://' + location.host + '/ws?code=' + code +
+    '&id=' + G_MULTI.playerId + '&name=' + encodeURIComponent(G.ps);
+  WS = new WebSocket(wsUrl);
+  WS.onmessage = function(e) {
+    var msg = JSON.parse(e.data);
+    if (msg.type === 'player_joined' || msg.type === 'player_left') {
+      renderLobbyPlayers(msg.players);
+    }
+    if (msg.type === 'game_start') {
+      launchMultiGame();
+    }
+    if (msg.type === 'score_update') {
+      G.pl = msg.players.map(function(p) {
+        return { n: p.name, s: p.score, me: p.id === G_MULTI.playerId, av: 'person', ans: false };
+      });
+      updateHdr(); renderPstrip();
+    }
+    if (msg.type === 'next_question' && !G_MULTI.isHost) {
+      G.cq = msg.index;
+      if (G.cq >= G.qs.length) { showPage('s-res'); doRes(); doConf(); }
+      else { hideG(); doBreak(G.cq, function() { doQ(); }); }
+    }
+  };
+  WS.onopen = function() {
+    renderLobbyPlayers([{ id: G_MULTI.playerId, name: G.ps, score: 0 }]);
+  };
+}
+
+function renderLobbyPlayers(players) {
+  var html = players.map(function(p) {
+    return '<div style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:10px;padding:10px 14px;font-size:14px">' +
+      '<span>🎵</span><span>' + p.name + (p.id === G_MULTI.playerId ? ' (toi)' : '') + '</span>' +
+      (p.id === G_MULTI.playerId && G_MULTI.isHost ? '<span style="margin-left:auto;font-size:10px;background:var(--grn);color:#080B12;border-radius:4px;padding:2px 6px;font-weight:700">Host</span>' : '') +
+      '</div>';
+  }).join('');
+  document.getElementById('lobby-players').innerHTML = html;
+  var btn = document.getElementById('btn-start-multi');
+  if (btn && G_MULTI.isHost) {
+    if (players.length >= 2) {
+      btn.disabled = false;
+      btn.textContent = 'Lancer la partie 🎵';
+    } else {
+      btn.disabled = true;
+      btn.textContent = 'En attente de joueurs...';
+    }
+  }
+}
+
+function startMultiGame() {
+  if (WS && WS.readyState === 1) {
+    WS.send(JSON.stringify({ type: 'start' }));
+    launchMultiGame();
+  }
+}
+
+function launchMultiGame() {
+  var key = G_MULTI.theme;
+  var t = THEMES[key];
+  if (!t) return;
+  G.theme = t.n; G.ic = t.ic; G.dq = t.dq;
+  G.gmode = 'free'; G.amode = 'free';
+  if (key === 'mix') {
+    var allTracks = [];
+    Object.keys(THEMES).forEach(function(k) {
+      if (k !== 'mix' && THEMES[k].tracks) {
+        THEMES[k].tracks.forEach(function(tr) {
+          allTracks.push({ t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'' });
+        });
+      }
+    });
+    for (var i = allTracks.length-1; i>0; i--) {
+      var j = Math.floor(Math.random()*(i+1));
+      var tmp = allTracks[i]; allTracks[i] = allTracks[j]; allTracks[j] = tmp;
+    }
+    G.pool = allTracks;
+  } else {
+    G.pool = t.tracks.map(function(tr) {
+      return { t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'' };
+    });
+  }
+  G.pl = [{ n: G.ps, av: 'person', s: 0, c: 0, me: true, ans: false }];
+  G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false;
+  buildQs(); showPage('s-game'); setAM('free'); updateHdr(); renderPstrip(); doCD();
+}
+
 </script>
+
+<!-- ═══ MULTIJOUEUR — CHOIX ═══ -->
+<section class="page" id="s-multi">
+  <nav>
+    <button class="btn-back" onclick="showPage('landing')">← Retour</button>
+    <a class="logo" href="#landing">SON<em>A</em>RA</a>
+    <div style="width:80px"></div>
+  </nav>
+  <div class="hero" style="padding-bottom:8px">
+    <h1 style="font-size:clamp(24px,6vw,36px)">Multijoueur</h1>
+    <p class="hero-sub">Joue avec tes amis, où qu'ils soient.</p>
+  </div>
+  <div class="multi-choice-grid">
+    <button class="multi-choice-card" onclick="showPage('s-create')">
+      <span style="font-size:40px">🎮</span>
+      <span style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;color:var(--txt)">Créer</span>
+      <span style="font-size:12px;color:var(--mut)">Lance une nouvelle salle</span>
+    </button>
+    <button class="multi-choice-card" onclick="showPage('s-join')">
+      <span style="font-size:40px">🔑</span>
+      <span style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;color:var(--txt)">Rejoindre</span>
+      <span style="font-size:12px;color:var(--mut)">Entre le code d'une salle</span>
+    </button>
+  </div>
+</section>
+
+<!-- ═══ CRÉER UNE SALLE ═══ -->
+<section class="page" id="s-create">
+  <nav>
+    <button class="btn-back" onclick="showPage('s-multi')">← Retour</button>
+    <a class="logo" href="#landing">SON<em>A</em>RA</a>
+    <div style="width:80px"></div>
+  </nav>
+  <div style="width:100%;max-width:440px;padding:24px 16px 40px">
+    <h2 style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:24px">Nouvelle salle</h2>
+    <label class="flbl">Ton pseudo</label>
+    <input class="finp" id="multi-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:20px">
+    <div class="slbl" style="margin-bottom:12px">Choisis ton univers</div>
+    <div class="tgrid" id="create-theme-grid">
+      <a class="tc t-mix"       onclick="selectMultiTheme('mix',this)">      <div class="glow"></div><span class="ic">🌴</span><span class="tn">Mix Caribéen</span><span class="ts">Tous styles</span></a>
+      <a class="tc t-zouk"      onclick="selectMultiTheme('zouk',this)">     <div class="glow"></div><span class="ic">🎺</span><span class="tn">Zouk</span><span class="ts">Gwadloup · Matinik</span></a>
+      <a class="tc t-kompa"     onclick="selectMultiTheme('kompa',this)">    <div class="glow"></div><span class="ic">🥁</span><span class="tn">Kompa</span><span class="ts">Haïti</span></a>
+      <a class="tc t-reggae"    onclick="selectMultiTheme('reggae',this)">   <div class="glow"></div><span class="ic">☮️</span><span class="tn">Reggae</span><span class="ts">Jamaïque</span></a>
+      <a class="tc t-dancehall" onclick="selectMultiTheme('dancehall',this)"><div class="glow"></div><span class="ic">🎤</span><span class="tn">Dancehall</span><span class="ts">Jamaica</span></a>
+      <a class="tc t-soca"      onclick="selectMultiTheme('soca',this)">     <div class="glow"></div><span class="ic">🎸</span><span class="tn">Soca</span><span class="ts">Trinidad &amp; Tobago</span></a>
+      <a class="tc t-shatta"    onclick="selectMultiTheme('shatta',this)">   <div class="glow"></div><span class="ic">⚡</span><span class="tn">Shatta</span><span class="ts">Antilles · Afrique</span></a>
+      <a class="tc t-trap"      onclick="selectMultiTheme('trap',this)">     <div class="glow"></div><span class="ic">🔥</span><span class="tn">Trap Antillais</span><span class="ts">Urban kréyol</span></a>
+      <a class="tc t-rap"       onclick="selectMultiTheme('rap',this)">      <div class="glow"></div><span class="ic">🎙️</span><span class="tn">Rap Caribéen</span><span class="ts">Flow antillais</span></a>
+    </div>
+    <button class="bgo" id="btn-create-room" style="margin-top:20px;opacity:.5;pointer-events:none" onclick="createRoom()">Créer la salle →</button>
+  </div>
+</section>
+
+<!-- ═══ REJOINDRE UNE SALLE ═══ -->
+<section class="page" id="s-join">
+  <nav>
+    <button class="btn-back" onclick="showPage('s-multi')">← Retour</button>
+    <a class="logo" href="#landing">SON<em>A</em>RA</a>
+    <div style="width:80px"></div>
+  </nav>
+  <div style="width:100%;max-width:440px;padding:24px 16px 40px">
+    <h2 style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:24px">Rejoindre une salle</h2>
+    <label class="flbl">Ton pseudo</label>
+    <input class="finp" id="join-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:20px">
+    <label class="flbl">Code de la salle</label>
+    <input style="background:var(--s2);border:1px solid var(--bd2);border-radius:10px;padding:14px;font-size:28px;font-weight:800;font-family:Syne,sans-serif;color:var(--txt);text-align:center;letter-spacing:6px;width:100%;text-transform:uppercase;margin-top:8px" id="join-code" type="text" placeholder="KALI" maxlength="4">
+    <button class="bgo" style="margin-top:20px" onclick="joinRoom()">Rejoindre →</button>
+  </div>
+</section>
+
+<!-- ═══ SALLE D'ATTENTE ═══ -->
+<section class="page" id="s-lobby">
+  <nav>
+    <button class="btn-back" onclick="showPage('s-multi')">← Retour</button>
+    <a class="logo" href="#landing">SON<em>A</em>RA</a>
+    <div style="width:80px"></div>
+  </nav>
+  <div style="width:100%;max-width:440px;padding:20px 16px 40px">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:2px">Code de la salle</div>
+      <div id="lobby-code" style="font-family:Syne,sans-serif;font-size:52px;font-weight:800;color:var(--grn);letter-spacing:10px;margin:8px 0">----</div>
+      <div style="font-size:12px;color:var(--mut)">Partage ce code à tes amis 👆</div>
+    </div>
+    <div style="background:var(--s1);border:1px solid var(--bd2);border-radius:16px;padding:20px">
+      <div style="font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Joueurs connectés</div>
+      <div id="lobby-players" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+    <div id="lobby-host-actions" style="display:none;margin-top:16px">
+      <button class="bgo" id="btn-start-multi" onclick="startMultiGame()" disabled>En attente de joueurs...</button>
+    </div>
+    <div id="lobby-guest-msg" style="display:none;text-align:center;color:var(--mut);font-size:14px;margin-top:20px">
+      ⏳ En attente que le host lance la partie...
+    </div>
+  </div>
+</section>
 </body>
 </html>
