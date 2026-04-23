@@ -1765,8 +1765,10 @@ function renderLobbyPlayers(players) {
 
 function startMultiGame() {
   if (WS && WS.readyState === 1) {
-    WS.send(JSON.stringify({ type: 'start' }));
-    launchMultiGame(null);
+    var pool = buildPool(G_MULTI.theme);
+    var order = pool.map(function(_,i){ return i; });
+    WS.send(JSON.stringify({ type: 'start', order: order }));
+    launchMultiGame(pool);
   }
 }
 
