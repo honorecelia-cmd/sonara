@@ -837,7 +837,6 @@ document.addEventListener('click', function(e) {
   if(tc) {
     var href = tc.getAttribute('href');
     if(href) {
-      // Carte avec href → ouvrir modal (legacy multi)
       e.preventDefault();
       document.querySelectorAll('.modal-bg').forEach(function(m){ m.classList.remove('open'); });
       var modal = document.getElementById(href.replace('#',''));
@@ -848,8 +847,7 @@ document.addEventListener('click', function(e) {
       }
       return;
     }
-    // Carte avec onclick → laisser le onclick s'exécuter naturellement
-    return;
+    // Pas de href → laisser le onclick fonctionner, ne pas bloquer
   }
   // Annuler / retour landing
   var bback = e.target.closest('.bback');
