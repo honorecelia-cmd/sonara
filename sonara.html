@@ -1839,5 +1839,36 @@ function launchSolo() {
     <button class="bgo" onclick="launchSolo()">Jouer →</button>
   </div>
 </section>
+
+<script>
+var G_SOLO_THEME = null;
+function selectSoloTheme(key) {
+  G_SOLO_THEME = key;
+  var t = THEMES[key];
+  if (!t) return;
+  var ic = document.getElementById('pseudo-theme-ic');
+  var nm = document.getElementById('pseudo-theme-name');
+  if (ic) ic.textContent = t.ic || '🎵';
+  if (nm) nm.textContent = t.n || key;
+  showPage('s-pseudo');
+  setTimeout(function(){
+    var inp = document.getElementById('solo-pseudo');
+    if (inp) { if (G.ps) inp.value = G.ps; inp.focus(); }
+  }, 100);
+}
+function launchSolo() {
+  var pseudo = document.getElementById('solo-pseudo').value.trim();
+  if (!pseudo) { document.getElementById('solo-pseudo').style.borderColor='var(--red)'; return; }
+  G.ps = pseudo;
+  var key = G_SOLO_THEME;
+  var modal = document.getElementById('modal-' + key);
+  if (modal) {
+    var inp = modal.querySelector('.pseudo-inp');
+    if (inp) inp.value = pseudo;
+    var btn = modal.querySelector('[data-action="launch"]');
+    if (btn) { launchFromModal(btn); return; }
+  }
+}
+</script>
 </body>
 </html>
