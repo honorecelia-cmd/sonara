@@ -832,12 +832,13 @@ setInterval(function(){lc=Math.max(180,Math.min(400,lc+Math.floor(Math.random()*
 
 // ── CÂBLAGE EVENTS (tout par addEventListener) ──────
 document.addEventListener('click', function(e) {
-  // Carte thème → ouvrir modal via JS pur
+  // Carte thème
   var tc = e.target.closest('.tc');
   if(tc) {
-    e.preventDefault();
     var href = tc.getAttribute('href');
     if(href) {
+      // Carte avec href → ouvrir modal (legacy multi)
+      e.preventDefault();
       document.querySelectorAll('.modal-bg').forEach(function(m){ m.classList.remove('open'); });
       var modal = document.getElementById(href.replace('#',''));
       if(modal) {
@@ -845,7 +846,9 @@ document.addEventListener('click', function(e) {
         var inp = modal.querySelector('.pseudo-inp');
         if(inp) { if(!inp.value && G.ps) inp.value = G.ps; inp.style.borderColor=''; setTimeout(function(){ inp.focus(); },50); }
       }
+      return;
     }
+    // Carte avec onclick → laisser le onclick s'exécuter naturellement
     return;
   }
   // Annuler / retour landing
