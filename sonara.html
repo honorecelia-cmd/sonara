@@ -1726,7 +1726,14 @@ function connectWS(code) {
     }
     if (msg.type === 'game_start') {
       var basePool = buildPool(G_MULTI.theme);
-      var orderedPool = msg.order ? msg.order.map(function(i){ return basePool[i]; }).filter(Boolean) : basePool;
+      var orderedPool;
+      if (msg.trackIds && msg.trackIds.length > 0) {
+        orderedPool = msg.trackIds.map(function(id) {
+          return basePool.find(function(tr){ return (tr.t + '||' + tr.a) === id; });
+        }).filter(Boolean);
+      } else {
+        orderedPool = basePool;
+      }
       launchMultiGame(orderedPool);
     }
     if (msg.type === 'score_update') {
@@ -1769,8 +1776,9 @@ function renderLobbyPlayers(players) {
 function startMultiGame() {
   if (WS && WS.readyState === 1) {
     var pool = buildPool(G_MULTI.theme);
-    var order = pool.map(function(_,i){ return i; });
-    WS.send(JSON.stringify({ type: 'start', order: order }));
+    // Envoyer les titres dans l'ordre shufflé pour synchro guest
+    var trackIds = pool.map(function(tr){ return tr.t + '||' + tr.a; });
+    WS.send(JSON.stringify({ type: 'start', trackIds: trackIds }));
     launchMultiGame(pool);
   }
 }
