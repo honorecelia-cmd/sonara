@@ -1822,6 +1822,12 @@ function launchMultiGame(sharedPool) {
   G.pl = [{ n: G.ps, av: 'person', s: 0, c: 0, me: true, ans: false }];
   G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false;
   buildQs(); showPage('s-game'); setAM('free'); updateHdr(); renderPstrip(); doCD();
+  // Host envoie le timestamp de démarrage pour synchro timer
+  if (G_MULTI.isHost && WS && WS.readyState === 1) {
+    setTimeout(function() {
+      WS.send(JSON.stringify({ type: 'question_start', t: Date.now(), idx: 0 }));
+    }, 100);
+  }
 }
 
 
@@ -1942,8 +1948,9 @@ function launchSolo() {
     <div id="lobby-host-actions" style="display:none;margin-top:16px">
       <button class="bgo" id="btn-start-multi" onclick="startMultiGame()" disabled>En attente de joueurs...</button>
     </div>
-    <div id="lobby-guest-msg" style="display:none;text-align:center;color:var(--mut);font-size:14px;margin-top:20px">
-      ⏳ En attente que le host lance la partie...
+    <div id="lobby-guest-msg" style="display:none;text-align:center;margin-top:20px">
+      <button id="btn-ready" onclick="guestReady()" class="bgo" style="margin-bottom:12px">🎵 Je suis prêt</button>
+      <div id="lobby-waiting" style="display:none;color:var(--mut);font-size:14px">⏳ En attente que le host lance la partie...</div>
     </div>
   </div>
 </section>
@@ -1998,6 +2005,20 @@ function launchSolo() {
     if (btn) { launchFromModal(btn); return; }
   }
 }
+
+function guestReady() {
+  // Créer et jouer un silence pour débloquer l'autoplay
+  var ctx = new (window.AudioContext || window.webkitAudioContext)();
+  var buf = ctx.createBuffer(1, 1, 22050);
+  var src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.connect(ctx.destination);
+  src.start(0);
+  document.getElementById('btn-ready').style.display = 'none';
+  document.getElementById('lobby-waiting').style.display = 'block';
+  G_MULTI._audioUnlocked = true;
+}
+
 </script>
 </body>
 </html>
