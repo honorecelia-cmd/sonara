@@ -1672,6 +1672,8 @@ function createRoom() {
   G_MULTI.playerId = genPlayerId();
   G_MULTI.isHost = true;
   G.ps = pseudo;
+  try{var ua=document.getElementById('aud');ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';ua.volume=0;var p=ua.play();if(p)p.then(function(){ua.pause();}).catch(function(){});}catch(e){}
+  try{gac();}catch(e){}
   fetch('/room/create', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1698,6 +1700,8 @@ function joinRoom() {
   G_MULTI.isHost = false;
   G_MULTI.code = code;
   G.ps = pseudo;
+  try{var ua=document.getElementById('aud');ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';ua.volume=0;var p=ua.play();if(p)p.then(function(){ua.pause();}).catch(function(){});}catch(e){}
+  try{gac();}catch(e){}
   fetch('/room/info?code=' + code)
   .then(function(r) {
     if (!r.ok) throw new Error('introuvable');
@@ -1725,16 +1729,11 @@ function connectWS(code) {
       renderLobbyPlayers(msg.players);
     }
     if (msg.type === 'game_start') {
-      var basePool = buildPool(G_MULTI.theme);
-      var orderedPool;
-      if (msg.trackIds && msg.trackIds.length > 0) {
-        orderedPool = msg.trackIds.map(function(id) {
-          return basePool.find(function(tr){ return (tr.t + '||' + tr.a) === id; });
-        }).filter(Boolean);
-      } else {
-        orderedPool = basePool;
+      try { var ua=document.getElementById('aud'); ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='; ua.volume=0; var up=ua.play(); if(up) up.then(function(){ua.pause();}).catch(function(){}); } catch(e){}
+      try { gac(); } catch(e){}
+      if (!G_MULTI.isHost) {
+        launchMultiGame(msg.trackOrder);
       }
-      launchMultiGame(orderedPool);
     }
     if (msg.type === 'score_update') {
       G.pl = msg.players.map(function(p) {
@@ -1776,10 +1775,7 @@ function renderLobbyPlayers(players) {
 function startMultiGame() {
   if (WS && WS.readyState === 1) {
     var pool = buildPool(G_MULTI.theme);
-    // Envoyer les titres dans l'ordre shufflé pour synchro guest
-    var trackIds = pool.map(function(tr){ return tr.t + '||' + tr.a; });
-    WS.send(JSON.stringify({ type: 'start', trackIds: trackIds }));
-    launchMultiGame(pool);
+    WS.send(JSON.stringify({ type: 'start', totalTracks: pool.length, trackCount: Math.min(10, pool.length) }));
   }
 }
 
@@ -1805,29 +1801,28 @@ function buildPool(key) {
     return { t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'' };
   });
 }
-function launchMultiGame(sharedPool) {
+function launchMultiGame(trackOrder) {
   var key = G_MULTI.theme;
   var t = THEMES[key];
   if (!t) return;
   G.theme = t.n; G.ic = t.ic; G.dq = t.dq;
   G.gmode = 'free'; G.amode = 'free';
-  if (sharedPool) {
-    G.pool = sharedPool;
-  } else {
-    G.pool = buildPool(key);
-    if (WS && WS.readyState === 1) {
-      WS.send(JSON.stringify({ type: 'sync_pool', pool: G.pool }));
+  var fullPool = buildPool(key);
+  G.pool = fullPool;
+  if (trackOrder && trackOrder.length) {
+    G.qs = [];
+    for (var i = 0; i < trackOrder.length; i++) {
+      var idx = trackOrder[i];
+      if (idx < fullPool.length) G.qs.push(fullPool[idx]);
     }
+    while (G.qs.length < 4) G.qs = G.qs.concat(G.qs.slice());
+    G.qs = G.qs.slice(0, 10);
+  } else {
+    buildQs();
   }
-  G.pl = [{ n: G.ps, av: 'person', s: 0, c: 0, me: true, ans: false }];
+  G.pl = [{ n: G.ps, av: '🎵', s: 0, c: 0, me: true, ans: false }];
   G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false;
-  buildQs(); showPage('s-game'); setAM('free'); updateHdr(); renderPstrip(); doCD();
-  // Host envoie le timestamp de démarrage pour synchro timer
-  if (G_MULTI.isHost && WS && WS.readyState === 1) {
-    setTimeout(function() {
-      WS.send(JSON.stringify({ type: 'question_start', t: Date.now(), idx: 0 }));
-    }, 100);
-  }
+  showPage('s-game'); setAM('free'); updateHdr(); renderPstrip(); doCD();
 }
 
 
