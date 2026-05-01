@@ -134,7 +134,16 @@ server.on('upgrade', function(req, socket) {
       const msg = JSON.parse(frame.payload);
       if (msg.type === 'start' && rooms[code].host === playerId) {
         rooms[code].started = true;
-        broadcastAll(code, { type: 'game_start', theme: rooms[code].theme, trackIds: msg.trackIds });
+        var trackCount = msg.trackCount || 10;
+        var totalTracks = msg.totalTracks || trackCount;
+        var indices = [];
+        for (var ti = 0; ti < totalTracks; ti++) indices.push(ti);
+        for (var ti = indices.length - 1; ti > 0; ti--) {
+          var tj = Math.floor(Math.random() * (ti + 1));
+          var tmp = indices[ti]; indices[ti] = indices[tj]; indices[tj] = tmp;
+        }
+        var trackOrder = indices.slice(0, trackCount);
+        broadcastAll(code, { type: 'game_start', theme: rooms[code].theme, trackOrder: trackOrder });
       }
       if (msg.type === 'answer') {
         const pl = rooms[code].players.find(function(x){ return x.id === playerId; });

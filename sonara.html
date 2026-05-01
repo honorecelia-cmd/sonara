@@ -1732,7 +1732,6 @@ function connectWS(code) {
       try { var ua=document.getElementById('aud'); ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='; ua.volume=0; var up=ua.play(); if(up) up.then(function(){ua.pause();}).catch(function(){}); } catch(ez){}
       try { gac(); } catch(ez){}
       launchMultiGame(msg.trackOrder);
-      setTimeout(function(){if(G.qs&&G.qs[0])alert('DEBUG track1: '+G.qs[0].t+' / '+G.qs[0].a);},2000);
     }
     if (msg.type === 'score_update') {
       G.pl = msg.players.map(function(p) {
