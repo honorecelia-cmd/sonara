@@ -1729,19 +1729,19 @@ function connectWS(code) {
       renderLobbyPlayers(msg.players);
     }
     if (msg.type === 'game_start') {
-      try { var ua=document.getElementById('aud'); ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='; ua.volume=0; var up=ua.play(); if(up) up.then(function(){ua.pause();}).catch(function(){}); } catch(e){}
-      try { gac(); } catch(e){}
-
-        launchMultiGame(msg.trackOrder);
-
-    }
+      try { var ua=document.getElementById('aud'); ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='; ua.volume=0; var up=ua.play(); if(up) up.then(function(){ua.pause();}).catch(function(){}); } catch(ez){}
+      try { gac(); } catch(ez){}
       launchMultiGame(msg.trackOrder);
+    }
+    if (msg.type === 'score_update') {
+      G.pl = msg.players.map(function(p) {
+        return { n: p.name, s: p.score, me: p.id === G_MULTI.playerId, av: '🎵', ans: false };
       });
       updateHdr(); renderPstrip();
     }
     if (msg.type === 'next_question' && !G_MULTI.isHost) {
       G.cq = msg.index;
-      if (G.cq >= G.qs.length) { showPage('s-res'); doRes(); doConf(); }
+      if (G.cq >= G.qs.length) { doResults(); }
       else { hideG(); doBreak(G.cq, function() { doQ(); }); }
     }
   };
