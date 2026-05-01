@@ -1789,9 +1789,11 @@ function buildPool(key) {
         });
       }
     });
-    for (var i = allTracks.length-1; i>0; i--) {
-      var j = Math.floor(Math.random()*(i+1));
-      var tmp = allTracks[i]; allTracks[i] = allTracks[j]; allTracks[j] = tmp;
+    if (!G_MULTI.code) {
+      for (var i = allTracks.length-1; i>0; i--) {
+        var j = Math.floor(Math.random()*(i+1));
+        var tmp = allTracks[i]; allTracks[i] = allTracks[j]; allTracks[j] = tmp;
+      }
     }
     return allTracks;
   }
