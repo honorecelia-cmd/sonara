@@ -1731,13 +1731,11 @@ function connectWS(code) {
     if (msg.type === 'game_start') {
       try { var ua=document.getElementById('aud'); ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='; ua.volume=0; var up=ua.play(); if(up) up.then(function(){ua.pause();}).catch(function(){}); } catch(e){}
       try { gac(); } catch(e){}
-      if (!G_MULTI.isHost) {
+
         launchMultiGame(msg.trackOrder);
-      }
+
     }
-    if (msg.type === 'score_update') {
-      G.pl = msg.players.map(function(p) {
-        return { n: p.name, s: p.score, me: p.id === G_MULTI.playerId, av: 'person', ans: false };
+      launchMultiGame(msg.trackOrder);
       });
       updateHdr(); renderPstrip();
     }
