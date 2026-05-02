@@ -181,6 +181,7 @@ input.ani.no{border-color:var(--red)!important;background:rgba(255,78,106,.05)!i
 button.vbtn{width:100%;margin-top:11px;background:var(--grn);border:none;border-radius:13px;padding:15px;font-family:Syne,sans-serif;font-size:15px;font-weight:800;color:#080B12;cursor:pointer;-webkit-appearance:none;display:block}
 button.vbtn:disabled{opacity:.3;cursor:not-allowed}
 .wmsg{text-align:center;font-size:12px;color:var(--mut);margin-top:12px;display:none;font-style:italic}
+.wmsg.waiting{color:var(--ora);font-style:normal;font-weight:600;animation:pgt 1.2s ease-in-out infinite}
 /* reveal */
 .rvsc{display:none;width:100%}.rvsc.on{display:block;animation:fup .38s ease}
 .revc{background:var(--s1);border:1px solid var(--bd);border-radius:18px;overflow:hidden}
@@ -1405,11 +1406,18 @@ function tryGuess(v,byUser){
   // Si les deux trouvés → terminer
   if(G.foundA&&G.foundT){
     G.ans=true;clearInterval(G.ti);stopA();
-    $('ani').disabled=true;$('vbtn').disabled=true;$('wmsg').style.display='block';
+    $('ani').disabled=true;$('vbtn').disabled=true;
+    var sb=$('skipbtn');if(sb)sb.style.display='none';
     var me=G.pl.filter(function(p){return p.me})[0];if(me)me.ans=true;
     var chip=document.querySelector('.pchip[data-n="'+G.ps+'"]');if(chip)chip.classList.add('ans');
     updateHdr();renderPstrip();
-    setTimeout(doReveal,500);
+    if(WS&&WS.readyState===1&&G_MULTI.code){
+      WS.send(JSON.stringify({type:'answer',points:0,done:true}));
+      var wm=$('wmsg');wm.textContent='En attente des autres joueurs…';wm.className='wmsg waiting';wm.style.display='block';
+    } else {
+      $('wmsg').style.display='block';
+      setTimeout(doReveal,500);
+    }
     return;
   }
   // Vider le champ après chaque tentative
@@ -1442,6 +1450,9 @@ function updateFoundScore(what){
     popScore('+'+pts+' pts 🔥');
   }
   updateHdr();renderPstrip();
+  if(WS&&WS.readyState===1&&G_MULTI.code&&pts>0){
+    WS.send(JSON.stringify({type:'answer',points:pts,done:false}));
+  }
 }
 function addFoundTag(txt,type){
   var ft=$('found-tags');if(!ft)return;
@@ -1470,11 +1481,17 @@ function doSub(v,byUser,src){
   // Appelé uniquement au timeout
   if(G.ans)return;G.ans=true;clearInterval(G.ti);stopA();
   var ani=$('ani');ani.disabled=true;$('vbtn').disabled=true;
+  var sb=$('skipbtn');if(sb)sb.style.display='none';
   if(!G.foundA&&!G.foundT){G.cb=0;G.mx=1;}
   var me2=G.pl.filter(function(p){return p.me})[0];if(me2)me2.ans=true;
   var chip=document.querySelector('.pchip[data-n="'+G.ps+'"]');if(chip)chip.classList.add('ans');
   updateHdr();renderPstrip();
-  setTimeout(doReveal,750);
+  if(WS&&WS.readyState===1&&G_MULTI.code){
+    WS.send(JSON.stringify({type:'answer',points:0,done:true}));
+    var wm=$('wmsg');wm.textContent='En attente des autres joueurs…';wm.className='wmsg waiting';wm.style.display='block';
+  } else {
+    setTimeout(doReveal,750);
+  }
 }
 function popScore(txt){
   var a=$('panch'),el=document.createElement('div');
@@ -1531,8 +1548,12 @@ function doReveal(){
   fi.style.transition='none';fi.style.width='0%';
   requestAnimationFrame(function(){fi.style.transition='width '+(delay/1000)+'s linear';fi.style.width='100%'});
   setTimeout(function(){
-    G.cq++;G.pl.forEach(function(p){p.ans=false});
-    if(G.cq>=G.qs.length)doResults();else doBreak(G.cq,doQ);
+    if(WS&&WS.readyState===1&&G_MULTI.code){
+      WS.send(JSON.stringify({type:'next_question',index:G.cq+1}));
+    } else {
+      G.cq++;G.pl.forEach(function(p){p.ans=false});
+      if(G.cq>=G.qs.length)doResults();else doBreak(G.cq,doQ);
+    }
   },delay);
 }
 function doResults(){
@@ -1734,13 +1755,31 @@ function connectWS(code) {
       launchMultiGame(msg.trackOrder);
     }
     if (msg.type === 'score_update') {
-      G.pl = msg.players.map(function(p) {
-        return { n: p.name, s: p.score, me: p.id === G_MULTI.playerId, av: '🎵', ans: false };
+      msg.players.forEach(function(p) {
+        var isMe = p.id === G_MULTI.playerId;
+        var existing = null;
+        for (var pi=0; pi<G.pl.length; pi++) { if(G.pl[pi].n === p.name) { existing = G.pl[pi]; break; } }
+        if (existing) {
+          if (!isMe) { existing.s = p.score; existing.ans = !!p.done; }
+        } else {
+          G.pl.push({ n: p.name, av: '🎵', s: p.score, c: 0, me: isMe, ans: !!p.done });
+        }
+        if (p.done) {
+          var chip = document.querySelector('.pchip[data-n="' + p.name.replace(/"/g,'') + '"]');
+          if (chip) chip.classList.add('ans');
+        }
       });
       updateHdr(); renderPstrip();
     }
-    if (msg.type === 'next_question' && !G_MULTI.isHost) {
+    if (msg.type === 'all_answered') {
+      var wm = $('wmsg');
+      if (wm) { wm.textContent = 'Tout le monde a répondu ! 🎉'; wm.className = 'wmsg'; wm.style.display = 'block'; }
+      setTimeout(doReveal, 800);
+    }
+    if (msg.type === 'next_question') {
       G.cq = msg.index;
+      G.pl.forEach(function(p){ p.ans = false; });
+      G.ans = false; G.foundA = false; G.foundT = false;
       if (G.cq >= G.qs.length) { doResults(); }
       else { hideG(); doBreak(G.cq, function() { doQ(); }); }
     }
@@ -1820,7 +1859,20 @@ function launchMultiGame(trackOrder) {
   } else {
     buildQs();
   }
-  G.pl = [{ n: G.ps, av: '🎵', s: 0, c: 0, me: true, ans: false }];
+  // Init player list from lobby
+  var lobbyEls = document.querySelectorAll('#lobby-players > div');
+  if (lobbyEls.length > 1) {
+    G.pl = [];
+    lobbyEls.forEach(function(el) {
+      var spans = el.querySelectorAll('span');
+      var nameText = spans[1] ? spans[1].textContent : 'Joueur';
+      var isMe = nameText.indexOf('(toi)') >= 0;
+      var cleanName = nameText.replace(' (toi)','').trim();
+      G.pl.push({ n: cleanName, av: '🎵', s: 0, c: 0, me: isMe, ans: false });
+    });
+  } else {
+    G.pl = [{ n: G.ps, av: '🎵', s: 0, c: 0, me: true, ans: false }];
+  }
   G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false;
   showPage('s-game'); setAM('free'); updateHdr(); renderPstrip(); doCD();
 }
