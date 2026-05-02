@@ -144,6 +144,17 @@ server.on('upgrade', function(req, socket) {
         }
         var trackOrder = indices.slice(0, trackCount);
         broadcastAll(code, { type: 'game_start', theme: rooms[code].theme, trackOrder: trackOrder });
+        // Timer serveur : forcer reveal_now après 38s si pas tous répondus
+        rooms[code].questionTimer = null;
+        function scheduleReveal(c) {
+          if (rooms[c].questionTimer) clearTimeout(rooms[c].questionTimer);
+          rooms[c].questionTimer = setTimeout(function() {
+            if (!rooms[c]) return;
+            rooms[c].players.forEach(function(x){ x.answered = true; });
+            broadcastAll(c, { type: 'reveal_now' });
+          }, 38000);
+        }
+        scheduleReveal(code);
       }
       if (msg.type === 'answer') {
         var pl = rooms[code].players.find(function(x){ return x.id === playerId; });
@@ -153,7 +164,10 @@ server.on('upgrade', function(req, socket) {
           broadcastAll(code, { type: 'score_update', players: rooms[code].players.map(function(x){ return { id: x.id, name: x.name, score: x.score, done: !!x.answered }; }) });
           if (msg.done) {
             var allDone = rooms[code].players.every(function(x){ return x.answered; });
-            if (allDone) broadcastAll(code, { type: 'reveal_now' });
+            if (allDone) {
+              if (rooms[code].questionTimer) clearTimeout(rooms[code].questionTimer);
+              broadcastAll(code, { type: 'reveal_now' });
+            }
           }
         }
       }
@@ -163,6 +177,8 @@ server.on('upgrade', function(req, socket) {
           rooms[code].question = nextIdx;
           rooms[code].players.forEach(function(x){ x.answered = false; });
           broadcastAll(code, { type: 'next_question', index: nextIdx });
+          // Relancer le timer pour la question suivante
+          if (typeof scheduleReveal === 'function') scheduleReveal(code);
         }
       }
     } catch(e) {}
