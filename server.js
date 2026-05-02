@@ -153,15 +153,16 @@ server.on('upgrade', function(req, socket) {
           broadcastAll(code, { type: 'score_update', players: rooms[code].players.map(function(x){ return { id: x.id, name: x.name, score: x.score, done: !!x.answered }; }) });
           if (msg.done) {
             var allDone = rooms[code].players.every(function(x){ return x.answered; });
-            if (allDone) broadcastAll(code, { type: 'all_answered' });
+            if (allDone) broadcastAll(code, { type: 'reveal_now' });
           }
         }
       }
-      if (msg.type === 'next_question') {
-        if (msg.index !== rooms[code].question) {
+      if (msg.type === 'reveal_done') {
+        var nextIdx = msg.index + 1;
+        if (nextIdx !== rooms[code].question) {
+          rooms[code].question = nextIdx;
           rooms[code].players.forEach(function(x){ x.answered = false; });
-          rooms[code].question = msg.index;
-          broadcastAll(code, { type: 'next_question', index: msg.index });
+          broadcastAll(code, { type: 'next_question', index: nextIdx });
         }
       }
     } catch(e) {}
