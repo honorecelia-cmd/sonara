@@ -1550,12 +1550,13 @@ function doReveal(){
   fi.style.transition='none';fi.style.width='0%';
   requestAnimationFrame(function(){fi.style.transition='width '+(delay/1000)+'s linear';fi.style.width='100%'});
   setTimeout(function(){
-    G.cq++;G.pl.forEach(function(p){p.ans=false});
-    G.ans=false;G.foundA=false;G.foundT=false;G._revealed=false;
-    if(WS&&WS.readyState===1&&G_MULTI.code){
-      WS.send(JSON.stringify({type:'next_question',index:G.cq}));
+    // En multi : le serveur envoie next_question après 6s (géré serveur)
+    // En solo : avancer localement
+    if(!WS||WS.readyState!==1||!G_MULTI.code){
+      G.cq++;G.pl.forEach(function(p){p.ans=false});
+      G.ans=false;G.foundA=false;G.foundT=false;G._revealed=false;
+      if(G.cq>=G.qs.length)doResults();else doBreak(G.cq,doQ);
     }
-    if(G.cq>=G.qs.length)doResults();else doBreak(G.cq,doQ);
   },delay);
 }
 function doResults(){
