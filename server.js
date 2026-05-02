@@ -158,9 +158,11 @@ server.on('upgrade', function(req, socket) {
         }
       }
       if (msg.type === 'next_question') {
-        rooms[code].players.forEach(function(x){ x.answered = false; });
-        rooms[code].question = msg.index;
-        broadcastAll(code, { type: 'next_question', index: msg.index });
+        if (msg.index !== rooms[code].question) {
+          rooms[code].players.forEach(function(x){ x.answered = false; });
+          rooms[code].question = msg.index;
+          broadcastAll(code, { type: 'next_question', index: msg.index });
+        }
       }
     } catch(e) {}
   });
