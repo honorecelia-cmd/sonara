@@ -1780,13 +1780,11 @@ function connectWS(code) {
       if(!G._revealed){G._revealed=true;setTimeout(doReveal, 800);}
     }
     if (msg.type === 'next_question') {
-      if (G.cq !== msg.index) {
-        G.cq = msg.index;
-        G.pl.forEach(function(p){ p.ans = false; });
-        G.ans = false; G.foundA = false; G.foundT = false; G._revealed = false;
-        if (G.cq >= G.qs.length) { doResults(); }
-        else { hideG(); doBreak(G.cq, function() { doQ(); }); }
-      }
+      G.cq = msg.index;
+      G.pl.forEach(function(p){ p.ans = false; });
+      G.ans = false; G.foundA = false; G.foundT = false; G._revealed = false;
+      if (G.cq >= G.qs.length) { doResults(); }
+      else { hideG(); doBreak(G.cq, function() { doQ(); }); }
     }
   };
   WS.onopen = function() {

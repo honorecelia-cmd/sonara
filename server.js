@@ -65,7 +65,7 @@ const server = http.createServer(function(req, res) {
       try {
         const data = JSON.parse(body);
         const code = genCode();
-        rooms[code] = { code, theme: data.theme, host: data.playerId, players: [], started: false, question: -1 };
+        rooms[code] = { code, theme: data.theme, host: data.playerId, players: [], started: false, question: 0 };
         res.writeHead(200, {'Content-Type':'application/json'});
         res.end(JSON.stringify({ code }));
         setTimeout(function(){ delete rooms[code]; }, 7200000);
