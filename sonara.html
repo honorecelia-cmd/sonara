@@ -1414,7 +1414,6 @@ function tryGuess(v,byUser){
     if(WS&&WS.readyState===1&&G_MULTI.code){
       WS.send(JSON.stringify({type:'answer',points:0,done:true}));
       var wm=$('wmsg');wm.textContent='En attente des autres joueurs…';wm.className='wmsg waiting';wm.style.display='block';
-      setTimeout(function(){if(!G._revealed){G._revealed=true;doReveal();}},3000);
     } else {
       $('wmsg').style.display='block';
       setTimeout(doReveal,500);
@@ -1550,13 +1549,12 @@ function doReveal(){
   fi.style.transition='none';fi.style.width='0%';
   requestAnimationFrame(function(){fi.style.transition='width '+(delay/1000)+'s linear';fi.style.width='100%'});
   setTimeout(function(){
-    // En multi : le serveur envoie next_question après 6s (géré serveur)
-    // En solo : avancer localement
-    if(!WS||WS.readyState!==1||!G_MULTI.code){
-      G.cq++;G.pl.forEach(function(p){p.ans=false});
-      G.ans=false;G.foundA=false;G.foundT=false;G._revealed=false;
-      if(G.cq>=G.qs.length)doResults();else doBreak(G.cq,doQ);
+    G.cq++;G.pl.forEach(function(p){p.ans=false});
+    G.ans=false;G.foundA=false;G.foundT=false;G._revealed=false;
+    if(WS&&WS.readyState===1&&G_MULTI.code){
+      WS.send(JSON.stringify({type:'next_question',index:G.cq}));
     }
+    if(G.cq>=G.qs.length)doResults();else doBreak(G.cq,doQ);
   },delay);
 }
 function doResults(){
@@ -1775,9 +1773,7 @@ function connectWS(code) {
       updateHdr(); renderPstrip();
     }
     if (msg.type === 'all_answered') {
-      var wm = $('wmsg');
-      if (wm) { wm.textContent = 'Tout le monde a répondu ! 🎉'; wm.className = 'wmsg'; wm.style.display = 'block'; }
-      if(!G._revealed){G._revealed=true;setTimeout(doReveal, 800);}
+      if(!G._revealed){G._revealed=true;doReveal();}
     }
     if (msg.type === 'next_question') {
       G.cq = msg.index;
