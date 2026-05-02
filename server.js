@@ -53,6 +53,16 @@ function broadcastAll(code, data) {
   rooms[code].players.forEach(function(p) { wsSend(p.socket, data); });
 }
 
+function startQuestionTimer(code) {
+  if (!rooms[code]) return;
+  if (rooms[code].questionTimer) clearTimeout(rooms[code].questionTimer);
+  rooms[code].questionTimer = setTimeout(function() {
+    if (!rooms[code]) return;
+    rooms[code].players.forEach(function(x){ x.answered = true; });
+    broadcastAll(code, { type: 'reveal_now' });
+  }, 35000);
+}
+
 const server = http.createServer(function(req, res) {
   const p = url.parse(req.url, true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -144,17 +154,7 @@ server.on('upgrade', function(req, socket) {
         }
         var trackOrder = indices.slice(0, trackCount);
         broadcastAll(code, { type: 'game_start', theme: rooms[code].theme, trackOrder: trackOrder });
-        // Timer serveur : forcer reveal_now après 38s si pas tous répondus
-        rooms[code].questionTimer = null;
-        function scheduleReveal(c) {
-          if (rooms[c].questionTimer) clearTimeout(rooms[c].questionTimer);
-          rooms[c].questionTimer = setTimeout(function() {
-            if (!rooms[c]) return;
-            rooms[c].players.forEach(function(x){ x.answered = true; });
-            broadcastAll(c, { type: 'reveal_now' });
-          }, 38000);
-        }
-        scheduleReveal(code);
+        startQuestionTimer(code);
       }
       if (msg.type === 'answer') {
         var pl = rooms[code].players.find(function(x){ return x.id === playerId; });
@@ -168,6 +168,7 @@ server.on('upgrade', function(req, socket) {
               if (rooms[code].questionTimer) clearTimeout(rooms[code].questionTimer);
               broadcastAll(code, { type: 'reveal_now' });
             }
+            // Sinon on attend le timer
           }
         }
       }
@@ -177,8 +178,7 @@ server.on('upgrade', function(req, socket) {
           rooms[code].question = nextIdx;
           rooms[code].players.forEach(function(x){ x.answered = false; });
           broadcastAll(code, { type: 'next_question', index: nextIdx });
-          // Relancer le timer pour la question suivante
-          if (typeof scheduleReveal === 'function') scheduleReveal(code);
+          startQuestionTimer(code);
         }
       }
     } catch(e) {}
