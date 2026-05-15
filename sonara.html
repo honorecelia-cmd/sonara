@@ -123,6 +123,16 @@ a.bback:hover{color:var(--txt)}
 .pchip .cp{color:var(--mut);font-size:10px;margin-left:2px}
 .pchip.ans{border-color:rgba(179,255,83,.5);background:rgba(179,255,83,.06)}
 
+.lrrow{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bd)}
+.lrrow:last-child{border-bottom:none}
+.lrpos{font-size:11px;font-weight:800;color:var(--mut);width:16px;flex-shrink:0}
+.lrpos.g{color:var(--grn)}
+.lrav{font-size:15px;flex-shrink:0}
+.lrnm{flex:1;font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrnm.me{color:var(--grn)}
+.lrsc{font-family:Syne,sans-serif;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+.lrans{width:8px;height:8px;border-radius:50%;background:var(--grn);flex-shrink:0;opacity:0}
+.lrans.on{opacity:1}
 /* countdown */
 .cds{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;width:100%}
 .cds.on{display:flex}
@@ -863,6 +873,7 @@ var THEMES = {
       </div>
       <div class="panch" id="panch"></div>
       <div class="wmsg" id="wmsg">Les deux trouvés ! 🎉 Révélation dans quelques secondes…</div>
+      <div id="live-rank" style="display:none;margin-top:14px;background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;width:100%"></div>
     </div>
     <div class="rvsc" id="rvsc">
       <div class="revc"><div class="reva" id="reva"><span class="remoji" id="remoji">🎵</span></div><div class="revb"><div class="revtit" id="rvtit"></div><div class="revar" id="rvar"></div><div class="revmt" id="rvmt"></div><div class="revv" id="rvv"></div></div></div>
@@ -1528,6 +1539,22 @@ function renderPstrip(){
   $('pstrip').innerHTML=G.pl.map(function(p){
     return '<div class="pchip'+(p.me?' me':'')+(p.ans?' ans':'')+'" data-n="'+esc(p.n)+'">'+'<span>'+p.av+'</span><span>'+(p.n.length>8?p.n.slice(0,7)+'…':p.n)+(p.me?' ★':'')+'</span><span class="cp">'+(p.me?G.sc:p.s)+'</span></div>';
   }).join('');
+  var lr=$('live-rank');
+  if(!lr)return;
+  if(G.pl.length<2){lr.style.display='none';return;}
+  var sorted=G.pl.slice().sort(function(a,b){return(b.me?G.sc:b.s)-(a.me?G.sc:a.s);});
+  lr.style.display='block';
+  lr.innerHTML='<div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--mut);margin-bottom:6px;text-transform:uppercase">Classement</div>'+
+    sorted.map(function(p,i){
+      var sc=p.me?G.sc:p.s;
+      return '<div class="lrrow">'+
+        '<div class="lrpos'+(i===0?' g':'')+'">'+['🥇','🥈','🥉','4','5'][i]+'</div>'+
+        '<div class="lrav">'+p.av+'</div>'+
+        '<div class="lrnm'+(p.me?' me':'')+'">'+esc(p.n.length>10?p.n.slice(0,9)+'…':p.n)+(p.me?' ★':'')+'</div>'+
+        '<div class="lrans'+(p.ans?' on':'')+'"></div>'+
+        '<div class="lrsc">'+sc+'</div>'+
+      '</div>';
+    }).join('');
 }
 function doReveal(){
   hideG();$('rvsc').classList.add('on');
@@ -1672,6 +1699,19 @@ window.addEventListener('load', function(){
     });
   });
 });
+
+// ── COPY LOBBY CODE ─────────────────────────────────────
+function copyLobbyCode(){
+  var code=document.getElementById('lobby-code').textContent.trim();
+  var btn=document.getElementById('btn-copy-code');
+  navigator.clipboard.writeText(code).then(function(){
+    btn.textContent='✅ Copié !';
+    setTimeout(function(){btn.textContent='📋 Copier le code'},1800);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+    btn.textContent='✅ Copié !';setTimeout(function(){btn.textContent='📋 Copier le code'},1800);
+  });
+}
 
 // ── MULTIJOUEUR ───────────────────────────────────────
 var WS = null;
@@ -1982,7 +2022,7 @@ function launchSolo() {
     <div style="text-align:center;margin-bottom:20px">
       <div style="font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:2px">Code de la salle</div>
       <div id="lobby-code" style="font-family:Syne,sans-serif;font-size:52px;font-weight:800;color:var(--grn);letter-spacing:10px;margin:8px 0">----</div>
-      <div style="font-size:12px;color:var(--mut)">Partage ce code à tes amis 👆</div>
+      <button id="btn-copy-code" onclick="copyLobbyCode()" style="margin-top:4px;background:var(--grad);border:none;border-radius:10px;padding:9px 22px;font-family:Syne,sans-serif;font-size:13px;font-weight:800;color:#fff;cursor:pointer;letter-spacing:.5px">📋 Copier le code</button>
     </div>
     <div style="background:var(--s1);border:1px solid var(--bd2);border-radius:16px;padding:20px">
       <div style="font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Joueurs connectés</div>
