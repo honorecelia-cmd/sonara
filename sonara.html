@@ -1544,6 +1544,7 @@ function renderPstrip(){
   var lr=$('live-rank');
   if(!lr)return;
   if(G.pl.length<2){lr.style.display='none';return;}
+  if(G.pl.every(function(p){return(p.me?G.sc:p.s)===0;})){lr.style.display='none';return;}
   var sorted=G.pl.slice().sort(function(a,b){return(b.me?G.sc:b.s)-(a.me?G.sc:a.s);});
   lr.style.display='block';
   lr.innerHTML='<div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--mut);margin-bottom:6px;text-transform:uppercase">Classement</div>'+
@@ -1560,6 +1561,8 @@ function renderPstrip(){
 }
 function doReveal(){
   G._questionActive=false;
+  clearInterval(G.ti);
+  G.ans=true;
   hideG();$('rvsc').classList.add('on');
   var q=G.qs[G.cq];
   $('rvtit').textContent=q.t;$('rvar').textContent=q.a;$('rvmt').textContent=q.y||'';$('remoji').textContent=q.e||'🎵';
