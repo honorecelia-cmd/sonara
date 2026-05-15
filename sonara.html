@@ -1383,7 +1383,7 @@ function tryGuess(v,byUser){
     sfxOk();
     addFoundTag('🎤 '+q.a,'artist');
     if(G.foundT){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}
-    updateFoundScore(G.foundT?'both':'artist');
+    updateFoundScore('artist');
     // Vider le champ pour retaper le titre
     if(byUser&&!G.foundT){var ani=$('ani');ani.value='';ani.placeholder='Maintenant le titre… 🎵';ani.focus();}
   } else if(matchT){
@@ -1392,7 +1392,7 @@ function tryGuess(v,byUser){
     sfxOk();
     addFoundTag('🎵 '+q.t,'title');
     if(G.foundA){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}
-    updateFoundScore(G.foundA?'both':'title');
+    updateFoundScore('title');
     // Vider le champ pour retaper l'artiste
     if(byUser&&!G.foundA){var ani=$('ani');ani.value='';ani.placeholder='Maintenant l\'artiste… 🎤';ani.focus();}
   } else if(closeA||closeT){
@@ -1750,6 +1750,7 @@ function connectWS(code) {
   WS.onmessage = function(e) {
     var msg = JSON.parse(e.data);
     if (msg.type === 'player_joined' || msg.type === 'player_left') {
+      G_MULTI.players = msg.players;
       renderLobbyPlayers(msg.players);
     }
     if (msg.type === 'game_start') {
@@ -1761,15 +1762,14 @@ function connectWS(code) {
       msg.players.forEach(function(p) {
         var isMe = p.id === G_MULTI.playerId;
         var existing = null;
-        for (var pi=0; pi<G.pl.length; pi++) { if(G.pl[pi].n === p.name) { existing = G.pl[pi]; break; } }
-        if (existing) {
-          if (!isMe) { existing.s = p.score; existing.ans = !!p.done; }
-        } else {
-          G.pl.push({ n: p.name, av: '🎵', s: p.score, c: 0, me: isMe, ans: !!p.done });
+        for (var pi=0; pi<G.pl.length; pi++) {
+          if (G.pl[pi].id === p.id || G.pl[pi].n === p.name) { existing = G.pl[pi]; break; }
         }
-        if (p.done) {
-          var chip = document.querySelector('.pchip[data-n="' + p.name.replace(/"/g,'') + '"]');
-          if (chip) chip.classList.add('ans');
+        if (existing) {
+          if (!isMe) existing.s = p.score;
+          existing.ans = !!p.done;
+        } else {
+          G.pl.push({ id: p.id, n: p.name, av: '🎵', s: p.score, c: 0, me: isMe, ans: !!p.done });
         }
       });
       updateHdr(); renderPstrip();
@@ -1861,19 +1861,13 @@ function launchMultiGame(trackOrder) {
   } else {
     buildQs();
   }
-  // Init player list from lobby
-  var lobbyEls = document.querySelectorAll('#lobby-players > div');
-  if (lobbyEls.length > 1) {
-    G.pl = [];
-    lobbyEls.forEach(function(el) {
-      var spans = el.querySelectorAll('span');
-      var nameText = spans[1] ? spans[1].textContent : 'Joueur';
-      var isMe = nameText.indexOf('(toi)') >= 0;
-      var cleanName = nameText.replace(' (toi)','').trim();
-      G.pl.push({ n: cleanName, av: '🎵', s: 0, c: 0, me: isMe, ans: false });
+  // Init player list depuis la liste WS (avec IDs)
+  if (G_MULTI.players && G_MULTI.players.length > 0) {
+    G.pl = G_MULTI.players.map(function(p) {
+      return { id: p.id, n: p.name, av: '🎵', s: 0, c: 0, me: p.id === G_MULTI.playerId, ans: false };
     });
   } else {
-    G.pl = [{ n: G.ps, av: '🎵', s: 0, c: 0, me: true, ans: false }];
+    G.pl = [{ id: G_MULTI.playerId, n: G.ps, av: '🎵', s: 0, c: 0, me: true, ans: false }];
   }
   G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false;
   showPage('s-game'); setAM('free'); updateHdr(); renderPstrip(); doCD();
