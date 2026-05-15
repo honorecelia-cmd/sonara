@@ -1452,7 +1452,7 @@ function updateFoundScore(what){
   }
   updateHdr();renderPstrip();
   if(WS&&WS.readyState===1&&G_MULTI.code&&pts>0){
-    WS.send(JSON.stringify({type:'answer',points:pts,done:false}));
+    if(what!=='both'){ WS.send(JSON.stringify({type:'answer',points:pts,done:false})); }
   }
 }
 function addFoundTag(txt,type){
@@ -1766,7 +1766,7 @@ function connectWS(code) {
           if (G.pl[pi].id === p.id || G.pl[pi].n === p.name) { existing = G.pl[pi]; break; }
         }
         if (existing) {
-          if (!isMe) existing.s = p.score;
+          existing.s = p.score;
           existing.ans = !!p.done;
         } else {
           G.pl.push({ id: p.id, n: p.name, av: '🎵', s: p.score, c: 0, me: isMe, ans: !!p.done });
