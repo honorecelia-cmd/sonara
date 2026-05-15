@@ -1594,6 +1594,7 @@ function doReveal(){
 }
 function doResults(){
   clearInterval(G.ti);stopA();showPage('s-res');doConf();
+  G.pl.forEach(function(p){if(p.me)p.s=G.sc;});
   var sorted=G.pl.slice().sort(function(a,b){return b.s-a.s});G.res=sorted;
   var me=sorted.filter(function(p){return p.me})[0]||sorted[0];var mr=sorted.indexOf(me)+1;
   var rks=['premier·e','deuxième','troisième','quatrième'];
@@ -1644,7 +1645,8 @@ function doConf(){
   msg.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Syne,sans-serif;font-size:clamp(32px,8vw,64px);font-weight:800;color:#fff;z-index:301;pointer-events:none;white-space:nowrap;';
   msg.textContent='🏆 Bravo !';
   w.appendChild(msg);
-  setTimeout(function(){w.innerHTML=''},8000);
+  setTimeout(function(){w.style.transition='opacity .6s';w.style.opacity='0';},2200);
+  setTimeout(function(){w.innerHTML='';w.style.opacity='';w.style.transition='';},2900);
 }
 function doReplay(){sfxC();buildQs();G.sc=0;G.cb=0;G.mx=1;G.cq=0;G.ans=false;G.foundA=false;G.foundT=false;G.pl.forEach(function(p){p.s=0;p.c=0;p.ans=false});showPage('s-game');setAM(G.amode);updateHdr();renderPstrip();doCD()}
 function doQuit(){
