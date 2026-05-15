@@ -1221,7 +1221,7 @@ function doBreak(nextIdx,cb){
 }
 function doQ(){
   hideG();$('qsc').classList.add('on');
-  G.ans=false;G._revealed=false;
+  G.ans=false;G._revealed=false;G._questionActive=false;G._pendingReveal=false;
   var dur=Math.max(8,G.td-Math.floor(G.cq/3)*2);
   $('gqc').textContent=G.cq+1;$('gqt').textContent=G.qs.length;
   var ani=$('ani');ani.value='';ani.disabled=false;ani.className='ani';ani.placeholder='Artiste ou titre… 🎵';
@@ -1237,6 +1237,8 @@ function doQ(){
   G.tl=dur;uTm(dur,dur);clearInterval(G.ti);
   playPR(q.preview,function(){
     $('ald').classList.remove('on');$('vbtn').disabled=false;
+    G._questionActive=true;
+    if(G._pendingReveal){G._pendingReveal=false;G._revealed=true;doReveal();return;}
     if(G.amode==='qcm')renderQCM(G.opts,false);
     else setTimeout(function(){ani.focus()},200);
     G.ti=setInterval(function(){
@@ -1557,6 +1559,7 @@ function renderPstrip(){
     }).join('');
 }
 function doReveal(){
+  G._questionActive=false;
   hideG();$('rvsc').classList.add('on');
   var q=G.qs[G.cq];
   $('rvtit').textContent=q.t;$('rvar').textContent=q.a;$('rvmt').textContent=q.y||'';$('remoji').textContent=q.e||'🎵';
@@ -1815,13 +1818,13 @@ function connectWS(code) {
       updateHdr(); renderPstrip();
     }
     if (msg.type === 'reveal_now') {
-      if(!G._revealed){G._revealed=true;doReveal();}
+      if(!G._revealed){if(G._questionActive){G._revealed=true;doReveal();}else{G._pendingReveal=true;}}
     }
     if (msg.type === 'next_question') {
       var wm2=$('wmsg');if(wm2){wm2.style.display='none';wm2.className='wmsg';}
       G.cq = msg.index;
       G.pl.forEach(function(p){ p.ans = false; });
-      G.ans = false; G.foundA = false; G.foundT = false; G._revealed = false;
+      G.ans = false; G.foundA = false; G.foundT = false; G._revealed = false; G._pendingReveal = false; G._questionActive = false;
       if (G.cq >= G.qs.length) { doResults(); }
       else { hideG(); doBreak(G.cq, function() { doQ(); }); }
     }
