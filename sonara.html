@@ -1466,7 +1466,7 @@ function updateFoundScore(what){
   }
   updateHdr();renderPstrip();
   if(WS&&WS.readyState===1&&G_MULTI.code&&pts>0){
-    if(what!=='both'){ WS.send(JSON.stringify({type:'answer',points:pts,done:false})); }
+    WS.send(JSON.stringify({type:'answer',points:pts,done:false}));
   }
 }
 function addFoundTag(txt,type){
