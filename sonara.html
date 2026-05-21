@@ -879,6 +879,7 @@ var THEMES = {
       <div class="revc"><div class="reva" id="reva"><span class="remoji" id="remoji">🎵</span></div><div class="revb"><div class="revtit" id="rvtit"></div><div class="revar" id="rvar"></div><div class="revmt" id="rvmt"></div><div class="revv" id="rvv"></div></div></div>
       <div class="pbw"><div class="pbl" id="pbl">Prochaine…</div><div class="pbtr"><div class="pbfi" id="pbfi"></div></div></div>
       <div class="rnkm" id="rnkm"></div>
+      <div id="hist-list" style="margin-top:12px;width:100%;display:none"></div>
     </div>
   </div>
   <audio id="aud" preload="auto"></audio>
@@ -1190,7 +1191,7 @@ function buildQCM(correct,pool){
 
 // ── JEU ─────────────────────────────────────────────
 function initGame(){
-  G.sc=0;G.cb=0;G.mx=1;G.cq=0;G.ans=false;
+  G.sc=0;G.cb=0;G.mx=1;G.cq=0;G.ans=false;G.history=[];
   G.pl=[{n:G.ps,av:G.av,s:0,c:0,me:true,ans:false}];
   // pas de bots
   G.amode='free';G.gmode='free';
@@ -1578,6 +1579,24 @@ function doReveal(){
   $('rnkm').innerHTML='<div class="rnkml">Classement</div>'+sorted.slice(0,5).map(function(p,i){
     return '<div class="rnkr"><div class="rpos'+(i===0?' top':'')+'">'+['🥇','🥈','🥉','4.','5.'][i]+'</div><div class="rav">'+p.av+'</div><div class="rnm">'+p.n+(p.me?' (toi)':'')+'</div><div class="rsc">'+(p.me?G.sc:p.s)+'</div></div>';
   }).join('');
+  // Historique : enregistrer ce track
+  if(!G.history)G.history=[];
+  var found=G.foundA&&G.foundT?'both':G.foundA?'artist':G.foundT?'title':'none';
+  G.history.unshift({e:q.e||'🎵',t:q.t,a:q.a,found:found});
+  var hl=$('hist-list');
+  if(hl&&G.history.length>0){
+    hl.style.display='block';
+    var labels={'both':'✓ Les deux','artist':'✓ Artiste','title':'✓ Titre','none':'✗ Raté'};
+    var ok2={'both':true,'artist':true,'title':true,'none':false};
+    hl.innerHTML='<div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--mut);margin-bottom:6px;text-transform:uppercase">Joués</div>'+
+      G.history.slice(0,5).map(function(h){
+        return '<div class="hrow">'+
+          '<div class="hem">'+h.e+'</div>'+
+          '<div class="hinfo"><div class="htit">'+h.t+'</div><div class="hart">'+h.a+'</div></div>'+
+          '<div class="hbdg '+(ok2[h.found]?'ok':'nok')+'">'+labels[h.found]+'</div>'+
+        '</div>';
+      }).join('');
+  }
   var fi=$('pbfi'),bl=$('pbl'),isLast=G.cq>=G.qs.length-1,delay=isLast?4000:5000;
   bl.textContent=isLast?'Résultats dans 4s…':'Prochaine question dans 5s…';
   fi.style.transition='none';fi.style.width='0%';
@@ -1648,7 +1667,7 @@ function doConf(){
   setTimeout(function(){w.style.transition='opacity .6s';w.style.opacity='0';},2200);
   setTimeout(function(){w.innerHTML='';w.style.opacity='';w.style.transition='';},2900);
 }
-function doReplay(){sfxC();buildQs();G.sc=0;G.cb=0;G.mx=1;G.cq=0;G.ans=false;G.foundA=false;G.foundT=false;G.pl.forEach(function(p){p.s=0;p.c=0;p.ans=false});showPage('s-game');setAM(G.amode);updateHdr();renderPstrip();doCD()}
+function doReplay(){sfxC();buildQs();G.sc=0;G.cb=0;G.mx=1;G.cq=0;G.ans=false;G.history=[];G.foundA=false;G.foundT=false;G.pl.forEach(function(p){p.s=0;p.c=0;p.ans=false});showPage('s-game');setAM(G.amode);updateHdr();renderPstrip();doCD()}
 function doQuit(){
   // Confirmer si en pleine partie
   if(!G.ans && G.cq > 0){
