@@ -104,6 +104,17 @@ const server = http.createServer(function(req, res) {
     return;
   }
 
+  // Fichiers statiques CSS / JS
+  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js') {
+    fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
+      if (err) { res.writeHead(404); res.end('Not found'); return; }
+      var ct = p.pathname.endsWith('.css') ? 'text/css' : 'application/javascript';
+      res.writeHead(200, {'Content-Type': ct + '; charset=utf-8'});
+      res.end(data);
+    });
+    return;
+  }
+
   if (p.pathname.startsWith('/audio/')) {
     fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
       if (err) { res.writeHead(404); res.end('Not found'); return; }
