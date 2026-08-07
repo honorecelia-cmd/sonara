@@ -284,11 +284,10 @@ function sfxCd(){tn(440,'sine',.11,.18)}
 var AVS=['🦜','🌺','🌴','🎺','🥁','🐠','🦋','🌊','🦈','🌸','🎵','⭐'];
 var BNS=['ZoukMaster','TiMarie','SocaKing','KaribSound','AntilaVibe','RacinWou'];
 var G={page:'landing',ps:'',av:'🌴',theme:'Mix Caribéen',ic:'🌴',dq:'kassav zouk',
-  gmode:'qcm',amode:'qcm',pool:[],qs:[],cq:0,sc:0,cb:0,mx:1,nq:10,td:25,ti:null,tl:25,ans:false,foundA:false,foundT:false,pl:[],res:[],opts:[]};
+  gmode:'qcm',amode:'qcm',pool:[],qs:[],cq:0,sc:0,cb:0,mx:1,nq:10,td:30,ti:null,tl:30,ans:false,foundA:false,foundT:false,pl:[],res:[],opts:[]};
 
 // ── LIVE COUNTER ────────────────────────────────────
-var lc=247;
-setInterval(function(){lc=Math.max(180,Math.min(400,lc+Math.floor(Math.random()*5)-2));$('ltxt').textContent=lc+' en ligne'},5500);
+// Compteur en ligne retiré (valeur simulée)
 
 // ── CÂBLAGE EVENTS (tout par addEventListener) ──────
 document.addEventListener('click', function(e) {
@@ -332,7 +331,7 @@ document.addEventListener('click', function(e) {
   if(e.target.id==='btn-load-back') { doHome(); return; }
 });
 
-$('ani').addEventListener('keydown', function(e){ if(e.key==='Enter'&&(!G.ans||!G.foundA||!G.foundT)) freeSubmit(); });
+$('ani').addEventListener('keydown', function(e){ if(e.key==='Enter') freeSubmit(); });
 
 // ── LAUNCH ──────────────────────────────────────────
 function launchFromModal(btn) {
@@ -564,7 +563,7 @@ function doBreak(nextIdx,cb){
 function doQ(){
   hideG();$('qsc').classList.add('on');
   G.ans=false;G._revealed=false;G._questionActive=false;G._pendingReveal=false;
-  var dur=Math.max(8,G.td-Math.floor(G.cq/3)*2);
+  var dur=G.td; // 30s fixe pour chaque question
   $('gqc').textContent=G.cq+1;$('gqt').textContent=G.qs.length;
   var ani=$('ani');ani.value='';ani.disabled=false;ani.className='ani';ani.placeholder='Artiste ou titre… 🎵';
   $('vbtn').disabled=true;
@@ -648,7 +647,8 @@ function setAM(m){
   G.amode='free'; // texte libre uniquement
   $('qcmw').style.display='none';
 }
-function freeSubmit(){if(G.ans)return;if(G.foundA&&G.foundT)return;var v=$('ani').value.trim();if(v)tryGuess(v,true);}
+function freeSubmit(){
+  if(G.ans)return; // Bloquer si réponse déjà validéeif(G.ans)return;if(G.foundA&&G.foundT)return;var v=$('ani').value.trim();if(v)tryGuess(v,true);}
 function normalize(s){
   return s.toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // accents
@@ -1142,6 +1142,10 @@ function joinRoom() {
   G.ps = pseudo;
   try{var ua=document.getElementById('aud');ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';ua.volume=0;var p=ua.play();if(p)p.then(function(){ua.pause();}).catch(function(){});}catch(e){}
   try{gac();}catch(e){}
+  var btn = document.querySelector('#s-join .bgo');
+  if(btn) { btn.disabled=true; btn.textContent='Vérification…'; }
+  var errMsg = document.getElementById('join-error');
+  if(errMsg) errMsg.style.display='none';
   fetch('/room/info?code=' + code)
   .then(function(r) {
     if (!r.ok) throw new Error('introuvable');
@@ -1155,7 +1159,14 @@ function joinRoom() {
     document.getElementById('lobby-guest-msg').style.display = 'block';
     connectWS(code);
   })
-  .catch(function() { alert('Salle introuvable — vérifie le code'); });
+  .catch(function() {
+    var codeInp = document.getElementById('join-code');
+    var errMsg = document.getElementById('join-error');
+    codeInp.style.borderColor = 'var(--red)';
+    if(errMsg) { errMsg.textContent = 'Code introuvable — vérifie et réessaie.'; errMsg.style.display='block'; }
+    var btn = document.querySelector('#s-join .bgo');
+    if(btn) { btn.disabled=false; btn.textContent='Rejoindre →'; }
+  });
 }
 
 function connectWS(code) {
