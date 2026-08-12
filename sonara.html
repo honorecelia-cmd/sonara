@@ -13,48 +13,45 @@
 
 <!-- ═══ LANDING ═══ -->
 <section class="page" id="landing">
-  <nav>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <!-- compteur en ligne retiré -->
-  </nav>
-  <div class="hero">
-    <div class="eyebrow">Es ou konet sa ?</div>
-    <h1>Le blind test <span class="hi">caribéen</span></h1>
-    <p class="hero-sub">Choisis ton mode de jeu.</p>
+  <div class="fig-nav">
+    <img src="/img/1.Sonara.png" class="fig-logo" alt="SONARA">
+    <div class="fig-online"><span class="fig-odot"></span><span id="ltxt">246 joueurs en ligne</span></div>
   </div>
-  <div class="mode-grid">
-    <button class="mode-card mode-solo" onclick="showPage('s-solo')">
-      <div class="mode-bar" style="background:var(--grad)"></div>
-      <span class="mode-title">Solo</span>
-      <span class="mode-sub">Joue seul, à ton rythme</span>
-    </button>
-    <button class="mode-card mode-multi" onclick="showPage('s-multi')">
-      <div class="mode-bar" style="background:var(--pur)"></div>
-      <span class="mode-title">Multijoueur</span>
-      <span class="mode-sub">Joue avec tes amis</span>
-    </button>
+  <div class="fig-body">
+    <img src="/img/1.Sonara.png" class="fig-logo-lg" alt="SONARA">
+    <p class="fig-eyebrow">1er blindtest caribéen</p>
+    <p class="fig-desc">Trouve le son, trouve l'artiste.<br>Défie tes potes sur les plus grands sons de la Caraïbe 🎵</p>
+    <label class="fig-pseudo-label">Choisis ton "son-nom" :</label>
+    <input id="landing-pseudo" class="fig-pseudo-inp" type="text" placeholder="#SON-SENSEI" maxlength="20" autocomplete="off">
+    <button class="fig-cta" onclick="startFromLanding()">Explore la Caraïbe →</button>
+    <span class="fig-multi-link" onclick="startFromLandingMulti()">🎯 Jouer entre proches</span>
   </div>
+  <footer class="fig-footer">📸 @sonara_blindtest</footer>
 </section>
 
 <!-- ═══ SOLO — CHOIX UNIVERS ═══ -->
 <section class="page" id="s-solo">
-  <nav>
+  <div class="fig-nav">
     <button class="btn-back" onclick="showPage('landing')">← Retour</button>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div style="width:80px"></div>
-  </nav>
-  <div class="slbl" style="margin-top:24px">Choisis ton univers</div>
-  <div class="tgrid">
-    <a class="tc t-mix" onclick="selectSoloTheme('mix')">      <div class="glow"></div><span class="ic">🌴</span><span class="tn">Mix Caribéen</span><span class="ts">Tous styles</span></a>
-    <a class="tc t-zouk" onclick="selectSoloTheme('zouk')">      <div class="glow"></div><span class="ic">🎺</span><span class="tn">Zouk</span><span class="ts">Gwadloup · Matinik</span></a>
-    <a class="tc t-kompa" onclick="selectSoloTheme('kompa')">      <div class="glow"></div><span class="ic">🥁</span><span class="tn">Kompa</span><span class="ts">Haïti</span></a>
-    <a class="tc t-reggae" onclick="selectSoloTheme('reggae')">      <div class="glow"></div><span class="ic">☮️</span><span class="tn">Reggae</span><span class="ts">Jamaïque</span></a>
-    <a class="tc t-dancehall" onclick="selectSoloTheme('dancehall')">      <div class="glow"></div><span class="ic">🎤</span><span class="tn">Dancehall</span><span class="ts">Jamaïque</span></a>
-    <a class="tc t-soca" onclick="selectSoloTheme('soca')">      <div class="glow"></div><span class="ic">🎸</span><span class="tn">Soca</span><span class="ts">Trinidad &amp; Tobago</span></a>
-    <a class="tc t-shatta" onclick="selectSoloTheme('shatta')">      <div class="glow"></div><span class="ic">⚡</span><span class="tn">Shatta</span><span class="ts">Antilles · Afrique</span></a>
-    <a class="tc t-trap" onclick="selectSoloTheme('trap')">      <div class="glow"></div><span class="ic">🔥</span><span class="tn">Trap Antillais</span><span class="ts">Urban kréyol</span></a>
-    <a class="tc t-rap" onclick="selectSoloTheme('rap')">      <div class="glow"></div><span class="ic">🎙️</span><span class="tn">Rap Caribéen</span><span class="ts">Flow antillais</span></a>
+    <img src="/img/1.Sonara.png" class="fig-logo" alt="SONARA">
+    <div class="fig-online"><span class="fig-odot"></span><span>246 en ligne</span></div>
   </div>
+  <div class="fig-solo-body">
+    <p class="fig-solo-eyebrow">Chaque univers, une fréquence différente.<br>À toi de choisir 🎶</p>
+    <div class="fig-tgrid">
+      <div class="fig-tc" onclick="selectSoloTheme('kompa')"><img src="/img/91cZVh4JTEL._UF350,350_QL80_.jpg" class="fig-tc-img" alt="Kompa"><span class="fig-tc-lbl">KOMPA</span></div>
+      <div class="fig-tc" onclick="selectSoloTheme('dancehall')"><img src="/img/vybzkartel_godandtime.jpg.webp" class="fig-tc-img" alt="Dancehall"><span class="fig-tc-lbl">DANCEHALL</span></div>
+      <div class="fig-tc" onclick="selectSoloTheme('zouk')"><img src="/img/69f1d9291683df13f08a9e00_cd-kalipsxau-corps-corps-album-zouk-pop-urbaine-la-runion.jpeg" class="fig-tc-img" alt="Zouk"><span class="fig-tc-lbl">ZOUK</span></div>
+      <div class="fig-tc" onclick="selectSoloTheme('reggae')"><img src="/img/a922f880957bcba31b8d655cf0aba569.jpg" class="fig-tc-img" alt="Reggae"><span class="fig-tc-lbl">REGGAE</span></div>
+      <div class="fig-tc" onclick="selectSoloTheme('soca')"><img src="/img/2236d7e340833d5b0decaf9b7eb5e864.jpg" class="fig-tc-img" alt="Soca"><span class="fig-tc-lbl">SOCA</span></div>
+      <div class="fig-tc" onclick="selectSoloTheme('rap')"><img src="/img/1668658e79a1fabc62263a5bc54247f7.jpg" class="fig-tc-img" alt="Rap"><span class="fig-tc-lbl">RAP</span></div>
+      <div class="fig-tc" onclick="selectSoloTheme('mix')"><div class="fig-tc-noimg">🌴</div><span class="fig-tc-lbl">MIX</span></div>
+      <div class="fig-tc" onclick="selectSoloTheme('shatta')"><div class="fig-tc-noimg">⚡</div><span class="fig-tc-lbl">SHATTA</span></div>
+      <div class="fig-tc" onclick="selectSoloTheme('trap')"><div class="fig-tc-noimg">🔥</div><span class="fig-tc-lbl">TRAP</span></div>
+    </div>
+    <p class="fig-swipe-hint">Swipe pour explorer les univers →</p>
+  </div>
+  <footer class="fig-footer">📸 @sonara_blindtest</footer>
 </section>
 
 <!-- ═══ SOLO — CHOIX UNIVERS ═══ -->
