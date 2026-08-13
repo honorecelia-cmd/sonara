@@ -115,6 +115,18 @@ const server = http.createServer(function(req, res) {
     return;
   }
 
+  if (p.pathname.startsWith('/img/')) {
+    var ext2 = p.pathname.split('.').pop().toLowerCase();
+    var mimes = {'jpg':'image/jpeg','jpeg':'image/jpeg','png':'image/png','webp':'image/webp','gif':'image/gif'};
+    var ct2 = mimes[ext2] || 'application/octet-stream';
+    fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
+      if (err) { res.writeHead(404); res.end('Not found'); return; }
+      res.writeHead(200, {'Content-Type': ct2});
+      res.end(data);
+    });
+    return;
+  }
+
   if (p.pathname.startsWith('/audio/')) {
     fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
       if (err) { res.writeHead(404); res.end('Not found'); return; }
