@@ -1,3 +1,11 @@
+
+function startFromLanding(){
+  var p=document.getElementById("landing-pseudo");
+  var val=p?p.value.trim():"";
+  if(val===""){if(p){p.style.borderColor="red";p.focus();}return;}
+  G.ps=val;G.av="🎵";
+  showPage("s-solo");
+}
 // Données thèmes — utilisées par les modals générés en JS
 var THEMES = {
   'mix':      {n:'Mix Caribéen',   ic:'🌴', dq:'kassav zouk OR dancehall OR soca OR merengue', tracks:null},

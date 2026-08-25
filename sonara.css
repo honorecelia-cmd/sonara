@@ -48,7 +48,7 @@ html,body{background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif
 /* Landing masquée via JS quand on navigue */
 
 /* ── LANDING ── */
-#landing{padding:0 20px 80px}
+#landing{padding:0}
 nav{width:100%;max-width:1000px;display:flex;align-items:center;justify-content:space-between;padding:24px 0}
 .logo{font-family:Syne,sans-serif;font-weight:800;font-size:21px;color:#fff;text-decoration:none}
 .logo em{font-style:normal}
