@@ -882,7 +882,7 @@ function uTm(t,tot){
   $('tprog').style.stroke=p>.5?'#B3FF53':p>.2?'#FF9F43':'#FF4E6A';
   $('tnum').textContent=Math.max(0,Math.round(t));
 }
-function updateHdr(){
+function updateHdr(){var ft=document.getElementById("fig-theme-title");if(ft&&G.theme)ft.textContent=G.theme.toUpperCase();var frt=document.getElementById("fig-res-theme");if(frt&&G.theme)frt.textContent=G.theme.toUpperCase();
   $('gpts').textContent=G.sc;
   var cb=$('gcmb');
   if(G.cb>=2){cb.style.display='block';$('cmbn').textContent=G.mx.toFixed(1)}else cb.style.display='none';
