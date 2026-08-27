@@ -1,4 +1,27 @@
 
+/* FIGMA MANQUANTS */
+.fig-section-lbl{font-family:'Inter',sans-serif;font-size:12px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px;width:100%;}
+.rnkr{display:flex;align-items:center;gap:8px;background:rgba(253,221,184,0.5)!important;border:1px solid #2D1002!important;border-radius:4px!important;padding:8px 10px!important;margin-bottom:4px!important;font-family:'Inter',sans-serif!important;font-size:12px!important;color:#000!important;}
+.rnkml{font-family:'Inter',sans-serif;font-size:12px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.hrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08);}
+.hem{width:36px;height:36px;background:rgba(195,69,3,0.3);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.hinfo{flex:1;min-width:0;}
+.htit{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hart{font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.hbdg{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;padding:3px 7px;border-radius:100px;flex-shrink:0;}
+.hbdg.ok{background:rgba(195,69,3,0.2);color:#C34503;}
+.hbdg.nok{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);}
+.rtblr{display:flex;align-items:center;gap:8px;background:rgba(253,221,184,0.5)!important;border:1px solid #2D1002!important;border-radius:4px!important;padding:8px 10px!important;margin-bottom:4px!important;font-family:'Inter',sans-serif!important;font-size:12px!important;color:#000!important;}
+.rtblr.me{border-color:#C34503!important;}
+.rtblh{display:none;}
+.lrrow{display:flex;align-items:center;gap:8px;background:rgba(253,221,184,0.5)!important;border:1px solid #2D1002!important;border-radius:4px!important;padding:7px 10px!important;margin-bottom:4px!important;font-family:'Inter',sans-serif!important;font-size:12px!important;color:#000!important;}
+.fig-countdown{text-align:center;padding:12px 20px;font-family:'Inter',sans-serif;font-size:12px;color:rgba(255,255,255,0.6);}
+.fig-countdown span{font-family:'MuseoModerno',sans-serif;font-size:18px;font-weight:900;color:#C34503;}
+.fig-share-box{display:flex;align-items:center;border:1px solid rgba(255,255,255,0.3);border-radius:4px;overflow:hidden;margin-bottom:16px;}
+.fig-share-url{flex:1;padding:10px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:#fff;background:transparent;border:none;outline:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fig-copy-btn{padding:10px 14px;background:#C34503;border:none;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0;letter-spacing:1px;}
+.fig-entre-body{flex:1;padding:16px 20px 0;overflow-y:auto;}
+
 /* FIX BOUTON LANDING */
 .fig-cta, .figbtn {
   position: relative !important;

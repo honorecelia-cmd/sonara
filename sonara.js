@@ -1,3 +1,4 @@
+function copyShareUrl(){var inp=document.getElementById("fig-share-url");if(inp){inp.select();try{document.execCommand("copy");}catch(e){}var btn=document.querySelector(".fig-copy-btn");if(btn){btn.textContent="COPIE !";setTimeout(function(){btn.textContent="COPIER";},2000);}}}
 
 function startFromLanding(){
   var p=document.getElementById("landing-pseudo");
