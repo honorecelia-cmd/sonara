@@ -607,3 +607,16 @@ h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-col
   user-select: none;
   width: 100%;
 }
+
+.ld-soar-txt {
+  font-family: 'MuseoModerno', sans-serif;
+  font-weight: 900;
+  font-size: clamp(120px, 38vw, 200px);
+  line-height: 0.85;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: -4px;
+  padding: 0 0 0 16px;
+  pointer-events: none;
+  user-select: none;
+  align-self: flex-start;
+}
