@@ -615,7 +615,8 @@ h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-col
   line-height: 0.85;
   color: rgba(255,255,255,0.3);
   letter-spacing: -4px;
-  padding: 0 0 0 16px;
+  padding: 0;
+  margin-left: -30px;
   pointer-events: none;
   user-select: none;
   align-self: flex-start;
