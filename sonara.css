@@ -18,7 +18,7 @@
   align-items: center;
   gap: 6px;
   font-family: 'Inter', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: #fff;
 }
@@ -38,7 +38,7 @@
 }
 .ld-eyebrow {
   font-family: 'Inter', sans-serif;
-  font-size: 9px;
+  font-size: 16px;
   font-weight: 400;
   color: #fff;
   margin: 0 0 6px 0;
@@ -53,7 +53,7 @@
 }
 .ld-desc {
   font-family: 'Inter', sans-serif;
-  font-size: 12px;
+  font-size: 18px;
   font-weight: 200;
   color: #fff;
   line-height: 1.5;
@@ -62,7 +62,7 @@
 }
 .ld-label {
   font-family: 'Inter', sans-serif;
-  font-size: 12px;
+  font-size: 22px;
   font-weight: 300;
   color: #fff;
   text-align: left;
@@ -90,12 +90,12 @@
 .ld-input::placeholder { color: rgba(0,0,0,0.4); }
 .ld-btn {
   width: 100%;
-  height: 33px;
+  height: 44px;
   background: #C34503;
   border: none;
   border-radius: 0;
   font-family: 'Inter', sans-serif;
-  font-size: 11px;
+  font-size: 18px;
   font-weight: 400;
   color: #fff;
   cursor: pointer;
@@ -126,7 +126,7 @@
 .ld-rs { height: 22px; width: 43px; object-fit: contain; }
 .ld-handle {
   font-family: 'Inter', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: #fff;
 }
@@ -625,7 +625,7 @@ h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-col
 
 .ld-suivez-line {
   font-family: 'Inter', sans-serif;
-  font-size: 12px; font-weight: 400; color: #fff;
+  font-size: 16px; font-weight: 400; color: #fff;
   text-align: right; width: 100%;
 }
 .ld-handle-line {
@@ -635,7 +635,7 @@ h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-col
 .ld-rs { height: 22px; width: 43px; object-fit: contain; }
 .ld-handle {
   font-family: 'Inter', sans-serif;
-  font-size: 12px; font-weight: 700; color: #fff;
+  font-size: 14px; font-weight: 700; color: #fff;
 }
 
 /* FIX BOUTON CLIQUABLE */
