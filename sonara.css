@@ -123,7 +123,7 @@
   width: 100%;
   text-align: right;
 }
-.ld-rs { height: 22px; width: 43px; object-fit: contain; }
+.ld-rs { height: 36px; width: auto; object-fit: contain; }
 .ld-handle {
   font-family: 'Inter', sans-serif;
   font-size: 14px;
@@ -632,7 +632,7 @@ h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-col
   display: flex; align-items: center;
   justify-content: flex-end; gap: 4px;
 }
-.ld-rs { height: 22px; width: 43px; object-fit: contain; }
+.ld-rs { height: 36px; width: auto; object-fit: contain; }
 .ld-handle {
   font-family: 'Inter', sans-serif;
   font-size: 14px; font-weight: 700; color: #fff;
