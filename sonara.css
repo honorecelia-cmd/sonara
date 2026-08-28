@@ -666,3 +666,21 @@ h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-col
 .ld-logo {
   animation: logo-pulse 3s ease-in-out infinite;
 }
+
+/* FIX DEFINITIF BOUTON LANDING */
+#landing .ld-btn {
+  position: relative !important;
+  z-index: 9999 !important;
+  pointer-events: all !important;
+  touch-action: manipulation !important;
+  cursor: pointer !important;
+  -webkit-tap-highlight-color: rgba(195,69,3,0.3) !important;
+}
+#landing .ld-content {
+  position: relative !important;
+  z-index: 9999 !important;
+}
+#landing .ld-soar-txt {
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
