@@ -616,8 +616,24 @@ h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-col
   color: rgba(255,255,255,0.3);
   letter-spacing: -4px;
   padding: 0;
-  margin-left: -30px;
+  margin-left: -20px;
+  margin-top: auto;
   pointer-events: none;
   user-select: none;
   align-self: flex-start;
+}
+
+.ld-suivez-line {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 400; color: #fff;
+  text-align: right; width: 100%;
+}
+.ld-handle-line {
+  display: flex; align-items: center;
+  justify-content: flex-end; gap: 4px;
+}
+.ld-rs { height: 22px; width: 43px; object-fit: contain; }
+.ld-handle {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 700; color: #fff;
 }
