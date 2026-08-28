@@ -657,7 +657,11 @@ function setAM(m){
   $('qcmw').style.display='none';
 }
 function freeSubmit(){
-  if(G.ans)return; // Bloquer si réponse déjà validéeif(G.ans)return;if(G.foundA&&G.foundT)return;var v=$('ani').value.trim();if(v)tryGuess(v,true);}
+  if(G.ans)return; // Bloquer si réponse déjà validée
+  if(G.foundA&&G.foundT)return;
+  var v=$('ani').value.trim();
+  if(v)tryGuess(v,true);
+}
 function normalize(s){
   return s.toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // accents
