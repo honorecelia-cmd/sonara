@@ -637,3 +637,32 @@ h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-col
   font-family: 'Inter', sans-serif;
   font-size: 12px; font-weight: 700; color: #fff;
 }
+
+/* FIX BOUTON CLIQUABLE */
+.ld-btn {
+  position: relative !important;
+  z-index: 50 !important;
+  touch-action: manipulation !important;
+}
+.ld-input {
+  position: relative !important;
+  z-index: 50 !important;
+}
+.ld-content {
+  position: relative !important;
+  z-index: 50 !important;
+}
+.ld-soar-txt {
+  position: relative !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+/* Animation logo */
+@keyframes logo-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.03); opacity: 0.9; }
+}
+.ld-logo {
+  animation: logo-pulse 3s ease-in-out infinite;
+}
