@@ -41,7 +41,7 @@
   font-size: 16px;
   font-weight: 400;
   color: #fff;
-  margin: 0 0 6px 0;
+  margin: 0 0 2px 0;
   text-align: center;
 }
 .ld-logo {
@@ -53,16 +53,16 @@
 }
 .ld-desc {
   font-family: 'Inter', sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 200;
   color: #fff;
-  line-height: 1.5;
+  line-height: 1.2;
   margin-bottom: 20px;
   text-align: center;
 }
 .ld-label {
   font-family: 'Inter', sans-serif;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 300;
   color: #fff;
   text-align: left;
@@ -617,7 +617,7 @@ h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-col
   letter-spacing: -4px;
   padding: 0;
   margin-left: -20px;
-  margin-top: auto;
+  margin-top: 60px;
   pointer-events: none;
   user-select: none;
   align-self: flex-start;
