@@ -261,6 +261,7 @@ function showPage(id){
   if(el){el.style.display='flex';el.classList.add('on');}
   G.page=id;
   window.scrollTo(0,0);
+  if(id==='s-solo'&&window._updateSoloActive) setTimeout(window._updateSoloActive,60);
   if(id==='s-game'||id==='s-load'||id==='s-res') history.pushState(null,'','#'+id);
 }
 function notif(txt){
@@ -1385,3 +1386,27 @@ function guestReady() {
   document.getElementById('lobby-waiting').style.display = 'block';
   G_MULTI._audioUnlocked = true;
 }
+
+// ── #s-solo : carte "active" (badge Commencer) suivant le scroll du carrousel ──
+(function(){
+  function updateSoloActive(){
+    var grid=document.querySelector('#s-solo .fig-tgrid');
+    if(!grid)return;
+    var cards=grid.querySelectorAll('.fig-tc');
+    if(!cards.length)return;
+    var gl=grid.getBoundingClientRect().left;
+    var best=cards[0],bestD=Infinity;
+    cards.forEach(function(c){
+      var d=Math.abs(c.getBoundingClientRect().left-gl);
+      if(d<bestD){bestD=d;best=c;}
+    });
+    cards.forEach(function(c){c.classList.toggle('active',c===best);});
+  }
+  window._updateSoloActive=updateSoloActive;
+  window.addEventListener('load',function(){
+    var grid=document.querySelector('#s-solo .fig-tgrid');
+    if(grid)grid.addEventListener('scroll',updateSoloActive,{passive:true});
+    updateSoloActive();
+  });
+  window.addEventListener('resize',updateSoloActive);
+})();
