@@ -278,7 +278,7 @@
       <div class="fig-mini-tc" onclick="selectSoloTheme('rap')"><img src="/img/cover_rap.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Rap</span></div>
       <div class="fig-mini-tc" onclick="selectSoloTheme('soca')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Soca</span></div>
     </div>
-    <div class="fig-mini-tc fig-mini-solo" onclick="doShare()"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Entre proches</span></div>
+    <div class="fig-mini-tc fig-mini-solo" onclick="showEntreProches()"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Entre proches</span></div>
   </div>
   <div class="rbtns">
     <button class="rb m" id="btn-replay">🔁 Rejouer</button>
@@ -291,6 +291,38 @@
   </div>
 </section>
 
+<!-- ═══ ENTRE PROCHES ═══ -->
+<section class="page" id="s-entre">
+  <div class="fig-nav">
+    <button class="btn-back" onclick="showPage('s-res')">← Retour</button>
+    <img src="/img/logo_sonara.png" class="fig-logo" alt="SONARA">
+    <div class="fig-online"><span class="fig-odot"></span><span>246 joueurs en ligne</span></div>
+  </div>
+  <div class="fig-entre-body">
+    <div class="fig-entre-title">ENTRE PROCHES</div>
+    <p class="fig-entre-desc">Envoie ce lien à tes proches et retrouve-les dans ton univers !</p>
+    <div class="fig-link-box">
+      <a class="fig-link-url" id="entre-link" href="#" target="_blank" rel="noopener">https://sonara-blindtest.fr/fr/custom-xxxx</a>
+      <button class="fig-copy-btn" id="entre-copy" onclick="copyEntreLink()">COPIER</button>
+    </div>
+    <div class="fig-mini-grid">
+      <div class="fig-mini-tc" onclick="selectSoloTheme('kompa')"><img src="/img/cover_kompa.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Kompa</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('zouk')"><img src="/img/cover_zouk.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Zouk</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('mix')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Mix</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('reggae')"><img src="/img/cover_reggae.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Reggae</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('dancehall')"><img src="/img/cover_dancehall.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Dancehall</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('trap')"><img src="/img/cover_dancehall.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Trap</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('rap')"><img src="/img/cover_rap.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Rap</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('soca')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Soca</span></div>
+    </div>
+    <button class="fig-entre-share" id="entre-share" onclick="shareEntreLink()">📤 Partager</button>
+  </div>
+  <div class="ld-soar-txt" aria-hidden="true">SO<br>AR</div>
+  <div class="ld-footer">
+    <div class="ld-suivez-line">Suivez-nous :</div>
+    <div class="ld-handle-line"><img src="/img/rs.png" class="ld-rs" alt=""><span class="ld-handle">sonara_blindtest</span></div>
+  </div>
+</section>
 
 
 

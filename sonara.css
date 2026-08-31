@@ -251,6 +251,19 @@
 #s-res .rb.m{background:#c34503;border:1px solid #fff;}
 #s-res .ld-footer{margin-top:18px;}
 
+/* ── #s-entre : ecran "Entre proches" (maquette Figma 52:201) ── */
+#s-entre{flex-direction:column;align-items:stretch;padding:0;position:relative;overflow-x:clip;}
+#s-entre .fig-nav,#s-entre .fig-entre-body,#s-entre .ld-footer{position:relative;z-index:1;}
+.fig-entre-title{font-family:'MuseoModerno',sans-serif;font-weight:900;font-size:20px;color:rgba(255,255,255,0.9);text-transform:uppercase;text-align:center;letter-spacing:.5px;margin-top:6px;}
+.fig-entre-desc{font-family:'Inter',sans-serif;font-weight:200;font-size:12px;color:#fff;text-align:center;line-height:1.35;margin:10px auto 22px;max-width:280px;}
+.fig-link-box{display:flex;align-items:stretch;background:rgba(253,221,184,0.5);border-radius:4px;overflow:hidden;margin-bottom:26px;}
+.fig-link-url{flex:1;min-width:0;display:flex;align-items:center;padding:9px 12px;font-family:'Inter',sans-serif;font-weight:700;font-size:11px;color:#fdddb8;text-decoration:underline;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fig-copy-btn{flex-shrink:0;background:#fdddb8;border:none;padding:0 16px;font-family:'Inter',sans-serif;font-weight:400;font-size:12px;color:#2e1001;cursor:pointer;letter-spacing:.3px;}
+#s-entre .fig-mini-grid{grid-template-columns:repeat(4,1fr);gap:16px;margin:0 0 24px;}
+#s-entre .fig-mini-img{width:60px;height:60px;aspect-ratio:auto;object-fit:cover;border-radius:0;margin:0 auto;}
+#s-entre .fig-mini-lbl{margin-top:6px;font-family:'MuseoModerno',sans-serif;font-weight:500;font-size:11px;color:#fff;text-transform:none;letter-spacing:0;}
+.fig-entre-share{width:100%;background:#c34503;border:1px solid #fff;border-radius:4px;padding:10px;font-family:'Inter',sans-serif;font-weight:400;font-size:12px;color:#fff;cursor:pointer;}
+
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#080B12;--s1:#0F1420;--s2:#161C2E;--s3:#1E2640;

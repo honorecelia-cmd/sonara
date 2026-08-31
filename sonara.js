@@ -1065,6 +1065,36 @@ function doShare(){
   else alert(txt);
 }
 
+// ── ENTRE PROCHES : ecran lien personnalise ──
+function entreLinkUrl(){
+  if(!G._entreCode){
+    G._entreCode=(G_MULTI&&G_MULTI.code?String(G_MULTI.code):Math.random().toString(36).substr(2,6)).toLowerCase();
+  }
+  return 'https://sonara-blindtest.fr/fr/custom-'+G._entreCode;
+}
+function showEntreProches(){
+  sfxC();
+  var url=entreLinkUrl();
+  var a=document.getElementById('entre-link');
+  if(a){a.textContent=url;a.href=url;}
+  var b=document.getElementById('entre-copy');
+  if(b)b.textContent='COPIER';
+  showPage('s-entre');
+}
+function copyEntreLink(){
+  var url=entreLinkUrl();
+  var b=document.getElementById('entre-copy');
+  function ok(){if(b){b.textContent='COPIÉ !';setTimeout(function(){b.textContent='COPIER';},2000);}}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(ok).catch(function(){prompt('Copie le lien :',url);});}
+  else{var t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok();}catch(e){prompt('Copie le lien :',url);}t.remove();}
+}
+function shareEntreLink(){
+  var url=entreLinkUrl();
+  var txt='🎵 Rejoins-moi sur SONARA — le blindtest caribéen !\n'+url;
+  if(navigator.share)navigator.share({text:txt,url:url}).catch(function(){});
+  else copyEntreLink();
+}
+
 // ── INIT : générer modals et câbler boutons ──
 
 /* ─────────────────────────────────── */
