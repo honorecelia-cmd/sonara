@@ -601,7 +601,7 @@ function doQ(){
   updateHdr();
 }
 function playPR(url,cb){
-  var el=$('aud');clearInterval(window._apIv);$('apfill').style.width='0%';$('astatus').textContent='';
+  var el=$('aud');clearInterval(window._apIv);$('apfill').style.width='0%';var ap0=$('ani-prog');if(ap0)ap0.style.width='0%';$('astatus').textContent='';
   if(!url){setEq(false);if(cb)setTimeout(cb,0);return;}
   var isLocal = url.indexOf('/audio/') === 0;
   el.src=url;el.volume=.82;
@@ -618,7 +618,7 @@ function playPR(url,cb){
       p.then(function(){
         setEq(true);
         var t0=Date.now();
-        window._apIv=setInterval(function(){var pct=Math.min(100,(Date.now()-t0)/30000*100);$('apfill').style.width=pct+'%';if(pct>=100)clearInterval(window._apIv)},350);
+        window._apIv=setInterval(function(){var pct=Math.min(100,(Date.now()-t0)/30000*100);$('apfill').style.width=pct+'%';var ap=$('ani-prog');if(ap)ap.style.width=pct+'%';if(pct>=100)clearInterval(window._apIv)},350);
         if(cb)cb();
       }).catch(function(){
         // Play échoué mais on lance quand même le jeu
@@ -632,7 +632,7 @@ function playPR(url,cb){
   };
   el.onerror=function(){played=true;clearTimeout(safe);setEq(false);if(cb)cb();};
 }
-function stopA(){clearInterval(window._apIv);var el=$('aud');el.pause();el.src='';$('apfill').style.width='0%';$('astatus').textContent='';setEq(false)}
+function stopA(){clearInterval(window._apIv);var el=$('aud');el.pause();el.src='';$('apfill').style.width='0%';var ap=$('ani-prog');if(ap)ap.style.width='0%';$('astatus').textContent='';setEq(false)}
 function setEq(on){document.querySelectorAll('.eqb').forEach(function(b){b.classList.toggle('off',!on)})}
 function renderQCM(opts,locked){
   $('qcmw').innerHTML=opts.map(function(o,i){
@@ -887,7 +887,6 @@ function uTm(t,tot){
   $('tprog').style.strokeDashoffset=C*(1-p);
   $('tprog').style.stroke=p>.5?'#B3FF53':p>.2?'#FF9F43':'#FF4E6A';
   $('tnum').textContent=Math.max(0,Math.round(t));
-  var ap=$('ani-prog');if(ap)ap.style.width=(Math.min(1,Math.max(0,1-p))*100)+'%';
 }
 function updateHdr(){var ft=document.getElementById("fig-theme-title");if(ft&&G.theme)ft.textContent=G.theme.toUpperCase();var frt=document.getElementById("fig-res-theme");if(frt&&G.theme)frt.textContent=G.theme.toUpperCase();
   $('gpts').textContent=G.sc;
@@ -1353,12 +1352,16 @@ function selectSoloTheme(key) {
   G_SOLO_THEME = key;
   var t = THEMES[key];
   if (!t) return;
-  var ic = document.getElementById('pseudo-theme-ic');
-  var nm = document.getElementById('pseudo-theme-name');
-  if (ic) ic.textContent = t.ic || '🎵';
-  if (nm) nm.textContent = t.n || key;
-  showPage('s-pseudo');
-  setTimeout(function(){ var inp = document.getElementById('solo-pseudo'); if(inp){ if(G.ps) inp.value = G.ps; inp.focus(); } }, 100);
+  // Le pseudo est deja saisi sur la landing -> on lance directement (pas d'ecran pseudo)
+  var pseudo = (G.ps || '').trim() || 'Joueur';
+  G.ps = pseudo;
+  var modal = document.getElementById('modal-' + key);
+  if (modal) {
+    var inp = modal.querySelector('.pseudo-inp');
+    if (inp) inp.value = pseudo;
+    var btn = modal.querySelector('[data-action="launch"]');
+    if (btn) { launchFromModal(btn); return; }
+  }
 }
 function launchSolo() {
   var pseudo = document.getElementById('solo-pseudo').value.trim();
@@ -1375,35 +1378,6 @@ function launchSolo() {
 }
 
 /* ─────────────────────────────────── */
-
-var G_SOLO_THEME = null;
-function selectSoloTheme(key) {
-  G_SOLO_THEME = key;
-  var t = THEMES[key];
-  if (!t) return;
-  var ic = document.getElementById('pseudo-theme-ic');
-  var nm = document.getElementById('pseudo-theme-name');
-  if (ic) ic.textContent = t.ic || '🎵';
-  if (nm) nm.textContent = t.n || key;
-  showPage('s-pseudo');
-  setTimeout(function(){
-    var inp = document.getElementById('solo-pseudo');
-    if (inp) { if (G.ps) inp.value = G.ps; inp.focus(); }
-  }, 100);
-}
-function launchSolo() {
-  var pseudo = document.getElementById('solo-pseudo').value.trim();
-  if (!pseudo) { document.getElementById('solo-pseudo').style.borderColor='var(--red)'; return; }
-  G.ps = pseudo;
-  var key = G_SOLO_THEME;
-  var modal = document.getElementById('modal-' + key);
-  if (modal) {
-    var inp = modal.querySelector('.pseudo-inp');
-    if (inp) inp.value = pseudo;
-    var btn = modal.querySelector('[data-action="launch"]');
-    if (btn) { launchFromModal(btn); return; }
-  }
-}
 
 function guestReady() {
   // Créer et jouer un silence pour débloquer l'autoplay
