@@ -230,9 +230,14 @@
 #s-game input.ani.ok{color:#0b0300!important;}
 #s-game input.ani.no{color:#0b0300!important;}
 #s-game button.vbtn{width:100%!important;margin-top:10px!important;background:#c34503!important;border:1px solid #fff!important;border-radius:4px!important;padding:9px!important;font-family:'Inter',sans-serif!important;font-size:11px!important;font-weight:400!important;letter-spacing:.2px!important;color:#fff!important;}
-#s-game #chat-log{background:transparent!important;border:0!important;padding:0!important;margin-bottom:10px!important;}
+#s-game #chat-log{background:transparent!important;border:0!important;padding:0!important;margin-bottom:10px!important;max-height:none!important;}
 #s-game #chat-log>div{font-family:'Inter',sans-serif;font-weight:200;font-size:12px;color:#fff;padding:2px 0;}
+#s-game #chat-log>div b{font-weight:400;}
 #s-game .fig-section-lbl{font-family:'Inter',sans-serif;font-weight:900;font-size:12px;color:#fff;text-transform:uppercase;letter-spacing:.5px;}
+/* maquette 39:3 : pas d'equalizer ni de minuteur circulaire — la barre creme du champ fait le minuteur */
+#s-game .eq,#s-game .tmo,#s-game .apbar{display:none!important;}
+#s-game .ani-wrap{box-shadow:0 6px 18px rgba(0,0,0,0.28);}
+#s-game button.vbtn{box-shadow:0 6px 16px rgba(0,0,0,0.28);}
 
 /* ── #s-res : resultats + changer d'univers (maquette Figma 44:223) ── */
 #s-res .pod{display:none;}

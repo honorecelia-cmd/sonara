@@ -836,11 +836,11 @@ function addChatMsg(txt,type){
   var box=$('chat-log');
   if(!box)return;
   var el=document.createElement('div');
-  el.style.cssText='font-size:13px;padding:3px 0;';
   if(type==='found')el.style.color='var(--grn)';
   else if(type==='close')el.style.color='var(--ora)';
-  else el.style.color='var(--mut)';
-  el.textContent=txt;
+  var m=String(txt).match(/^([^:]{1,20}) : (.*)$/);
+  if(m)el.innerHTML='<b>'+esc(m[1])+'</b> : '+esc(m[2]);
+  else el.textContent=txt;
   box.style.display='block';
   box.appendChild(el);
   box.scrollTop=box.scrollHeight;
