@@ -231,10 +231,11 @@
       <!-- Chat log des tentatives -->
       <div id="chat-log" style="max-height:110px;overflow-y:auto;padding:8px 12px;background:var(--s2);border-radius:12px;margin-bottom:10px;border:1px solid var(--bd);display:none"></div>
       <div id="found-tags" style="display:flex;gap:8px;margin-bottom:8px;min-height:26px;flex-wrap:wrap"></div>
-      <div style="display:flex;gap:8px">
-        <input class="ani" id="ani" type="text" placeholder="Artiste ou titre… 🎵" autocomplete="off" autocorrect="off" spellcheck="false" style="flex:1">
-        <button class="vbtn" id="vbtn" style="margin-top:0;width:auto;padding:15px 20px;flex-shrink:0">→</button>
+      <div class="ani-wrap">
+        <span class="ani-prog" id="ani-prog"></span>
+        <input class="ani" id="ani" type="text" placeholder="Artiste ou titre… 🎵" autocomplete="off" autocorrect="off" spellcheck="false">
       </div>
+      <button class="vbtn" id="vbtn">Envoyer →</button>
       <div class="panch" id="panch"></div>
       <div class="wmsg" id="wmsg">Les deux trouvés ! 🎉 Révélation dans quelques secondes…</div>
       <div id="live-rank" style="display:none;margin-top:14px;background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;width:100%"></div>

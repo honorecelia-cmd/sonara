@@ -887,6 +887,7 @@ function uTm(t,tot){
   $('tprog').style.strokeDashoffset=C*(1-p);
   $('tprog').style.stroke=p>.5?'#B3FF53':p>.2?'#FF9F43':'#FF4E6A';
   $('tnum').textContent=Math.max(0,Math.round(t));
+  var ap=$('ani-prog');if(ap)ap.style.width=(Math.min(1,Math.max(0,1-p))*100)+'%';
 }
 function updateHdr(){var ft=document.getElementById("fig-theme-title");if(ft&&G.theme)ft.textContent=G.theme.toUpperCase();var frt=document.getElementById("fig-res-theme");if(frt&&G.theme)frt.textContent=G.theme.toUpperCase();
   $('gpts').textContent=G.sc;

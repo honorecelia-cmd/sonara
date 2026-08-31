@@ -219,6 +219,19 @@
 .fig-swipe-hint{font-family:'Inter',sans-serif;font-weight:200;font-size:12px;color:#fff;text-align:center;margin-top:10px;padding-bottom:16px;}
 .solo-expl{position:absolute;left:-34px;bottom:0;width:auto;height:min(50vh,410px);max-width:none;opacity:.42;pointer-events:none;user-select:none;z-index:0;}
 #s-solo .fig-nav,#s-solo .fig-solo-body,#s-solo .ld-footer{position:relative;z-index:1;}
+
+/* ── #s-game : champ reponse + bouton Envoyer (maquette Figma 39:3) ── */
+.ani-wrap{position:relative;width:100%;background:#fff;border-radius:4px;overflow:hidden;}
+.ani-prog{position:absolute;left:0;top:0;bottom:0;width:0;background:#fdddb8;z-index:0;transition:width .25s linear;pointer-events:none;}
+#s-game input.ani{position:relative;z-index:1;width:100%;background:transparent!important;border:2px solid #000!important;border-radius:4px!important;padding:16px 14px!important;font-family:'Inter',sans-serif!important;font-size:12px!important;font-weight:400!important;color:#0b0300!important;}
+#s-game input.ani::placeholder{color:rgba(11,3,0,0.45)!important;}
+#s-game input.ani.ok{color:#0b0300!important;}
+#s-game input.ani.no{color:#0b0300!important;}
+#s-game button.vbtn{width:100%!important;margin-top:10px!important;background:#c34503!important;border:1px solid #fff!important;border-radius:4px!important;padding:9px!important;font-family:'Inter',sans-serif!important;font-size:11px!important;font-weight:400!important;letter-spacing:.2px!important;color:#fff!important;}
+#s-game #chat-log{background:transparent!important;border:0!important;padding:0!important;margin-bottom:10px!important;}
+#s-game #chat-log>div{font-family:'Inter',sans-serif;font-weight:200;font-size:12px;color:#fff;padding:2px 0;}
+#s-game .fig-section-lbl{font-family:'Inter',sans-serif;font-weight:900;font-size:12px;color:#fff;text-transform:uppercase;letter-spacing:.5px;}
+
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#080B12;--s1:#0F1420;--s2:#161C2E;--s3:#1E2640;
