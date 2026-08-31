@@ -236,12 +236,13 @@
 /* maquette 39:3 : pas d'equalizer ni de minuteur circulaire — la barre creme du champ est la barre d'avancement audio */
 #s-game .eq,#s-game .tmo,#s-game .apbar,#s-game .pstrip{display:none!important;}
 /* decompte + inter-questions : police / couleurs de la maquette (plus de Syne ni de vert neon) */
-#s-game .cdth,#s-game .brklbl{font-family:'Inter',sans-serif;font-weight:900;color:#fff;opacity:.7;}
-#s-game .cdn,#s-game .brknum{font-family:'MuseoModerno',sans-serif;font-weight:900;color:#fff;}
-#s-game .cdlbl,#s-game .brksub{font-family:'Inter',sans-serif;font-weight:200;color:#fff;}
+#s-game .cds,#s-game .brksc{min-height:44vh;}
+#s-game .cdth,#s-game .brklbl{font-family:'Inter',sans-serif;font-weight:900;color:#fff!important;opacity:.75;}
+#s-game .cdn,#s-game .brknum{font-family:'MuseoModerno',sans-serif;font-weight:900;color:#fff!important;-webkit-text-fill-color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.45);}
+#s-game .cdlbl,#s-game .brksub{font-family:'Inter',sans-serif;font-weight:200;color:#fff!important;}
 #s-game .brkfill{background:#c34503;}
 #s-game .brktrack{background:rgba(255,255,255,.18);}
-#s-game .brkready{color:#fdddb8;}
+#s-game .brkready{color:#fdddb8!important;}
 
 /* ── #s-res : resultats + changer d'univers (maquette Figma 44:223) ── */
 #s-res .pod{display:none;}
