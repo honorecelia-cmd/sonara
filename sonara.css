@@ -636,7 +636,7 @@ h1 .hi{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-col
   margin: 0;
   position: absolute;
   left: 0;
-  bottom: 34px;
+  bottom: 0;
   z-index: -1;
   pointer-events: none;
   user-select: none;
