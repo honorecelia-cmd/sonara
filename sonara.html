@@ -254,15 +254,40 @@
 
 <!-- ═══ RESULTS ═══ -->
 <section class="page" id="s-res">
-  <div class="fignav"><img src="/img/logo_sonara.png" class="fig-logo" alt="SONARA"><div class="fig-online"><span class="fig-odot"></span><span>246 joueurs en ligne</span></div></div><div class="fig-res-head"><div class="fig-res-theme" id="fig-res-theme">BLINDTEST</div><div class="fig-res-sub">Resultats</div><div class="rmsg" id="rmsg"></div></div>
+  <div class="fignav"><img src="/img/logo_sonara.png" class="fig-logo" alt="SONARA"><div class="fig-online"><span class="fig-odot"></span><span>246 joueurs en ligne</span></div></div>
+  <div class="fig-res-head">
+    <div class="fig-res-theme" id="fig-res-theme">BLINDTEST</div>
+    <div class="fig-res-sub">Résultats</div>
+    <div class="fig-res-end">Fin de partie</div>
+    <div class="rmsg" id="rmsg"></div>
+  </div>
   <div class="pod" id="pod"></div>
   <div class="rtbl" id="rtbl"></div>
   <div class="bdgs" id="bdgs"></div>
-  <div class="fig-countdown" id="fig-countdown" style="display:none">Prochaine partie dans <span id="fig-cdown-num">5</span></div>
+  <div class="fig-countdown" id="fig-countdown">Prochaine partie dans<br><span id="fig-cdown-num">5, 4, 3, 2, 1</span></div>
+  <div class="fig-univ-block">
+    <div class="fig-univ-title">Changer d'univers</div>
+    <div class="fig-univ-sub">et tester vos potes sur des classiques caribéens</div>
+    <div class="fig-mini-grid">
+      <div class="fig-mini-tc" onclick="selectSoloTheme('kompa')"><img src="/img/cover_kompa.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Kompa</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('zouk')"><img src="/img/cover_zouk.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Zouk</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('mix')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Mix</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('reggae')"><img src="/img/cover_reggae.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Reggae</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('dancehall')"><img src="/img/cover_dancehall.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Dancehall</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('trap')"><img src="/img/cover_dancehall.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Trap</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('rap')"><img src="/img/cover_rap.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Rap</span></div>
+      <div class="fig-mini-tc" onclick="selectSoloTheme('soca')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Soca</span></div>
+    </div>
+    <div class="fig-mini-tc fig-mini-solo" onclick="doShare()"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Entre proches</span></div>
+  </div>
   <div class="rbtns">
     <button class="rb m" id="btn-replay">🔁 Rejouer</button>
-    <button class="rb s" id="btn-home">🎵 Changer d'univers</button>
-    <button class="rb s" id="btn-share">📤 Partager</button>
+    <button class="rb s" id="btn-home" style="display:none">🎵 Changer d'univers</button>
+    <button class="rb s" id="btn-share" style="display:none">📤 Partager</button>
+  </div>
+  <div class="ld-footer">
+    <div class="ld-suivez-line">Suivez-nous :</div>
+    <div class="ld-handle-line"><img src="/img/rs.png" class="ld-rs" alt=""><span class="ld-handle">sonara_blindtest</span></div>
   </div>
 </section>
 
