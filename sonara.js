@@ -5,6 +5,10 @@ function startFromLanding(){
   var val=p?p.value.trim():"";
   if(val===""){if(p){p.style.borderColor="red";p.focus();}return;}
   G.ps=val;G.av="🎵";
+  // Arrive via un lien "Entre proches" -> on lance direct l'univers partage
+  if(G._sharedTheme&&THEMES[G._sharedTheme]&&typeof selectSoloTheme==='function'){
+    selectSoloTheme(G._sharedTheme);return;
+  }
   showPage("s-solo");
 }
 // Données thèmes — utilisées par les modals générés en JS
@@ -995,6 +999,23 @@ function doResults(){
   if(G.cb>=5)bg.push('🔥 An Feu ×'+G.cb);
   if(!bg.length)bg.push('🎵 Bien joué!');
   $('bdgs').innerHTML=bg.map(function(b){return '<div class="bdg">'+b+'</div>'}).join('');
+  submitScore();
+}
+// ── Classement persistant : enregistre le score et affiche le top ──
+function submitScore(){
+  var gt=$('glb-top');if(gt)gt.innerHTML='';
+  fetch('/score',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:G.ps,score:G.sc,theme:themeSlug()})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(!gt||!d||!d.top||!d.top.length)return;
+    var rows=d.top.map(function(e,i){
+      var me=e.name===G.ps&&e.score===G.sc;
+      return '<div class="glb-row'+(me?' me':'')+'"><span class="glb-rk">'+(i+1)+'</span>'+
+        '<span class="glb-nm">'+esc(e.name)+'</span><span class="glb-sc">'+e.score+'</span></div>';
+    }).join('');
+    gt.innerHTML='<div class="fig-section-lbl">MEILLEURS SCORES · '+esc(G.theme)+'</div>'+rows;
+  }).catch(function(){});
 }
 function doConf(){
   var w=$('cfbox');w.innerHTML='';
@@ -1064,35 +1085,77 @@ function doShare(){
   else alert(txt);
 }
 
-// ── ENTRE PROCHES : ecran lien personnalise ──
-function entreLinkUrl(){
-  if(!G._entreCode){
-    G._entreCode=(G_MULTI&&G_MULTI.code?String(G_MULTI.code):Math.random().toString(36).substr(2,6)).toLowerCase();
-  }
-  return 'https://sonara-blindtest.fr/fr/custom-'+G._entreCode;
+// ── ENTRE PROCHES : ecran lien personnalise (code cree cote serveur) ──
+function themeSlug(){
+  var k=Object.keys(THEMES).find(function(x){return THEMES[x].n===G.theme;});
+  return k||'mix';
+}
+function entreLinkFromCode(code){
+  return location.origin+'/fr/custom-'+code;
+}
+function ensureEntreCode(cb){
+  if(G._entreCode){cb(G._entreCode);return;}
+  fetch('/custom',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({theme:themeSlug(),themeName:G.theme})})
+  .then(function(r){return r.json();})
+  .then(function(d){G._entreCode=d.code;cb(d.code);})
+  .catch(function(){G._entreCode='local'+Math.random().toString(36).slice(2,6);cb(G._entreCode);});
 }
 function showEntreProches(){
   sfxC();
-  var url=entreLinkUrl();
-  var a=document.getElementById('entre-link');
-  if(a){a.textContent=url;a.href=url;}
-  var b=document.getElementById('entre-copy');
-  if(b)b.textContent='COPIER';
   showPage('s-entre');
+  var a=document.getElementById('entre-link');
+  if(a){a.textContent='Génération du lien…';a.removeAttribute('href');}
+  var b=document.getElementById('entre-copy');if(b)b.textContent='COPIER';
+  ensureEntreCode(function(code){
+    var url=entreLinkFromCode(code);
+    if(a){a.textContent=url;a.href=url;}
+  });
 }
 function copyEntreLink(){
-  var url=entreLinkUrl();
   var b=document.getElementById('entre-copy');
   function ok(){if(b){b.textContent='COPIÉ !';setTimeout(function(){b.textContent='COPIER';},2000);}}
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(ok).catch(function(){prompt('Copie le lien :',url);});}
-  else{var t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok();}catch(e){prompt('Copie le lien :',url);}t.remove();}
+  ensureEntreCode(function(code){
+    var url=entreLinkFromCode(code);
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(ok).catch(function(){prompt('Copie le lien :',url);});}
+    else{var t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok();}catch(e){prompt('Copie le lien :',url);}t.remove();}
+  });
 }
 function shareEntreLink(){
-  var url=entreLinkUrl();
-  var txt='🎵 Rejoins-moi sur SONARA — le blindtest caribéen !\n'+url;
-  if(navigator.share)navigator.share({text:txt,url:url}).catch(function(){});
-  else copyEntreLink();
+  ensureEntreCode(function(code){
+    var url=entreLinkFromCode(code);
+    var txt='🎵 Rejoins-moi sur SONARA — le blindtest caribéen !\n'+url;
+    if(navigator.share)navigator.share({text:txt,url:url}).catch(function(){});
+    else copyEntreLink();
+  });
 }
+
+// ── Lien partage entrant : /custom-xxxx ou /fr/custom-xxxx -> pre-selectionne l'univers ──
+(function(){
+  var m=location.pathname.match(/\/(?:fr\/)?custom-([a-z0-9]{4,12})/i);
+  if(!m)return;
+  fetch('/custom/'+m[1]).then(function(r){return r.ok?r.json():null;}).then(function(d){
+    if(d&&d.theme&&THEMES[d.theme]){
+      G._sharedTheme=d.theme;
+      var el=document.getElementById('ltxt');
+      if(el){el.classList.remove('online-count');el.textContent='Rejoins '+(d.themeName||THEMES[d.theme].n)+' 🎵';}
+    }
+  }).catch(function(){});
+})();
+
+// ── Compteur "en ligne" reel ──
+(function(){
+  var id=Math.random().toString(36).slice(2)+Date.now().toString(36);
+  function tick(){
+    fetch('/ping?id='+id).then(function(r){return r.json();}).then(function(d){
+      var n=Math.max(1,d.online||1);
+      document.querySelectorAll('.online-count').forEach(function(e){
+        e.textContent=n+(e.dataset.short?' en ligne':' joueur'+(n>1?'s':'')+' en ligne');
+      });
+    }).catch(function(){});
+  }
+  tick();setInterval(tick,30000);
+})();
 
 // ── INIT : générer modals et câbler boutons ──
 

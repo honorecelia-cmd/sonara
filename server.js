@@ -4,9 +4,35 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const crypto = require('crypto');
+const store = require('./store');
 const PORT = process.env.PORT || 3000;
 
 const rooms = {};
+
+// ── Compteur "en ligne" reel : sessions vues dans les 70 dernieres secondes ──
+const seen = new Map(); // clientId -> timestamp
+function touch(id) { if (id) seen.set(id, Date.now()); }
+function onlineCount() {
+  const cut = Date.now() - 70000;
+  for (const [k, t] of seen) if (t < cut) seen.delete(k);
+  return seen.size;
+}
+
+function slug(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 12) || 'mix'; }
+function genCustomCode() {
+  let c;
+  do { c = Math.random().toString(36).slice(2, 8); } while (store.data.customLinks[c]);
+  return c;
+}
+function readBody(req, cb) {
+  let b = '';
+  req.on('data', function (d) { b += d; if (b.length > 8192) req.destroy(); });
+  req.on('end', function () { try { cb(null, b ? JSON.parse(b) : {}); } catch (e) { cb(e); } });
+}
+function sendJson(res, code, obj) {
+  res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.end(JSON.stringify(obj));
+}
 function genCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
@@ -92,6 +118,60 @@ const server = http.createServer(function(req, res) {
       code: room.code, theme: room.theme, started: room.started,
       players: room.players.map(function(pl){ return { id: pl.id, name: pl.name, score: pl.score||0 }; })
     }));
+    return;
+  }
+
+  // ── Compteur en ligne ──
+  if (p.pathname === '/ping') {
+    touch(p.query.id);
+    sendJson(res, 200, { online: onlineCount() });
+    return;
+  }
+
+  // ── Lien "Entre proches" : creer / resoudre ──
+  if (p.pathname === '/custom' && req.method === 'POST') {
+    readBody(req, function (err, data) {
+      if (err) { sendJson(res, 400, {}); return; }
+      const code = genCustomCode();
+      store.data.customLinks[code] = { theme: slug(data.theme), themeName: String(data.themeName || '').slice(0, 40), at: Date.now() };
+      store.save();
+      sendJson(res, 200, { code: code });
+    });
+    return;
+  }
+  if (p.pathname.indexOf('/custom/') === 0 && req.method === 'GET') {
+    const code = p.pathname.slice(8).replace(/[^a-z0-9]/gi, '').slice(0, 12);
+    const rec = store.data.customLinks[code];
+    if (!rec) { sendJson(res, 404, {}); return; }
+    sendJson(res, 200, { theme: rec.theme, themeName: rec.themeName || '' });
+    return;
+  }
+
+  // ── Classement persistant ──
+  if (p.pathname === '/score' && req.method === 'POST') {
+    readBody(req, function (err, data) {
+      if (err) { sendJson(res, 400, {}); return; }
+      const entry = {
+        name: String(data.name || 'Joueur').slice(0, 24),
+        score: Math.max(0, Math.min(100000, parseInt(data.score, 10) || 0)),
+        theme: slug(data.theme),
+        at: Date.now()
+      };
+      store.data.leaderboard.push(entry);
+      store.data.leaderboard.sort(function (a, b) { return b.score - a.score; });
+      if (store.data.leaderboard.length > 200) store.data.leaderboard.length = 200;
+      store.data.stats.gamesPlayed = (store.data.stats.gamesPlayed || 0) + 1;
+      store.save();
+      const list = store.data.leaderboard.filter(function (e) { return e.theme === entry.theme; });
+      const rank = list.indexOf(entry) + 1;
+      sendJson(res, 200, { rank: rank, gamesPlayed: store.data.stats.gamesPlayed, top: list.slice(0, 10) });
+    });
+    return;
+  }
+  if (p.pathname === '/leaderboard' && req.method === 'GET') {
+    const th = p.query.theme ? slug(p.query.theme) : null;
+    const list = store.data.leaderboard.filter(function (e) { return !th || e.theme === th; });
+    sendJson(res, 200, { top: list.slice(0, 10), gamesPlayed: store.data.stats.gamesPlayed || 0 });
     return;
   }
 

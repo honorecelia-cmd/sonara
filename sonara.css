@@ -262,6 +262,13 @@
 #s-res .rb{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:4px;padding:11px;background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;}
 #s-res .rb.m{background:#c34503;border:1px solid #fff;}
 #s-res .ld-footer{margin-top:18px;}
+.glb-top{padding:4px 20px 0;}
+.glb-top .fig-section-lbl{margin:10px 0 6px;}
+.glb-row{display:flex;align-items:center;gap:10px;background:rgba(253,221,184,0.5);border-radius:4px;padding:7px 12px;margin-bottom:4px;font-family:'Inter',sans-serif;font-size:12px;color:#2d1002;}
+.glb-row.me{background:#fdddb8;font-weight:700;}
+.glb-rk{width:18px;font-weight:800;}
+.glb-nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.glb-sc{font-weight:800;}
 
 /* ── #s-entre : ecran "Entre proches" (maquette Figma 52:201) ── */
 #s-entre{flex-direction:column;align-items:stretch;padding:0;position:relative;overflow-x:clip;}
