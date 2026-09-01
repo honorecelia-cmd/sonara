@@ -1,1 +1,13 @@
-{"name":"sonara","version":"1.0.0","main":"server.js","scripts":{"start":"node server.js"},"engines":{"node":">=18"}}
+{
+  "name": "sonara",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "check": "node --check server.js && node --check sonara.js && node scripts/check-assets.js",
+    "prestart": "npm run check",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
