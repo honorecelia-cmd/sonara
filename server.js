@@ -174,6 +174,19 @@ const server = http.createServer(function(req, res) {
     sendJson(res, 200, { top: list.slice(0, 10), gamesPlayed: store.data.stats.gamesPlayed || 0 });
     return;
   }
+  // TEMP (a retirer apres usage) : purge des scores de test deposes manuellement
+  if (p.pathname === '/admin/purge-test-scores' && req.method === 'POST') {
+    readBody(req, function (err, data) {
+      if (err || !data || data.secret !== 'c6b7ae678bf446060c123e3b7b415599d6c6bf1569256515') { sendJson(res, 403, {}); return; }
+      const names = ['__verif_volume__', '__verif_volume_2__', '__verif_volume_3__'];
+      const before = store.data.leaderboard.length;
+      store.data.leaderboard = store.data.leaderboard.filter(function (e) { return names.indexOf(e.name) === -1; });
+      store.data.stats.gamesPlayed = Math.max(0, (store.data.stats.gamesPlayed || 0) - (before - store.data.leaderboard.length));
+      store.save();
+      sendJson(res, 200, { removed: before - store.data.leaderboard.length });
+    });
+    return;
+  }
 
   if (p.pathname === '/deezer') {
     res.setHeader('Content-Type', 'application/json');
