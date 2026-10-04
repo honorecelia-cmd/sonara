@@ -59,7 +59,17 @@ var C_INK = '#2d1002';    // --ink
 // source 5.svg, reutilise verbatim) -- pas C_CREAM. Voir plus bas.
 
 var W,H,U;
-function size(){ W=innerWidth; H=innerHeight; U=Math.min(W,H)/100; }
+function size(){
+  W=innerWidth; H=innerHeight;
+  var base = Math.min(W,H)/100;
+  // Mobile portrait (reference 402x874, inchangee) : min(W,H)=W, formule
+  // d'origine intacte. En paysage large (ordinateur), min(W,H)=H deja (donc
+  // base=H/100) -- mais le motif restait trop compact/petit au milieu du
+  // vide : on l'agrandit pour qu'il occupe ~70% de la hauteur d'ecran aux
+  // moments les plus etendus (bento, salon), sans toucher au mobile.
+  if(W>H && W>=900){ base *= 1.65; }
+  U = base;
+}
 function X(x){ return W/2+(x-50)*U; }
 function Y(y){ return H/2+(y-50)*U; }
 
