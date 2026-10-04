@@ -334,7 +334,7 @@ Les couleurs ont été relevées au pixel sur la maquette.
 
 ### 6.4 Composants à garder tels quels
 
-Micro-labels « Label / », numéros de section « 01 / », icône de section ronde, bandeau de section (« SONARA » à gauche, « Blind test caribéen » à droite), pied de section avec un globe et le trio lecteur rond, lignes en fondu, méga-titres avec un mockup qui passe devant, cartes satellites flottantes, pills, avatars ronds, orbes, halos de points, cercles orbitaux, lettrage géant de fond, marquee, grain.
+Micro-labels « Label / », numéros de section « 01 / », icône de section ronde, bandeau de section (« SONARA » à gauche, « THE Blind test » à droite), pied de section avec un globe et le trio lecteur rond, lignes en fondu, méga-titres avec un mockup qui passe devant, cartes satellites flottantes, pills, avatars ronds, orbes, halos de points, cercles orbitaux, lettrage géant de fond, marquee, grain.
 
 ---
 
@@ -419,10 +419,13 @@ Les textes entre crochets [ ] sont des emplacements à remplir avec le contenu r
 
 ### Éléments communs
 
+> **Slogan officiel : « THE Blind test »** (« THE » en majuscules, « Blind test » en deux mots). Il remplace « Blind test caribéen » partout (bandeau des sections, méta flottante) et donne le titre de la page : `<title>SONARA, THE Blind test</title>`.
+
 | Emplacement | Texte |
 |---|---|
+| Slogan officiel | THE Blind test |
 | Bandeau de section, gauche | SONARA |
-| Bandeau de section, droite | Blind test caribéen |
+| Bandeau de section, droite | THE Blind test |
 | Pied de section, à côté du globe | Musique caribéenne / en multijoueur |
 | Bouton principal (partout) | Jouer |
 | Lettrage géant de fond | SONARA |
@@ -433,18 +436,18 @@ Les textes entre crochets [ ] sont des emplacements à remplir avec le contenu r
 
 | Emplacement | Texte |
 |---|---|
-| Méta 1 | Jeu / Blind test musical |
-| Méta 2 | Univers / 9 univers musicaux |
-| Méta 3 | Mode / Solo ou multijoueur |
-| Méta 4 (droite) | logo SONARA |
+| Méta 1 (gauche) | logo SONARA |
+| Méta 2 | menu « Univers » : Dancehall · Kompa · Zouk · Rap · Trap · Soca · Reggae · Shatta · Mix |
+| Méta 3 | menu « Mode » : Solo · Multijoueur |
+| Logo géant + slogan (à gauche du téléphone) | logo SONARA / THE Blind test |
 | Titre (3 lignes) | Le blind test / qui fait vibrer / la Caraïbe |
 | Accroche (droite) | Écoute un extrait, trouve le titre et l'artiste, et défie tes proches où qu'ils soient. Le zouk, le kompa ou le dancehall deviennent un jeu à partager. |
-| Méta flottante gauche | SONARA / Blind test caribéen |
-| Méta flottante droite | Né en / Martinique |
-| Méta flottante centre-gauche | Pour qui ? / Toute la famille |
+| Méta flottante gauche | SONARA / THE Blind test |
+| Méta flottante droite (plus bas) | Made in Martinique |
+| Méta flottante centre-gauche | Pour qui ? / Tous les univers |
 | Liste bas droite (4 lignes) | Écouter / Deviner / Marquer / Partager |
 | Sous la liste | Origine : / Martinique, Antilles |
-| Écran du téléphone | Univers Zouk · Manche 3/10 · « Qui chante ? » · barre de temps · pochette floutée |
+| Écran du téléphone | Manche 3/10 · « Qui chante ? » · barre de temps · pochette plein écran (maquette Figma en attendant les nouvelles) |
 | CTA | Jouer |
 
 ---

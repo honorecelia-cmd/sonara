@@ -129,7 +129,7 @@
     hand.style.opacity=fade;
     thumb.style.opacity=fade;
     // Parallaxe : le lettrage geant glisse plus lentement que la page
-    if(y<hero.offsetHeight)giant.style.transform='translate3d(0,'+(y*.25).toFixed(1)+'px,0)';
+    if(y<hero.offsetHeight&&giant.offsetParent&&getComputedStyle(giant).position==='absolute')giant.style.transform='translate3d(0,'+(y*.25).toFixed(1)+'px,0)';
   }
   function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(update);}}
   window.addEventListener('scroll',onScroll,{passive:true});
@@ -147,7 +147,6 @@
   var UNIV=[['Zouk','cover_zouk'],['Kompa','cover_kompa'],['Dancehall','cover_dancehall'],
             ['Reggae','cover_reggae'],['Soca','cover_soca'],['Rap','cover_rap']];
   var cover=document.getElementById('nb-scr-cover');
-  var univ=document.getElementById('nb-scr-univ');
   var manche=document.getElementById('nb-scr-manche');
   var fill=document.getElementById('nb-scr-fill');
   var clock=document.getElementById('nb-scr-t');
@@ -156,7 +155,6 @@
 
   function render(){
     manche.textContent='Manche '+round+'/10';
-    univ.textContent='Univers '+UNIV[u][0];
     cover.style.backgroundImage="url('/img/"+UNIV[u][1]+".jpg')";
   }
   function step(dir){
