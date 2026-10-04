@@ -190,4 +190,44 @@
   });
   tickClock();
   requestAnimationFrame(loop);
+
+  // ── 4. Grandes phrases : chaque ligne s'eclaircit au defilement ──
+  // Couleur finale degressive ligne par ligne (#EDEDED -> #5A5A5A),
+  // chaque ligne part de #3A3A3A et atteint sa couleur en remontant.
+  var FROM=[58,58,58], LIGHT=[237,237,237], DARK=[90,90,90];
+  function mix(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t);}).join(',')+')';}
+  var lines=[];
+  landing.querySelectorAll('[data-scrub]').forEach(function(ph){
+    var spans=ph.children, n=spans.length;
+    for(var i=0;i<n;i++){
+      var end=n>1?LIGHT.map(function(v,k){return v+(DARK[k]-v)*i/(n-1);}):LIGHT;
+      lines.push({el:spans[i],end:end});
+    }
+  });
+  // ── 5. Satellites : vitesse propre a chacun (0.8x a 1.2x) ──
+  var sats=[].slice.call(landing.querySelectorAll('[data-speed]'));
+  var fxTicking=false;
+  function fx(){
+    fxTicking=false;
+    if(landing.offsetParent===null)return;
+    var vh=window.innerHeight, still=reduce.matches;
+    lines.forEach(function(l){
+      var t=1;
+      if(!still){
+        var top=l.el.getBoundingClientRect().top;
+        t=Math.min(1,Math.max(0,(vh*.9-top)/(vh*.4)));
+      }
+      l.el.style.color=mix(FROM,l.end,t);
+    });
+    sats.forEach(function(el){
+      if(still||!el.offsetParent){el.style.transform='';return;}
+      var r=el.parentNode.getBoundingClientRect();
+      var d=r.top+r.height/2-vh/2;
+      el.style.transform='translate3d(0,'+(d*(parseFloat(el.getAttribute('data-speed'))-1)).toFixed(1)+'px,0)';
+    });
+  }
+  function onFx(){if(!fxTicking){fxTicking=true;requestAnimationFrame(fx);}}
+  window.addEventListener('scroll',onFx,{passive:true});
+  window.addEventListener('resize',onFx);
+  fx();
 })();

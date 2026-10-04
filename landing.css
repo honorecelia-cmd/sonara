@@ -74,6 +74,8 @@
 }
 .nb-header.is-on{opacity:1;pointer-events:auto}
 .nb-hd-logo img{height:30px;width:auto;display:block}
+.nb-header .nb-pill--cta{background:var(--neb-orange)}
+.nb-header .nb-pill--cta:hover{background:var(--accent)}
 .nb-hd-right{display:flex;align-items:center;gap:18px}
 /* Emplacement du telephone une fois loge (meme proportion que .nb-phone) */
 .nb-hd-slot{display:block;width:22px;height:46px}
@@ -88,6 +90,11 @@
   flex-shrink:0;
 }
 .nb-hero-clip{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+/* Bas du hero : le degrade se fond dans le noir de la section 01 */
+.nb-hero-clip::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:9vw;
+  background:linear-gradient(180deg,rgba(8,8,8,0),var(--neb-black));
+}
 .nb-hero-bg{
   position:absolute;inset:0;
   background:
@@ -408,4 +415,215 @@
 @media (prefers-reduced-motion:reduce){
   .nb-hero-bg{animation:none}
   .nb-pill,.nb-trio button{transition:none}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Composants communs aux sections
+   ═══════════════════════════════════════════════════════════════ */
+.nb-sec{position:relative;background:var(--neb-black);color:#fff;overflow:hidden}
+.nb-sec .nb-label{margin:0 0 18px}
+/* Bandeau de section : SONARA a gauche, slogan a droite */
+.nb-band{
+  position:absolute;top:32px;left:var(--neb-margin);right:var(--neb-margin);
+  display:flex;justify-content:space-between;
+  font-family:var(--f-text);font-size:13px;line-height:1;color:rgba(255,255,255,.45);
+}
+/* Numero de section "01 /" + titre */
+.nb-secnum span{display:block;font-family:var(--f-text);font-size:14px;color:rgba(255,255,255,.45)}
+.nb-secnum h2{margin:6px 0 0;font-family:var(--f-text);font-size:14px;font-weight:500;color:#fff}
+/* Icone de section : cercle 32px, 4 points en losange */
+.nb-secicon{
+  position:relative;display:block;width:32px;height:32px;margin-bottom:18px;
+  border:1px solid rgba(255,255,255,.35);border-radius:50%;
+}
+.nb-secicon i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;left:50%;top:50%;margin:-1.5px 0 0 -1.5px}
+.nb-secicon i:nth-child(1){transform:translateY(-5px)}
+.nb-secicon i:nth-child(2){transform:translateX(5px)}
+.nb-secicon i:nth-child(3){transform:translateY(5px)}
+.nb-secicon i:nth-child(4){transform:translateX(-5px)}
+/* Grandes phrases : chaque ligne s'eclaircit au defilement (landing.js) */
+.nb-phrase{
+  margin:0;font-family:var(--f-display);font-weight:400;
+  font-size:4.5vw;line-height:1.05;letter-spacing:-.02em;color:#5A5A5A;
+}
+.nb-phrase > span{display:block}
+.nb-phrase--sm{font-size:2.4vw;line-height:1.15;letter-spacing:-.01em}
+.nb-body{margin:0;font-family:var(--f-text);font-size:15px;line-height:1.45;color:rgba(255,255,255,.62)}
+/* Avatars ronds (placeholders, aucune photo) */
+.nb-avatar{display:block;border-radius:50%;flex-shrink:0}
+.nb-avatar--a{background:radial-gradient(circle at 35% 30%,#FF8B56,#C23401 70%)}
+.nb-avatar--b{background:radial-gradient(circle at 35% 30%,#E6C789,#D3561A 75%)}
+.nb-avatar--c{background:radial-gradient(circle at 35% 30%,#A10D01,#400000 75%)}
+.nb-avatar--d{background:radial-gradient(circle at 35% 30%,#E9E1DB,#8F887C 75%)}
+/* Pied de section : globe + texte, trio lecteur miniature */
+.nb-secfoot{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  padding:10vw var(--neb-margin) 32px;
+}
+.nb-globe{width:28px;height:28px;fill:none;stroke:rgba(255,255,255,.7);stroke-width:1.2}
+.nb-secfoot p{margin:10px 0 0;font-family:var(--f-text);font-size:13px;line-height:1.35;color:rgba(255,255,255,.5)}
+.nb-trio-mini{display:flex;gap:8px}
+.nb-trio-mini span{
+  width:24px;height:24px;border-radius:50%;background:var(--neb-orange);
+  display:flex;align-items:center;justify-content:center;
+}
+.nb-trio-mini svg{width:11px;height:11px;fill:none;stroke:var(--neb-btn-cream);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* Satellites flottants (parallaxe : landing.js, inclinaison au survol) */
+.nb-sat{position:absolute;z-index:2;will-change:transform;transition:rotate .35s ease}
+.nb-sat:hover{rotate:-2deg}
+
+/* ═══════════════════════════════════════════════════════════════
+   01 / QU'EST-CE QUE SONARA
+   ═══════════════════════════════════════════════════════════════ */
+.nb-s01-intro{position:relative;padding-top:11vw}
+.nb-s01-intro .nb-secnum{position:absolute;left:var(--neb-margin);top:11vw}
+.nb-s01-icon{position:absolute;left:32vw;top:11vw}
+.nb-s01-idea{margin-left:36vw;width:59vw}
+
+/* Rangee B : telephone accueil + satellites */
+.nb-s01-stage{position:relative;height:66vw;margin-top:9vw}
+.nb-s01-home{--pw:24vw;position:absolute;left:38vw;top:0;width:var(--pw);z-index:1}
+.nb-s01-about{position:absolute;left:var(--neb-margin);bottom:5vw;width:17vw}
+
+.nb-screen--home{background:radial-gradient(120% 55% at 50% 0%,#3a1206 0%,#120706 55%,#0b0505 100%)}
+.nb-home-top{
+  position:absolute;top:calc(var(--pw) * .17);left:7%;right:7%;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.nb-home-top img{height:calc(var(--pw) * .08);width:auto}
+.nb-home-top .nb-avatar{width:calc(var(--pw) * .1);height:calc(var(--pw) * .1)}
+.nb-home-tabs{
+  position:absolute;top:calc(var(--pw) * .33);left:7%;right:0;
+  display:flex;gap:calc(var(--pw) * .06);white-space:nowrap;
+  font-size:calc(var(--pw) * .048);font-weight:500;color:rgba(255,255,255,.4);
+}
+.nb-home-tabs .is-on{position:relative;color:#fff}
+.nb-home-tabs i{
+  position:absolute;right:calc(var(--pw) * -.03);top:0;
+  width:calc(var(--pw) * .02);height:calc(var(--pw) * .02);border-radius:50%;background:var(--neb-orange);
+}
+.nb-home-carousel{
+  position:absolute;top:calc(var(--pw) * .46);left:-16%;right:-16%;height:calc(var(--pw) * .62);
+  display:flex;align-items:center;justify-content:center;gap:calc(var(--pw) * .035);
+}
+.nb-home-cv{display:block;position:relative;flex-shrink:0;background-size:cover;background-position:center;border-radius:calc(var(--pw) * .048)}
+.nb-home-cv--main{width:calc(var(--pw) * .62);height:calc(var(--pw) * .62)}
+.nb-home-cv--side{width:calc(var(--pw) * .36);height:calc(var(--pw) * .48);opacity:.45}
+.nb-home-play{
+  position:absolute;right:8%;bottom:8%;
+  width:calc(var(--pw) * .13);height:calc(var(--pw) * .13);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+}
+.nb-home-play svg{width:42%;height:42%;fill:#fff;margin-left:6%}
+.nb-home-card{
+  position:absolute;left:7%;right:7%;bottom:calc(var(--pw) * .1);
+  padding:calc(var(--pw) * .055);border-radius:calc(var(--pw) * .065);
+  background:#171717;
+}
+.nb-home-k{margin:0;font-size:calc(var(--pw) * .036);color:rgba(255,255,255,.5)}
+.nb-home-t{margin:calc(var(--pw) * .015) 0 calc(var(--pw) * .045);font-family:var(--f-display);font-weight:800;font-size:calc(var(--pw) * .06);line-height:1.05}
+.nb-home-t em{font-style:normal;color:rgba(255,255,255,.45)}
+.nb-home-btn{
+  display:inline-flex;align-items:center;gap:calc(var(--pw) * .02);
+  padding:calc(var(--pw) * .028) calc(var(--pw) * .05);border-radius:999px;
+  background:var(--neb-orange);font-size:calc(var(--pw) * .038);font-weight:600;
+}
+.nb-home-btn svg{width:calc(var(--pw) * .032);height:calc(var(--pw) * .032);fill:#fff}
+
+.nb-sat-invite{
+  left:24vw;top:14vw;width:15.5vw;padding:1.7vw;border-radius:22px;
+  background:rgba(17,17,17,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.06);
+  font-family:var(--f-text);
+}
+.nb-avatars{display:flex;margin-bottom:1.1vw}
+.nb-avatars .nb-avatar{width:2.4vw;height:2.4vw;min-width:28px;min-height:28px;border:2px solid #111}
+.nb-avatars .nb-avatar + .nb-avatar{margin-left:-.75vw}
+.nb-sat-t{margin:0;font-size:15px;font-weight:600}
+.nb-sat-s{margin:4px 0 14px;font-size:13px;color:rgba(255,255,255,.5)}
+.nb-sat-btn{display:inline-block;padding:9px 18px;border-radius:999px;background:#333;font-size:13px;font-weight:500}
+.nb-sat-create{
+  left:57vw;top:31vw;display:flex;align-items:center;gap:12px;
+  padding:8px 22px 8px 8px;border-radius:999px;background:var(--neb-card);
+  font-family:var(--f-text);font-size:14px;font-weight:500;white-space:nowrap;
+}
+.nb-ring-plus{
+  width:40px;height:40px;border-radius:50%;border:1.5px solid var(--neb-orange);
+  display:flex;align-items:center;justify-content:center;
+}
+.nb-ring-plus svg{width:16px;height:16px;fill:none;stroke:var(--neb-orange);stroke-width:2;stroke-linecap:round}
+.nb-sat-wave{
+  left:30vw;top:46vw;width:4.3vw;height:4.3vw;min-width:48px;min-height:48px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;
+}
+.nb-sat-wave svg{width:44%;height:44%;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round}
+.nb-sat-tile{
+  right:var(--neb-margin);top:20vw;width:11vw;height:11vw;border-radius:20px;overflow:hidden;
+  background-size:cover;background-position:center;
+}
+.nb-sat-tile::after{content:"";position:absolute;inset:0;background:var(--neb-orange);mix-blend-mode:multiply;opacity:.7}
+.nb-sat-tile .nb-home-play{--pw:11vw;right:auto;bottom:auto;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;width:3.4vw;height:3.4vw}
+
+/* Rangee C : classement, mission, partie qui sort du cadre */
+.nb-s01-row2{position:relative;height:60vw}
+.nb-s01-rank{--pw:20vw;position:absolute;left:20.4vw;top:2vw;width:var(--pw)}
+.nb-s01-mission{position:absolute;left:61vw;top:4vw}
+.nb-s01-mission .nb-label{color:rgba(255,255,255,.45)}
+.nb-s01-game{--pw:22vw;position:absolute;left:70vw;top:28vw;width:var(--pw)}
+.nb-screen--rank{background:linear-gradient(180deg,#1a0b07 0%,#0b0505 60%)}
+.nb-rank-tabs{top:calc(var(--pw) * .17)}
+.nb-podium{
+  position:absolute;top:calc(var(--pw) * .34);left:8%;right:8%;
+  display:flex;justify-content:center;align-items:flex-end;gap:calc(var(--pw) * .03);
+}
+.nb-podium-col{display:flex;flex-direction:column;align-items:center;gap:calc(var(--pw) * .03);width:30%}
+.nb-podium-col .nb-avatar{width:calc(var(--pw) * .14);height:calc(var(--pw) * .14)}
+.nb-podium-col--1 .nb-avatar{width:calc(var(--pw) * .18);height:calc(var(--pw) * .18);box-shadow:0 0 0 2px var(--neb-orange)}
+.nb-podium-col b{
+  display:flex;align-items:flex-start;justify-content:center;width:100%;
+  padding-top:calc(var(--pw) * .03);border-radius:calc(var(--pw) * .035) calc(var(--pw) * .035) 0 0;
+  background:var(--neb-ctrl);font-family:var(--f-display);font-weight:800;font-size:calc(var(--pw) * .07);
+}
+.nb-podium-col--1 b{height:calc(var(--pw) * .32);background:var(--neb-orange)}
+.nb-podium-col--2 b{height:calc(var(--pw) * .23)}
+.nb-podium-col--3 b{height:calc(var(--pw) * .16)}
+.nb-rank-list{
+  position:absolute;top:calc(var(--pw) * 1.06);left:7%;right:7%;margin:0;padding:0;list-style:none;
+  font-size:calc(var(--pw) * .042);
+}
+.nb-rank-list li{
+  display:flex;align-items:center;gap:calc(var(--pw) * .035);
+  padding:calc(var(--pw) * .04) 0;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.nb-rank-list span:first-child{width:calc(var(--pw) * .04);color:rgba(255,255,255,.45)}
+.nb-rank-list .nb-avatar{width:calc(var(--pw) * .09);height:calc(var(--pw) * .09)}
+.nb-rank-list b{flex:1;font-weight:600}
+.nb-rank-list em{font-style:normal;color:rgba(255,255,255,.45)}
+
+/* Rangee D : l'histoire */
+.nb-s01-story{margin:11vw 0 0 var(--neb-margin);width:64vw}
+.nb-s01-story .nb-phrase--sm{font-size:2.2vw}
+
+/* ── Sections : mobile ── */
+@media (max-width:760px){
+  .nb-band{top:22px;left:16px;right:16px;font-size:12px}
+  .nb-phrase{font-size:7vw}
+  .nb-phrase--sm,.nb-s01-story .nb-phrase--sm{font-size:6vw}
+  .nb-secfoot{padding:64px 16px 24px}
+
+  .nb-s01-intro{padding:76px 16px 0}
+  .nb-s01-intro .nb-secnum{position:static;margin-bottom:40px}
+  .nb-s01-icon{position:relative;left:auto;top:auto}
+  .nb-s01-idea{margin:0;width:auto}
+  .nb-s01-stage{height:auto;margin-top:56px;padding:0 16px}
+  .nb-s01-home{--pw:62vw;position:relative;left:auto;margin:0 auto}
+  .nb-s01-about{position:static;width:auto;margin-top:48px}
+  .nb-sat{display:none}
+  .nb-s01-row2{height:auto;overflow:visible;padding:64px 16px 0;display:flex;flex-direction:column;gap:48px}
+  .nb-s01-mission{position:static;order:-1}
+  .nb-s01-rank{--pw:56vw;position:relative;left:auto;top:auto;margin:0 auto}
+  .nb-s01-game{display:none}
+  .nb-s01-story{margin:72px 16px 0;width:auto}
 }
