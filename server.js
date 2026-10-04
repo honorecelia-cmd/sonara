@@ -184,7 +184,7 @@ const server = http.createServer(function(req, res) {
   }
 
   // Fichiers statiques CSS / JS
-  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js' || p.pathname === '/intro.css' || p.pathname === '/intro.js') {
+  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js' || p.pathname === '/landing.css' || p.pathname === '/landing.js') {
     fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
       if (err) { res.writeHead(404); res.end('Not found'); return; }
       var ct = p.pathname.endsWith('.css') ? 'text/css' : 'application/javascript';

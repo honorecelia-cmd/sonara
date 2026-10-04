@@ -1138,7 +1138,7 @@ function shareEntreLink(){
     if(d&&d.theme&&THEMES[d.theme]){
       G._sharedTheme=d.theme;
       var el=document.getElementById('ltxt');
-      if(el){el.classList.remove('online-count');el.textContent='Rejoins '+(d.themeName||THEMES[d.theme].n)+' 🎵';}
+      if(el){el.classList.remove('online-count');el.textContent='Rejoins '+(d.themeName||THEMES[d.theme].n);}
       var row=document.getElementById('ld-badge-row');
       if(row)row.style.display='flex'; // compteur reste masque par defaut, mais ce message reste visible
     }

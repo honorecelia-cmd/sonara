@@ -1,0 +1,153 @@
+// ═══════════════════════════════════════════════════════════════
+// SONARA — landing (refonte d'apres la maquette Nebula)
+// 1. Choix du son-nom apres le clic sur "Jouer"
+// 2. Telephone du hero qui monte puis se loge dans le header au defilement
+// 3. Trio lecteur : pilote l'apercu de partie du telephone (aucun son)
+// Spec : nebula-analyse-pour-sonara.md
+// ═══════════════════════════════════════════════════════════════
+(function(){
+  'use strict';
+  var landing=document.getElementById('landing');
+  if(!landing)return;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // ── 1. Son-nom ──────────────────────────────────────────────
+  var dlg=document.getElementById('nb-sonnom');
+  var form=document.getElementById('nb-sonnom-form');
+  var input=document.getElementById('landing-pseudo');
+  var lastFocus=null;
+  function openSonnom(){
+    lastFocus=document.activeElement;
+    dlg.hidden=false;
+    setTimeout(function(){input.focus();},30);
+  }
+  function closeSonnom(){
+    dlg.hidden=true;
+    if(lastFocus&&lastFocus.focus)lastFocus.focus();
+  }
+  landing.addEventListener('click',function(e){
+    if(e.target.closest('[data-nb-play]'))openSonnom();
+    else if(e.target.closest('[data-nb-close]')||e.target===dlg)closeSonnom();
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&!dlg.hidden)closeSonnom();
+  });
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    startFromLanding();
+    // startFromLanding() quitte la landing si le son-nom est valide
+    if(window.G&&G.page!=='landing')dlg.hidden=true;
+  });
+  input.addEventListener('input',function(){input.style.borderColor='';});
+
+  // ── 2. Telephone -> header ──────────────────────────────────
+  var hero=document.getElementById('nb-hero');
+  var wrap=document.getElementById('nb-phone-wrap');
+  var slot=document.getElementById('nb-hd-slot');
+  var header=document.getElementById('nb-header');
+  var hand=document.getElementById('nb-hand');
+  var thumb=document.getElementById('nb-thumb');
+  var giant=document.getElementById('nb-giant');
+  var nat=null,ticking=false;
+
+  function measure(){
+    wrap.style.transform='';
+    // La main et le lettrage geant suivent la position reelle du telephone
+    hero.style.setProperty('--hx',wrap.offsetLeft+'px');
+    hero.style.setProperty('--hy',wrap.offsetTop+'px');
+    var r=wrap.getBoundingClientRect();
+    nat={x:r.left,y:r.top+window.scrollY,w:r.width,h:r.height};
+    update();
+  }
+  function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+  function update(){
+    ticking=false;
+    if(!nat||landing.offsetParent===null)return;
+    var y=window.scrollY;
+    if(reduce.matches){
+      wrap.style.transform='';
+      header.classList.toggle('is-on',y>nat.y*.5);
+      return;
+    }
+    // Le telephone est loge quand son centre aurait atteint le haut de l'ecran
+    // (ou plus tot si la page ne defile pas jusque-la)
+    var maxY=document.documentElement.scrollHeight-window.innerHeight;
+    var end=Math.max(1,Math.min(nat.y+nat.h*.5,maxY));
+    var p=Math.min(1,Math.max(0,y/end));
+    var e=ease(p);
+    var s=slot.getBoundingClientRect();
+    var cx=nat.x+nat.w/2, cy=nat.y-y+nat.h/2;
+    var tx=(s.left+s.width/2-cx)*e;
+    var ty=(s.top+s.height/2-cy)*e;
+    var k=1+(s.height/nat.h-1)*e;
+    wrap.style.transform='translate3d('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px,0) scale('+k.toFixed(4)+')';
+    wrap.classList.toggle('nb-wrap-docked',p>=1);
+    header.classList.toggle('is-on',p>.45);
+    var fade=Math.max(0,1-p*3);
+    hand.style.opacity=fade;
+    thumb.style.opacity=fade;
+    // Parallaxe : le lettrage geant glisse plus lentement que la page
+    if(y<hero.offsetHeight)giant.style.transform='translate3d(0,'+(y*.25).toFixed(1)+'px,0)';
+  }
+  function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(update);}}
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',measure);
+  window.addEventListener('load',measure);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(measure);
+  measure();
+  // Telephone loge dans le header : raccourci vers "Jouer"
+  wrap.addEventListener('click',function(){if(wrap.classList.contains('nb-wrap-docked'))openSonnom();});
+  // Retour sur la landing (showPage) : la page reapparait, on remesure
+  new MutationObserver(function(){if(landing.style.display!=='none')measure();})
+    .observe(landing,{attributes:true,attributeFilter:['style']});
+
+  // ── 3. Trio lecteur -> apercu de partie ─────────────────────
+  var UNIV=[['Zouk','cover_zouk'],['Kompa','cover_kompa'],['Dancehall','cover_dancehall'],
+            ['Reggae','cover_reggae'],['Soca','cover_soca'],['Rap','cover_rap']];
+  var cover=document.getElementById('nb-scr-cover');
+  var univ=document.getElementById('nb-scr-univ');
+  var manche=document.getElementById('nb-scr-manche');
+  var fill=document.getElementById('nb-scr-fill');
+  var clock=document.getElementById('nb-scr-t');
+  var round=3,u=0,t=12,paused=false,last=0;
+  var DUR=30;
+
+  function render(){
+    manche.textContent='Manche '+round+'/10';
+    univ.textContent='Univers '+UNIV[u][0];
+    cover.style.backgroundImage="url('/img/"+UNIV[u][1]+".jpg')";
+  }
+  function step(dir){
+    round=(round-1+dir+10)%10+1;
+    u=(u+dir+UNIV.length)%UNIV.length;
+    t=0;render();tickClock();
+  }
+  function tickClock(){
+    fill.style.width=(t/DUR*100).toFixed(2)+'%';
+    var sec=Math.floor(t);
+    clock.textContent='0:'+(sec<10?'0':'')+sec;
+  }
+  function loop(now){
+    if(last&&!paused&&!reduce.matches&&!document.hidden){
+      t+=(now-last)/1000;
+      if(t>=DUR){step(1);}
+      tickClock();
+    }
+    last=now;
+    requestAnimationFrame(loop);
+  }
+  landing.querySelectorAll('[data-nb-trio]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var a=b.getAttribute('data-nb-trio');
+      if(a==='prev')step(-1);
+      else if(a==='next')step(1);
+      else{
+        paused=!paused;
+        b.setAttribute('aria-pressed',String(paused));
+        b.setAttribute('aria-label',paused?'Lecture':'Pause');
+      }
+    });
+  });
+  tickClock();
+  requestAnimationFrame(loop);
+})();
