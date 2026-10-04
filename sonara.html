@@ -36,21 +36,41 @@
          reste hors de ce calque pour pouvoir le quitter au defilement. -->
     <div class="nb-hero-clip" aria-hidden="true">
       <div class="nb-hero-bg"></div>
-      <div class="nb-giant" id="nb-giant"><span>S</span><span>O</span><span>N</span><span>A</span><span>R</span><span>A</span></div>
+      <img class="nb-giant" id="nb-giant" src="/img/logo_sonara.svg" alt="">
       <svg class="nb-hand" id="nb-hand" viewBox="0 0 160 280" preserveAspectRatio="none">
         <path d="M60 280C58 240 56 200 52 172C44 150 30 140 25 112C18 82 21 44 30 22L127 6C140 3 147 12 140 18L133 20C145 20 149 32 139 36L133 38C145 39 148 51 137 55L133 57C143 59 144 70 133 74C129 104 126 150 125 190C124 230 124 260 126 280Z"/>
       </svg>
       <div class="nb-grain"></div>
     </div>
 
-    <div class="nb-meta">
-      <div class="nb-meta-col"><span>Jeu</span><b>Blind test musical</b></div>
-      <div class="nb-meta-col"><span>Univers</span><b>9 univers musicaux</b></div>
-      <div class="nb-meta-col"><span>Mode</span><b>Solo ou multijoueur</b></div>
-      <img class="nb-meta-logo" src="/img/logo_sonara.svg" alt="SONARA">
-    </div>
+    <nav class="nb-meta" aria-label="Menu principal">
+      <a class="nb-meta-logo" href="#landing"><img src="/img/logo_sonara.svg" alt="SONARA"></a>
+      <div class="nb-meta-col nb-menu">
+        <button class="nb-menu-btn" type="button" aria-expanded="false" aria-controls="nb-menu-univ">Univers<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <ul class="nb-menu-list" id="nb-menu-univ" hidden>
+          <li><button type="button" data-nb-univ="dancehall">Dancehall</button></li>
+          <li><button type="button" data-nb-univ="kompa">Kompa</button></li>
+          <li><button type="button" data-nb-univ="zouk">Zouk</button></li>
+          <li><button type="button" data-nb-univ="rap">Rap</button></li>
+          <li><button type="button" data-nb-univ="trap">Trap</button></li>
+          <li><button type="button" data-nb-univ="soca">Soca</button></li>
+          <li><button type="button" data-nb-univ="reggae">Reggae</button></li>
+          <li><button type="button" data-nb-univ="shatta">Shatta</button></li>
+          <li><button type="button" data-nb-univ="mix">Mix</button></li>
+        </ul>
+      </div>
+      <div class="nb-meta-col nb-menu">
+        <button class="nb-menu-btn" type="button" aria-expanded="false" aria-controls="nb-menu-mode">Mode<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <ul class="nb-menu-list" id="nb-menu-mode" hidden>
+          <li><button type="button" data-nb-mode="solo">Solo</button></li>
+          <li><button type="button" data-nb-mode="multi">Multijoueur</button></li>
+        </ul>
+      </div>
+    </nav>
 
-    <h1 class="nb-hero-title"><span>Le blind test</span><span>qui fait vibrer</span><span>la Caraïbe</span></h1>
+    <!-- Le ï est reconstruit (i sans point + 2 points en CSS) : en Syne 800
+         les deux points du glyphe ï fusionnent en une seule barre. -->
+    <h1 class="nb-hero-title" aria-label="Le blind test qui fait vibrer la Caraïbe"><span>Le blind test</span><span>qui fait vibrer</span><span>la Cara<span class="nb-trema">&#x131;</span>be</span></h1>
 
     <div class="nb-hero-lede">
       <p>Écoute un extrait, trouve le titre et l'artiste, et défie tes proches où qu'ils soient. Le zouk, le kompa ou le dancehall deviennent un jeu à partager.</p>
@@ -63,8 +83,8 @@
     </div>
 
     <p class="nb-float nb-float--l"><span>SONARA</span>Blind test caribéen</p>
-    <p class="nb-float nb-float--r"><span>Né en</span>Martinique</p>
-    <p class="nb-float nb-float--c"><span>Pour qui ?</span>Toute la famille</p>
+    <p class="nb-float nb-float--r">Made in Martinique</p>
+    <p class="nb-float nb-float--c"><span>Pour qui ?</span>Tous les univers</p>
 
     <!-- Telephone : partie en cours (pochette floutee, manche, temps) -->
     <div class="nb-phone-wrap" id="nb-phone-wrap">

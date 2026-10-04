@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
 // SONARA — landing (refonte d'apres la maquette Nebula)
-// 1. Choix du son-nom apres le clic sur "Jouer"
+// 1. Choix du son-nom apres le clic sur "Jouer" (ou un choix du menu)
 // 2. Telephone du hero qui monte puis se loge dans le header au defilement
 // 3. Trio lecteur : pilote l'apercu de partie du telephone (aucun son)
 // Spec : nebula-analyse-pour-sonara.md
@@ -16,7 +16,12 @@
   var form=document.getElementById('nb-sonnom-form');
   var input=document.getElementById('landing-pseudo');
   var lastFocus=null;
-  function openSonnom(){
+  // Ce qui suit le son-nom : {theme:'zouk'} (menu Univers), {mode:'multi'}
+  // (menu Mode) ou null = parcours normal (choix de l'univers)
+  var pending=null;
+  function openSonnom(next){
+    pending=next||null;
+    closeMenus();
     lastFocus=document.activeElement;
     dlg.hidden=false;
     setTimeout(function(){input.focus();},30);
@@ -26,15 +31,52 @@
     if(lastFocus&&lastFocus.focus)lastFocus.focus();
   }
   landing.addEventListener('click',function(e){
-    if(e.target.closest('[data-nb-play]'))openSonnom();
-    else if(e.target.closest('[data-nb-close]')||e.target===dlg)closeSonnom();
+    var t=e.target, b;
+    if(t.closest('[data-nb-play]'))openSonnom(null);
+    else if(t.closest('[data-nb-close]')||t===dlg)closeSonnom();
+    else if((b=t.closest('[data-nb-univ]')))openSonnom({theme:b.getAttribute('data-nb-univ')});
+    else if((b=t.closest('[data-nb-mode]')))openSonnom(b.getAttribute('data-nb-mode')==='multi'?{mode:'multi'}:null);
   });
   document.addEventListener('keydown',function(e){
-    if(e.key==='Escape'&&!dlg.hidden)closeSonnom();
+    if(e.key!=='Escape')return;
+    if(!dlg.hidden)closeSonnom();
+    else closeMenus(true);
   });
+
+  // ── Menus Univers / Mode ──
+  var menuBtns=landing.querySelectorAll('.nb-menu-btn');
+  function closeMenus(refocus){
+    menuBtns.forEach(function(btn){
+      if(btn.getAttribute('aria-expanded')!=='true')return;
+      btn.setAttribute('aria-expanded','false');
+      document.getElementById(btn.getAttribute('aria-controls')).hidden=true;
+      if(refocus)btn.focus();
+    });
+  }
+  menuBtns.forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var open=btn.getAttribute('aria-expanded')==='true';
+      closeMenus();
+      if(!open){
+        btn.setAttribute('aria-expanded','true');
+        var list=document.getElementById(btn.getAttribute('aria-controls'));
+        list.hidden=false;
+        list.querySelector('button').focus();
+      }
+    });
+  });
+  document.addEventListener('click',function(e){if(!e.target.closest('.nb-menu'))closeMenus();});
   form.addEventListener('submit',function(e){
     e.preventDefault();
-    startFromLanding();
+    var v=input.value.trim();
+    if(pending&&v){
+      G.ps=v;
+      if(pending.theme)selectSoloTheme(pending.theme);
+      else if(pending.mode==='multi'){
+        ['multi-pseudo','join-pseudo'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=v;});
+        showPage('s-multi');
+      }
+    }else startFromLanding();
     // startFromLanding() quitte la landing si le son-nom est valide
     if(window.G&&G.page!=='landing')dlg.hidden=true;
   });
