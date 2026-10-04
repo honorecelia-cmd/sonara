@@ -5,24 +5,66 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SONARA — Le blind test caribéen</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="sonara.css">
+<link rel="stylesheet" href="intro.css">
 </head>
 <body>
 <canvas id="bg"></canvas>
 <div class="cfbox" id="cfbox"></div>
 
+<!-- ═══ INTRO PILOTÉE AU DÉFILEMENT ═══
+     Precede #landing dans le flux du document : une fois les 800vh
+     defiles (ou immediatement si prefers-reduced-motion / deja vue cette
+     session), le DOM se trouve naturellement sur la landing qui suit.
+     Voir intro.css / intro.js. -->
+<div id="intro-track">
+  <div id="intro-stage">
+    <div id="i-shape" class="i-c"></div>
+    <div id="i-logo" class="i-c"></div>
+    <div id="i-bars"></div>
+    <div id="i-tiles"></div>
+    <div id="i-room"></div>
+    <div id="i-podium"></div>
+    <div id="i-flood" class="i-c"></div>
+    <svg id="i-iris"><path id="i-irisPath" fill-rule="evenodd"/></svg>
+    <div id="i-ring" class="i-c"></div>
+    <svg id="i-cursor" width="28" height="28" viewBox="0 0 24 24"><path style="position:static" d="M4 2l15 9-6.5 1.6L9.6 19z" fill="#fdddb8" stroke="#140a06" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <div id="i-hint">Fais défiler</div>
+  </div>
+  <button id="i-skip" type="button">Passer l'intro</button>
+</div>
+
 <!-- ═══ LANDING ═══ -->
 <section class="page" id="landing">
-  <div class="ld-badge-row">
-    <div class="ld-badge"><span class="ld-dot"></span><span id="ltxt" class="online-count">246 joueurs en ligne</span></div>
+  <!-- Compteur "en ligne" retire de la landing (consigne). #ltxt reste en
+       DOM, vide et masque par defaut : il sert aussi au message "Rejoins
+       [univers]" affiche quand on arrive via un lien "Entre proches"
+       (voir sonara.js, bloc "Lien partage entrant") -- mecanisme inchange. -->
+  <div class="ld-badge-row" id="ld-badge-row" style="display:none">
+    <div class="ld-badge"><span class="ld-dot"></span><span id="ltxt"></span></div>
   </div>
-  <div class="ld-content">
-    <p class="ld-eyebrow">1er blindtest caribéen</p>
-    <img src="/img/logo_sonara.png" class="ld-logo" alt="SONARA">
-    <p class="ld-desc">Trouve le son, trouve l'artiste. Défis tes potes sur les plus grands sons de la Caraïbe ! ♫</p>
-    <label class="ld-label">Choisis ton "son-nom" :</label>
-    <input id="landing-pseudo" class="ld-input" type="text" placeholder="#SON-SENSEI" maxlength="20" autocomplete="off">
-    <button class="ld-btn" onclick="startFromLanding()">Explore la Caraïbe →</button>
+  <!-- ld-hero : display:contents en mobile (zero impact sur le flux existant),
+       devient une grille 2 colonnes a partir de 900px (voir sonara.css).
+       Le panneau de pochettes est masque par defaut et n'apparait qu'en
+       desktop -- aucune image supplementaire chargee visuellement en mobile. -->
+  <div class="ld-hero">
+    <div class="ld-content">
+      <p class="ld-eyebrow">1er blindtest caribéen</p>
+      <img src="/img/logo_sonara.png" class="ld-logo" alt="SONARA">
+      <p class="ld-desc">Trouve le son, trouve l'artiste. Défis tes potes sur les plus grands sons de la Caraïbe ! ♫</p>
+      <label class="ld-label">Choisis ton "son-nom" :</label>
+      <input id="landing-pseudo" class="ld-input" type="text" placeholder="#SON-SENSEI" maxlength="20" autocomplete="off">
+      <button class="ld-btn" onclick="startFromLanding()">Explore la Caraïbe →</button>
+    </div>
+    <div class="ld-covers-panel" aria-hidden="true">
+      <img src="/img/cover_dancehall.jpg" class="ld-cv ld-cv-a" alt="">
+      <img src="/img/cover_zouk.jpg" class="ld-cv ld-cv-b" alt="">
+      <img src="/img/cover_kompa.jpg" class="ld-cv ld-cv-c" alt="">
+      <img src="/img/cover_soca.jpg" class="ld-cv ld-cv-d" alt="">
+      <img src="/img/cover_reggae.jpg" class="ld-cv ld-cv-e" alt="">
+      <img src="/img/cover_rap.jpg" class="ld-cv ld-cv-f" alt="">
+    </div>
   </div>
   <div class="ld-soar-txt" aria-hidden="true">SO<br>AR</div>
   <div class="ld-spacer"></div>
@@ -448,5 +490,6 @@
 
 
 <script src="sonara.js"></script>
+<script src="intro.js"></script>
 </body>
 </html>

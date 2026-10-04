@@ -184,7 +184,7 @@ const server = http.createServer(function(req, res) {
   }
 
   // Fichiers statiques CSS / JS
-  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js') {
+  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js' || p.pathname === '/intro.css' || p.pathname === '/intro.js') {
     fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
       if (err) { res.writeHead(404); res.end('Not found'); return; }
       var ct = p.pathname.endsWith('.css') ? 'text/css' : 'application/javascript';
@@ -196,7 +196,7 @@ const server = http.createServer(function(req, res) {
 
   if (p.pathname.startsWith('/img/')) {
     var ext2 = p.pathname.split('.').pop().toLowerCase();
-    var mimes = {'jpg':'image/jpeg','jpeg':'image/jpeg','png':'image/png','webp':'image/webp','gif':'image/gif'};
+    var mimes = {'jpg':'image/jpeg','jpeg':'image/jpeg','png':'image/png','webp':'image/webp','gif':'image/gif','svg':'image/svg+xml'};
     var ct2 = mimes[ext2] || 'application/octet-stream';
     fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
       if (err) { res.writeHead(404); res.end('Not found'); return; }
