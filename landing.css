@@ -140,20 +140,20 @@ html{scroll-padding-top:var(--hd-h)}
 /* Main en silhouette qui monte du bas (derriere le telephone) */
 /* Main : silhouette en aplat sombre de la palette (comme Nebula), sans effet */
 .nb-hand,.nb-thumb{position:absolute;fill:var(--ink)}
-/* Calage : dans le trace (viewBox 667 x 1000), le telephone occupe x 250-420
-   (170 unites = largeur pw), son bas est a y 300 : la main le pince par son
+/* Calage : dans le trace retourne (viewBox 667 x 1000), le telephone occupe
+   x 247-417 (170 unites = largeur pw), son bas est a y 300 : la main le pince par son
    tiers inferieur. 1 unite = pw / 170. Le bras sort du bas du hero. */
 .nb-hand{
-  left:calc(var(--hx, var(--px)) - var(--pw) * 1.4706);
+  left:calc(var(--hx, var(--px)) - var(--pw) * 1.4529);
   top:calc(var(--hy, var(--pt)) + var(--pw) * .402);
   width:calc(var(--pw) * 3.9235);
   height:calc(var(--pw) * 5.8824);
   /* centre du telephone : la main suit exactement son deplacement au defilement */
-  transform-origin:calc(var(--pw) * 1.9706) calc(var(--pw) * .6813);
+  transform-origin:calc(var(--pw) * 1.9529) calc(var(--pw) * .6813);
   will-change:transform,opacity;
 }
 .nb-thumb{
-  left:calc(var(--pw) * -1.4706);top:calc(var(--pw) * .402);
+  left:calc(var(--pw) * -1.4529);top:calc(var(--pw) * .402);
   width:calc(var(--pw) * 3.9235);height:calc(var(--pw) * 5.8824);
   pointer-events:none;
 }
