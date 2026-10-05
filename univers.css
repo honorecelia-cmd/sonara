@@ -21,7 +21,8 @@
 .uv{
   --uv-c:var(--univers-dancehall);           /* couleur de l'univers actif (JS) */
   --uv-d:45vmin;                             /* diametre du vinyle central */
-  position:relative;height:100vh;min-height:560px;overflow:hidden;
+  /* plein ecran sous le header : le titre et le compteur restent visibles */
+  position:relative;height:calc(100vh - var(--hd-h));min-height:560px;overflow:hidden;
   background:var(--neb-black);color:#fff;
   font-family:var(--f-text);
 }

@@ -23,7 +23,10 @@
   --neb-margin:4.85vw;
   --f-display:'MuseoModerno', sans-serif;  /* titres */
   --f-text:'Inter', sans-serif;
+  --hd-h:64px;                 /* hauteur du header fixe */
 }
+/* Une ancre ou un scrollIntoView ne place jamais un titre sous le header */
+html{scroll-padding-top:var(--hd-h)}
 
 /* Centres lumineux du degrade : animes pour la "respiration" */
 @property --nb-g1x{syntax:'<percentage>';inherits:false;initial-value:85%}
@@ -64,7 +67,7 @@
 /* ── Header fixe ── */
 .nb-header{
   position:fixed;top:0;left:0;right:0;z-index:40;
-  height:64px;padding:0 var(--neb-margin);
+  height:var(--hd-h);padding:0 var(--neb-margin);
   display:flex;align-items:center;justify-content:space-between;
   background:rgba(8,8,8,.72);
   -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
@@ -383,7 +386,8 @@
 
 /* ── Mobile : les colonnes se replient ── */
 @media (max-width:760px){
-  .nb-header{height:56px;padding:0 16px}
+  :root{--hd-h:56px}
+  .nb-header{padding:0 16px}
   .nb-hd-logo img{height:24px}
   .nb-hd-slot{width:19px;height:40px}
   .nb-hd-right{gap:12px}
