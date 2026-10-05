@@ -254,17 +254,23 @@ var UNIVERS = [
   var AUTO=5000, RESUME=4000;
   var userPaused=false, hovering=false, kbFocus=false, holdUntil=0, lastTurn=performance.now();
   function holdAuto(){holdUntil=performance.now()+RESUME;}
+  // TEMPORAIRE : messages console pour verifier l'autoplay (a retirer)
+  var wasPaused=null;
+  console.log('autoplay : démarrage');
   setInterval(function(){
     var now=performance.now();
-    if(reduce.matches||userPaused||open||busy||!inView||document.hidden||hovering||kbFocus||now<holdUntil){lastTurn=now;return;}
-    if(now-lastTurn>=AUTO){lastTurn=now;go(1,true);}
+    var why=reduce.matches?'reduced-motion':userPaused?'bouton':open?'univers ouvert':!inView?'section hors écran':document.hidden?'onglet masqué':hovering?'survol panneau':kbFocus?'focus clavier':now<holdUntil?'inactivité':busy?'transition':'';
+    if(why&&why!=='transition'){if(wasPaused!==true)console.log('autoplay : pause ('+why+')');wasPaused=true;lastTurn=now;return;}
+    if(why){lastTurn=now;return;}
+    if(wasPaused!==false){console.log('autoplay : reprise');wasPaused=false;}
+    if(now-lastTurn>=AUTO){lastTurn=now;console.log('autoplay : univers suivant');go(1,true);}
   },250);
   // Survol : seulement le vinyle central et le panneau ouvert (la section
   // occupe tout l'ecran, la souris y est presque toujours)
-  [center,panel].forEach(function(el){
-    el.addEventListener('mouseenter',function(){hovering=true;});
-    el.addEventListener('mouseleave',function(){hovering=false;holdAuto();});
-  });
+  // Survol : seulement le panneau ouvert (le vinyle central est au centre
+  // de l'ecran, la souris y est souvent posee)
+  panel.addEventListener('mouseenter',function(){hovering=true;});
+  panel.addEventListener('mouseleave',function(){hovering=false;holdAuto();});
   sec.addEventListener('touchstart',holdAuto,{passive:true});
   sec.addEventListener('focusin',function(e){if(e.target.matches(':focus-visible'))kbFocus=true;});
   sec.addEventListener('focusout',function(e){if(!sec.contains(e.relatedTarget)){kbFocus=false;holdAuto();}});
