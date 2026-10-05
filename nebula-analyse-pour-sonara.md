@@ -510,7 +510,7 @@ Les textes entre crochets [ ] sont des emplacements à remplir avec le contenu r
 | Phrase gauche (4 lignes) | Trouve le titre, / trouve l'artiste / et grimpe / au classement ! |
 | 5 pills d'étapes | Choisis ton son-nom · Choisis ton univers · Écoute l'extrait · Trouve titre et artiste · Monte sur le podium |
 | Label + texte | Comment jouer / Il faut trouver le titre et l'artiste pour passer au morceau suivant. Plus tu réponds vite, plus tu marques. |
-| Liste « Les points » | Titre + artiste : 100 pts / Artiste seul : 60 pts / Titre seul : 50 pts / Bonus de rapidité |
+| Liste « Les points » | Trouve l'artiste ou le titre : 15 points. / Les deux : 30 points. / Réponds vite pour multiplier tes points : ×3 en moins de 5 secondes, ×2 en moins de 10. |
 | Potards | Rapidité · Précision · Série · Score |
 | Étiquettes sur les orbites | Réponse rapide · Fautes tolérées · Score en direct · Podium final |
 | Texte droite | Un jeu simple à comprendre / Difficile à lâcher |
