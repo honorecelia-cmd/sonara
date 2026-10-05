@@ -1046,7 +1046,7 @@ function doConf(){
   }
   // Message de victoire au centre
   var msg=document.createElement('div');
-  msg.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Syne,sans-serif;font-size:clamp(32px,8vw,64px);font-weight:800;color:#fff;z-index:301;pointer-events:none;white-space:nowrap;';
+  msg.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:MuseoModerno,sans-serif;font-size:clamp(32px,8vw,64px);font-weight:800;color:#fff;z-index:301;pointer-events:none;white-space:nowrap;';
   msg.textContent='🏆 Bravo !';
   w.appendChild(msg);
   setTimeout(function(){w.style.transition='opacity .6s';w.style.opacity='0';},2200);

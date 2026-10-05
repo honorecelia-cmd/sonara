@@ -21,7 +21,7 @@
   --neb-btn-cream:#E9E1DB;
   --neb-orange:#E85E16;
   --neb-margin:4.85vw;
-  --f-display:'Syne', sans-serif;
+  --f-display:'MuseoModerno', sans-serif;  /* titres */
   --f-text:'Inter', sans-serif;
 }
 
@@ -201,12 +201,6 @@
   font-family:var(--f-display);font-weight:800;font-size:5.3vw;line-height:.95;letter-spacing:-.03em;
 }
 .nb-hero-title > span{display:block}
-.nb-trema{position:relative;display:inline}
-.nb-trema::before{
-  content:"";position:absolute;left:50%;top:.06em;
-  width:.1em;height:.12em;margin-left:-.12em;
-  background:currentColor;box-shadow:.14em 0 0 currentColor;
-}
 .nb-hero-title > span:nth-child(1){color:#F3E3DC}
 .nb-hero-title > span:nth-child(2){color:rgba(246,196,178,.72)}
 .nb-hero-title > span:nth-child(3){color:rgba(244,160,128,.48)}
@@ -215,7 +209,7 @@
 .nb-hero-lede{position:absolute;left:67%;right:var(--neb-margin);top:12.4vw;z-index:2}
 .nb-hero-lede p{
   margin:0 0 2.2vw;
-  font-family:var(--f-display);font-weight:400;font-size:1.95vw;line-height:1.15;letter-spacing:-.01em;
+  font-family:var(--f-text);font-weight:300;font-size:1.95vw;line-height:1.15;letter-spacing:-.01em;
   color:#fff;
 }
 .nb-hero-lede .ld-badge-row{justify-content:flex-start;padding:0;margin:18px 0 0}
@@ -463,7 +457,7 @@
 .nb-secicon i:nth-child(4){transform:translateX(-5px)}
 /* Grandes phrases : chaque ligne s'eclaircit au defilement (landing.js) */
 .nb-phrase{
-  margin:0;font-family:var(--f-display);font-weight:400;
+  margin:0;font-family:var(--f-text);font-weight:300;
   font-size:4.5vw;line-height:1.05;letter-spacing:-.02em;color:#5A5A5A;
 }
 .nb-phrase > span{display:block}

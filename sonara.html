@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SONARA, THE Blind test</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="sonara.css">
 <link rel="stylesheet" href="landing.css">
 <link rel="stylesheet" href="univers.css">
@@ -81,9 +81,7 @@
       </button>
     </nav>
 
-    <!-- Le ï est reconstruit (i sans point + 2 points en CSS) : en Syne 800
-         les deux points du glyphe ï fusionnent en une seule barre. -->
-    <h1 class="nb-hero-title" aria-label="Le blind test qui fait vibrer la Caraïbe"><span>Le blind test</span><span>qui fait vibrer</span><span>la Cara<span class="nb-trema">&#x131;</span>be</span></h1>
+    <h1 class="nb-hero-title"><span>Le blind test</span><span>qui fait vibrer</span><span>la Caraïbe</span></h1>
 
     <div class="nb-hero-lede">
       <p>Écoute un extrait, trouve le titre et l'artiste, et défie tes proches où qu'ils soient. Le zouk, le kompa ou le dancehall deviennent un jeu à partager.</p>
@@ -730,12 +728,12 @@
   <div class="multi-choice-grid">
     <button class="multi-choice-card" onclick="showPage('s-create')">
       <span style="font-size:40px">🎮</span>
-      <span style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;color:var(--txt)">Créer</span>
+      <span style="font-family:MuseoModerno,sans-serif;font-size:16px;font-weight:800;color:var(--txt)">Créer</span>
       <span style="font-size:12px;color:var(--mut)">Lance une nouvelle salle</span>
     </button>
     <button class="multi-choice-card" onclick="showPage('s-join')">
       <span style="font-size:40px">🔑</span>
-      <span style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;color:var(--txt)">Rejoindre</span>
+      <span style="font-family:MuseoModerno,sans-serif;font-size:16px;font-weight:800;color:var(--txt)">Rejoindre</span>
       <span style="font-size:12px;color:var(--mut)">Entre le code d'une salle</span>
     </button>
   </div>
@@ -749,7 +747,7 @@
     <div style="width:80px"></div>
   </nav>
   <div style="width:100%;max-width:440px;padding:24px 16px 40px">
-    <h2 style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:24px">Nouvelle salle</h2>
+    <h2 style="font-family:MuseoModerno,sans-serif;font-size:22px;font-weight:800;margin-bottom:24px">Nouvelle salle</h2>
     <label class="flbl">Ton pseudo</label>
     <input class="finp" id="multi-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:20px">
     <div class="slbl" style="margin-bottom:12px">Choisis ton univers</div>
@@ -776,11 +774,11 @@
     <div style="width:80px"></div>
   </nav>
   <div style="width:100%;max-width:440px;padding:24px 16px 40px">
-    <h2 style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:24px">Rejoindre une salle</h2>
+    <h2 style="font-family:MuseoModerno,sans-serif;font-size:22px;font-weight:800;margin-bottom:24px">Rejoindre une salle</h2>
     <label class="flbl">Ton pseudo</label>
     <input class="finp" id="join-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:20px">
     <label class="flbl">Code de la salle</label>
-    <input style="background:var(--s2);border:1px solid var(--bd2);border-radius:10px;padding:14px;font-size:28px;font-weight:800;font-family:Syne,sans-serif;color:var(--txt);text-align:center;letter-spacing:6px;width:100%;text-transform:uppercase;margin-top:8px" id="join-code" type="text" placeholder="KALI" maxlength="4">
+    <input style="background:var(--s2);border:1px solid var(--bd2);border-radius:10px;padding:14px;font-size:28px;font-weight:800;font-family:MuseoModerno,sans-serif;color:var(--txt);text-align:center;letter-spacing:6px;width:100%;text-transform:uppercase;margin-top:8px" id="join-code" type="text" placeholder="KALI" maxlength="4">
     <button class="bgo" style="margin-top:20px" onclick="joinRoom()">Rejoindre →</button>
     <div id="join-error" style="display:none;margin-top:12px;color:var(--red);font-size:13px;font-weight:600;text-align:center"></div>
   </div>
@@ -796,8 +794,8 @@
   <div style="width:100%;max-width:440px;padding:20px 16px 40px">
     <div style="text-align:center;margin-bottom:20px">
       <div style="font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:2px">Code de la salle</div>
-      <div id="lobby-code" style="font-family:Syne,sans-serif;font-size:52px;font-weight:800;color:var(--grn);letter-spacing:10px;margin:8px 0">----</div>
-      <button id="btn-copy-code" onclick="copyLobbyCode()" style="margin-top:4px;background:var(--grad);border:none;border-radius:10px;padding:9px 22px;font-family:Syne,sans-serif;font-size:13px;font-weight:800;color:#fff;cursor:pointer;letter-spacing:.5px">📋 Copier le code</button>
+      <div id="lobby-code" style="font-family:MuseoModerno,sans-serif;font-size:52px;font-weight:800;color:var(--grn);letter-spacing:10px;margin:8px 0">----</div>
+      <button id="btn-copy-code" onclick="copyLobbyCode()" style="margin-top:4px;background:var(--grad);border:none;border-radius:10px;padding:9px 22px;font-family:MuseoModerno,sans-serif;font-size:13px;font-weight:800;color:#fff;cursor:pointer;letter-spacing:.5px">📋 Copier le code</button>
     </div>
     <div style="background:var(--s1);border:1px solid var(--bd2);border-radius:16px;padding:20px">
       <div style="font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Joueurs connectés</div>
@@ -824,7 +822,7 @@
     <div id="pseudo-theme-info" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--bd2);border-radius:16px;padding:16px;margin-bottom:24px">
       <span id="pseudo-theme-ic" style="font-size:32px">🌴</span>
       <div>
-        <div id="pseudo-theme-name" style="font-family:Syne,sans-serif;font-weight:800;font-size:16px">Mix Caribéen</div>
+        <div id="pseudo-theme-name" style="font-family:MuseoModerno,sans-serif;font-weight:800;font-size:16px">Mix Caribéen</div>
         <div style="font-size:12px;color:var(--mut)">10 questions</div>
       </div>
     </div>
