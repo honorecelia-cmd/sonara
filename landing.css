@@ -216,9 +216,10 @@ html{scroll-padding-top:var(--hd-h)}
   font-family:var(--f-display);font-weight:800;font-size:5.3vw;line-height:.95;letter-spacing:-.03em;
 }
 .nb-hero-title > span{display:block}
-.nb-hero-title > span:nth-child(1){color:#F3E3DC}
-.nb-hero-title > span:nth-child(2){color:rgba(246,196,178,.72)}
-.nb-hero-title > span:nth-child(3){color:rgba(244,160,128,.48)}
+.nb-hero-title > span{color:#fff}
+/* Seul fondu de la page : une teinte unie par ligne, la derniere en blanc plein */
+.nb-hero-title > span:nth-child(1){color:rgba(255,255,255,.55)}
+.nb-hero-title > span:nth-child(2){color:rgba(255,255,255,.75)}
 
 /* Accroche a droite (colonne 67 %) */
 .nb-hero-lede{position:absolute;left:67%;right:var(--neb-margin);top:12.4vw;z-index:2}
@@ -469,10 +470,10 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-secicon i:nth-child(2){transform:translateX(5px)}
 .nb-secicon i:nth-child(3){transform:translateY(5px)}
 .nb-secicon i:nth-child(4){transform:translateX(-5px)}
-/* Grandes phrases : chaque ligne s'eclaircit au defilement (landing.js) */
+/* Grandes phrases : teinte pleine (blanc, ou --ink sur fond creme) */
 .nb-phrase{
   margin:0;font-family:var(--f-text);font-weight:300;
-  font-size:4.5vw;line-height:1.05;letter-spacing:-.02em;color:#5A5A5A;
+  font-size:4.5vw;line-height:1.05;letter-spacing:-.02em;color:#fff;
 }
 .nb-phrase > span{display:block}
 .nb-phrase--sm{font-size:2.4vw;line-height:1.15;letter-spacing:-.01em}
@@ -795,7 +796,7 @@ html{scroll-padding-top:var(--hd-h)}
   font-size:11vw;line-height:.9;letter-spacing:-.04em;text-align:center;
 }
 .nb-mega span{display:block}
-.nb-s04-mega{position:relative;margin-top:1vw;color:rgba(42,10,0,.55)}
+.nb-s04-mega{position:relative;margin-top:1vw;color:var(--ink)}
 
 /* hauteur minimale + bloc "Comment jouer" dans le flux : la zone grandit
    avec son texte, les etapes ne peuvent plus le chevaucher */
@@ -903,7 +904,7 @@ html{scroll-padding-top:var(--hd-h)}
   margin:6vw var(--neb-margin) 0 auto;width:max-content;text-align:right;
   font-family:var(--f-text);font-weight:300;font-size:2.4vw;line-height:1.15;color:#111;
 }
-.nb-s04-right span{color:#8A8378}
+.nb-s04-right span{color:inherit}
 .nb-secfoot--light .nb-globe{stroke:rgba(17,17,17,.7)}
 .nb-secfoot--light p{color:rgba(17,17,17,.55)}
 
@@ -940,11 +941,9 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-s05-intro .nb-secnum{position:absolute;left:var(--neb-margin);top:11vw}
 .nb-s05-title{
   margin:0 0 0 20.4vw;font-family:var(--f-display);font-weight:800;
-  font-size:6.4vw;line-height:.95;letter-spacing:-.03em;color:var(--cream);
+  font-size:6.4vw;line-height:.95;letter-spacing:-.03em;color:#fff;
 }
 .nb-s05-title span{display:block}
-.nb-s05-title span:nth-child(2){color:rgba(253,221,184,.7)}
-.nb-s05-title span:nth-child(3){color:rgba(253,221,184,.45)}
 
 .nb-s05-stage{position:relative;height:56vw;margin-top:4vw}
 .nb-s05-labels{
@@ -1044,3 +1043,5 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-sec--light .nb-s04-pts{color:var(--ink)}
 .nb-sec--light .nb-s04-pts li{border-top-color:rgba(45,16,2,.14)}
 .nb-sec--light .nb-s04-right{color:var(--ink)}
+
+.nb-sec--light .nb-phrase{color:var(--ink)}
