@@ -138,13 +138,13 @@ html{scroll-padding-top:var(--hd-h)}
 }
 
 /* Main en silhouette qui monte du bas (derriere le telephone) */
-.nb-hand,.nb-thumb{position:absolute;fill:#0b0201}
+/* Main : silhouette en aplat sombre de la palette (comme Nebula), sans effet */
+.nb-hand,.nb-thumb{position:absolute;fill:var(--ink)}
 .nb-hand{
   left:calc(var(--hx, var(--px)) - var(--pw) * .3);
   top:calc(var(--hy, var(--pt)) + var(--pw) * .96);
   width:calc(var(--pw) * 1.6);
   height:calc(var(--pw) * 2.8);
-  filter:drop-shadow(0 0 1px rgba(255,150,90,.25));
 }
 .nb-thumb{
   left:-30%;top:calc(var(--pw) * .96);
