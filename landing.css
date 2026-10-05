@@ -33,6 +33,13 @@
 html{scroll-padding-top:var(--hd-h)}
 
 
+/* Centres lumineux du degrade : animes pour la "respiration" */
+@property --nb-g1x{syntax:'<percentage>';inherits:false;initial-value:85%}
+@property --nb-g1y{syntax:'<percentage>';inherits:false;initial-value:95%}
+@property --nb-g2x{syntax:'<percentage>';inherits:false;initial-value:55%}
+@property --nb-g2y{syntax:'<percentage>';inherits:false;initial-value:60%}
+@property --nb-g3x{syntax:'<percentage>';inherits:false;initial-value:75%}
+
 #landing{
   display:flex;
   flex-direction:column;
@@ -91,7 +98,31 @@ html{scroll-padding-top:var(--hd-h)}
   flex-shrink:0;
 }
 .nb-hero-clip{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.nb-hero-bg{position:absolute;inset:0;background:var(--fond-orange)}
+/* Exception aux aplats : le hero garde son degrade (demande explicite) */
+/* Bas du hero : le degrade se fond dans le brun de la section 01 */
+.nb-hero-clip::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:9vw;
+  background:linear-gradient(180deg,rgba(45,16,2,0),var(--fond-brun));
+}
+.nb-hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(60% 55% at var(--nb-g1x) var(--nb-g1y), var(--neb-peach) 0%, transparent 70%),
+    radial-gradient(70% 70% at var(--nb-g2x) var(--nb-g2y), var(--neb-core) 0%, transparent 75%),
+    radial-gradient(90% 80% at var(--nb-g3x) 20%, var(--neb-brick) 0%, transparent 80%),
+    linear-gradient(135deg, var(--neb-ink) 0%, var(--neb-wine) 30%, var(--neb-brick) 55%, var(--neb-core) 80%, var(--neb-hot) 100%);
+  animation:nb-breathe 12s ease-in-out infinite alternate;
+}
+@keyframes nb-breathe{
+  0%  {--nb-g1x:85%;--nb-g1y:95%;--nb-g2x:55%;--nb-g2y:60%;--nb-g3x:75%}
+  50% {--nb-g1x:81%;--nb-g1y:91%;--nb-g2x:59%;--nb-g2y:57%;--nb-g3x:71%}
+  100%{--nb-g1x:88%;--nb-g1y:93%;--nb-g2x:52%;--nb-g2y:63%;--nb-g3x:78%}
+}
+/* Grain SVG (feTurbulence) a 7 % : evite les bandes de couleur */
+.nb-grain{
+  position:absolute;inset:0;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
 /* Logo geant en filigrane : toute la largeur libre a gauche du telephone
    (proportions gardees : c'est la largeur qui le limite), centre dans la
@@ -410,6 +441,7 @@ html{scroll-padding-top:var(--hd-h)}
 }
 
 @media (prefers-reduced-motion:reduce){
+  .nb-hero-bg{animation:none}
   .nb-pill,.nb-trio button{transition:none}
 }
 
@@ -860,12 +892,12 @@ html{scroll-padding-top:var(--hd-h)}
 }
 .nb-steps li{
   display:flex;align-items:center;gap:12px;padding:8px 22px 8px 8px;border-radius:999px;
-  background:#E9E5DE;font-family:var(--f-text);font-size:14px;font-weight:600;color:#111;
+  background:var(--ink);font-family:var(--f-text);font-size:14px;font-weight:600;color:var(--cream);
 }
 .nb-steps span{
   width:40px;height:40px;border-radius:50%;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  background:#fff;color:var(--neb-orange);font-weight:700;
+  background:var(--accent);color:#fff;font-weight:700;
 }
 .nb-s04-right{
   margin:6vw var(--neb-margin) 0 auto;width:max-content;text-align:right;
