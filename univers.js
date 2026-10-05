@@ -6,6 +6,10 @@
 // placeholder (aplat de la couleur + nom en MuseoModerno).
 // Transitions : A (changer d'univers), B (ouvrir), C (fermer).
 // ═══════════════════════════════════════════════════════════════
+// Reglages du carrousel
+var UV_DELAI_AUTO = 3000;        // ms entre deux univers en defilement automatique
+var UV_DUREE_TRANSITION = 500;   // ms pour passer d'un univers a l'autre (pivot du disque)
+
 var UNIVERS = [
   {nom:'Dancehall', slug:'dancehall', couleur:'var(--univers-dancehall)', image:'/img/cover_dancehall.jpg',
    origine:'Jamaïque', epoque:'fin des années 1970', signature:'le deejay sur les riddims',
@@ -117,22 +121,22 @@ var UNIVERS = [
       });
       return;
     }
-    var out=anim(flip,[{transform:'rotateY(0deg)'},{transform:'rotateY('+(90*dir)+'deg)'}],{easing:'cubic-bezier(.65,0,1,1)'});
+    var out=anim(flip,[{transform:'rotateY(0deg)'},{transform:'rotateY('+(90*dir)+'deg)'}],{duration:UV_DUREE_TRANSITION/2,easing:'cubic-bezier(.65,0,1,1)'});
     [giant].forEach(function(el){
-      anim(el,[{opacity:1,transform:'translate(0,-50%)'},{opacity:0,transform:'translate('+(-6*dir)+'vw,-50%)'}],{duration:350}).finished.then(function(){
+      anim(el,[{opacity:1,transform:'translate(0,-50%)'},{opacity:0,transform:'translate('+(-6*dir)+'vw,-50%)'}],{duration:UV_DUREE_TRANSITION/2}).finished.then(function(){
         paintGiant();
-        anim(el,[{opacity:0,transform:'translate('+(6*dir)+'vw,-50%)'},{opacity:1,transform:'translate(0,-50%)'}],{duration:400,fill:'none'});
+        anim(el,[{opacity:0,transform:'translate('+(6*dir)+'vw,-50%)'},{opacity:1,transform:'translate(0,-50%)'}],{duration:UV_DUREE_TRANSITION/2,fill:'none'});
       });
     });
     [prevVy,nextVy].forEach(function(el){
-      anim(el,[{opacity:1,transform:'none'},{opacity:0,transform:'translateX('+(-40*dir)+'px)'}],{duration:350}).finished.then(function(){
+      anim(el,[{opacity:1,transform:'none'},{opacity:0,transform:'translateX('+(-40*dir)+'px)'}],{duration:UV_DUREE_TRANSITION/2}).finished.then(function(){
         paintSides();
-        anim(el,[{opacity:0,transform:'translateX('+(40*dir)+'px)'},{opacity:1,transform:'none'}],{duration:400,fill:'none'});
+        anim(el,[{opacity:0,transform:'translateX('+(40*dir)+'px)'},{opacity:1,transform:'none'}],{duration:UV_DUREE_TRANSITION/2,fill:'none'});
       });
     });
     out.finished.then(function(){
       paintCenter();paintCount();
-      var back=anim(flip,[{transform:'rotateY('+(-90*dir)+'deg)'},{transform:'rotateY(0deg)'}],{easing:'cubic-bezier(0,0,.35,1)',fill:'none'});
+      var back=anim(flip,[{transform:'rotateY('+(-90*dir)+'deg)'},{transform:'rotateY(0deg)'}],{duration:UV_DUREE_TRANSITION/2,easing:'cubic-bezier(0,0,.35,1)',fill:'none'});
       out.cancel();
       back.finished.then(function(){
         [giant,prevVy,nextVy].forEach(function(el){el.getAnimations().forEach(function(a){a.cancel();});});
@@ -251,7 +255,7 @@ var UNIVERS = [
   // l'ecran. En pause : survol du vinyle central ou du panneau, toucher, focus clavier, univers ouvert,
   // bouton pause ; reprise apres quelques secondes d'inactivite.
   // Desactive avec prefers-reduced-motion.
-  var AUTO=5000, RESUME=4000;
+  var AUTO=UV_DELAI_AUTO, RESUME=4000;
   var userPaused=false, hovering=false, kbFocus=false, holdUntil=0, lastTurn=performance.now();
   function holdAuto(){holdUntil=performance.now()+RESUME;}
   // TEMPORAIRE : messages console pour verifier l'autoplay (a retirer)
@@ -261,10 +265,10 @@ var UNIVERS = [
     var now=performance.now();
     var why=reduce.matches?'reduced-motion':userPaused?'bouton':open?'univers ouvert':!inView?'section hors écran':document.hidden?'onglet masqué':hovering?'survol panneau':kbFocus?'focus clavier':now<holdUntil?'inactivité':busy?'transition':'';
     if(why&&why!=='transition'){if(wasPaused!==true)console.log('autoplay : pause ('+why+')');wasPaused=true;lastTurn=now;return;}
-    if(why){lastTurn=now;return;}
+    if(why)return;   // transition en cours : le delai continue de courir
     if(wasPaused!==false){console.log('autoplay : reprise');wasPaused=false;}
     if(now-lastTurn>=AUTO){lastTurn=now;console.log('autoplay : univers suivant');go(1,true);}
-  },250);
+  },100);
   // Survol : seulement le vinyle central et le panneau ouvert (la section
   // occupe tout l'ecran, la souris y est presque toujours)
   // Survol : seulement le panneau ouvert (le vinyle central est au centre
@@ -316,5 +320,6 @@ var UNIVERS = [
     if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3)go(dx<0?1:-1);
   },{passive:true});
 
+  bg.style.transitionDuration=UV_DUREE_TRANSITION+'ms';
   paintAll();
 })();
