@@ -1,0 +1,153 @@
+/* ═══════════════════════════════════════════════════════════════
+   SONARA — section "Les univers" (carrousel de vinyles)
+   Donnees : tableau UNIVERS dans univers.js. Vinyle : composant .vy
+   (landing.css). Aplats uniquement dans cette section : seule exception,
+   la texture des sillons et le reflet du disque.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Une couleur pleine par univers (palette chaude SONARA) */
+:root{
+  --univers-dancehall:#C34503;
+  --univers-soca:#E85E16;
+  --univers-zouk:#A10D01;
+  --univers-reggae:#6B3A0E;
+  --univers-trap:#2D1002;
+  --univers-rap:#5A2318;
+  --univers-mix:#F35524;
+  --univers-kompa:#860100;
+  --univers-shatta:#D3561A;
+}
+
+.uv{
+  --uv-c:var(--univers-dancehall);           /* couleur de l'univers actif (JS) */
+  --uv-d:45vmin;                             /* diametre du vinyle central */
+  position:relative;height:100vh;min-height:560px;overflow:hidden;
+  background:var(--neb-black);color:#fff;
+  font-family:var(--f-text);
+}
+/* Aplat de l'univers : se retracte en cercle a l'ouverture (clip-path) */
+.uv-bg{
+  position:absolute;inset:0;background:var(--uv-c);
+  clip-path:circle(150% at 50% 50%);
+  transition:background-color .6s ease;
+}
+/* Nom geant ton sur ton, decor */
+.uv-giant{
+  position:absolute;left:0;right:0;top:50%;margin:0;transform:translateY(-50%);
+  text-align:center;white-space:nowrap;pointer-events:none;
+  font-family:'MuseoModerno',sans-serif;font-weight:900;line-height:.85;letter-spacing:-.02em;
+  font-size:var(--uv-fs,22vw);
+  color:color-mix(in srgb, var(--uv-c) 80%, #000);
+}
+
+.uv-stage{position:absolute;inset:0;perspective:1200px}
+.uv-center,.uv-side,.uv-sleeve{position:absolute;left:50%;top:50%}
+.uv-center{
+  width:var(--uv-d);height:var(--uv-d);margin:calc(var(--uv-d) / -2) 0 0 calc(var(--uv-d) / -2);
+  padding:0;border:none;border-radius:50%;background:none;cursor:pointer;z-index:2;
+  -webkit-tap-highlight-color:transparent;
+}
+.uv-center:focus-visible{outline:2px solid #fff;outline-offset:6px}
+.uv-flip{display:block;width:100%;height:100%;transform-style:preserve-3d;will-change:transform}
+.uv-center .vy{--vy-hole:var(--uv-c);filter:drop-shadow(0 18px 40px rgba(0,0,0,.35))}
+
+/* Voisins : plus petits, coupes par les bords de l'ecran */
+.uv-side{
+  --uv-ds:calc(var(--uv-d) * .62);
+  width:var(--uv-ds);height:var(--uv-ds);margin-top:calc(var(--uv-ds) / -2);z-index:1;
+}
+.uv-side--prev{left:calc(var(--uv-ds) / -2)}
+.uv-side--next{left:calc(100% - var(--uv-ds) / 2)}
+.uv-side .vy{--vy-hole:var(--uv-c)}
+
+/* Pochette (etui) : glisse devant le vinyle a l'ouverture */
+.uv-sleeve{
+  width:var(--uv-d);height:var(--uv-d);margin:calc(var(--uv-d) / -2) 0 0 calc(var(--uv-d) / -2);
+  z-index:3;border-radius:16px;overflow:hidden;opacity:0;pointer-events:none;
+  background:var(--uv-c);
+}
+.uv-sleeve img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.uv-sleeve-ph{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10%;
+  font-family:'MuseoModerno',sans-serif;font-weight:900;font-size:calc(var(--uv-d) * .14);line-height:.9;text-align:center;
+}
+/* Survol : decalage de couleur discret (duotone dans la couleur de l'univers) */
+.uv-sleeve::after{
+  content:"";position:absolute;inset:0;background:var(--uv-c);
+  mix-blend-mode:color;opacity:0;transition:opacity .4s ease;
+}
+.uv.is-open .uv-sleeve{pointer-events:auto}
+@media (hover:hover){
+  .uv-sleeve:hover::after{opacity:.45}
+  .uv-sleeve:hover img{transform:translate(4px,-3px) scale(1.02)}
+}
+
+/* Interface du carrousel */
+.uv-ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+.uv-ui > *{pointer-events:auto}
+.uv-arrow{
+  position:absolute;top:50%;margin-top:-28px;width:56px;height:56px;border-radius:50%;
+  border:none;background:var(--neb-black);color:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background-color .25s ease, transform .25s ease;
+}
+.uv-arrow:hover{background:var(--accent)}
+.uv-arrow:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.uv-arrow svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.uv-arrow--prev{left:var(--neb-margin)}
+.uv-arrow--next{right:var(--neb-margin)}
+.uv-count{
+  position:absolute;left:var(--neb-margin);bottom:5vh;margin:0;
+  display:flex;align-items:baseline;gap:10px;
+}
+.uv-count b{font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:clamp(48px,5.5vw,96px);line-height:1}
+.uv-count span{font-size:16px;color:rgba(255,255,255,.75)}
+.uv-discover{
+  position:absolute;left:50%;top:calc(50% + var(--uv-d) / 2 + 28px);transform:translateX(-50%);
+  background:var(--neb-black);color:#fff;
+}
+.uv-discover:hover{background:#fff;color:var(--neb-black);transform:translate(-50%,-2px)}
+
+/* Panneau ouvert */
+.uv-panel{
+  position:absolute;left:52vw;right:var(--neb-margin);top:50%;transform:translateY(-50%);z-index:4;
+  max-height:84vh;overflow-y:auto;
+}
+.uv-panel[hidden]{display:none}
+.uv-p-title{
+  margin:0 0 18px;font-family:'MuseoModerno',sans-serif;font-weight:900;
+  font-size:clamp(44px,6vw,104px);line-height:.92;letter-spacing:-.02em;color:var(--uv-c);
+  min-height:.92em;
+}
+.uv-p-meta{margin:0 0 22px;font-size:15px;color:rgba(255,255,255,.6)}
+.uv-p-text{margin:0 0 28px;font-size:16px;line-height:1.55;color:rgba(255,255,255,.82);max-width:560px}
+.uv-p-text span{display:inline}
+.uv-p-infos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:0 0 32px;max-width:620px}
+.uv-p-infos div{padding-top:12px;border-top:1px solid rgba(255,255,255,.14)}
+.uv-p-infos dt{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px}
+.uv-p-infos dd{margin:0;font-size:14px;line-height:1.35}
+.uv-p-actions{display:flex;flex-wrap:wrap;gap:12px}
+.uv-play{background:var(--uv-c);color:#fff}
+.uv-play:hover{background:#fff;color:var(--neb-black)}
+.uv-back{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+.uv-back:hover{background:#fff;color:var(--neb-black)}
+
+/* Couleur claire (Mix, Soca...) : le texte reste blanc, lisible sur aplat chaud */
+
+/* ── Mobile ── */
+@media (max-width:767px){
+  .uv{--uv-d:70vw;min-height:600px}
+  .uv-side{--uv-ds:calc(var(--uv-d) * .55)}
+  .uv-side--prev{left:calc(var(--uv-ds) * -.82)}
+  .uv-side--next{left:calc(100% - var(--uv-ds) * .18)}
+  .uv-arrow{width:46px;height:46px;margin-top:-23px;top:auto;bottom:5vh}
+  .uv-arrow--prev{left:auto;right:calc(16px + 56px)}
+  .uv-arrow--next{right:16px}
+  .uv-count{left:16px}
+    .uv-panel{
+    left:16px;right:16px;top:calc(var(--uv-d) * .6 + 110px);bottom:16px;transform:none;
+    max-height:none;padding-bottom:16px;
+  }
+  .uv-p-title{font-size:13vw}
+  .uv-p-infos{grid-template-columns:1fr}
+}

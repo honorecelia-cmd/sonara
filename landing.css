@@ -182,24 +182,17 @@
   font-family:var(--f-text);font-size:14px;color:rgba(255,255,255,.82);
   transition:background-color .2s ease,color .2s ease;
 }
-/* Vinyle "Decouvrir" (tout a droite du menu) */
+/* Vinyle "Decouvrir" (tout a droite du menu) : composant .vy + libelle */
 .nb-vinyl{
   position:relative;margin-left:auto;flex-shrink:0;
-  width:44px;height:44px;padding:0;border:none;border-radius:50%;
-  background:none;cursor:pointer;
-  box-shadow:0 6px 18px -6px rgba(0,0,0,.6);
-  transition:box-shadow .3s ease;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:0;border:none;background:none;cursor:pointer;color:#fff;
+  font-family:var(--f-text);font-size:13px;font-weight:500;
   -webkit-tap-highlight-color:transparent;
 }
-.nb-vinyl:hover{box-shadow:0 0 0 2px rgba(243,227,220,.35),0 8px 22px -6px rgba(0,0,0,.7)}
-.nb-vinyl:focus-visible{outline:2px solid #fff;outline-offset:3px}
-.nb-vinyl svg{display:block;width:100%;height:100%;will-change:transform}
-.nb-vinyl-disc{fill:#0d0d0d}
-.nb-vinyl-groove{fill:none;stroke:rgba(255,255,255,.13);stroke-width:.6}
-.nb-vinyl-groove--label{stroke:rgba(8,8,8,.35)}
-.nb-vinyl-txt{font-family:var(--f-text);font-size:5.2px;font-weight:700;fill:#F3E3DC}
-.nb-vinyl-label{fill:var(--neb-orange)}
-.nb-vinyl-hole{fill:#F3E3DC}
+.nb-vinyl .vy{width:44px;--vy-label:var(--accent);--vy-hole:#7a1a02;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+.nb-vinyl:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:999px}
+.nb-vinyl:hover .nb-vinyl-txt{text-decoration:underline;text-underline-offset:4px}
 .nb-menu-list button:hover,.nb-menu-list button:focus-visible{background:var(--neb-orange);color:#fff;outline:none}
 
 /* Titre 3 lignes : blanc chaud qui s'estompe vers le rose-orange translucide */
@@ -411,7 +404,9 @@
   .nb-meta-col{position:static;font-size:12px}
   .nb-meta{grid-template-columns:auto auto auto 1fr;align-items:center;gap:12px 22px;padding:0}
   .nb-vinyl{justify-self:end}
-  .nb-vinyl{position:static;width:40px;height:40px}
+  .nb-vinyl{position:static}
+  .nb-vinyl .vy{width:40px}
+  .nb-vinyl-txt{display:none}
   .nb-meta-logo{position:static}
   .nb-meta-logo img{height:28px}
   .nb-meta .nb-meta-col{position:relative;left:auto}
@@ -716,107 +711,6 @@
 }
 .nb-crumbs i{font-style:normal;margin:0 6px;color:rgba(255,255,255,.25)}
 
-.nb-s02-big2{margin:12vw 0 0 36vw;width:55vw}
-
-/* L'artiste a l'honneur + les artistes */
-.nb-s02-artists{position:relative;height:49vw;margin-top:10vw}
-.nb-marquee{position:absolute;left:0;right:0;top:20vw;overflow:hidden;pointer-events:none}
-.nb-marquee-track{display:flex;width:max-content;animation:nb-marquee 38s linear infinite}
-.nb-marquee-track span{
-  padding-right:.4em;white-space:nowrap;
-  font-family:var(--f-display);font-weight:400;font-size:6.4vw;line-height:1;letter-spacing:-.02em;color:#262626;
-}
-@keyframes nb-marquee{to{transform:translateX(-50%)}}
-.nb-s02-gold{--pw:20vw;position:absolute;left:20.4vw;top:0;width:var(--pw);z-index:1}
-.nb-s02-list{--pw:20vw;position:absolute;left:51vw;top:4vw;width:var(--pw);z-index:1}
-.nb-s02-artcol{position:absolute;left:78vw;top:8vw;width:17vw}
-
-.nb-screen--gold{background:radial-gradient(120% 55% at 50% 35%,#3b2608 0%,#140c05 55%,#0a0604 100%);text-align:center}
-.nb-gold-star{position:absolute;top:calc(var(--pw) * .2);left:50%;width:calc(var(--pw) * .07);transform:translateX(-50%);fill:#F6C04A}
-.nb-gold-t{
-  position:absolute;top:calc(var(--pw) * .3);left:0;right:0;margin:0;
-  font-family:var(--f-display);font-weight:800;font-size:calc(var(--pw) * .085);line-height:1;letter-spacing:-.02em;
-  background:linear-gradient(180deg,#FFE6A6 0%,#F6C04A 50%,#B8862B 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.nb-gold-card{
-  position:absolute;top:calc(var(--pw) * .58);left:12%;right:12%;
-  padding:calc(var(--pw) * .04);border-radius:calc(var(--pw) * .06);
-  background:linear-gradient(160deg,rgba(246,192,74,.22),rgba(255,255,255,.04) 45%,rgba(184,134,43,.18));
-  box-shadow:inset 0 0 0 1px rgba(246,192,74,.45),0 0 calc(var(--pw) * .18) rgba(246,192,74,.22);
-  overflow:hidden;
-}
-.nb-gold-card::after{
-  content:"";position:absolute;inset:-40% -60%;
-  background:linear-gradient(115deg,transparent 40%,rgba(255,236,190,.28) 50%,transparent 60%);
-  animation:nb-shine 4.5s ease-in-out infinite;
-}
-@keyframes nb-shine{0%,30%{transform:translateX(-40%)}70%,100%{transform:translateX(40%)}}
-.nb-gold-photo{
-  position:relative;aspect-ratio:1;border-radius:calc(var(--pw) * .04);
-  background:
-    radial-gradient(35% 32% at 50% 40%,rgba(255,230,166,.55),transparent 70%),
-    radial-gradient(60% 45% at 50% 100%,rgba(232,94,22,.6),transparent 75%),
-    linear-gradient(160deg,#5a3608,#1f1206);
-}
-.nb-gold-medal{
-  position:absolute;left:50%;bottom:calc(var(--pw) * -.05);transform:translateX(-50%);
-  width:calc(var(--pw) * .11);height:calc(var(--pw) * .11);border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#FFE6A6,#B8862B 75%);
-  display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px #140c05;
-}
-.nb-gold-medal svg{width:52%;fill:#3b2608}
-.nb-gold-name{margin:calc(var(--pw) * .085) 0 0;font-family:var(--f-display);font-weight:800;font-size:calc(var(--pw) * .05)}
-.nb-gold-sub{margin:calc(var(--pw) * .01) 0 0;font-size:calc(var(--pw) * .038);color:rgba(255,255,255,.55)}
-.nb-gold-count{margin:calc(var(--pw) * .03) 0 calc(var(--pw) * .01);font-size:calc(var(--pw) * .036);color:#F6C04A}
-.nb-gold-spark{
-  position:absolute;top:calc(var(--pw) * .62);right:9%;
-  width:calc(var(--pw) * .025);height:calc(var(--pw) * .025);border-radius:50%;
-  background:#FFE6A6;box-shadow:0 0 calc(var(--pw) * .04) calc(var(--pw) * .015) rgba(246,192,74,.8);
-}
-.nb-gold-btn{
-  position:absolute;left:50%;bottom:calc(var(--pw) * .13);transform:translateX(-50%);
-  padding:calc(var(--pw) * .035) calc(var(--pw) * .09);border-radius:999px;
-  background:linear-gradient(180deg,#F6C04A,#D99A2B);color:#2A0A00;
-  font-size:calc(var(--pw) * .042);font-weight:700;white-space:nowrap;
-}
-
-.nb-screen--artists{background:linear-gradient(180deg,#160a07 0%,#0b0505 70%)}
-.nb-art-tabs{top:calc(var(--pw) * .17)}
-.nb-art-grid{position:absolute;top:calc(var(--pw) * .3);left:6%;right:6%;display:flex;gap:calc(var(--pw) * .04)}
-.nb-art-col{flex:1;display:flex;flex-direction:column;gap:calc(var(--pw) * .05)}
-.nb-art-col--off{padding-top:calc(var(--pw) * .16)}
-.nb-art{font-size:calc(var(--pw) * .038)}
-.nb-art-img{display:block;aspect-ratio:1;border-radius:calc(var(--pw) * .045);margin-bottom:calc(var(--pw) * .025)}
-.nb-art-img--a{background:linear-gradient(150deg,#FF8B56,#C23401)}
-.nb-art-img--b{background:linear-gradient(150deg,#E6C789,#D3561A)}
-.nb-art-img--c{background:linear-gradient(150deg,#A10D01,#400000)}
-.nb-art-img--d{background:linear-gradient(150deg,#E9E1DB,#8F887C)}
-.nb-art b{display:flex;align-items:center;gap:calc(var(--pw) * .015);font-weight:600}
-.nb-art b i{
-  width:calc(var(--pw) * .035);height:calc(var(--pw) * .035);border-radius:50%;background:var(--neb-orange);
-  position:relative;flex-shrink:0;
-}
-.nb-art b i::after{
-  content:"";position:absolute;left:30%;top:22%;width:24%;height:40%;
-  border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg);
-}
-.nb-art em{display:block;font-style:normal;color:rgba(255,255,255,.45)}
-.nb-art-search{position:absolute;left:6%;right:6%;bottom:calc(var(--pw) * .08);display:flex;gap:calc(var(--pw) * .03)}
-.nb-art-field{
-  flex:1;height:calc(var(--pw) * .12);border-radius:999px;background:#1f1f1f;
-  display:flex;align-items:center;padding-left:calc(var(--pw) * .04);
-}
-.nb-art-field svg{width:calc(var(--pw) * .05);fill:none;stroke:rgba(255,255,255,.5);stroke-width:2;stroke-linecap:round}
-.nb-art-filter{
-  width:calc(var(--pw) * .12);height:calc(var(--pw) * .12);border-radius:50%;background:var(--neb-orange);
-  display:flex;align-items:center;justify-content:center;
-}
-.nb-art-filter svg{width:45%;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round}
-
-@media (prefers-reduced-motion:reduce){
-  .nb-marquee-track,.nb-gold-card::after{animation:none}
-}
 
 @media (max-width:760px){
   .nb-s02-intro{padding:76px 16px 0;min-height:0}
@@ -829,11 +723,53 @@
   .nb-s02-room{--pw:56vw;position:relative;left:auto;top:auto;margin:30px 0 60px}
   .nb-s02-label{position:static;width:auto;align-self:stretch}
   .nb-crumbs{position:static;align-self:stretch;margin-top:18px}
-  .nb-s02-big2{margin:72px 16px 0;width:auto}
-  .nb-s02-artists{height:auto;margin-top:64px;padding:0 16px;display:flex;flex-direction:column;align-items:center;gap:48px}
-  .nb-marquee{top:40vw}
-  .nb-s02-gold,.nb-s02-list{--pw:56vw;position:relative;left:auto;top:auto}
-  .nb-s02-list{display:none}
-  .nb-s02-artcol{position:static;width:auto;align-self:stretch}
-  .nb-marquee-track span{font-size:16vw}
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Composant vinyle (hero + carrousel des univers)
+   Etiquette = pochette en rond (33 % du diametre), trou 2,5 %, zone lisse
+   etroite, sillons fins et serres + 3 separations de plages, bord lisse.
+   Seuls .vy-spin (disque + etiquette) tourne ; le reflet .vy-sheen est
+   un calque separe, immobile. Exception "aucun degrade" : limitee au
+   disque (texture des sillons et reflet).
+   Variables : --vy-color (disque), --vy-label (aplat d'etiquette sans
+   image), --vy-hole (couleur vue a travers le trou).
+   ═══════════════════════════════════════════════════════════════ */
+.vy{
+  --vy-color:#141414;--vy-label:var(--accent);--vy-hole:var(--neb-black);
+  position:relative;display:block;width:100%;aspect-ratio:1;border-radius:50%;
+  container-type:inline-size;
+}
+.vy-spin{position:absolute;inset:0;border-radius:50%;will-change:transform}
+.vy-disc{
+  position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(circle closest-side, var(--vy-color) 0 36.6%, transparent 37% 96.8%, var(--vy-color) 97.2% 100%, transparent 100%),
+    radial-gradient(circle closest-side, transparent 0 52.4%, rgba(0,0,0,.16) 52.6% 52.9%, transparent 53.1% 66.4%, rgba(0,0,0,.16) 66.6% 66.9%, transparent 67.1% 80.9%, rgba(0,0,0,.16) 81.1% 81.4%, transparent 81.6%),
+    repeating-radial-gradient(circle, rgba(255,255,255,.035) 0, rgba(0,0,0,.075) .9px, rgba(255,255,255,.035) 1.8px),
+    var(--vy-color);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.35);
+}
+.vy-label{
+  position:absolute;left:33.5%;top:33.5%;width:33%;height:33%;border-radius:50%;overflow:hidden;
+  background:var(--vy-label);
+  display:flex;align-items:center;justify-content:center;
+}
+.vy-label img{display:block;width:100%;height:100%;object-fit:cover}
+.vy-label-txt{
+  font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:4.2cqw;line-height:1;color:#fff;
+  text-align:center;padding:0 8%;
+}
+.vy-hole{
+  position:absolute;left:50%;top:50%;width:2.5%;height:2.5%;min-width:2px;min-height:2px;
+  transform:translate(-50%,-50%);border-radius:50%;background:var(--vy-hole);
+}
+.vy-sheen{
+  position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 25deg, transparent 0deg, rgba(255,255,255,.14) 22deg, transparent 50deg 180deg, rgba(255,255,255,.1) 204deg, transparent 232deg);
+  -webkit-mask:radial-gradient(circle closest-side, transparent 0 35%, #000 37% 98%, transparent 100%);
+  mask:radial-gradient(circle closest-side, transparent 0 35%, #000 37% 98%, transparent 100%);
+}
+.vy--spin .vy-spin{animation:vy-spin 8s linear infinite}
+@keyframes vy-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.vy--spin .vy-spin{animation:none}}

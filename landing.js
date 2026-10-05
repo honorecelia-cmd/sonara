@@ -26,6 +26,7 @@
     dlg.hidden=false;
     setTimeout(function(){input.focus();},30);
   }
+  window.nbOpenSonnom=openSonnom;   // utilise par univers.js ("Jouer en ...")
   function closeSonnom(){
     dlg.hidden=true;
     if(lastFocus&&lastFocus.focus)lastFocus.focus();
@@ -69,7 +70,7 @@
 
   // ── Vinyle "Decouvrir" : ~6 s par tour, plus vite au survol ──
   var vinyl=document.getElementById('nb-vinyl');
-  var vsvg=vinyl.querySelector('svg');
+  var vsvg=vinyl.querySelector('.vy-spin');
   var vAngle=0,vSpeed=60,vTarget=60,vLast=0;   // degres par seconde
   vinyl.addEventListener('mouseenter',function(){vTarget=240;});
   vinyl.addEventListener('mouseleave',function(){vTarget=60;});
