@@ -248,7 +248,7 @@ var UNIVERS = [
 
   // ── Defilement automatique ───────────────────────────────────
   // Univers suivant toutes les 5 s, seulement quand la section est a
-  // l'ecran. En pause : survol, toucher, focus clavier, univers ouvert,
+  // l'ecran. En pause : survol du vinyle central ou du panneau, toucher, focus clavier, univers ouvert,
   // bouton pause ; reprise apres quelques secondes d'inactivite.
   // Desactive avec prefers-reduced-motion.
   var AUTO=5000, RESUME=4000;
@@ -259,8 +259,12 @@ var UNIVERS = [
     if(reduce.matches||userPaused||open||busy||!inView||document.hidden||hovering||kbFocus||now<holdUntil){lastTurn=now;return;}
     if(now-lastTurn>=AUTO){lastTurn=now;go(1,true);}
   },250);
-  sec.addEventListener('mouseenter',function(){hovering=true;});
-  sec.addEventListener('mouseleave',function(){hovering=false;holdAuto();});
+  // Survol : seulement le vinyle central et le panneau ouvert (la section
+  // occupe tout l'ecran, la souris y est presque toujours)
+  [center,panel].forEach(function(el){
+    el.addEventListener('mouseenter',function(){hovering=true;});
+    el.addEventListener('mouseleave',function(){hovering=false;holdAuto();});
+  });
   sec.addEventListener('touchstart',holdAuto,{passive:true});
   sec.addEventListener('focusin',function(e){if(e.target.matches(':focus-visible'))kbFocus=true;});
   sec.addEventListener('focusout',function(e){if(!sec.contains(e.relatedTarget)){kbFocus=false;holdAuto();}});
