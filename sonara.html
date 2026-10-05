@@ -72,6 +72,7 @@
           <li><button type="button" data-nb-mode="multi">Multijoueur</button></li>
         </ul>
       </div>
+      <a class="nb-meta-col nb-menu-link" href="#comment-jouer">Comment jouer</a>
       <!-- Vinyle "Decouvrir" : tourne en continu (landing.js), renvoie vers #univers -->
       <button class="nb-vinyl" id="nb-vinyl" type="button" aria-label="Découvrir les univers">
         <span class="vy" aria-hidden="true">
@@ -410,6 +411,98 @@
       <div class="uv-p-actions">
         <button class="nb-pill uv-play" id="uv-play" type="button">Jouer</button>
         <button class="nb-pill uv-back" id="uv-back" type="button">Retour aux univers</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 04 / COMMENT JOUER ── (Nebula : 3D Audio + Stem Splitter) -->
+  <section class="nb-sec nb-s04" id="comment-jouer" aria-labelledby="nb-s04-t">
+    <div class="nb-s04-bg" aria-hidden="true"><div class="nb-grain"></div></div>
+    <div class="nb-band"><span>Sonara</span><span>THE Blind test</span></div>
+    <div class="nb-s04-head">
+      <div class="nb-secnum"><span>04 /</span><h2 id="nb-s04-t">Comment jouer</h2></div>
+    </div>
+
+    <!-- Mega-titre, le telephone passe devant la 2e ligne -->
+    <p class="nb-mega nb-s04-mega" aria-hidden="true"><span>Écoute.</span><span>Devine.</span></p>
+
+    <div class="nb-s04-stage">
+      <p class="nb-phrase nb-s04-left" data-scrub="dark">
+        <span>Trouve le titre,</span>
+        <span>trouve l'artiste</span>
+        <span>et grimpe</span>
+        <span>au classement !</span>
+      </p>
+
+      <div class="nb-orbits nb-s04-orbits" aria-hidden="true"><i></i><i></i></div>
+      <span class="nb-orbit-tag nb-orbit-tag--a" aria-hidden="true">Réponse rapide</span>
+      <span class="nb-orbit-tag nb-orbit-tag--b" aria-hidden="true">Fautes tolérées</span>
+      <span class="nb-orbit-tag nb-orbit-tag--c" aria-hidden="true">Score en direct</span>
+      <span class="nb-orbit-tag nb-orbit-tag--d" aria-hidden="true">Podium final</span>
+
+      <!-- Telephone : partie en cours (timer en anneau, pochette qui se devoile) -->
+      <div class="nb-s04-phone" aria-hidden="true">
+        <div class="nb-phone">
+          <div class="nb-screen nb-screen--play">
+            <div class="nb-island"></div>
+            <div class="nb-scr-status"><span>9:41</span><span class="nb-scr-bat"></span></div>
+            <div class="nb-play-top">
+              <span>Manche 4/10</span>
+              <span class="nb-play-timer">
+                <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" class="nb-ring-track"/><circle cx="18" cy="18" r="15.5" class="nb-ring-val" pathLength="100" style="--v:.6"/></svg>
+                <b>12</b>
+              </span>
+            </div>
+            <div class="nb-play-cover" style="background-image:url('/img/cover_kompa.jpg')"><span class="nb-play-veil"></span></div>
+            <p class="nb-play-q">Qui chante ?</p>
+            <div class="nb-play-found"><span class="is-ok">Artiste trouvé</span><span>Titre ?</span></div>
+            <div class="nb-play-input"><span>Titre ou artiste…</span><i></i></div>
+            <p class="nb-play-pts">+45 pts</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Potards (satellite) -->
+      <div class="nb-sat nb-s04-knobs" data-speed=".9" aria-hidden="true">
+        <div class="nb-knob" style="--v:.8"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="nb-ring-track"/><circle cx="18" cy="18" r="15" class="nb-ring-val" pathLength="100"/></svg><b>80</b><span>Rapidité</span></div>
+        <div class="nb-knob" style="--v:.65"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="nb-ring-track"/><circle cx="18" cy="18" r="15" class="nb-ring-val" pathLength="100"/></svg><b>65</b><span>Précision</span></div>
+        <div class="nb-knob" style="--v:.3"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="nb-ring-track"/><circle cx="18" cy="18" r="15" class="nb-ring-val" pathLength="100"/></svg><b>3</b><span>Série</span></div>
+        <div class="nb-knob" style="--v:.6"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="nb-ring-track"/><circle cx="18" cy="18" r="15" class="nb-ring-val" pathLength="100"/></svg><b>540</b><span>Score</span></div>
+      </div>
+
+      <div class="nb-s04-rules">
+        <span class="nb-secicon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <p class="nb-label">Comment jouer /</p>
+        <p class="nb-body">Il faut trouver le titre et l'artiste pour passer au morceau suivant. Plus tu réponds vite, plus tu marques.</p>
+        <p class="nb-label nb-s04-pts-t">Les points</p>
+        <ul class="nb-s04-pts">
+          <li>Trouve l'artiste ou le titre : 15 points.</li>
+          <li>Les deux : 30 points.</li>
+          <li>Réponds vite pour multiplier tes points : ×3 en moins de 5 secondes, ×2 en moins de 10.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 5 etapes -->
+    <ol class="nb-steps">
+      <li><span>1</span>Choisis ton son-nom</li>
+      <li><span>2</span>Choisis ton univers</li>
+      <li><span>3</span>Écoute l'extrait</li>
+      <li><span>4</span>Trouve titre et artiste</li>
+      <li><span>5</span>Monte sur le podium</li>
+    </ol>
+
+    <p class="nb-s04-right">Un jeu simple à comprendre<br><span>Difficile à lâcher</span></p>
+
+    <div class="nb-secfoot nb-secfoot--light" aria-hidden="true">
+      <div class="nb-secfoot-l">
+        <svg class="nb-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
+        <p>Musique caribéenne<br>en multijoueur</p>
+      </div>
+      <div class="nb-trio-mini">
+        <span><svg viewBox="0 0 24 24"><path d="M7 6v12M18 6l-8 6 8 6z"/></svg></span>
+        <span><svg viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg></span>
+        <span><svg viewBox="0 0 24 24"><path d="M17 6v12M6 6l8 6-8 6z"/></svg></span>
       </div>
     </div>
   </section>

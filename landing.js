@@ -237,8 +237,11 @@
   landing.querySelectorAll('[data-scrub]').forEach(function(ph){
     var spans=ph.children, n=spans.length;
     for(var i=0;i<n;i++){
-      var end=n>1?LIGHT.map(function(v,k){return v+(DARK[k]-v)*i/(n-1);}):LIGHT;
-      lines.push({el:spans[i],end:end});
+      // data-scrub="dark" : texte sombre sur fond clair (beige)
+      var dk=ph.getAttribute('data-scrub')==='dark';
+      var L=dk?[17,17,17]:LIGHT, Dk=dk?[138,131,120]:DARK;
+      var end=n>1?L.map(function(v,k){return v+(Dk[k]-v)*i/(n-1);}):L;
+      lines.push({el:spans[i],end:end,from:dk?[196,189,176]:FROM});
     }
   });
   // ── 5. Satellites : vitesse propre a chacun (0.8x a 1.2x) ──
@@ -254,7 +257,7 @@
         var top=l.el.getBoundingClientRect().top;
         t=Math.min(1,Math.max(0,(vh*.9-top)/(vh*.4)));
       }
-      l.el.style.color=mix(FROM,l.end,t);
+      l.el.style.color=mix(l.from,l.end,t);
     });
     sats.forEach(function(el){
       if(still||!el.offsetParent){el.style.transform='';return;}

@@ -778,3 +778,161 @@ html{scroll-padding-top:var(--hd-h)}
 .vy--spin .vy-spin{animation:vy-spin 8s linear infinite}
 @keyframes vy-spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.vy--spin .vy-spin{animation:none}}
+
+/* ═══════════════════════════════════════════════════════════════
+   04 / COMMENT JOUER
+   Bandeau orange (degrade Nebula, recette 6.2 bis) qui se fond dans le
+   beige papier ; textes sombres sur la partie beige.
+   ═══════════════════════════════════════════════════════════════ */
+.nb-s04{background:var(--neb-cream);color:#111}
+.nb-s04-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(80% 22% at 20% 0%, var(--neb-wine) 0%, transparent 70%),
+    radial-gradient(70% 22% at 70% 4%, var(--neb-core) 0%, transparent 75%),
+    linear-gradient(180deg, var(--neb-brick) 0%, var(--neb-hot) 9%, var(--neb-peach) 22%, var(--neb-cream) 36%);
+}
+.nb-s04 .nb-band{color:rgba(255,255,255,.7)}
+.nb-s04-head{position:relative;padding-top:11vw}
+.nb-s04-head .nb-secnum{margin-left:var(--neb-margin)}
+.nb-s04 .nb-secnum span{color:rgba(255,255,255,.7)}
+.nb-s04 .nb-secnum h2{color:#fff}
+
+/* Mega-titre brun translucide sur l'orange */
+.nb-mega{
+  margin:0;font-family:var(--f-display);font-weight:900;
+  font-size:11vw;line-height:.9;letter-spacing:-.04em;text-align:center;
+}
+.nb-mega span{display:block}
+.nb-s04-mega{position:relative;margin-top:1vw;color:rgba(42,10,0,.55)}
+
+.nb-s04-stage{position:relative;height:70vw;margin-top:-9vw}
+/* au-dessus du fond degrade (positionne) */
+.nb-steps,.nb-s04-right,.nb-s04 .nb-secfoot{position:relative}
+.nb-s04-left{position:absolute;left:var(--neb-margin);top:22vw;width:28vw;font-size:3.6vw}
+.nb-s04-orbits{top:28vw}
+.nb-s04-orbits i{border:1px dashed rgba(17,17,17,.22)}
+.nb-s04-orbits i:nth-child(1){width:42vw;height:42vw}
+.nb-s04-orbits i:nth-child(2){width:60vw;height:60vw;border-color:rgba(17,17,17,.12)}
+.nb-orbit-tag{
+  position:absolute;z-index:2;padding:9px 16px;border-radius:999px;background:#fff;color:#111;
+  font-family:var(--f-text);font-size:13px;font-weight:600;white-space:nowrap;
+}
+.nb-orbit-tag--a{left:31vw;top:14vw}
+.nb-orbit-tag--b{left:62vw;top:10vw}
+.nb-orbit-tag--c{left:66vw;top:42vw}
+.nb-orbit-tag--d{left:29vw;top:46vw}
+
+.nb-s04-phone{--pw:21vw;position:absolute;left:calc(50% - 10.5vw);top:4vw;width:var(--pw);z-index:1}
+.nb-screen--play{background:#120605}
+.nb-play-top{
+  position:absolute;top:calc(var(--pw) * .17);left:7%;right:7%;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:calc(var(--pw) * .045);color:rgba(255,255,255,.6);
+}
+.nb-play-timer{position:relative;width:calc(var(--pw) * .15);height:calc(var(--pw) * .15)}
+.nb-play-timer svg,.nb-knob svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.nb-ring-track{fill:none;stroke:rgba(255,255,255,.14);stroke-width:3}
+.nb-ring-val{
+  fill:none;stroke:var(--neb-orange);stroke-width:3;stroke-linecap:round;
+  stroke-dasharray:100;stroke-dashoffset:calc(100 - var(--v) * 100);
+}
+.nb-play-timer b{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:calc(var(--pw) * .05);font-weight:700;color:#fff;
+}
+/* Pochette qui se devoile (concept "La Pochette") */
+.nb-play-cover{
+  position:absolute;top:calc(var(--pw) * .32);left:7%;right:7%;aspect-ratio:1;
+  border-radius:calc(var(--pw) * .05);overflow:hidden;background-size:cover;background-position:center;
+}
+.nb-play-veil{
+  position:absolute;inset:0;background:#1F1F1F;
+  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 0,22% 22%,22% 78%,78% 78%,78% 22%,22% 22%);
+}
+.nb-play-q{
+  position:absolute;top:calc(var(--pw) * 1.25);left:7%;right:7%;margin:0;
+  font-size:calc(var(--pw) * .075);font-weight:700;
+}
+.nb-play-found{position:absolute;top:calc(var(--pw) * 1.39);left:7%;right:7%;display:flex;gap:calc(var(--pw) * .025)}
+.nb-play-found span{
+  padding:calc(var(--pw) * .018) calc(var(--pw) * .04);border-radius:999px;
+  background:#1F1F1F;font-size:calc(var(--pw) * .036);color:rgba(255,255,255,.6);
+}
+.nb-play-found .is-ok{background:var(--neb-orange);color:#fff}
+.nb-play-input{
+  position:absolute;top:calc(var(--pw) * 1.56);left:7%;right:7%;height:calc(var(--pw) * .14);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 calc(var(--pw) * .025) 0 calc(var(--pw) * .05);border-radius:999px;background:#fff;
+  font-size:calc(var(--pw) * .042);color:rgba(17,17,17,.45);
+}
+.nb-play-input i{width:calc(var(--pw) * .1);height:calc(var(--pw) * .1);border-radius:50%;background:var(--neb-orange)}
+.nb-play-pts{
+  position:absolute;top:calc(var(--pw) * 1.78);left:0;right:0;margin:0;text-align:center;
+  font-size:calc(var(--pw) * .05);font-weight:700;color:var(--neb-orange);
+}
+
+/* Potards du score */
+.nb-s04-knobs{
+  left:auto;right:var(--neb-margin);top:21vw;
+  display:grid;grid-template-columns:repeat(2,auto);gap:18px 22px;
+  padding:22px;border-radius:24px;background:var(--neb-card);color:#fff;
+}
+.nb-knob{position:relative;width:64px;padding-top:64px;text-align:center;font-family:var(--f-text)}
+.nb-knob svg{inset:0 0 auto 0;height:64px}
+.nb-knob b{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.nb-knob span{display:block;margin-top:8px;font-size:12px;color:rgba(255,255,255,.6)}
+
+.nb-s04-rules{position:absolute;left:var(--neb-margin);top:44vw;width:26vw}
+.nb-s04 .nb-label{color:#8A8378}
+.nb-s04 .nb-body{color:#3d3a35}
+.nb-s04 .nb-secicon{border-color:rgba(17,17,17,.35)}
+.nb-s04 .nb-secicon i{background:#111}
+.nb-s04-pts-t{margin-top:26px !important}
+.nb-s04-pts{margin:0;padding:0;list-style:none;font-family:var(--f-text);font-size:15px;line-height:1.45;color:#111}
+.nb-s04-pts li{padding:10px 0;border-top:1px solid rgba(17,17,17,.12)}
+
+/* 5 etapes : pills a pastille ronde */
+.nb-steps{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:12px;
+  margin:4vw var(--neb-margin) 0;padding:0;list-style:none;
+}
+.nb-steps li{
+  display:flex;align-items:center;gap:12px;padding:8px 22px 8px 8px;border-radius:999px;
+  background:#E9E5DE;font-family:var(--f-text);font-size:14px;font-weight:600;color:#111;
+}
+.nb-steps span{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;color:var(--neb-orange);font-weight:700;
+}
+.nb-s04-right{
+  margin:6vw var(--neb-margin) 0 auto;width:max-content;text-align:right;
+  font-family:var(--f-text);font-weight:300;font-size:2.4vw;line-height:1.15;color:#111;
+}
+.nb-s04-right span{color:#8A8378}
+.nb-secfoot--light .nb-globe{stroke:rgba(17,17,17,.7)}
+.nb-secfoot--light p{color:rgba(17,17,17,.55)}
+
+/* Lien simple du menu */
+.nb-menu-link{
+  font-family:var(--f-text);font-size:13px;font-weight:500;color:#fff;text-decoration:none;padding:4px 0;
+}
+.nb-menu-link:hover{text-decoration:underline;text-underline-offset:4px}
+
+@media (max-width:760px){
+  .nb-menu-link{display:none}
+  .nb-s04-head{padding:76px 16px 0}
+  .nb-s04-head .nb-secnum{margin:0}
+  .nb-mega{font-size:14vw}
+  .nb-s04-mega{margin-top:40px}
+  .nb-s04-bg{background:
+    linear-gradient(180deg, var(--neb-brick) 0%, var(--neb-hot) 6%, var(--neb-peach) 14%, var(--neb-cream) 22%)}
+  .nb-s04-stage{height:auto;margin-top:4vw;padding:0 16px;display:flex;flex-direction:column;align-items:center;gap:40px}
+  .nb-s04-phone{--pw:58vw;position:relative;left:auto;top:auto;order:1}
+  .nb-s04-left{position:static;width:auto;align-self:stretch;font-size:7vw;order:2}
+  .nb-s04-rules{position:static;width:auto;align-self:stretch;order:3}
+  .nb-s04-orbits,.nb-orbit-tag,.nb-s04-knobs{display:none}
+  .nb-steps{margin:48px 16px 0;justify-content:flex-start}
+  .nb-s04-right{margin:48px 16px 0;font-size:6vw;width:auto;text-align:left}
+}
