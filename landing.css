@@ -150,15 +150,15 @@
 }
 
 /* Ligne meta (4 colonnes) */
-.nb-meta{position:absolute;left:0;right:0;top:2.1vw;height:3vw;z-index:60;
-  width:auto;max-width:none;padding:0;display:block}  /* annule nav{} de sonara.css */
+.nb-meta{position:absolute;left:0;right:0;top:2.1vw;z-index:60;
+  width:auto;max-width:none;padding:0 var(--neb-margin);  /* annule nav{} de sonara.css */
+  display:flex;align-items:center;justify-content:flex-start;gap:36px}
+/* Menu : logo, puis Univers et Mode cote a cote ; le vinyle part a droite */
 .nb-meta-col{
-  position:absolute;top:0;
+  position:relative;
   font-family:var(--f-text);font-size:13px;line-height:1.35;
 }
-.nb-meta-col:nth-child(2){left:33%}
-.nb-meta-col:nth-child(3){left:61%}
-.nb-meta-logo{position:absolute;left:var(--neb-margin);top:0;display:block}
+.nb-meta-logo{display:block;margin-right:12px}
 .nb-meta-logo img{display:block;height:2.9vw;min-height:30px;width:auto}
 .nb-menu-btn{
   display:inline-flex;align-items:center;gap:6px;padding:4px 0;
@@ -184,7 +184,7 @@
 }
 /* Vinyle "Decouvrir" (tout a droite du menu) */
 .nb-vinyl{
-  position:absolute;right:var(--neb-margin);top:-8px;
+  position:relative;margin-left:auto;flex-shrink:0;
   width:44px;height:44px;padding:0;border:none;border-radius:50%;
   background:none;cursor:pointer;
   box-shadow:0 6px 18px -6px rgba(0,0,0,.6);
@@ -409,7 +409,8 @@
   }
   .nb-meta{position:relative;top:auto;height:auto;display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;margin-bottom:36px}
   .nb-meta-col{position:static;font-size:12px}
-  .nb-meta{grid-template-columns:auto 1fr 1fr auto;align-items:center;gap:12px 18px}
+  .nb-meta{grid-template-columns:auto auto auto 1fr;align-items:center;gap:12px 22px;padding:0}
+  .nb-vinyl{justify-self:end}
   .nb-vinyl{position:static;width:40px;height:40px}
   .nb-meta-logo{position:static}
   .nb-meta-logo img{height:28px}
