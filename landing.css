@@ -99,11 +99,6 @@ html{scroll-padding-top:var(--hd-h)}
 }
 .nb-hero-clip{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 /* Exception aux aplats : le hero garde son degrade (demande explicite) */
-/* Bas du hero : le degrade se fond dans le brun de la section 01 */
-.nb-hero-clip::after{
-  content:"";position:absolute;left:0;right:0;bottom:0;height:9vw;
-  background:linear-gradient(180deg,rgba(45,16,2,0),var(--fond-brun));
-}
 .nb-hero-bg{
   position:absolute;inset:0;
   background:
@@ -118,9 +113,9 @@ html{scroll-padding-top:var(--hd-h)}
   50% {--nb-g1x:81%;--nb-g1y:91%;--nb-g2x:59%;--nb-g2y:57%;--nb-g3x:71%}
   100%{--nb-g1x:88%;--nb-g1y:93%;--nb-g2x:52%;--nb-g2y:63%;--nb-g3x:78%}
 }
-/* Grain SVG (feTurbulence) a 7 % : evite les bandes de couleur */
+/* Grain SVG (feTurbulence) a 8 % en soft-light : evite les bandes de couleur */
 .nb-grain{
-  position:absolute;inset:0;opacity:.07;
+  position:absolute;inset:0;opacity:.08;mix-blend-mode:soft-light;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -434,7 +429,7 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-phone-wrap{order:4}
   .nb-phone-wrap{position:relative;left:auto;top:auto;margin:44px auto 0}
   .nb-hero-list{display:none}
-  .nb-trio--hero{top:auto;bottom:22px;right:16px;gap:10px}
+  .nb-trio--hero{top:auto;bottom:40px;right:16px;gap:10px}
   .nb-trio--hero button{width:48px;height:48px}
 
   .nb-sonnom-row{flex-direction:column}
