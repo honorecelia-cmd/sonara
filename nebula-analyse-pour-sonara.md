@@ -5,7 +5,7 @@
 Source : Behance, « Nebula Music App – UI/UX Design » (Anu Niyaz, juillet 2025, © All Rights Reserved).
 Format analysé : 8 planches de 1400 px de large empilées, environ 22 200 px de haut au total. Toutes les couleurs ci-dessous ont été relevées au pixel sur les images originales.
 
-> Règle d'usage : on reprend la structure, la mise en page, le rythme et les effets. On ne reprend ni les photos d'artistes, ni les textes mot pour mot, ni le nom Nebula. Pour SONARA, on garde le logo, Syne et les couleurs SONARA. La règle « aucun emoji » s'applique partout. Les formes rondes de la maquette sont **conservées telles quelles** : voir la partie 6.
+> Règle d'usage : on reprend la structure, la mise en page, le rythme et les effets. On ne reprend ni les photos d'artistes, ni les textes mot pour mot, ni le nom Nebula. Pour SONARA, on garde le logo, la typographie (MuseoModerno pour les titres, Inter pour le texte) et les couleurs SONARA. La règle « aucun emoji » s'applique partout. Les formes rondes de la maquette sont **conservées telles quelles** : voir la partie 6.
 
 ---
 
@@ -237,7 +237,7 @@ Sur beige, le texte principal est `#111`, le secondaire `#6B6B6B` et les labels 
 
 ### 6.1 Priorités
 
-1. **Le logo SONARA et son identité passent avant tout.** On garde Syne et les couleurs SONARA. Nebula est en Helvetica Now, donc on transpose les rôles typographiques vers Syne : Syne 800 pour les méga-titres et le titre hero, Syne 400 pour les grandes phrases en fondu (pour retrouver la légèreté du Light), et la police de texte actuelle de SONARA pour les paragraphes et labels.
+1. **Le logo SONARA et son identité passent avant tout.** On garde la typographie et les couleurs SONARA. Nebula est en Helvetica Now, donc on transpose les rôles typographiques : MuseoModerno 800-900 pour les méga-titres, le titre hero et tous les vrais titres ; Inter Light 300 pour les grandes phrases en fondu (des phrases à lire, pas des titres) ; Inter pour les paragraphes et labels. Syne n'est plus utilisée nulle part.
 2. **On reprend fidèlement tout le reste de la maquette**, formes rondes comprises, puisque l'identité SONARA est déjà très proche de Nebula.
 3. **Aucun emoji** nulle part.
 4. **Grand dégradé orange de Nebula conservé**, à l'identique. On le reprend sur le hero, les bandeaux de transition (au-dessus de « Les univers » et de « Comment jouer »), la section « Nouveautés » (version rouge-orange-jaune) et la lueur floue avant l'outro. Sa recette est en partie 6.2 bis.
@@ -345,10 +345,10 @@ Refonte de la landing SONARA, reproduction fidèle de la maquette « Nebula Musi
 App » (Behance). Ne pas reproduire les sections « The Process » ni « Flows ».
 Lis d'abord le fichier nebula-analyse-pour-sonara.md (spécification complète),
 puis le CSS existant de SONARA pour récupérer le logo, les variables de couleur
-et les fonts (Syne).
+et les fonts (MuseoModerno, Inter).
 
 Priorités :
-- le logo SONARA et son identité passent avant tout : garder le logo, Syne et la
+- le logo SONARA et son identité passent avant tout : garder le logo, MuseoModerno, Inter et la
   palette SONARA ; ne pas importer Helvetica ;
 - tout le reste suit la maquette Nebula au plus près, formes rondes comprises ;
 - reprendre le grand dégradé orange de Nebula (recette CSS en partie 6.2 bis :
@@ -384,9 +384,9 @@ Formes rondes à reproduire (voir l'inventaire en partie 6.2 du fichier) :
 1. Grille 12 colonnes, marges 4.85 %, colonnes repères à 20.4 % / 36 % / 67 %.
 2. Bandeau de section 13 px (SONARA à gauche, sous-titre à droite).
 3. Micro-labels « Label / », numéros « 01 / » + icône de section ronde.
-4. Grandes phrases Syne 400 dont chaque ligne s'éclaircit au scroll
+4. Grandes phrases Inter Light 300 dont chaque ligne s'éclaircit au scroll
    (scroll-scrub, du gris foncé vers la couleur finale).
-5. Méga-titres Syne 800 (9–11vw, interligne 0.9, tracking -0.04em) avec un
+5. Méga-titres MuseoModerno 800 (9–11vw, interligne 0.9, tracking -0.04em) avec un
    mockup qui passe devant la 2e ligne.
 6. Lettrage géant « SONARA » en fond du hero (28vw, opacité 0.15) en parallaxe.
 7. Hero : ligne méta en 4 colonnes, titre 3 lignes à gauche, accroche à droite,
