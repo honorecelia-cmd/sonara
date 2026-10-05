@@ -51,6 +51,7 @@ var UNIVERS = [
   var pTitle=$('uv-p-title'), pMeta=$('uv-p-meta'), pText=$('uv-p-text'), pInfos=$('uv-p-infos');
   var pPlay=$('uv-play'), pBack=$('uv-back');
   var idx=0, busy=false, open=false, timers=[], held=[];
+  var countEl=$('uv-count'), autoBtn=$('uv-auto'), inView=false;
 
   // Precharge des pochettes
   UNIVERS.forEach(function(u){if(u.image){var im=new Image();im.src=u.image;}});
@@ -100,9 +101,11 @@ var UNIVERS = [
   function clearTimers(){timers.forEach(clearTimeout);timers=[];}
 
   // ── Transition A : changer d'univers ─────────────────────────
-  function go(dir){
+  function go(dir,auto){
     if(busy||open)return;
     busy=true;
+    countEl.setAttribute('aria-live',auto?'off':'polite');
+    if(!auto)holdAuto();
     idx=(idx+dir+N)%N;
     paintColor();                      // le fond change en meme temps (0,6 s)
     if(reduce.matches){
@@ -236,12 +239,36 @@ var UNIVERS = [
           held=[];
           panel.hidden=true;sleeve.innerHTML='';
           sec.classList.remove('is-open');
-          open=false;busy=false;
+          open=false;busy=false;holdAuto();
           center.focus({preventScroll:true});
         });
       },t2);
     },t1);
   }
+
+  // ── Defilement automatique ───────────────────────────────────
+  // Univers suivant toutes les 5 s, seulement quand la section est a
+  // l'ecran. En pause : survol, toucher, focus clavier, univers ouvert,
+  // bouton pause ; reprise apres quelques secondes d'inactivite.
+  // Desactive avec prefers-reduced-motion.
+  var AUTO=5000, RESUME=4000;
+  var userPaused=false, hovering=false, kbFocus=false, holdUntil=0, lastTurn=performance.now();
+  function holdAuto(){holdUntil=performance.now()+RESUME;}
+  setInterval(function(){
+    var now=performance.now();
+    if(reduce.matches||userPaused||open||busy||!inView||document.hidden||hovering||kbFocus||now<holdUntil){lastTurn=now;return;}
+    if(now-lastTurn>=AUTO){lastTurn=now;go(1,true);}
+  },250);
+  sec.addEventListener('mouseenter',function(){hovering=true;});
+  sec.addEventListener('mouseleave',function(){hovering=false;holdAuto();});
+  sec.addEventListener('touchstart',holdAuto,{passive:true});
+  sec.addEventListener('focusin',function(e){if(e.target.matches(':focus-visible'))kbFocus=true;});
+  sec.addEventListener('focusout',function(e){if(!sec.contains(e.relatedTarget)){kbFocus=false;holdAuto();}});
+  autoBtn.addEventListener('click',function(){
+    userPaused=!userPaused;
+    autoBtn.setAttribute('aria-pressed',String(userPaused));
+    autoBtn.setAttribute('aria-label',userPaused?'Reprendre le défilement automatique':'Mettre en pause le défilement automatique');
+  });
 
   // ── Interactions ─────────────────────────────────────────────
   sec.querySelector('.uv-arrow--prev').addEventListener('click',function(){go(-1);});
@@ -259,7 +286,6 @@ var UNIVERS = [
     closeUniverse();
   });
   // Clavier : fleches quand la section est a l'ecran, Echap pour fermer
-  var inView=false;
   new IntersectionObserver(function(es){inView=es[0].intersectionRatio>=.5;},{threshold:[0,.5,1]}).observe(sec);
   document.addEventListener('keydown',function(e){
     var son=document.getElementById('nb-sonnom');

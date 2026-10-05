@@ -376,9 +376,11 @@
   </section>
 
   <!-- ── LES UNIVERS : carrousel de vinyles ── (univers.css / univers.js) -->
-  <section class="uv" id="univers" aria-label="Les univers Sonara" aria-roledescription="carrousel">
+  <section class="uv" id="univers" aria-labelledby="uv-sec-t" aria-roledescription="carrousel">
     <div class="uv-bg" id="uv-bg"></div>
     <p class="uv-giant" id="uv-giant" aria-hidden="true"></p>
+    <div class="nb-band uv-band"><span>Sonara</span><span>THE Blind test</span></div>
+    <div class="nb-secnum uv-secnum"><span>03 /</span><h2 id="uv-sec-t">Nos univers</h2></div>
     <div class="uv-stage">
       <div class="uv-side uv-side--prev" id="uv-prev-vy" aria-hidden="true"></div>
       <div class="uv-side uv-side--next" id="uv-next-vy" aria-hidden="true"></div>
@@ -388,7 +390,14 @@
     <div class="uv-ui" id="uv-ui">
       <button class="uv-arrow uv-arrow--prev" type="button" aria-label="Univers précédent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
       <button class="uv-arrow uv-arrow--next" type="button" aria-label="Univers suivant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-      <p class="uv-count" aria-live="polite"><b id="uv-num">01</b><span>/ 09</span></p>
+      <div class="uv-countbar">
+        <p class="uv-count" id="uv-count" aria-live="off"><b id="uv-num">01</b><span>/ 09</span></p>
+        <!-- Defilement automatique : pause / lecture -->
+        <button class="uv-auto" id="uv-auto" type="button" aria-pressed="false" aria-label="Mettre en pause le défilement automatique">
+          <svg class="uv-ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>
+          <svg class="uv-ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg>
+        </button>
+      </div>
       <button class="nb-pill uv-discover" id="uv-discover" type="button">Découvrir</button>
     </div>
     <div class="uv-panel" id="uv-panel" role="region" aria-labelledby="uv-p-title" hidden>

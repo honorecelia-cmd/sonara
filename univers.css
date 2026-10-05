@@ -96,10 +96,28 @@
 .uv-arrow svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .uv-arrow--prev{left:var(--neb-margin)}
 .uv-arrow--next{right:var(--neb-margin)}
-.uv-count{
-  position:absolute;left:var(--neb-margin);bottom:5vh;margin:0;
-  display:flex;align-items:baseline;gap:10px;
+/* Bandeau et numero de section (memes composants que 01 / 02) */
+.uv-band{z-index:4;color:rgba(255,255,255,.7)}
+.uv-secnum{position:absolute;left:var(--neb-margin);top:11vw;z-index:4}
+.uv .uv-secnum span{color:rgba(255,255,255,.7)}
+.uv-countbar{
+  position:absolute;left:var(--neb-margin);bottom:5vh;
+  display:flex;align-items:center;gap:18px;
 }
+.uv-count{margin:0;display:flex;align-items:baseline;gap:10px}
+.uv-auto{
+  width:36px;height:36px;border-radius:50%;padding:0;cursor:pointer;
+  border:1px solid rgba(255,255,255,.45);background:transparent;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:background-color .25s ease, color .25s ease;
+}
+.uv-auto:hover{background:#fff;color:var(--neb-black)}
+.uv-auto:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.uv-auto svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.uv-auto .uv-ic-play{display:none;fill:currentColor;stroke:none}
+.uv-auto[aria-pressed="true"] .uv-ic-play{display:block}
+.uv-auto[aria-pressed="true"] .uv-ic-pause{display:none}
+@media (prefers-reduced-motion:reduce){.uv-auto{display:none}}
 .uv-count b{font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:clamp(48px,5.5vw,96px);line-height:1}
 .uv-count span{font-size:16px;color:rgba(255,255,255,.75)}
 .uv-discover{
@@ -143,7 +161,8 @@
   .uv-arrow{width:46px;height:46px;margin-top:-23px;top:auto;bottom:5vh}
   .uv-arrow--prev{left:auto;right:calc(16px + 56px)}
   .uv-arrow--next{right:16px}
-  .uv-count{left:16px}
+  .uv-countbar{left:16px;gap:12px}
+  .uv-secnum{left:16px;top:76px}
     .uv-panel{
     left:16px;right:16px;top:calc(var(--uv-d) * .6 + 110px);bottom:16px;transform:none;
     max-height:none;padding-bottom:16px;
