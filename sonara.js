@@ -540,7 +540,7 @@ function buildQCM(correct,pool){
   if(wrongs.length<3)wrongs=wrongs.concat([{t:"Mystery",a:"Unknown"},{t:"Hidden",a:"Caribbean"},{t:"Tropical",a:"Island"}]);
   var s=wrongs.slice().sort(function(){return Math.random()-.5});
   var opts=[correct].concat(s.slice(0,3)).sort(function(){return Math.random()-.5});
-  return opts.map(function(o,i){return{lbl:['A','B','C','D'][i],text:o.t+' — '+o.a,ok:o===correct}});
+  return opts.map(function(o,i){return{lbl:['A','B','C','D'][i],text:o.t+', '+o.a,ok:o===correct}});
 }
 
 // ── JEU ─────────────────────────────────────────────
@@ -752,7 +752,7 @@ function tryGuess(v,byUser){
     updateFoundScore('both');
   } else if(matchA){
     G.foundA=true;
-    addChatMsg(G.ps+' a trouvé l\'artiste 🎤 — maintenant le titre !','found');
+    addChatMsg(G.ps+' a trouvé l\'artiste 🎤, maintenant le titre !','found');
     sfxOk();
     addFoundTag('🎤 '+q.a,'artist');
     if(G.foundT){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}
@@ -761,7 +761,7 @@ function tryGuess(v,byUser){
     if(byUser&&!G.foundT){var ani=$('ani');ani.value='';ani.placeholder='Maintenant le titre… 🎵';ani.focus();}
   } else if(matchT){
     G.foundT=true;
-    addChatMsg(G.ps+' a trouvé le titre 🎵 — maintenant l\'artiste !','found');
+    addChatMsg(G.ps+' a trouvé le titre 🎵, maintenant l\'artiste !','found');
     sfxOk();
     addFoundTag('🎵 '+q.t,'title');
     if(G.foundA){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}
@@ -929,11 +929,11 @@ function doReveal(){
   var reva=$('reva');reva.querySelectorAll('img').forEach(function(i){i.remove()});
   if(q.cover){var img=document.createElement('img');img.src=q.cover;img.onerror=function(){img.remove()};reva.appendChild(img)}
   var v=$('rvv');
-  if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='✓ Les deux trouvés en '+(G.td-G.tl)+'s — Sé ou! 🔥'}
-  else if(G.foundA){v.className='revv vok';v.textContent='✓ Artiste trouvé : '+q.a+' — titre manquant : '+q.t}
-  else if(G.foundT){v.className='revv vok';v.textContent='✓ Titre trouvé : '+q.t+' — artiste manquant : '+q.a}
-  else if($('ani').value.trim()||document.querySelector('.qb.wrong')){v.className='revv vno';v.textContent='✗ C\'était : '+q.t+' — '+q.a}
-  else{v.className='revv vmh';v.textContent='⏱ Temps écoulé — '+q.t+' · '+q.a}
+  if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='✓ Les deux trouvés en '+(G.td-G.tl)+'s. Sé ou! 🔥'}
+  else if(G.foundA){v.className='revv vok';v.textContent='✓ Artiste trouvé : '+q.a+'. Titre manquant : '+q.t}
+  else if(G.foundT){v.className='revv vok';v.textContent='✓ Titre trouvé : '+q.t+'. Artiste manquant : '+q.a}
+  else if($('ani').value.trim()||document.querySelector('.qb.wrong')){v.className='revv vno';v.textContent='✗ C\'était : '+q.t+', '+q.a}
+  else{v.className='revv vmh';v.textContent='⏱ Temps écoulé : '+q.t+' · '+q.a}
   var sorted=G.pl.slice().sort(function(a,b){return b.s-a.s});
   $('rnkm').innerHTML='<div class="rnkml">Classement</div>'+sorted.slice(0,5).map(function(p,i){
     return '<div class="rnkr"><div class="rpos'+(i===0?' top':'')+'">'+['🥇','🥈','🥉','4.','5.'][i]+'</div><div class="rav">'+p.av+'</div><div class="rnm">'+p.n+(p.me?' (toi)':'')+'</div><div class="rsc">'+(p.me?G.sc:p.s)+'</div></div>';
@@ -980,10 +980,10 @@ function doResults(){
   var pct=G.qs.length>0?mc2/G.qs.length:0;
   var rmsgTxt;
   if(pct===1)rmsgTxt='🏆 '+me.n+' a tout déchiré !';
-  else if(pct>=0.7)rmsgTxt='🔥 '+me.n+' — bien joué !';
-  else if(pct>=0.4)rmsgTxt='🎵 Bien joué '+me.n+' — '+(rks[mr-1]||mr+'ème');
-  else if(pct>0)rmsgTxt='💪 '+me.n+' — continue comme ça !';
-  else rmsgTxt='😅 '+me.n+' — la prochaine fois sera la bonne !';
+  else if(pct>=0.7)rmsgTxt='🔥 '+me.n+', bien joué !';
+  else if(pct>=0.4)rmsgTxt='🎵 Bien joué '+me.n+', '+(rks[mr-1]||mr+'ème');
+  else if(pct>0)rmsgTxt='💪 '+me.n+', continue comme ça !';
+  else rmsgTxt='😅 '+me.n+', la prochaine fois sera la bonne !';
   $('rmsg').textContent=rmsgTxt;
   var top=sorted.slice(0,Math.min(3,sorted.length));
   var order=top.length>=2?[top[1],top[0],top[2]].filter(Boolean):[top[0]];
@@ -994,7 +994,7 @@ function doResults(){
   $('rtbl').innerHTML='<div class="rtblh"><span>#</span><span></span><span>Joueur</span><span>Score</span><span>✓</span></div>'+sorted.map(function(p,i){return '<div class="rtblr'+(p.me?' me':'')+'"><div class="rrk'+(i===0?' g':'')+'">'+( i===0?'🏆':i+1)+'</div><div class="rav2">'+p.av+'</div><div class="rnm2">'+p.n+(p.me?' (toi)':'')+'</div><div class="rsc2">'+(p.me?G.sc:p.s)+'</div><div class="rct">'+((p.me?(G.pl.filter(function(x){return x.me})[0]||{}).c:p.c)||0)+'/'+G.qs.length+'</div></div>'}).join('');
   var mc=(G.pl.filter(function(p){return p.me})[0]||{}).c||0,pos=sorted.findIndex(function(p){return p.me}),bg=[];
   if(pos===0)bg.push('🏆 Sé mwen ki win!');
-  if(mc===G.qs.length)bg.push('🌴 Kokiy — 100%!');
+  if(mc===G.qs.length)bg.push('🌴 Kokiy : 100%!');
   if(mc===0)bg.push('😅 Touriste');
   if(G.cb>=5)bg.push('🔥 An Feu ×'+G.cb);
   if(!bg.length)bg.push('🎵 Bien joué!');
@@ -1079,7 +1079,7 @@ function doShare(){
   sfxC();
   var mc=(G.pl.filter(function(p){return p.me})[0]||{}).c||0;
   var r=G.res.findIndex(function(p){return p.me})+1;
-  var txt='🎵 Sonara — Es ou konet sa?\n\n'+G.ps+' : '+G.sc+' pts ('+mc+'/'+G.qs.length+')\nThème : '+G.ic+' '+G.theme+'\n'+r+'/'+G.res.length+' 🏆\n\nJoue sur SONARA! 🌴';
+  var txt='🎵 Sonara. Es ou konet sa?\n\n'+G.ps+' : '+G.sc+' pts ('+mc+'/'+G.qs.length+')\nThème : '+G.ic+' '+G.theme+'\n'+r+'/'+G.res.length+' 🏆\n\nJoue sur SONARA! 🌴';
   if(navigator.share)navigator.share({text:txt});
   else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(function(){notif('✓ Copié!')});
   else alert(txt);
@@ -1124,7 +1124,7 @@ function copyEntreLink(){
 function shareEntreLink(){
   ensureEntreCode(function(code){
     var url=entreLinkFromCode(code);
-    var txt='🎵 Rejoins-moi sur Sonara — le blindtest caribéen !\n'+url;
+    var txt='🎵 Rejoins-moi sur Sonara, le blindtest caribéen !\n'+url;
     if(navigator.share)navigator.share({text:txt,url:url}).catch(function(){});
     else copyEntreLink();
   });
@@ -1272,7 +1272,7 @@ function joinRoom() {
     var codeInp = document.getElementById('join-code');
     var errMsg = document.getElementById('join-error');
     codeInp.style.borderColor = 'var(--red)';
-    if(errMsg) { errMsg.textContent = 'Code introuvable — vérifie et réessaie.'; errMsg.style.display='block'; }
+    if(errMsg) { errMsg.textContent = 'Code introuvable. Vérifie et réessaie.'; errMsg.style.display='block'; }
     var btn = document.querySelector('#s-join .bgo');
     if(btn) { btn.disabled=false; btn.textContent='Rejoindre →'; }
   });
