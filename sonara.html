@@ -508,6 +508,65 @@
     </div>
   </section>
 
+  <!-- ── 05 / LA REVELATION ── (Nebula : AI Search, sans orbe ni faisceaux) -->
+  <section class="nb-sec nb-s05" id="la-revelation" aria-labelledby="nb-s05-t">
+    <div class="nb-band"><span>Sonara</span><span>THE Blind test</span></div>
+    <div class="nb-s05-intro">
+      <div class="nb-secnum"><span>05 /</span><h2 id="nb-s05-t">La révélation</h2></div>
+      <p class="nb-s05-title"><span>Le moment</span><span>où tout</span><span>se révèle.</span></p>
+    </div>
+
+    <div class="nb-s05-stage">
+      <p class="nb-s05-labels"><span>La révélation</span>Titre et artiste</p>
+
+      <!-- Telephone : la reponse s'ecrit en direct, puis la pochette se devoile
+           (animation : landing.js, bloc "Revelation") -->
+      <div class="nb-s05-phone" aria-hidden="true">
+        <div class="nb-phone">
+          <div class="nb-screen nb-screen--reveal" id="nb-rev">
+            <div class="nb-island"></div>
+            <div class="nb-scr-status"><span>9:41</span><span class="nb-scr-bat"></span></div>
+            <p class="nb-rev-univ">Univers Soca · Manche 6/10</p>
+            <div class="nb-rev-cover" style="background-image:url('/img/cover_soca.jpg')"><span class="nb-rev-veil" id="nb-rev-veil"></span></div>
+            <p class="nb-rev-k">Ta réponse s'écrit en direct</p>
+            <p class="nb-rev-answer"><span id="nb-rev-t"></span><span class="nb-rev-by" id="nb-rev-by"></span><b id="nb-rev-a"></b><i class="nb-rev-caret"></i></p>
+            <p class="nb-rev-status" id="nb-rev-status"><span class="nb-rev-bars"><i></i><i></i><i></i></span>À l'écoute</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barre de reponse flottante (sans orbe) -->
+      <div class="nb-sat nb-s05-bar" data-speed="1.1" aria-hidden="true">
+        <span>Titre ou artiste…</span>
+        <span class="nb-s05-send"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+      </div>
+
+      <div class="nb-s05-text">
+        <p class="nb-label">Ta réponse /</p>
+        <p class="nb-body">Tape ta réponse pendant l'extrait. Les accents et les petites fautes ne comptent pas : si c'est le bon titre, Sonara le reconnaît. À la fin du temps, la pochette se dévoile.</p>
+      </div>
+    </div>
+
+    <p class="nb-phrase nb-s05-phrase" data-scrub>
+      <span>Appuyer sur play,</span>
+      <span>c'est dépassé.</span>
+      <span>Ici, on écoute</span>
+      <span>pour gagner.</span>
+    </p>
+
+    <div class="nb-secfoot" aria-hidden="true">
+      <div class="nb-secfoot-l">
+        <svg class="nb-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
+        <p>Musique caribéenne<br>en multijoueur</p>
+      </div>
+      <div class="nb-trio-mini">
+        <span><svg viewBox="0 0 24 24"><path d="M7 6v12M18 6l-8 6 8 6z"/></svg></span>
+        <span><svg viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg></span>
+        <span><svg viewBox="0 0 24 24"><path d="M17 6v12M6 6l8 6-8 6z"/></svg></span>
+      </div>
+    </div>
+  </section>
+
   <!-- Choix du son-nom : s'ouvre au clic sur "Jouer" (consigne : le son-nom
        se choisit apres le clic). #landing-pseudo est lu par startFromLanding(). -->
   <div class="nb-sonnom" id="nb-sonnom" role="dialog" aria-modal="true" aria-labelledby="nb-sonnom-t" hidden>

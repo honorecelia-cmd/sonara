@@ -267,6 +267,41 @@
     });
   }
   function onFx(){if(!fxTicking){fxTicking=true;requestAnimationFrame(fx);}}
+
+  // ── 6. Revelation : la reponse s'ecrit, puis la pochette se devoile ──
+  // Morceau reel : audio/Machel_Montano-Mister_fete.mp3 (univers Soca).
+  var rev=document.getElementById('nb-rev');
+  if(rev){
+    var REV={titre:'Mister fete', artiste:'Machel Montano'};
+    var rT=document.getElementById('nb-rev-t'), rBy=document.getElementById('nb-rev-by'),
+        rA=document.getElementById('nb-rev-a'), rVeil=document.getElementById('nb-rev-veil'),
+        rStatus=document.getElementById('nb-rev-status');
+    var revTimers=[], revRunning=false;
+    function revLater(fn,ms){revTimers.push(setTimeout(fn,ms));}
+    function revFinal(){
+      rT.textContent=REV.titre;rBy.textContent=' par ';rA.textContent=REV.artiste;
+      rVeil.classList.add('is-open');
+    }
+    function revCycle(){
+      revTimers.forEach(clearTimeout);revTimers=[];
+      rT.textContent='';rBy.textContent='';rA.textContent='';rVeil.classList.remove('is-open');
+      var t=600, k;
+      for(k=0;k<REV.titre.length;k++)(function(ch,d){revLater(function(){rT.textContent+=ch;},d);})(REV.titre[k],t+k*70);
+      t+=REV.titre.length*70+250;
+      revLater(function(){rBy.textContent=' par ';},t);
+      t+=300;
+      for(k=0;k<REV.artiste.length;k++)(function(ch,d){revLater(function(){rA.textContent+=ch;},d);})(REV.artiste[k],t+k*70);
+      t+=REV.artiste.length*70+700;
+      revLater(function(){rVeil.classList.add('is-open');},t);   // fin du temps
+      revLater(function(){if(revRunning)revCycle();},t+3200);
+    }
+    if(reduce.matches)revFinal();
+    else new IntersectionObserver(function(es){
+      var vis=es[0].isIntersecting;
+      if(vis&&!revRunning){revRunning=true;revCycle();}
+      else if(!vis&&revRunning){revRunning=false;revTimers.forEach(clearTimeout);revTimers=[];revFinal();}
+    },{threshold:.35}).observe(rev);
+  }
   window.addEventListener('scroll',onFx,{passive:true});
   window.addEventListener('resize',onFx);
   fx();

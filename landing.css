@@ -936,3 +936,101 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-steps{margin:48px 16px 0;justify-content:flex-start}
   .nb-s04-right{margin:48px 16px 0;font-size:6vw;width:auto;text-align:left}
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   05 / LA REVELATION
+   Aplat brun de la palette, aucun degrade ni rond decoratif.
+   ═══════════════════════════════════════════════════════════════ */
+.nb-s05{background:#381309}
+.nb-s05 .nb-band,.nb-s05 .nb-secnum span{color:rgba(253,221,184,.55)}
+.nb-s05-intro{position:relative;padding-top:11vw}
+.nb-s05-intro .nb-secnum{position:absolute;left:var(--neb-margin);top:11vw}
+.nb-s05-title{
+  margin:0 0 0 20.4vw;font-family:var(--f-display);font-weight:800;
+  font-size:6.4vw;line-height:.95;letter-spacing:-.03em;color:var(--cream);
+}
+.nb-s05-title span{display:block}
+.nb-s05-title span:nth-child(2){color:rgba(253,221,184,.7)}
+.nb-s05-title span:nth-child(3){color:rgba(253,221,184,.45)}
+
+.nb-s05-stage{position:relative;height:56vw;margin-top:4vw}
+.nb-s05-labels{
+  position:absolute;left:var(--neb-margin);top:22vw;margin:0;
+  font-family:var(--f-text);font-size:15px;line-height:1.4;color:var(--cream);
+}
+.nb-s05-labels span{display:block;color:var(--neb-orange);font-weight:600}
+.nb-s05-phone{--pw:21vw;position:absolute;left:calc(50% - 10.5vw);top:0;width:var(--pw);z-index:1}
+.nb-screen--reveal{background:#1a0904}
+.nb-rev-univ{
+  position:absolute;top:calc(var(--pw) * .17);left:7%;right:7%;margin:0;
+  font-size:calc(var(--pw) * .042);color:rgba(255,255,255,.55);
+}
+.nb-rev-cover{
+  position:absolute;top:calc(var(--pw) * .28);left:7%;right:7%;aspect-ratio:1;
+  border-radius:calc(var(--pw) * .05);overflow:hidden;background-size:cover;background-position:center;
+}
+/* Voile plein qui s'ouvre a la fin du temps (clip-path anime en JS) */
+.nb-rev-veil{
+  position:absolute;inset:0;background:#2a1208;
+  clip-path:inset(0 0 0 0);transition:clip-path .9s cubic-bezier(.65,0,.35,1);
+}
+.nb-rev-veil.is-open{clip-path:inset(0 0 100% 0)}
+.nb-rev-k{
+  position:absolute;top:calc(var(--pw) * 1.22);left:7%;right:7%;margin:0;
+  font-size:calc(var(--pw) * .04);color:rgba(255,255,255,.5);
+}
+.nb-rev-answer{
+  position:absolute;top:calc(var(--pw) * 1.3);left:7%;right:7%;margin:0;min-height:2.3em;
+  font-size:calc(var(--pw) * .068);font-weight:700;line-height:1.15;color:#fff;
+}
+.nb-rev-by{color:rgba(255,255,255,.5);font-weight:600}
+.nb-rev-answer b{color:var(--neb-orange);font-weight:700}
+.nb-rev-caret{
+  display:inline-block;width:2px;height:1em;margin-left:2px;vertical-align:-.12em;background:#fff;
+  animation:nb-caret 1s steps(1) infinite;
+}
+@keyframes nb-caret{50%{opacity:0}}
+.nb-rev-status{
+  position:absolute;left:7%;right:7%;bottom:calc(var(--pw) * .1);margin:0;
+  display:flex;align-items:center;gap:calc(var(--pw) * .025);
+  padding:calc(var(--pw) * .035) calc(var(--pw) * .05);border-radius:999px;background:#2a1208;
+  font-size:calc(var(--pw) * .042);color:var(--cream);
+}
+.nb-rev-bars{display:flex;align-items:flex-end;gap:2px;height:calc(var(--pw) * .04)}
+.nb-rev-bars i{width:3px;background:var(--neb-orange);animation:nb-bars 1s ease-in-out infinite}
+.nb-rev-bars i:nth-child(1){height:40%}
+.nb-rev-bars i:nth-child(2){height:100%;animation-delay:-.3s}
+.nb-rev-bars i:nth-child(3){height:65%;animation-delay:-.6s}
+@keyframes nb-bars{50%{transform:scaleY(.35)}}
+.nb-rev-bars i{transform-origin:bottom}
+
+.nb-s05-bar{
+  left:58vw;top:24vw;width:24vw;display:flex;align-items:center;justify-content:space-between;
+  padding:8px 8px 8px 24px;border-radius:999px;background:#fff;
+  font-family:var(--f-text);font-size:15px;color:rgba(17,17,17,.5);
+}
+.nb-s05-send{
+  width:40px;height:40px;border-radius:999px;background:var(--neb-orange);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.nb-s05-send svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.nb-s05-text{position:absolute;right:var(--neb-margin);bottom:2vw;width:24vw}
+.nb-s05 .nb-label{color:rgba(253,221,184,.55)}
+.nb-s05 .nb-body{color:rgba(253,221,184,.8)}
+.nb-s05-phrase{margin:12vw 0 0 36vw;width:55vw}
+
+@media (prefers-reduced-motion:reduce){
+  .nb-rev-caret,.nb-rev-bars i{animation:none}
+  .nb-rev-veil{transition:none}
+}
+@media (max-width:760px){
+  .nb-s05-intro{padding:76px 16px 0}
+  .nb-s05-intro .nb-secnum{position:static;margin-bottom:40px}
+  .nb-s05-title{margin:0;font-size:13vw}
+  .nb-s05-stage{height:auto;margin-top:48px;padding:0 16px;display:flex;flex-direction:column;gap:36px}
+  .nb-s05-labels{position:static}
+  .nb-s05-phone{--pw:58vw;position:relative;left:auto;top:auto;align-self:center}
+  .nb-s05-bar{display:none}
+  .nb-s05-text{position:static;width:auto}
+  .nb-s05-phrase{margin:64px 16px 0;width:auto}
+}
