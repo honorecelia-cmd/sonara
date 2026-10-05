@@ -66,6 +66,28 @@
     });
   });
   document.addEventListener('click',function(e){if(!e.target.closest('.nb-menu'))closeMenus();});
+
+  // ── Vinyle "Decouvrir" : ~6 s par tour, plus vite au survol ──
+  var vinyl=document.getElementById('nb-vinyl');
+  var vsvg=vinyl.querySelector('svg');
+  var vAngle=0,vSpeed=60,vTarget=60,vLast=0;   // degres par seconde
+  vinyl.addEventListener('mouseenter',function(){vTarget=240;});
+  vinyl.addEventListener('mouseleave',function(){vTarget=60;});
+  vinyl.addEventListener('click',function(e){
+    e.stopPropagation();
+    var target=document.getElementById('univers');
+    if(target)target.scrollIntoView({behavior:reduce.matches?'auto':'smooth'});
+    else landing.querySelector('[aria-controls="nb-menu-univ"]').click();  // section a venir
+  });
+  (function spin(now){
+    var dt=vLast?Math.min(.1,(now-vLast)/1000):0; vLast=now;
+    if(!reduce.matches&&landing.offsetParent!==null){
+      vSpeed+=(vTarget-vSpeed)*Math.min(1,dt*4);
+      vAngle=(vAngle+vSpeed*dt)%360;
+      vsvg.style.transform='rotate('+vAngle.toFixed(2)+'deg)';
+    }else if(reduce.matches)vsvg.style.transform='';
+    requestAnimationFrame(spin);
+  })(0);
   form.addEventListener('submit',function(e){
     e.preventDefault();
     var v=input.value.trim();
@@ -89,6 +111,7 @@
   var header=document.getElementById('nb-header');
   var hand=document.getElementById('nb-hand');
   var thumb=document.getElementById('nb-thumb');
+  var slogan=document.getElementById('nb-slogan');
   var giant=document.getElementById('nb-giant');
   var nat=null,ticking=false;
 
@@ -129,7 +152,11 @@
     hand.style.opacity=fade;
     thumb.style.opacity=fade;
     // Parallaxe : le lettrage geant glisse plus lentement que la page
-    if(y<hero.offsetHeight&&giant.offsetParent&&getComputedStyle(giant).position==='absolute')giant.style.transform='translate3d(0,'+(y*.25).toFixed(1)+'px,0)';
+    if(y<hero.offsetHeight&&giant.offsetParent){
+      var par='translate3d(0,'+(y*.25).toFixed(1)+'px,0)';
+      giant.style.transform=par;
+      if(getComputedStyle(slogan).position==='absolute')slogan.style.transform=par;
+    }
   }
   function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(update);}}
   window.addEventListener('scroll',onScroll,{passive:true});

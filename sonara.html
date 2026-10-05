@@ -36,17 +36,16 @@
          reste hors de ce calque pour pouvoir le quitter au defilement. -->
     <div class="nb-hero-clip" aria-hidden="true">
       <div class="nb-hero-bg"></div>
+      <!-- Logo geant en filigrane, a gauche du telephone, derriere la main -->
+      <img class="nb-giant" id="nb-giant" src="/img/logo_sonara.svg" alt="">
       <svg class="nb-hand" id="nb-hand" viewBox="0 0 160 280" preserveAspectRatio="none">
         <path d="M60 280C58 240 56 200 52 172C44 150 30 140 25 112C18 82 21 44 30 22L127 6C140 3 147 12 140 18L133 20C145 20 149 32 139 36L133 38C145 39 148 51 137 55L133 57C143 59 144 70 133 74C129 104 126 150 125 190C124 230 124 260 126 280Z"/>
       </svg>
       <div class="nb-grain"></div>
     </div>
 
-    <!-- Logo geant en filigrane + slogan officiel, a gauche du telephone -->
-    <div class="nb-giant" id="nb-giant">
-      <img src="/img/logo_sonara.svg" alt="" aria-hidden="true">
-      <p class="nb-slogan">THE Blind test</p>
-    </div>
+    <!-- Slogan officiel, sous le logo geant (logo : calque decoupe ci-dessus) -->
+    <p class="nb-slogan" id="nb-slogan">THE Blind test</p>
 
     <nav class="nb-meta" aria-label="Menu principal">
       <a class="nb-meta-logo" href="#landing"><img src="/img/logo_sonara.svg" alt="SONARA"></a>
@@ -71,6 +70,19 @@
           <li><button type="button" data-nb-mode="multi">Multijoueur</button></li>
         </ul>
       </div>
+      <!-- Vinyle "Decouvrir" : tourne en continu (landing.js), renvoie vers #univers -->
+      <button class="nb-vinyl" id="nb-vinyl" type="button" aria-label="Découvrir les univers">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <defs><path id="nb-vinyl-arc" d="M22 22m-15.6 0a15.6 15.6 0 1 1 31.2 0a15.6 15.6 0 1 1 -31.2 0"/></defs>
+          <circle cx="22" cy="22" r="21.5" class="nb-vinyl-disc"/>
+          <circle cx="22" cy="22" r="20.4" class="nb-vinyl-groove"/>
+          <circle cx="22" cy="22" r="12.2" class="nb-vinyl-groove"/>
+          <text class="nb-vinyl-txt"><textPath href="#nb-vinyl-arc" textLength="96">DÉCOUVRIR · DÉCOUVRIR ·</textPath></text>
+          <circle cx="22" cy="22" r="10" class="nb-vinyl-label"/>
+          <circle cx="22" cy="22" r="6.5" class="nb-vinyl-groove nb-vinyl-groove--label"/>
+          <circle cx="22" cy="22" r="1.6" class="nb-vinyl-hole"/>
+        </svg>
+      </button>
     </nav>
 
     <!-- Le ï est reconstruit (i sans point + 2 points en CSS) : en Syne 800
