@@ -117,7 +117,7 @@
   var nat=null,ticking=false,pS=0,snap=true;
 
   function measure(){
-    wrap.style.transform='';
+    wrap.style.transform='';hand.style.transform='';
     // La main et le lettrage geant suivent la position reelle du telephone
     hero.style.setProperty('--hx',wrap.offsetLeft+'px');
     hero.style.setProperty('--hy',wrap.offsetTop+'px');
@@ -132,7 +132,7 @@
     if(!nat||landing.offsetParent===null)return;
     var y=window.scrollY;
     if(reduce.matches){
-      wrap.style.transform='';
+      wrap.style.transform='';hand.style.transform='';
       header.classList.toggle('is-on',y>nat.y*.5);
       return;
     }
@@ -153,7 +153,9 @@
     var tx=(s.left+s.width/2-cx)*e;
     var ty=(s.top+s.height/2-cy)*e;
     var k=1+(s.height/nat.h-1)*e;
-    wrap.style.transform='translate3d('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px,0) scale('+k.toFixed(4)+')';
+    var tf='translate3d('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px,0) scale('+k.toFixed(4)+')';
+    wrap.style.transform=tf;
+    hand.style.transform=tf;   // la main part avec le telephone (meme centre, voir CSS)
     wrap.classList.toggle('nb-wrap-docked',p>=1);
     header.classList.toggle('is-on',p>.45);
     var fade=Math.max(0,1-p*3);
