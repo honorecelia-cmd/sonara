@@ -26,14 +26,14 @@ var UNIVERS = [
    origine:'le Bronx, New York', epoque:'années 1970', signature:'le flow sur le beat',
    texte:"Dans les block parties du Bronx, DJ Kool Herc, né en Jamaïque, isole les breaks des disques pendant que des MC prennent le micro. Le rap est né, avec un héritage direct du toasting des sound systems jamaïcains. Le genre conquiert le monde et s'installe aux Antilles dans les années 90, où il se fait en créole comme en français, entre conscience et ego trip."},
   {nom:'Mix', slug:'mix', couleur:'var(--univers-mix)', image:null,
-   origine:'SONARA', epoque:'maintenant', signature:'tous les univers en une partie',
-   texte:"L'univers qui casse les frontières. Mix réunit tous les univers SONARA dans une même partie : un zouk peut succéder à un classique du reggae, puis à un shatta. C'est le reflet de nos playlists, de nos soirées et de la Caraïbe elle-même, faite de rencontres et de mélanges. Le mode pour ceux qui connaissent tout, ou qui veulent tout découvrir."},
+   origine:'Sonara', epoque:'maintenant', signature:'tous les univers en une partie',
+   texte:"L'univers qui casse les frontières. Mix réunit tous les univers Sonara dans une même partie : un zouk peut succéder à un classique du reggae, puis à un shatta. C'est le reflet de nos playlists, de nos soirées et de la Caraïbe elle-même, faite de rencontres et de mélanges. Le mode pour ceux qui connaissent tout, ou qui veulent tout découvrir."},
   {nom:'Kompa', slug:'kompa', couleur:'var(--univers-kompa)', image:'/img/cover_kompa.jpg',
    origine:'Haïti', epoque:'1955', signature:'la danse en couple par excellence',
    texte:"En 1955, le saxophoniste haïtien Nemours Jean-Baptiste crée le « konpa dirèk », un rythme de danse régulier et chaloupé inspiré du méringue. Guitares, cuivres, puis claviers : le kompa voyage avec la diaspora haïtienne et s'installe durablement aux Antilles, où il a nourri la cadence et le zouk. Aujourd'hui encore, c'est la danse en couple par excellence."},
   {nom:'Shatta', slug:'shatta', couleur:'var(--univers-shatta)', image:null,
    origine:'Martinique', epoque:'années 2010', signature:'minimaliste, percussif, fait pour le dancefloor',
-   texte:"Né en Martinique, le shatta est un enfant du dancehall : plus minimaliste, plus percussif, pensé pour faire bouger le dancefloor, avec des textes crus et beaucoup d'humour. Longtemps réservé aux soirées locales, il explose dans l'Hexagone au début des années 2020, porté notamment par Maureen et Bamby. C'est la touche martiniquaise de SONARA."}
+   texte:"Né en Martinique, le shatta est un enfant du dancehall : plus minimaliste, plus percussif, pensé pour faire bouger le dancefloor, avec des textes crus et beaucoup d'humour. Longtemps réservé aux soirées locales, il explose dans l'Hexagone au début des années 2020, porté notamment par Maureen et Bamby. C'est la touche martiniquaise de Sonara."}
 ];
 
 (function(){

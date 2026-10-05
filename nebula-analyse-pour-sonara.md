@@ -419,12 +419,14 @@ Les textes entre crochets [ ] sont des emplacements à remplir avec le contenu r
 
 ### Éléments communs
 
+> **Nom dans les textes : « Sonara »** (casse normale) dans tous les textes, titres et sous-titres. Seul le logo reste en capitales. Aucun `text-transform: uppercase` ne doit le remettre en majuscules.
+>
 > **Slogan officiel : « THE Blind test »** (« THE » en majuscules, « Blind test » en deux mots). Il remplace « Blind test caribéen » partout (bandeau des sections, méta flottante) et donne le titre de la page : `<title>SONARA, THE Blind test</title>`.
 
 | Emplacement | Texte |
 |---|---|
 | Slogan officiel | THE Blind test |
-| Bandeau de section, gauche | SONARA |
+| Bandeau de section, gauche | Sonara |
 | Bandeau de section, droite | THE Blind test |
 | Pied de section, à côté du globe | Musique caribéenne / en multijoueur |
 | Bouton principal (partout) | Jouer |
@@ -442,7 +444,7 @@ Les textes entre crochets [ ] sont des emplacements à remplir avec le contenu r
 | Logo géant + slogan (à gauche du téléphone) | logo SONARA / THE Blind test |
 | Titre (3 lignes) | Le blind test / qui fait vibrer / la Caraïbe |
 | Accroche (droite) | Écoute un extrait, trouve le titre et l'artiste, et défie tes proches où qu'ils soient. Le zouk, le kompa ou le dancehall deviennent un jeu à partager. |
-| Méta flottante gauche | SONARA / THE Blind test |
+| Méta flottante gauche | Sonara / THE Blind test |
 | Méta flottante droite (plus bas) | Made in Martinique |
 | Méta flottante centre-gauche | Pour qui ? / Tous les univers |
 | Liste bas droite (4 lignes) | Écouter / Deviner / Marquer / Partager |
@@ -456,17 +458,17 @@ Les textes entre crochets [ ] sont des emplacements à remplir avec le contenu r
 
 | Emplacement | Texte |
 |---|---|
-| Numéro + titre | 01 / Qu'est-ce que SONARA |
+| Numéro + titre | 01 / Qu'est-ce que Sonara |
 | Label | L'idée / |
-| Grande phrase (4 lignes en fondu) | Un blind test qui / sonne comme chez nous. / SONARA met la musique / antillaise au cœur du jeu. |
-| À propos / | SONARA est un jeu de blind test en ligne dédié aux musiques des Antilles et de la Caraïbe. On y joue seul ou à plusieurs, à distance, pour partager un vrai moment ensemble. |
+| Grande phrase (4 lignes en fondu) | Un blind test qui / sonne comme chez nous. / Sonara met la musique / antillaise au cœur du jeu. |
+| À propos / | Sonara est un jeu de blind test en ligne dédié aux musiques des Antilles et de la Caraïbe. On y joue seul ou à plusieurs, à distance, pour partager un vrai moment ensemble. |
 | Liste (fondu) — titre « Notre mission » | Transmettre / Rassembler / Faire découvrir / S'amuser |
 | Satellite « inviter » | Invite tes proches / Partage le lien de ta salle / [Inviter] |
 | Satellite pill | Créer une salle |
 | Onglets du téléphone | Univers · Salles · Classement |
 | Carte du téléphone | Morceau à l'honneur / [Titre] — [Artiste] / [Lancer la partie] |
 | Label | L'histoire / |
-| Phrase histoire (5 lignes en fondu) | Tout est parti d'une soirée entre frère et sœur, autour d'un blind test. / On s'est dit qu'il nous fallait un jeu fait pour nous, / avec les sons qu'on aime / et qui nous font vibrer. / SONARA est né ce soir-là. |
+| Phrase histoire (5 lignes en fondu) | Tout est parti d'une soirée entre frère et sœur, autour d'un blind test. / On s'est dit qu'il nous fallait un jeu fait pour nous, / avec les sons qu'on aime / et qui nous font vibrer. / Sonara est né ce soir-là. |
 
 ---
 
@@ -480,9 +482,9 @@ Les textes entre crochets [ ] sont des emplacements à remplir avec le contenu r
 | Label + texte | Salle de jeu / Crée ta salle, partage le lien et lance la partie quand tout le monde est prêt. Les scores s'affichent en direct pour chaque joueur. |
 | Fil d'Ariane | Solo / Multijoueur / Classement |
 | Grande phrase 2 (4 lignes) | Chaque partie / met en lumière / un morceau / et son artiste. |
-| Carte dorée | L'artiste à l'honneur / [Nom de l'artiste] / [Univers] / [X titres dans SONARA] / [Découvrir] |
+| Carte dorée | L'artiste à l'honneur / [Nom de l'artiste] / [Univers] / [X titres dans Sonara] / [Découvrir] |
 | Marquee | Artistes Artistes Artistes |
-| Label + texte | Les artistes / Découvre les artistes qui font vivre les univers de SONARA, des grands classiques aux nouvelles voix. |
+| Label + texte | Les artistes / Découvre les artistes qui font vivre les univers de Sonara, des grands classiques aux nouvelles voix. |
 
 ---
 
@@ -494,7 +496,7 @@ Les textes entre crochets [ ] sont des emplacements à remplir avec le contenu r
 | Label gauche | La révélation / Titre et artiste |
 | Écran du téléphone | Ta réponse s'écrit en direct : « [Titre] par **[Artiste]** » · « À l'écoute » |
 | Barre de réponse flottante | Titre ou artiste… [orbe] |
-| Label + texte droite | Ta réponse / Tape ta réponse pendant l'extrait. Les accents et les petites fautes ne comptent pas : si c'est le bon titre, SONARA le reconnaît. À la fin du temps, la pochette se dévoile. |
+| Label + texte droite | Ta réponse / Tape ta réponse pendant l'extrait. Les accents et les petites fautes ne comptent pas : si c'est le bon titre, Sonara le reconnaît. À la fin du temps, la pochette se dévoile. |
 | Grande phrase 2 (5 lignes) | Appuyer sur play, / c'est dépassé. / Ici, on écoute / pour gagner. |
 | Profil (version ultérieure, ne pas intégrer maintenant) | Ton profil / Tes parties, tes scores et ta place au classement. |
 
@@ -524,7 +526,7 @@ Les textes entre crochets [ ] sont des emplacements à remplir avec le contenu r
 | Texte droite | Du zouk au shatta, chaque univers a ses morceaux, ses artistes et sa pochette. Choisis le tien avant chaque partie. |
 | Carte centrale | [Univers] / [X titres] / [Jouer cet univers] |
 | Roue de sélection (9 univers) | Dancehall · Kompa · Zouk · Rap · Trap · Soca · Reggae · Shatta · Mix |
-| Marquee | SONARA SONARA SONARA |
+| Marquee | Sonara Sonara Sonara |
 
 ---
 
@@ -537,7 +539,7 @@ Section intégrée maintenant, avec du lorem ipsum dans les cartes. Le contenu r
 | Méga-titre | Les / nouveautés |
 | Gauche | Nouveaux sons. / Nouvelles voix. |
 | Label + texte | À l'honneur / Chaque nouveauté met en avant un morceau et son artiste : son histoire, son univers et où l'écouter. |
-| Grande phrase (4 lignes) | La musique antillaise / bouge tout le temps. / SONARA aussi : / de nouveaux sons arrivent. |
+| Grande phrase (4 lignes) | La musique antillaise / bouge tout le temps. / Sonara aussi : / de nouveaux sons arrivent. |
 | Cartes (3) | Catégorie : Nouveau son · Article · Artiste à l'honneur. Titre : « Lorem ipsum dolor sit amet ». Texte : « Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. » Bouton : Lire |
 | Carte en avant | Lorem ipsum dolor / Lorem ipsum · [Univers] / [Lire] |
 

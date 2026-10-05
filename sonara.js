@@ -1079,7 +1079,7 @@ function doShare(){
   sfxC();
   var mc=(G.pl.filter(function(p){return p.me})[0]||{}).c||0;
   var r=G.res.findIndex(function(p){return p.me})+1;
-  var txt='🎵 SONARA — Es ou konet sa?\n\n'+G.ps+' : '+G.sc+' pts ('+mc+'/'+G.qs.length+')\nThème : '+G.ic+' '+G.theme+'\n'+r+'/'+G.res.length+' 🏆\n\nJoue sur SONARA! 🌴';
+  var txt='🎵 Sonara — Es ou konet sa?\n\n'+G.ps+' : '+G.sc+' pts ('+mc+'/'+G.qs.length+')\nThème : '+G.ic+' '+G.theme+'\n'+r+'/'+G.res.length+' 🏆\n\nJoue sur SONARA! 🌴';
   if(navigator.share)navigator.share({text:txt});
   else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(function(){notif('✓ Copié!')});
   else alert(txt);
@@ -1124,7 +1124,7 @@ function copyEntreLink(){
 function shareEntreLink(){
   ensureEntreCode(function(code){
     var url=entreLinkFromCode(code);
-    var txt='🎵 Rejoins-moi sur SONARA — le blindtest caribéen !\n'+url;
+    var txt='🎵 Rejoins-moi sur Sonara — le blindtest caribéen !\n'+url;
     if(navigator.share)navigator.share({text:txt,url:url}).catch(function(){});
     else copyEntreLink();
   });
