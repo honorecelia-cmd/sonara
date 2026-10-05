@@ -239,9 +239,9 @@
     for(var i=0;i<n;i++){
       // data-scrub="dark" : texte sombre sur fond clair (beige)
       var dk=ph.getAttribute('data-scrub')==='dark';
-      var L=dk?[17,17,17]:LIGHT, Dk=dk?[138,131,120]:DARK;
+      var L=dk?[45,16,2]:LIGHT, Dk=dk?[150,110,80]:DARK;   // fond creme : de --ink vers un brun clair
       var end=n>1?L.map(function(v,k){return v+(Dk[k]-v)*i/(n-1);}):L;
-      lines.push({el:spans[i],end:end,from:dk?[196,189,176]:FROM});
+      lines.push({el:spans[i],end:end,from:dk?[232,200,160]:FROM});
     }
   });
   // ── 5. Satellites : vitesse propre a chacun (0.8x a 1.2x) ──

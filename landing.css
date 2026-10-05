@@ -23,17 +23,15 @@
   --neb-margin:4.85vw;
   --f-display:'MuseoModerno', sans-serif;  /* titres */
   --f-text:'Inter', sans-serif;
-  --hd-h:64px;                 /* hauteur du header fixe */
+  --hd-h:64px;
+  /* Fonds de section : un aplat par section, en alternance */
+  --fond-orange:var(--neb-core);   /* #DE5810 */
+  --fond-brun:var(--ink);          /* #2d1002 */
+  --fond-creme:var(--cream);       /* #fdddb8, texte en --ink */                 /* hauteur du header fixe */
 }
 /* Une ancre ou un scrollIntoView ne place jamais un titre sous le header */
 html{scroll-padding-top:var(--hd-h)}
 
-/* Centres lumineux du degrade : animes pour la "respiration" */
-@property --nb-g1x{syntax:'<percentage>';inherits:false;initial-value:85%}
-@property --nb-g1y{syntax:'<percentage>';inherits:false;initial-value:95%}
-@property --nb-g2x{syntax:'<percentage>';inherits:false;initial-value:55%}
-@property --nb-g2y{syntax:'<percentage>';inherits:false;initial-value:60%}
-@property --nb-g3x{syntax:'<percentage>';inherits:false;initial-value:75%}
 
 #landing{
   display:flex;
@@ -93,30 +91,7 @@ html{scroll-padding-top:var(--hd-h)}
   flex-shrink:0;
 }
 .nb-hero-clip{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-/* Bas du hero : le degrade se fond dans le noir de la section 01 */
-.nb-hero-clip::after{
-  content:"";position:absolute;left:0;right:0;bottom:0;height:9vw;
-  background:linear-gradient(180deg,rgba(8,8,8,0),var(--neb-black));
-}
-.nb-hero-bg{
-  position:absolute;inset:0;
-  background:
-    radial-gradient(60% 55% at var(--nb-g1x) var(--nb-g1y), var(--neb-peach) 0%, transparent 70%),
-    radial-gradient(70% 70% at var(--nb-g2x) var(--nb-g2y), var(--neb-core) 0%, transparent 75%),
-    radial-gradient(90% 80% at var(--nb-g3x) 20%, var(--neb-brick) 0%, transparent 80%),
-    linear-gradient(135deg, var(--neb-ink) 0%, var(--neb-wine) 30%, var(--neb-brick) 55%, var(--neb-core) 80%, var(--neb-hot) 100%);
-  animation:nb-breathe 12s ease-in-out infinite alternate;
-}
-@keyframes nb-breathe{
-  0%  {--nb-g1x:85%;--nb-g1y:95%;--nb-g2x:55%;--nb-g2y:60%;--nb-g3x:75%}
-  50% {--nb-g1x:81%;--nb-g1y:91%;--nb-g2x:59%;--nb-g2y:57%;--nb-g3x:71%}
-  100%{--nb-g1x:88%;--nb-g1y:93%;--nb-g2x:52%;--nb-g2y:63%;--nb-g3x:78%}
-}
-/* Grain SVG (feTurbulence) a 7 % : evite les bandes de couleur */
-.nb-grain{
-  position:absolute;inset:0;opacity:.07;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
+.nb-hero-bg{position:absolute;inset:0;background:var(--fond-orange)}
 
 /* Logo geant en filigrane : toute la largeur libre a gauche du telephone
    (proportions gardees : c'est la largeur qui le limite), centre dans la
@@ -199,7 +174,7 @@ html{scroll-padding-top:var(--hd-h)}
   font-family:var(--f-text);font-size:13px;font-weight:500;
   -webkit-tap-highlight-color:transparent;
 }
-.nb-vinyl .vy{width:44px;--vy-label:var(--accent);--vy-hole:#7a1a02;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+.nb-vinyl .vy{width:44px;--vy-label:var(--accent);--vy-hole:#7a1a02}
 .nb-vinyl:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:999px}
 .nb-vinyl:hover .nb-vinyl-txt{text-decoration:underline;text-underline-offset:4px}
 .nb-menu-list button:hover,.nb-menu-list button:focus-visible{background:var(--neb-orange);color:#fff;outline:none}
@@ -245,8 +220,8 @@ html{scroll-padding-top:var(--hd-h)}
   position:relative;width:100%;aspect-ratio:9/19.5;
   border-radius:calc(var(--pw) * .143);
   padding:calc(var(--pw) * .022);
-  background:linear-gradient(145deg,#5b5a58 0%,#2b2a29 18%,#3c3b39 50%,#1e1d1c 82%,#4a4947 100%);
-  box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 30px 80px -20px rgba(32,0,0,.65);
+  background:#2b2a29;
+  box-shadow:0 0 0 1px rgba(0,0,0,.6);
 }
 .nb-wrap-docked .nb-phone{cursor:pointer}
 .nb-screen{
@@ -261,12 +236,9 @@ html{scroll-padding-top:var(--hd-h)}
   position:absolute;inset:0;
   background-size:cover;background-position:center;
 }
-/* Voile : lisibilite de la barre d'etat en haut et des infos en bas */
-.nb-scr-tint{
-  position:absolute;inset:0;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,0) 13%, rgba(0,0,0,0) 52%, rgba(12,2,0,.72) 72%, rgba(12,2,0,.92) 100%);
-}
+/* Voile en aplat (ecrans a pochette) : panneau bas pour lire les infos */
+.nb-scr-tint{position:absolute;inset:0;pointer-events:none}
+.nb-scr-tint::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:rgba(12,2,0,.84)}
 .nb-island{
   position:absolute;top:calc(var(--pw) * .035);left:50%;transform:translateX(-50%);
   width:32%;height:calc(var(--pw) * .09);border-radius:999px;background:#000;z-index:3;
@@ -438,7 +410,6 @@ html{scroll-padding-top:var(--hd-h)}
 }
 
 @media (prefers-reduced-motion:reduce){
-  .nb-hero-bg{animation:none}
   .nb-pill,.nb-trio button{transition:none}
 }
 
@@ -476,10 +447,10 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-body{margin:0;font-family:var(--f-text);font-size:15px;line-height:1.45;color:rgba(255,255,255,.62)}
 /* Avatars ronds (placeholders, aucune photo) */
 .nb-avatar{display:block;border-radius:50%;flex-shrink:0}
-.nb-avatar--a{background:radial-gradient(circle at 35% 30%,#FF8B56,#C23401 70%)}
-.nb-avatar--b{background:radial-gradient(circle at 35% 30%,#E6C789,#D3561A 75%)}
-.nb-avatar--c{background:radial-gradient(circle at 35% 30%,#A10D01,#400000 75%)}
-.nb-avatar--d{background:radial-gradient(circle at 35% 30%,#E9E1DB,#8F887C 75%)}
+.nb-avatar--a{background:#E85E16}
+.nb-avatar--b{background:#E6C789}
+.nb-avatar--c{background:#A10D01}
+.nb-avatar--d{background:#8F887C}
 /* Pied de section : globe + texte, trio lecteur miniature */
 .nb-secfoot{
   display:flex;justify-content:space-between;align-items:flex-end;
@@ -501,6 +472,7 @@ html{scroll-padding-top:var(--hd-h)}
 /* ═══════════════════════════════════════════════════════════════
    01 / QU'EST-CE QUE SONARA
    ═══════════════════════════════════════════════════════════════ */
+.nb-s01{background:var(--fond-brun)}
 .nb-s01-intro{position:relative;padding-top:11vw}
 .nb-s01-intro .nb-secnum{position:absolute;left:var(--neb-margin);top:11vw}
 .nb-s01-icon{position:absolute;left:32vw;top:11vw}
@@ -511,7 +483,7 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-s01-home{--pw:24vw;position:absolute;left:38vw;top:0;width:var(--pw);z-index:1}
 .nb-s01-about{position:absolute;left:var(--neb-margin);bottom:5vw;width:17vw}
 
-.nb-screen--home{background:radial-gradient(120% 55% at 50% 0%,#3a1206 0%,#120706 55%,#0b0505 100%)}
+.nb-screen--home{background:#120706}
 .nb-home-top{
   position:absolute;top:calc(var(--pw) * .17);left:7%;right:7%;
   display:flex;justify-content:space-between;align-items:center;
@@ -597,7 +569,7 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-s01-mission{position:absolute;left:61vw;top:4vw}
 .nb-s01-mission .nb-label{color:rgba(255,255,255,.45)}
 .nb-s01-game{--pw:22vw;position:absolute;left:70vw;top:28vw;width:var(--pw)}
-.nb-screen--rank{background:linear-gradient(180deg,#1a0b07 0%,#0b0505 60%)}
+.nb-screen--rank{background:#120706}
 .nb-rank-tabs{top:calc(var(--pw) * .17)}
 .nb-podium{
   position:absolute;top:calc(var(--pw) * .34);left:8%;right:8%;
@@ -656,9 +628,7 @@ html{scroll-padding-top:var(--hd-h)}
 /* ═══════════════════════════════════════════════════════════════
    02 / LES POSSIBILITES
    ═══════════════════════════════════════════════════════════════ */
-.nb-s02{background:
-  radial-gradient(42% 30% at 50% 30%, rgba(122,40,8,.42) 0%, rgba(56,19,9,.18) 45%, transparent 75%),
-  var(--neb-black)}
+.nb-s02{background:var(--fond-creme)}
 .nb-s02-intro{position:relative;padding-top:11vw;min-height:30vw}
 .nb-s02-intro .nb-secnum{position:absolute;left:var(--neb-margin);top:11vw}
 .nb-s02-big{margin-left:20.4vw;width:45vw}
@@ -677,9 +647,8 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-s02-room{
   --pw:21vw;position:absolute;left:calc(50% - 10.5vw);top:6.5vw;width:var(--pw);z-index:1;
   transform:perspective(1400px) rotateY(-14deg) rotateZ(-12deg);
-  filter:drop-shadow(-30px 40px 60px rgba(227,82,1,.28));
 }
-.nb-screen--room{background:radial-gradient(130% 60% at 30% 0%,#4a1606 0%,#140807 55%,#0b0505 100%)}
+.nb-screen--room{background:#120706}
 .nb-room-head{position:absolute;top:calc(var(--pw) * .2);left:8%;right:8%;display:flex;justify-content:space-between;align-items:center}
 .nb-room-t{margin:0;font-family:var(--f-text);font-weight:700;font-size:calc(var(--pw) * .062);white-space:nowrap}
 .nb-room-code{
@@ -784,19 +753,9 @@ html{scroll-padding-top:var(--hd-h)}
    Bandeau orange (degrade Nebula, recette 6.2 bis) qui se fond dans le
    beige papier ; textes sombres sur la partie beige.
    ═══════════════════════════════════════════════════════════════ */
-.nb-s04{background:var(--neb-cream);color:#111}
-.nb-s04-bg{
-  position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(80% 22% at 20% 0%, var(--neb-wine) 0%, transparent 70%),
-    radial-gradient(70% 22% at 70% 4%, var(--neb-core) 0%, transparent 75%),
-    linear-gradient(180deg, var(--neb-brick) 0%, var(--neb-hot) 9%, var(--neb-peach) 22%, var(--neb-cream) 36%);
-}
-.nb-s04 .nb-band{color:rgba(255,255,255,.7)}
+.nb-s04{background:var(--fond-creme);color:var(--ink)}
 .nb-s04-head{position:relative;padding-top:11vw}
 .nb-s04-head .nb-secnum{margin-left:var(--neb-margin)}
-.nb-s04 .nb-secnum span{color:rgba(255,255,255,.7)}
-.nb-s04 .nb-secnum h2{color:#fff}
 
 /* Mega-titre brun translucide sur l'orange */
 .nb-mega{
@@ -930,8 +889,6 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-s04-head .nb-secnum{margin:0}
   .nb-mega{font-size:14vw}
   .nb-s04-mega{margin-top:40px}
-  .nb-s04-bg{background:
-    linear-gradient(180deg, var(--neb-brick) 0%, var(--neb-hot) 6%, var(--neb-peach) 14%, var(--neb-cream) 22%)}
   .nb-s04-stage{height:auto;margin-top:4vw;padding:0 16px;display:flex;flex-direction:column;align-items:center;gap:40px}
   .nb-s04-phone{--pw:58vw;position:relative;left:auto;top:auto;order:1}
   .nb-s04-left{position:static;width:auto;align-self:stretch;font-size:7vw;order:2}
@@ -945,7 +902,7 @@ html{scroll-padding-top:var(--hd-h)}
    05 / LA REVELATION
    Aplat brun de la palette, aucun degrade ni rond decoratif.
    ═══════════════════════════════════════════════════════════════ */
-.nb-s05{background:#381309}
+.nb-s05{background:var(--fond-brun)}
 .nb-s05 .nb-band,.nb-s05 .nb-secnum span{color:rgba(253,221,184,.55)}
 .nb-s05-intro{position:relative;padding-top:11vw}
 .nb-s05-intro .nb-secnum{position:absolute;left:var(--neb-margin);top:11vw}
@@ -1038,3 +995,20 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-s05-text{position:static;width:auto}
   .nb-s05-phrase{margin:64px 16px 0;width:auto}
 }
+
+/* ── Sections sur fond creme : texte brun fonce (--ink) ── */
+.nb-sec--light{color:var(--ink)}
+.nb-sec--light .nb-band,.nb-sec--light .nb-secnum span{color:rgba(45,16,2,.55)}
+.nb-sec--light .nb-secnum h2{color:var(--ink)}
+.nb-sec--light .nb-label{color:rgba(45,16,2,.6)}
+.nb-sec--light .nb-body{color:rgba(45,16,2,.82)}
+.nb-sec--light .nb-secicon{border-color:rgba(45,16,2,.35)}
+.nb-sec--light .nb-secicon i{background:var(--ink)}
+.nb-sec--light .nb-crumbs{color:rgba(45,16,2,.55)}
+.nb-sec--light .nb-crumbs i{color:rgba(45,16,2,.3)}
+.nb-sec--light .nb-orbits i{border-color:rgba(45,16,2,.16)}
+.nb-sec--light .nb-secfoot p{color:rgba(45,16,2,.6)}
+.nb-sec--light .nb-globe{stroke:rgba(45,16,2,.7)}
+.nb-sec--light .nb-s04-pts{color:var(--ink)}
+.nb-sec--light .nb-s04-pts li{border-top-color:rgba(45,16,2,.14)}
+.nb-sec--light .nb-s04-right{color:var(--ink)}
