@@ -114,13 +114,14 @@
   var thumb=document.getElementById('nb-thumb');
   var slogan=document.getElementById('nb-slogan');
   var giant=document.getElementById('nb-giant');
-  var nat=null,ticking=false;
+  var nat=null,ticking=false,pS=0,snap=true;
 
   function measure(){
     wrap.style.transform='';
     // La main et le lettrage geant suivent la position reelle du telephone
     hero.style.setProperty('--hx',wrap.offsetLeft+'px');
     hero.style.setProperty('--hy',wrap.offsetTop+'px');
+    snap=true;
     var r=wrap.getBoundingClientRect();
     nat={x:r.left,y:r.top+window.scrollY,w:r.width,h:r.height};
     update();
@@ -135,11 +136,17 @@
       header.classList.toggle('is-on',y>nat.y*.5);
       return;
     }
-    // Le telephone est loge quand son centre aurait atteint le haut de l'ecran
-    // (ou plus tot si la page ne defile pas jusque-la)
+    // Sortie etalee sur deux fois la distance qui amene le centre du
+    // telephone en haut de l'ecran (ou moins si la page est trop courte)
     var maxY=document.documentElement.scrollHeight-window.innerHeight;
-    var end=Math.max(1,Math.min(nat.y+nat.h*.5,maxY));
-    var p=Math.min(1,Math.max(0,y/end));
+    var end=Math.max(1,Math.min((nat.y+nat.h*.5)*2,maxY));
+    var target=Math.min(1,Math.max(0,y/end));
+    // Lissage : la progression rattrape le defilement en douceur
+    if(snap){pS=target;snap=false;}
+    else pS+=(target-pS)*.14;
+    if(Math.abs(target-pS)<.0005)pS=target;
+    else if(!ticking){ticking=true;requestAnimationFrame(update);}
+    var p=pS;
     var e=ease(p);
     var s=slot.getBoundingClientRect();
     var cx=nat.x+nat.w/2, cy=nat.y-y+nat.h/2;
