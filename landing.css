@@ -806,7 +806,9 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-mega span{display:block}
 .nb-s04-mega{position:relative;margin-top:1vw;color:rgba(42,10,0,.55)}
 
-.nb-s04-stage{position:relative;height:70vw;margin-top:-9vw}
+/* hauteur minimale + bloc "Comment jouer" dans le flux : la zone grandit
+   avec son texte, les etapes ne peuvent plus le chevaucher */
+.nb-s04-stage{position:relative;display:flow-root;min-height:70vw;margin-top:-9vw;padding-bottom:2vw}
 /* au-dessus du fond degrade (positionne) */
 .nb-steps,.nb-s04-right,.nb-s04 .nb-secfoot{position:relative}
 .nb-s04-left{position:absolute;left:var(--neb-margin);top:22vw;width:28vw;font-size:3.6vw}
@@ -818,10 +820,10 @@ html{scroll-padding-top:var(--hd-h)}
   position:absolute;z-index:2;padding:9px 16px;border-radius:999px;background:#fff;color:#111;
   font-family:var(--f-text);font-size:13px;font-weight:600;white-space:nowrap;
 }
-.nb-orbit-tag--a{left:31vw;top:14vw}
+.nb-orbit-tag--a{right:61.5vw;top:14vw}   /* cale par le bord droit : jamais sur le telephone */
 .nb-orbit-tag--b{left:62vw;top:10vw}
 .nb-orbit-tag--c{left:66vw;top:42vw}
-.nb-orbit-tag--d{left:29vw;top:46vw}
+.nb-orbit-tag--d{left:41vw;top:55vw}     /* sous le telephone, hors du texte des regles */
 
 .nb-s04-phone{--pw:21vw;position:absolute;left:calc(50% - 10.5vw);top:4vw;width:var(--pw);z-index:1}
 .nb-screen--play{background:#120605}
@@ -883,7 +885,7 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-knob b{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
 .nb-knob span{display:block;margin-top:8px;font-size:12px;color:rgba(255,255,255,.6)}
 
-.nb-s04-rules{position:absolute;left:var(--neb-margin);top:44vw;width:26vw}
+.nb-s04-rules{position:relative;margin:44vw 0 0 var(--neb-margin);width:26vw;min-width:240px}
 .nb-s04 .nb-label{color:#8A8378}
 .nb-s04 .nb-body{color:#3d3a35}
 .nb-s04 .nb-secicon{border-color:rgba(17,17,17,.35)}
@@ -920,6 +922,8 @@ html{scroll-padding-top:var(--hd-h)}
 }
 .nb-menu-link:hover{text-decoration:underline;text-underline-offset:4px}
 
+/* Ecran moyen : pas la place pour la carte des potards a cote des orbites */
+@media (max-width:1100px){.nb-s04-knobs{display:none}}
 @media (max-width:760px){
   .nb-menu-link{display:none}
   .nb-s04-head{padding:76px 16px 0}
@@ -931,7 +935,7 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-s04-stage{height:auto;margin-top:4vw;padding:0 16px;display:flex;flex-direction:column;align-items:center;gap:40px}
   .nb-s04-phone{--pw:58vw;position:relative;left:auto;top:auto;order:1}
   .nb-s04-left{position:static;width:auto;align-self:stretch;font-size:7vw;order:2}
-  .nb-s04-rules{position:static;width:auto;align-self:stretch;order:3}
+  .nb-s04-rules{position:static;width:auto;min-width:0;margin:0;align-self:stretch;order:3}
   .nb-s04-orbits,.nb-orbit-tag,.nb-s04-knobs{display:none}
   .nb-steps{margin:48px 16px 0;justify-content:flex-start}
   .nb-s04-right{margin:48px 16px 0;font-size:6vw;width:auto;text-align:left}
