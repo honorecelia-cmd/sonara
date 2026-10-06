@@ -380,7 +380,7 @@ function launchFromModal(btn) {
     Object.keys(THEMES).forEach(function(k){
       if(k !== 'mix' && THEMES[k].tracks){
         THEMES[k].tracks.forEach(function(t){
-          allTracks.push({t:t.t, a:t.a, e:t.e, preview:t.preview||'', cover:t.cover||''});
+          allTracks.push({t:t.t, a:t.a, e:t.e, preview:t.preview||'', cover:t.cover||'', u:k});
         });
       }
     });
@@ -400,7 +400,7 @@ function launchFromModal(btn) {
     // 1. Copier le pool complet
     G.pool = fixedTracks.map(function(t){
       // Garder le preview local s'il existe
-      return {t:t.t, a:t.a, e:t.e, preview:t.preview||'', cover:t.cover||''};
+      return {t:t.t, a:t.a, e:t.e, preview:t.preview||'', cover:t.cover||'', u:key};
     });
     // 2. Sélectionner 10 titres aléatoires
     buildQs();
@@ -908,7 +908,10 @@ function doReveal(){
   var q=G.qs[G.cq];
   $('rvtit').textContent=q.t;$('rvar').textContent=q.a;$('rvmt').textContent=q.y||'';$('remoji').textContent=q.e||'🎵';
   var reva=$('reva');reva.querySelectorAll('img').forEach(function(i){i.remove()});
-  if(q.cover){var img=document.createElement('img');img.src=q.cover;img.onerror=function(){img.remove()};reva.appendChild(img)}
+  // Pochette du morceau si connue, sinon pochette de son univers (UNIVERS, univers.js)
+  var cov=q.cover||universeCover(q.u||themeSlug());
+  $('remoji').style.display=cov?'none':'';
+  if(cov){var img=document.createElement('img');img.src=cov;img.alt='';img.onerror=function(){img.remove();$('remoji').style.display=''};reva.appendChild(img)}
   var v=$('rvv');
   if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='✓ Les deux trouvés en '+(G.td-G.tl)+'s. Sé ou! 🔥'}
   else if(G.foundA){v.className='revv vok';v.textContent='✓ Artiste trouvé : '+q.a+'. Titre manquant : '+q.t}
@@ -948,6 +951,12 @@ function doReveal(){
     G.ans=false;G.foundA=false;G.foundT=false;G._revealed=false;
     if(G.cq>=G.qs.length)doResults();else doBreak(G.cq,doQ);
   },delay);
+}
+// Pochette d'un univers (chemins locaux du tableau UNIVERS) ; null si inconnue
+function universeCover(key){
+  var list=window.UNIVERS||[];
+  for(var i=0;i<list.length;i++)if(list[i].slug===key)return list[i].image||null;
+  return null;
 }
 function doResults(){
   clearInterval(G.ti);stopA();showPage('s-res');doConf();
@@ -1346,7 +1355,7 @@ function buildPool(key) {
     Object.keys(THEMES).forEach(function(k) {
       if (k !== 'mix' && THEMES[k].tracks) {
         THEMES[k].tracks.forEach(function(tr) {
-          allTracks.push({ t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'' });
+          allTracks.push({ t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'', u: k });
         });
       }
     });
@@ -1359,7 +1368,7 @@ function buildPool(key) {
     return allTracks;
   }
   return t.tracks.map(function(tr) {
-    return { t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'' };
+    return { t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'', u: key };
   });
 }
 function launchMultiGame(trackOrder) {
