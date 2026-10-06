@@ -1027,9 +1027,13 @@ html{scroll-padding-top:var(--hd-h)}
 
 
 /* ── Fin de section 05 : phrase + grand bouton Jouer ── */
-.nb-s05-phrase{margin:12vw 0 0 36vw;width:55vw}
-.nb-s05-cta{margin:4vw 0 0 36vw}
-.nb-pill--xl{padding:22px 56px;font-size:20px}
+.nb-s05-end{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:40px;
+  margin:12vw var(--neb-margin) 0;
+}
+.nb-s05-phrase{margin:0}
+/* bouton centre sur la derniere ligne (hauteur de ligne 4.5vw x 1.05) */
+.nb-s05-cta{flex-shrink:0;margin-bottom:calc((4.5vw * 1.05 - 47px) / 2)}
 .nb-s05 .nb-pill--cta{background:var(--cream);color:var(--ink)}
 .nb-s05 .nb-pill--cta:hover{background:#fff;color:var(--ink)}
 
@@ -1075,9 +1079,8 @@ html{scroll-padding-top:var(--hd-h)}
 
 @media (max-width:760px){
   .nb-footer{padding:28px 12px 24px}
-  .nb-s05-phrase{margin:64px 16px 0;width:auto}
-  .nb-s05-cta{margin:40px 16px 0}
-  .nb-pill--xl{width:100%;padding:20px 0}
+  .nb-s05-end{flex-direction:column;align-items:flex-start;gap:32px;margin:64px 16px 0}
+  .nb-s05-cta{margin-bottom:0}
   .nb-ft-card{border-radius:28px;padding:36px 22px 0}
   .nb-ft-top{grid-template-columns:1fr;gap:32px}
   .nb-ft-socials{flex-direction:row;flex-wrap:wrap}
