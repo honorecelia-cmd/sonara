@@ -15,3 +15,6 @@ ul{padding-left:20px}
 .todo{background:#fff;border-radius:6px;padding:1px 6px;font-weight:600;color:var(--accent)}
 footer{background:var(--black);color:rgba(255,255,255,.6);text-align:center;font-size:13px;padding:28px 16px}
 a{color:var(--accent)}
+ul{margin:0 0 16px}
+li{margin-bottom:8px}
+main a{color:var(--accent);font-weight:600}
