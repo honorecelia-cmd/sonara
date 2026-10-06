@@ -1029,5 +1029,6 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-sec--light .nb-phrase{color:var(--ink)}
 
 /* Sections sans pied de section : marge basse equivalente */
-.nb-s02,.nb-s04,.nb-s05{padding-bottom:10vw}
-@media (max-width:760px){.nb-s02,.nb-s04,.nb-s05{padding-bottom:64px}}
+.nb-s02,.nb-s05{padding-bottom:10vw}
+.nb-s04{padding-bottom:5vw}   /* moins de vide sous "Un jeu simple..." */
+@media (max-width:760px){.nb-s02,.nb-s05{padding-bottom:64px}.nb-s04{padding-bottom:40px}}
