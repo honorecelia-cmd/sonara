@@ -6,23 +6,23 @@
    = 1/14 vw. Mobile en bas de fichier.
    ═══════════════════════════════════════════════════════════════ */
 
-/* Couleurs relevees sur la maquette (partie 2.1 / 6.2 bis) */
+/* Alias des tokens du kit (sonara-kit.css, source unique) */
 :root{
-  --neb-ink:#200000;
-  --neb-wine:#860100;
-  --neb-brick:#C23401;
-  --neb-core:#DE5810;
-  --neb-hot:#F35524;
-  --neb-peach:#E6C789;
-  --neb-cream:#CCC5B8;
-  --neb-black:#080808;
-  --neb-card:#111111;
-  --neb-ctrl:#1F1F1F;
-  --neb-btn-cream:#E9E1DB;
-  --neb-orange:#E85E16;
+  --neb-ink:var(--sn-hero-ink);
+  --neb-wine:var(--sn-hero-wine);
+  --neb-brick:var(--sn-hero-brick);
+  --neb-core:var(--sn-hero-core);
+  --neb-hot:var(--sn-hero-hot);
+  --neb-peach:var(--sn-peach);
+  --neb-cream:var(--sn-paper);
+  --neb-black:var(--sn-black);
+  --neb-card:var(--sn-card);
+  --neb-ctrl:var(--sn-ctrl);
+  --neb-btn-cream:var(--sn-cream-btn);
+  --neb-orange:var(--sn-orange);
   --neb-margin:4.85vw;
-  --f-display:'MuseoModerno', sans-serif;  /* titres */
-  --f-text:'Inter', sans-serif;
+  --f-display:var(--sn-font-display);  /* titres */
+  --f-text:var(--sn-font-body);
   --hd-h:64px;
   /* Fonds de section : un aplat par section, en alternance */
   --fond-orange:var(--neb-core);   /* #DE5810 */
@@ -1114,7 +1114,7 @@ html{scroll-padding-top:var(--hd-h)}
    sauf avec prefers-reduced-motion : tout reste alors affiche).
    Easing et durees du haut de page : cubic-bezier(.65,0,.35,1), .6s.
    ═══════════════════════════════════════════════════════════════ */
-:root{--ease-nb:cubic-bezier(.65,0,.35,1)}
+:root{--ease-nb:var(--sn-ease)}
 /* phrase finale : mots grises qui s'allument au defilement */
 .nb-anim .nb-s05-phrase .nb-w{color:rgba(255,255,255,.22);transition:color .4s var(--ease-nb)}
 .nb-anim .nb-s05-phrase .nb-w.is-on{color:#fff}

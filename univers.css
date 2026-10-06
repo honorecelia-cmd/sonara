@@ -5,17 +5,17 @@
    la texture des sillons et le reflet du disque.
    ═══════════════════════════════════════════════════════════════ */
 
-/* Une couleur pleine par univers (palette chaude SONARA) */
+/* Une couleur pleine par univers : alias des tokens --sn-u-* du kit */
 :root{
-  --univers-dancehall:#C34503;
-  --univers-soca:#E85E16;
-  --univers-zouk:#A10D01;
-  --univers-reggae:#6B3A0E;
-  --univers-trap:#2D1002;
-  --univers-rap:#5A2318;
-  --univers-mix:#F35524;
-  --univers-kompa:#860100;
-  --univers-shatta:#D3561A;
+  --univers-dancehall:var(--sn-u-dancehall);
+  --univers-soca:var(--sn-u-soca);
+  --univers-zouk:var(--sn-u-zouk);
+  --univers-reggae:var(--sn-u-reggae);
+  --univers-trap:var(--sn-u-trap);
+  --univers-rap:var(--sn-u-rap);
+  --univers-mix:var(--sn-u-mix);
+  --univers-kompa:var(--sn-u-kompa);
+  --univers-shatta:var(--sn-u-shatta);
 }
 
 .uv{

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Kit de design · Sonara</title>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="/sonara-kit.css">
+<style>
+  /* Mise en page de la demo uniquement (les composants viennent du kit) */
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sn-black);color:var(--sn-white);font-family:var(--sn-font-body)}
+  .k-page{padding:var(--sn-sp-7) var(--sn-margin) var(--sn-sp-8)}
+  .k-head{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--sn-sp-5);flex-wrap:wrap;margin-bottom:var(--sn-sp-7)}
+  .k-head img{height:44px;display:block}
+  .k-sec{margin-top:var(--sn-sp-7)}
+  .k-sec > .sn-eyebrow{margin-bottom:var(--sn-sp-4)}
+  .k-grid{display:grid;gap:var(--sn-sp-4);grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .k-grid--wide{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+  .k-sw{border-radius:var(--sn-r-md);overflow:hidden;background:var(--sn-card);box-shadow:var(--sn-line-soft)}
+  .k-sw i{display:block;height:64px}
+  .k-sw p{margin:0;padding:10px 12px;font-size:12px;line-height:1.4;color:var(--sn-muted)}
+  .k-sw b{display:block;color:var(--sn-white);font-weight:600}
+  .k-row{display:flex;flex-wrap:wrap;gap:var(--sn-sp-3);align-items:center}
+  .k-panel{border-radius:var(--sn-r-card);padding:var(--sn-sp-6);overflow:hidden}
+  .k-bgdemo{min-height:220px;display:flex;flex-direction:column;justify-content:flex-end;gap:var(--sn-sp-3)}
+  .k-scale p{margin:0 0 var(--sn-sp-3)}
+  .k-scale small{display:block;font-family:var(--sn-font-body);font-size:12px;font-weight:400;color:var(--sn-muted);letter-spacing:0}
+  .k-tok{font-size:12px;color:var(--sn-muted);margin-top:var(--sn-sp-2)}
+  .k-cover{max-width:220px}
+  .k-cover-demo{display:flex;gap:var(--sn-sp-5);align-items:flex-start;flex-wrap:wrap}
+  .k-score{position:relative;display:inline-flex;align-items:center;gap:var(--sn-sp-3);min-height:40px}
+  .k-cd{font-family:var(--sn-font-display);font-weight:900;font-size:var(--sn-fs-2xl);min-width:1.2em;text-align:center}
+  .k-logo{height:72px;display:block}
+  .k-motion .sn-card{padding:var(--sn-sp-5)}
+  .k-motion p{margin:0 0 var(--sn-sp-3);font-size:13px;color:var(--sn-muted)}
+</style>
+</head>
+<body>
+<div class="sn-bg-hero">
+  <div class="k-page">
+    <header class="k-head">
+      <div>
+        <span class="sn-eyebrow">Kit de design /</span>
+        <h1 class="sn-display">Sonara, THE Blind test</h1>
+      </div>
+      <img src="/img/logo_sonara.svg" alt="Sonara">
+    </header>
+    <p class="sn-text">Toutes les briques communes des écrans du jeu, extraites de la landing. Fichiers : sonara-kit.css et sonara-kit.js.</p>
+
+    <!-- COULEURS -->
+    <section class="k-sec">
+      <span class="sn-eyebrow sn-eyebrow--strong">01 / Couleurs</span>
+      <div class="k-grid" id="k-colors"></div>
+    </section>
+
+    <!-- UNIVERS -->
+    <section class="k-sec">
+      <span class="sn-eyebrow sn-eyebrow--strong">02 / Univers</span>
+      <div class="k-grid" id="k-univers"></div>
+    </section>
+  </div>
+</div>
+
+<div class="k-page">
+  <!-- FONDS -->
+  <section class="k-sec" style="margin-top:0">
+    <span class="sn-eyebrow sn-eyebrow--strong">03 / Fonds</span>
+    <div class="k-grid k-grid--wide">
+      <div class="k-panel k-bgdemo sn-bg-hero">
+        <span class="sn-eyebrow">.sn-bg-hero</span>
+        <p class="sn-display sn-display--xl">Son-nom, mode, univers, résultats</p>
+      </div>
+      <div class="k-panel k-bgdemo sn-bg-play">
+        <span class="sn-eyebrow">.sn-bg-play + .sn-surface</span>
+        <div class="sn-surface" style="padding:var(--sn-sp-4)"><p class="sn-display sn-display--xl" style="margin:0">Salle, manche, révélation</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TYPO -->
+  <section class="k-sec k-scale">
+    <span class="sn-eyebrow sn-eyebrow--strong">04 / Typographie</span>
+    <p class="sn-display sn-display--mega">Écoute.<small>.sn-display--mega · MuseoModerno 900 · --sn-fs-mega</small></p>
+    <p class="sn-display">Le blind test qui fait vibrer la Caraïbe<small>.sn-display · MuseoModerno 800 · --sn-fs-display</small></p>
+    <p class="sn-display sn-display--xl">Qui chante ?<small>.sn-display--xl · --sn-fs-2xl</small></p>
+    <p style="font-size:var(--sn-fs-xl);font-weight:300">Écoute un extrait, trouve le titre et l'artiste.<small>Inter 300 · --sn-fs-xl</small></p>
+    <p class="sn-text">Tape ta réponse pendant l'extrait. Les accents et les petites fautes ne comptent pas.<small>.sn-text · Inter 400 · --sn-fs-base</small></p>
+    <span class="sn-eyebrow">Manche 6/10 · 01 /<small>.sn-eyebrow · --sn-fs-sm</small></span>
+  </section>
+
+  <!-- BOUTONS -->
+  <section class="k-sec">
+    <span class="sn-eyebrow sn-eyebrow--strong">05 / Boutons</span>
+    <div class="k-row">
+      <button class="sn-btn" type="button">Jouer</button>
+      <button class="sn-btn sn-btn--accent" type="button">Jouer</button>
+      <button class="sn-btn sn-btn--ghost" type="button">Retour aux univers</button>
+      <button class="sn-btn sn-btn--sm" type="button">Petit</button>
+      <button class="sn-btn" type="button" disabled>Désactivé</button>
+    </div>
+    <p class="k-tok">.sn-btn · .sn-btn--accent · .sn-btn--ghost · .sn-btn--sm · :disabled (survol, appui, focus clavier)</p>
+  </section>
+
+  <!-- CHAMP -->
+  <section class="k-sec">
+    <span class="sn-eyebrow sn-eyebrow--strong">06 / Champ de réponse</span>
+    <div class="k-grid k-grid--wide">
+      <label class="sn-input" id="k-input"><input type="text" placeholder="Titre ou artiste…" aria-label="Titre ou artiste"><button class="sn-btn sn-btn--round" type="button" aria-label="Envoyer"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></label>
+      <label class="sn-input sn-input--dark"><input type="text" placeholder="#SON-SENSEI" aria-label="Son-nom"><button class="sn-btn sn-btn--round" type="button" aria-label="Valider"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></label>
+    </div>
+    <p class="k-tok">.sn-input · .sn-input--dark · .is-error (secousse)</p>
+  </section>
+
+  <!-- CARTES ET BADGES -->
+  <section class="k-sec">
+    <span class="sn-eyebrow sn-eyebrow--strong">07 / Cartes, badges, chips</span>
+    <div class="k-grid k-grid--wide">
+      <div class="sn-card">
+        <span class="sn-eyebrow">.sn-card</span>
+        <p class="sn-display sn-display--xl" style="margin-top:8px">Salle de jeu</p>
+        <p class="sn-text" style="margin-top:8px">Code K7MZ, 4 joueurs connectés.</p>
+      </div>
+      <div class="sn-glass">
+        <span class="sn-eyebrow">.sn-glass</span>
+        <p class="sn-display sn-display--xl" style="margin-top:8px">Invite tes proches</p>
+        <p class="sn-text" style="margin-top:8px">Partage le lien de ta salle.</p>
+      </div>
+    </div>
+    <div class="k-row" style="margin-top:var(--sn-sp-5)">
+      <span class="sn-badge">En direct</span>
+      <span class="sn-badge sn-badge--mult">×2</span>
+      <span class="sn-badge sn-badge--mult">×3</span>
+      <span class="sn-badge sn-badge--score">+45 pts</span>
+      <span class="sn-badge sn-badge--success">Artiste trouvé</span>
+      <span class="sn-badge sn-badge--dark"><i class="sn-badge__dot"></i>Rejoins Kompa</span>
+    </div>
+    <div class="sn-chips" style="margin-top:var(--sn-sp-5)">
+      <button class="sn-chip is-on" type="button">Univers</button>
+      <button class="sn-chip" type="button">Salles</button>
+      <button class="sn-chip" type="button">Classement</button>
+    </div>
+  </section>
+
+  <!-- JOUEURS ET PODIUM -->
+  <section class="k-sec sn-bg-play k-panel">
+    <span class="sn-eyebrow sn-eyebrow--strong">08 / Joueurs et podium</span>
+    <div class="k-grid k-grid--wide" style="margin-top:var(--sn-sp-4);align-items:end">
+      <div>
+        <div class="sn-player-row is-me"><span class="sn-player-row__rank">1</span><i class="sn-avatar"></i><span class="sn-player-row__name">Maëlle (toi)</span><span class="sn-player-row__pts">270 pts</span></div>
+        <div class="sn-player-row"><span class="sn-player-row__rank">2</span><i class="sn-avatar sn-avatar--b"></i><span class="sn-player-row__name">Chloé</span><span class="sn-player-row__pts">225 pts</span></div>
+        <div class="sn-player-row"><span class="sn-player-row__rank">3</span><i class="sn-avatar sn-avatar--c"></i><span class="sn-player-row__name">Benjamin</span><span class="sn-player-row__pts">180 pts</span></div>
+        <div class="sn-player-row"><span class="sn-player-row__rank">4</span><i class="sn-avatar sn-avatar--d"></i><span class="sn-player-row__name">Léa</span><span class="sn-player-row__pts">105 pts</span></div>
+      </div>
+      <div class="sn-podium">
+        <div class="sn-podium__col sn-podium__col--2"><i class="sn-avatar sn-avatar--b"></i><span class="sn-podium__name">Chloé</span><span class="sn-podium__pts">225 pts</span><b class="sn-podium__step">2</b></div>
+        <div class="sn-podium__col sn-podium__col--1"><i class="sn-avatar"></i><span class="sn-podium__name">Maëlle</span><span class="sn-podium__pts">270 pts</span><b class="sn-podium__step">1</b></div>
+        <div class="sn-podium__col sn-podium__col--3"><i class="sn-avatar sn-avatar--c"></i><span class="sn-podium__name">Benjamin</span><span class="sn-podium__pts">180 pts</span><b class="sn-podium__step">3</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MINUTEUR ET POCHETTE -->
+  <section class="k-sec sn-bg-play k-panel">
+    <span class="sn-eyebrow sn-eyebrow--strong">09 / Minuteur et pochette</span>
+    <div class="k-cover-demo" style="margin-top:var(--sn-sp-4)">
+      <div style="flex:1;min-width:240px">
+        <span class="sn-eyebrow">Manche 6/10</span>
+        <p class="sn-display sn-display--xl" style="margin:6px 0 18px">Qui chante ?</p>
+        <div class="sn-timer" style="--sn-p:.7"><div class="sn-timer__track"><span class="sn-timer__fill"></span></div><div class="sn-timer__times"><span>0:21</span><span>0:30</span></div></div>
+        <div class="k-row" style="margin-top:var(--sn-sp-5)">
+          <span class="sn-timer-ring" style="--sn-p:.6"><svg viewBox="0 0 36 36"><circle class="sn-timer-ring__track" cx="18" cy="18" r="15.5" pathLength="100"/><circle class="sn-timer-ring__val" cx="18" cy="18" r="15.5" pathLength="100"/></svg><b>12</b></span>
+          <span class="sn-eyebrow">.sn-timer · .sn-timer-ring (--sn-p de 0 à 1)</span>
+        </div>
+      </div>
+      <figure class="sn-cover is-blurred k-cover" id="k-cover" style="margin:0">
+        <img src="/img/cover_kompa.jpg" alt="">
+      </figure>
+      <figure class="sn-cover k-cover" id="k-cover-veil" style="margin:0">
+        <img src="/img/cover_reggae.jpg" alt="">
+        <span class="sn-cover__veil"></span>
+      </figure>
+    </div>
+    <div class="k-row" style="margin-top:var(--sn-sp-4)">
+      <button class="sn-btn sn-btn--sm" type="button" id="k-reveal">Dévoiler les pochettes</button>
+      <button class="sn-btn sn-btn--ghost sn-btn--sm" type="button" id="k-hide">Masquer</button>
+      <span class="sn-eyebrow">.sn-cover · .is-blurred · .is-revealed · .sn-cover__veil</span>
+    </div>
+  </section>
+
+  <!-- MOUVEMENT -->
+  <section class="k-sec k-motion">
+    <span class="sn-eyebrow sn-eyebrow--strong">10 / Mouvement</span>
+    <div class="k-grid k-grid--wide">
+      <div class="sn-card"><p>Bonne réponse : pop et envol du score (couleur succès)</p>
+        <div class="k-row"><span class="k-score" id="k-score-anchor"><span class="sn-badge sn-badge--success" id="k-score">Les deux trouvés</span></span><button class="sn-btn sn-btn--sm" type="button" id="k-ok">Rejouer</button></div></div>
+      <div class="sn-card"><p>Erreur discrète : crème atténué et secousse</p>
+        <div class="k-row"><span class="sn-text" id="k-err">Pas tout à fait…</span><button class="sn-btn sn-btn--sm" type="button" id="k-ko">Rejouer</button></div></div>
+      <div class="sn-card"><p>Compte à rebours</p>
+        <div class="k-row"><span class="k-cd" id="k-cd">3</span><button class="sn-btn sn-btn--sm" type="button" id="k-cd-go">Lancer</button></div></div>
+      <div class="sn-card"><p>Pulsation du logo, curseur, barres d'écoute, rotation</p>
+        <div class="k-row"><img class="k-logo sn-anim-pulse" src="/img/logo_sonara.svg" alt=""><span>Mister fete<i class="sn-caret"></i></span><span class="sn-bars"><i></i><i></i><i></i></span><span class="sn-anim-spin" style="display:inline-block;width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--sn-w-22);border-top:2px solid var(--sn-orange)"></span></div></div>
+      <div class="sn-card"><p>Cascade d'apparition (.sn-stagger, 70 ms)</p>
+        <div id="k-stagger" class="k-row"><span class="sn-chip">Dancehall</span><span class="sn-chip">Kompa</span><span class="sn-chip">Zouk</span><span class="sn-chip">Rap</span><span class="sn-chip">Trap</span></div>
+        <button class="sn-btn sn-btn--sm" type="button" id="k-st" style="margin-top:12px">Rejouer</button></div>
+    </div>
+    <p class="k-tok">Courbe --sn-ease cubic-bezier(.65,0,.35,1) · durées --sn-dur-fast .25s, --sn-dur-base .4s, --sn-dur-slow .6s, --sn-dur-reveal .9s · prefers-reduced-motion : aucune animation.</p>
+  </section>
+</div>
+
+<script src="/sonara-kit.js"></script>
+<script>
+(function(){
+  // Nuancier construit a partir des tokens (valeurs lues dans le CSS)
+  var root=getComputedStyle(document.documentElement);
+  function swatches(id,list){
+    var box=document.getElementById(id);
+    box.innerHTML=list.map(function(t){
+      var v=root.getPropertyValue(t[0]).trim();
+      return '<div class="k-sw"><i style="background:var('+t[0]+')"></i><p><b>'+t[1]+'</b>'+t[0]+'<br>'+v+'</p></div>';
+    }).join('');
+  }
+  swatches('k-colors',[['--sn-accent','Accent'],['--sn-orange','Orange'],['--sn-cream','Crème'],['--sn-cream-btn','Crème bouton'],['--sn-cream-title','Crème titre'],['--sn-peach','Pêche (succès)'],['--sn-paper','Papier'],['--sn-ink','Brun'],['--sn-black','Noir'],['--sn-card','Carte'],['--sn-ctrl','Contrôle'],['--sn-play-1','Fond de jeu'],['--sn-play-2','Surface de jeu'],['--sn-taupe','Taupe'],['--sn-error','Erreur'],['--sn-muted','Atténué']]);
+  swatches('k-univers',[['--sn-u-dancehall','Dancehall'],['--sn-u-kompa','Kompa'],['--sn-u-zouk','Zouk'],['--sn-u-rap','Rap'],['--sn-u-trap','Trap'],['--sn-u-soca','Soca'],['--sn-u-reggae','Reggae'],['--sn-u-shatta','Shatta'],['--sn-u-mix','Mix']]);
+  var K=window.SonaraKit,$=function(i){return document.getElementById(i)};
+  $('k-reveal').onclick=function(){K.reveal($('k-cover'));K.reveal($('k-cover-veil'));};
+  $('k-hide').onclick=function(){K.hide($('k-cover'));$('k-cover-veil').classList.remove('is-revealed');};
+  $('k-ok').onclick=function(){K.popScore($('k-score'));K.flyScore($('k-score-anchor'),'+90 pts');};
+  $('k-ko').onclick=function(){var e=$('k-err');e.classList.remove('sn-is-error');void e.offsetWidth;e.classList.add('sn-is-error');K.shake($('k-input'));};
+  $('k-cd-go').onclick=function(){K.countdown($('k-cd'),3,function(){$('k-cd').textContent='Top !';});};
+  $('k-st').onclick=function(){K.stagger($('k-stagger'));};
+  K.stagger($('k-stagger'));
+})();
+</script>
+</body>
+</html>

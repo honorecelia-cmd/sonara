@@ -1,0 +1,368 @@
+/* ═══════════════════════════════════════════════════════════════
+   SONARA, kit de design commun
+   Source unique de l'identite (extraite de la landing validee).
+   Charge AVANT sonara.css, landing.css et univers.css : leurs anciennes
+   variables (--accent, --cream, --ink, --neb-*, --univers-*...) sont des
+   alias de ces tokens.
+   Regles : aucune regle globale sur les balises (rien ne s'applique hors
+   des classes .sn-*), aucun degrade hors du fond du hero, aucune ombre
+   portee (contours fins et anneau orange uniquement).
+   Demo : /kit.html (non liee sur le site).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Centres lumineux du degrade du hero (respiration, comme la landing) */
+@property --sn-g1x{syntax:'<percentage>';inherits:false;initial-value:85%}
+@property --sn-g1y{syntax:'<percentage>';inherits:false;initial-value:95%}
+@property --sn-g2x{syntax:'<percentage>';inherits:false;initial-value:55%}
+@property --sn-g2y{syntax:'<percentage>';inherits:false;initial-value:60%}
+@property --sn-g3x{syntax:'<percentage>';inherits:false;initial-value:75%}
+
+:root{
+  /* ── Couleurs d'identite ── */
+  --sn-accent:#C34503;                     /* orange brule : boutons sur fond clair, badges */
+  --sn-orange:#E85E16;                     /* orange vif : CTA du header, curseurs, anneaux */
+  --sn-cream:#FDDDB8;                      /* creme : texte sur sombre, fonds de section */
+  --sn-cream-soft:rgba(253,221,184,.5);
+  --sn-cream-btn:#E9E1DB;                  /* creme des boutons ronds du lecteur */
+  --sn-cream-title:#F3E3DC;                /* creme rose des titres (fenetre son-nom) */
+  --sn-peach:#E6C789;                      /* peche : lumiere du hero */
+  --sn-paper:#CCC5B8;                      /* beige papier */
+  --sn-ink:#2D1002;                        /* brun tres sombre : fonds, texte sur creme */
+  --sn-black:#080808;                      /* noir de fond, header */
+  --sn-card:#111111;                       /* cartes et pastilles sombres */
+  --sn-ctrl:#1F1F1F;                       /* controles, marches du podium */
+  --sn-field:#1A1A1A;                      /* champ de saisie sombre */
+  --sn-play-1:#120706;                     /* fond d'ecran de jeu */
+  --sn-play-2:#1A0904;                     /* surfaces sur fond de jeu */
+  --sn-taupe:#8A8378;                      /* texte secondaire sur papier */
+
+  /* ── Etats ── */
+  --sn-success:var(--sn-peach);            /* bonne reponse (+ pop ou envol du score) */
+  --sn-error:rgba(253,221,184,.55);        /* erreur discrete (creme attenue + secousse) */
+  --sn-muted:rgba(255,255,255,.55);        /* texte attenue sur sombre */
+  --sn-muted-ink:rgba(45,16,2,.6);         /* texte attenue sur creme */
+
+  /* ── Blancs translucides (lignes et textes de la landing) ── */
+  --sn-white:#FFFFFF;
+  --sn-w-05:rgba(255,255,255,.05);
+  --sn-w-08:rgba(255,255,255,.08);
+  --sn-w-14:rgba(255,255,255,.14);
+  --sn-w-22:rgba(255,255,255,.22);
+  --sn-w-35:rgba(255,255,255,.35);
+  --sn-w-45:rgba(255,255,255,.45);
+  --sn-w-62:rgba(255,255,255,.62);
+
+  /* ── Teintes du degrade du hero ── */
+  --sn-hero-ink:#200000;
+  --sn-hero-wine:#860100;
+  --sn-hero-brick:#C23401;
+  --sn-hero-core:#DE5810;
+  --sn-hero-hot:#F35524;
+  --sn-hero-peach:var(--sn-peach);
+  /* le seul degrade de fond autorise ; les centres respirent (voir .sn-bg-hero) */
+  --sn-grad-hero:
+    radial-gradient(60% 55% at var(--sn-g1x) var(--sn-g1y), var(--sn-hero-peach) 0%, transparent 70%),
+    radial-gradient(70% 70% at var(--sn-g2x) var(--sn-g2y), var(--sn-hero-core) 0%, transparent 75%),
+    radial-gradient(90% 80% at var(--sn-g3x) 20%, var(--sn-hero-brick) 0%, transparent 80%),
+    linear-gradient(135deg, var(--sn-hero-ink) 0%, var(--sn-hero-wine) 30%, var(--sn-hero-brick) 55%, var(--sn-hero-core) 80%, var(--sn-hero-hot) 100%);
+  /* grain SVG (feTurbulence), 8 % en soft-light */
+  --sn-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* ── Univers (couleurs pleines validees sur la landing) ── */
+  --sn-u-dancehall:#C34503;
+  --sn-u-kompa:#860100;
+  --sn-u-zouk:#A10D01;
+  --sn-u-rap:#5A2318;
+  --sn-u-trap:#2D1002;
+  --sn-u-soca:#E85E16;
+  --sn-u-reggae:#6B3A0E;
+  --sn-u-shatta:#D3561A;
+  --sn-u-mix:#F35524;
+
+  /* ── Typographie ── */
+  --sn-font-display:'MuseoModerno', sans-serif;   /* titres */
+  --sn-font-body:'Inter', sans-serif;             /* texte */
+  --sn-fs-2xs:12px;
+  --sn-fs-xs:clamp(12px, .85vw, 13px);
+  --sn-fs-sm:clamp(13px, .95vw, 14px);
+  --sn-fs-base:clamp(15px, 1.05vw, 16px);
+  --sn-fs-lg:clamp(17px, 1.4vw, 20px);
+  --sn-fs-xl:clamp(22px, 2.1vw, 30px);
+  --sn-fs-2xl:clamp(30px, 3.4vw, 48px);
+  --sn-fs-display:clamp(40px, 5.3vw, 76px);
+  --sn-fs-mega:clamp(56px, 11vw, 160px);
+  --sn-lh-tight:.95;
+  --sn-lh-body:1.45;
+  --sn-track-display:-.03em;
+
+  /* ── Espacements ── */
+  --sn-sp-1:4px;  --sn-sp-2:8px;  --sn-sp-3:12px; --sn-sp-4:16px;
+  --sn-sp-5:24px; --sn-sp-6:32px; --sn-sp-7:48px; --sn-sp-8:64px;
+  --sn-margin:clamp(16px, 4.85vw, 72px);  /* marge laterale (4.85vw, 16px sur mobile) */
+
+  /* ── Rayons (formes rondes) ── */
+  --sn-r-pill:999px;
+  --sn-r-round:50%;
+  --sn-r-cover:16px;
+  --sn-r-md:20px;
+  --sn-r-card:24px;
+  --sn-r-xl:40px;
+
+  /* ── Contours (pas d'ombre portee) ── */
+  --sn-line:inset 0 0 0 1px var(--sn-w-14);
+  --sn-line-soft:inset 0 0 0 1px var(--sn-w-08);
+  --sn-line-strong:inset 0 0 0 1px rgba(255,255,255,.3);
+  --sn-line-accent:inset 0 0 0 1px rgba(232,94,22,.5);
+  --sn-ring:0 0 0 2px var(--sn-orange);
+
+  /* ── Flou (verre depoli) ── */
+  --sn-blur-sm:8px;    /* boutons ronds */
+  --sn-blur-md:10px;   /* cartes, fenetres */
+  --sn-blur-lg:14px;   /* header */
+  --sn-glass:rgba(17,17,17,.9);
+  --sn-scrim:rgba(8,8,8,.6);
+
+  /* ── Mouvement ── */
+  --sn-ease:cubic-bezier(.65,0,.35,1);   /* courbe commune de la landing */
+  --sn-ease-ui:ease;                     /* survols */
+  --sn-dur-fast:.25s;
+  --sn-dur-base:.4s;
+  --sn-dur-slow:.6s;
+  --sn-dur-reveal:.9s;
+  --sn-stagger:70ms;
+}
+
+/* ═══════════════════════════ FONDS ═══════════════════════════ */
+/* Hero : degrade complet, respiration 12 s, grain. Son-nom, mode, univers, resultats. */
+.sn-bg-hero{
+  position:relative;isolation:isolate;color:var(--sn-white);
+  background:var(--sn-grad-hero);
+  animation:sn-breathe 12s ease-in-out infinite alternate;
+}
+.sn-bg-hero::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:var(--sn-grain);opacity:.08;mix-blend-mode:soft-light;
+}
+/* Jeu : aplat sombre pour que la pochette ressorte. Salle d'attente, manche, revelation. */
+.sn-bg-play{background:var(--sn-play-1);color:var(--sn-white)}
+.sn-surface{background:var(--sn-play-2);border-radius:var(--sn-r-card)}
+
+/* ═══════════════════════════ TYPO ═══════════════════════════ */
+.sn-display{
+  margin:0;font-family:var(--sn-font-display);font-weight:800;
+  font-size:var(--sn-fs-display);line-height:var(--sn-lh-tight);letter-spacing:var(--sn-track-display);
+}
+.sn-display--xl{font-size:var(--sn-fs-2xl)}
+.sn-display--mega{font-size:var(--sn-fs-mega);font-weight:900;letter-spacing:-.04em;line-height:.9}
+.sn-eyebrow{
+  display:block;margin:0;font-family:var(--sn-font-body);font-size:var(--sn-fs-sm);font-weight:400;
+  color:var(--sn-muted);font-variant-numeric:tabular-nums;
+}
+.sn-eyebrow--strong{color:var(--sn-white);font-weight:500}
+.sn-text{margin:0;font-family:var(--sn-font-body);font-size:var(--sn-fs-base);line-height:var(--sn-lh-body);color:var(--sn-w-62)}
+
+/* ═══════════════════════════ BOUTONS ═══════════════════════════ */
+.sn-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5em;
+  border:none;border-radius:var(--sn-r-pill);cursor:pointer;
+  font-family:var(--sn-font-body);font-weight:600;font-size:15px;line-height:1;
+  padding:16px 30px;
+  background:var(--sn-cream);color:var(--sn-ink);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:transform var(--sn-dur-fast) var(--sn-ease-ui), background-color var(--sn-dur-fast) var(--sn-ease-ui), color var(--sn-dur-fast) var(--sn-ease-ui), box-shadow var(--sn-dur-fast) var(--sn-ease-ui);
+}
+.sn-btn:hover{transform:translateY(-2px);background:var(--sn-white)}
+.sn-btn:active{transform:translateY(0) scale(.98)}
+.sn-btn:focus-visible{outline:2px solid var(--sn-white);outline-offset:3px}
+.sn-btn:disabled,.sn-btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed;transform:none}
+.sn-btn--accent{background:var(--sn-orange);color:var(--sn-white)}
+.sn-btn--accent:hover{background:var(--sn-accent);color:var(--sn-white)}
+.sn-btn--ghost{background:transparent;color:var(--sn-white);box-shadow:var(--sn-line-strong)}
+.sn-btn--ghost:hover{background:var(--sn-white);color:var(--sn-black)}
+.sn-btn--sm{padding:11px 22px;font-size:14px}
+.sn-btn--block{width:100%}
+.sn-btn--round{width:48px;height:48px;padding:0;border-radius:var(--sn-r-round)}
+
+/* ═══════════════════════════ CHAMP ═══════════════════════════ */
+/* Champ de reponse "Titre ou artiste..." : pilule blanche + bouton rond orange */
+.sn-input{
+  display:flex;align-items:center;gap:var(--sn-sp-2);height:52px;padding:0 6px 0 22px;
+  border-radius:var(--sn-r-pill);background:var(--sn-white);
+  transition:box-shadow var(--sn-dur-fast) var(--sn-ease-ui);
+}
+.sn-input:focus-within{box-shadow:var(--sn-ring)}
+.sn-input input{
+  flex:1;min-width:0;height:100%;border:none;outline:none;background:transparent;
+  font-family:var(--sn-font-body);font-size:16px;color:var(--sn-black);
+}
+.sn-input input::placeholder{color:rgba(17,17,17,.45)}
+.sn-input .sn-btn--round{width:40px;height:40px;flex-shrink:0;background:var(--sn-orange);color:var(--sn-white)}
+.sn-input .sn-btn--round svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* Variante sombre (fenetre son-nom) */
+.sn-input--dark{background:var(--sn-field);box-shadow:inset 0 0 0 1px var(--sn-w-14)}
+.sn-input--dark input{color:var(--sn-white)}
+.sn-input--dark input::placeholder{color:var(--sn-w-35)}
+.sn-input--dark:focus-within{box-shadow:inset 0 0 0 1px var(--sn-orange)}
+.sn-input.is-error{animation:sn-shake .4s var(--sn-ease)}
+
+/* ═══════════════════════════ CARTES ═══════════════════════════ */
+.sn-card{
+  background:var(--sn-card);border-radius:var(--sn-r-card);box-shadow:var(--sn-line-soft);
+  padding:var(--sn-sp-6);
+}
+.sn-glass{
+  background:var(--sn-glass);border-radius:var(--sn-r-card);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+  -webkit-backdrop-filter:blur(var(--sn-blur-md));backdrop-filter:blur(var(--sn-blur-md));
+  padding:var(--sn-sp-5);
+}
+.sn-card--cream{background:var(--sn-cream);color:var(--sn-ink);box-shadow:none}
+
+/* ═══════════════════════════ BADGES ═══════════════════════════ */
+.sn-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--sn-r-pill);
+  background:var(--sn-accent);color:var(--sn-cream);
+  font-family:var(--sn-font-body);font-size:12px;font-weight:600;line-height:1.2;white-space:nowrap;
+}
+.sn-badge--mult{                         /* x2, x3 : rond orange */
+  width:40px;height:40px;padding:0;justify-content:center;border-radius:var(--sn-r-round);
+  background:var(--sn-orange);color:var(--sn-white);font-size:14px;font-weight:700;
+}
+.sn-badge--score{background:transparent;color:var(--sn-orange);font-size:15px;font-weight:700;padding:0}
+.sn-badge--success{background:var(--sn-success);color:var(--sn-ink)}
+.sn-badge--dark{background:var(--sn-ink);color:var(--sn-cream)}
+.sn-badge__dot{width:8px;height:8px;border-radius:var(--sn-r-round);background:var(--sn-orange)}
+
+/* ═══════════════════════════ CHIPS ═══════════════════════════ */
+.sn-chips{display:flex;flex-wrap:wrap;gap:6px}
+.sn-chip{
+  flex-shrink:0;padding:8px 14px;border-radius:var(--sn-r-pill);cursor:pointer;
+  border:1px solid var(--sn-w-35);background:transparent;color:var(--sn-white);
+  font-family:var(--sn-font-body);font-size:13px;font-weight:600;white-space:nowrap;
+  transition:background-color var(--sn-dur-fast) var(--sn-ease-ui),color var(--sn-dur-fast) var(--sn-ease-ui),border-color var(--sn-dur-fast) var(--sn-ease-ui);
+}
+.sn-chip:hover{border-color:var(--sn-white)}
+.sn-chip.is-on,.sn-chip[aria-current="true"]{background:var(--sn-white);color:var(--sn-ink);border-color:var(--sn-white)}
+.sn-chip:focus-visible{outline:2px solid var(--sn-white);outline-offset:2px}
+
+/* ═══════════════════════════ JOUEURS ═══════════════════════════ */
+.sn-avatar{display:block;width:36px;height:36px;border-radius:var(--sn-r-round);flex-shrink:0;background:var(--sn-orange)}
+.sn-avatar--b{background:var(--sn-peach)}
+.sn-avatar--c{background:var(--sn-u-zouk)}
+.sn-avatar--d{background:#8F887C}
+.sn-player-row{
+  display:flex;align-items:center;gap:var(--sn-sp-3);padding:12px 14px;border-radius:var(--sn-r-md);
+  background:var(--sn-w-05);font-family:var(--sn-font-body);font-size:var(--sn-fs-sm);color:var(--sn-white);
+}
+.sn-player-row + .sn-player-row{margin-top:var(--sn-sp-2)}
+.sn-player-row__rank{width:18px;color:var(--sn-w-45);font-variant-numeric:tabular-nums}
+.sn-player-row__name{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sn-player-row__pts{color:var(--sn-muted);font-variant-numeric:tabular-nums}
+.sn-player-row.is-me{background:rgba(232,94,22,.18);box-shadow:var(--sn-line-accent)}
+
+/* ═══════════════════════════ PODIUM ═══════════════════════════ */
+.sn-podium{display:flex;justify-content:center;align-items:flex-end;gap:var(--sn-sp-3)}
+.sn-podium__col{display:flex;flex-direction:column;align-items:center;gap:var(--sn-sp-2);width:30%;max-width:140px;font-family:var(--sn-font-body);color:var(--sn-white)}
+.sn-podium__col .sn-avatar{width:48px;height:48px}
+.sn-podium__col--1 .sn-avatar{width:60px;height:60px;box-shadow:var(--sn-ring)}
+.sn-podium__name{font-size:var(--sn-fs-sm);font-weight:600}
+.sn-podium__pts{font-size:var(--sn-fs-xs);color:var(--sn-muted)}
+.sn-podium__step{
+  display:flex;justify-content:center;width:100%;padding-top:10px;border-radius:14px 14px 0 0;
+  background:var(--sn-ctrl);font-family:var(--sn-font-display);font-weight:800;font-size:var(--sn-fs-xl);
+}
+.sn-podium__col--1 .sn-podium__step{height:112px;background:var(--sn-orange)}
+.sn-podium__col--2 .sn-podium__step{height:80px}
+.sn-podium__col--3 .sn-podium__step{height:56px}
+
+/* ═══════════════════════════ MINUTEUR ═══════════════════════════ */
+/* Barre type 0:21 / 0:30 ; --sn-p = progression 0 a 1 */
+.sn-timer{--sn-p:.4;font-family:var(--sn-font-body)}
+.sn-timer__track{position:relative;height:2px;border-radius:2px;background:var(--sn-w-22)}
+.sn-timer__fill{
+  position:absolute;left:0;top:0;bottom:0;width:calc(var(--sn-p) * 100%);border-radius:2px;background:var(--sn-white);
+}
+.sn-timer__fill::after{
+  content:"";position:absolute;right:-5px;top:50%;width:10px;height:10px;margin-top:-5px;
+  border-radius:var(--sn-r-round);background:var(--sn-orange);
+}
+.sn-timer__times{display:flex;justify-content:space-between;margin-top:8px;font-size:var(--sn-fs-xs);color:var(--sn-muted);font-variant-numeric:tabular-nums}
+/* Version ronde : <svg viewBox="0 0 36 36"> + 2 cercles pathLength="100" */
+.sn-timer-ring{--sn-p:.6;position:relative;width:56px;height:56px;flex-shrink:0}
+.sn-timer-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.sn-timer-ring__track{fill:none;stroke:var(--sn-w-14);stroke-width:3}
+.sn-timer-ring__val{
+  fill:none;stroke:var(--sn-orange);stroke-width:3;stroke-linecap:round;
+  stroke-dasharray:100;stroke-dashoffset:calc(100 - var(--sn-p) * 100);
+  transition:stroke-dashoffset 1s linear;
+}
+.sn-timer-ring b{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--sn-font-body);font-size:16px;font-weight:700;color:var(--sn-white);font-variant-numeric:tabular-nums;
+}
+
+/* ═══════════════════════════ POCHETTE ═══════════════════════════ */
+.sn-cover{
+  position:relative;display:block;width:100%;aspect-ratio:1;overflow:hidden;
+  border-radius:var(--sn-r-cover);background:var(--sn-play-2);
+}
+.sn-cover img{
+  display:block;width:100%;height:100%;object-fit:cover;
+  transition:filter var(--sn-dur-reveal) var(--sn-ease), transform var(--sn-dur-reveal) var(--sn-ease);
+}
+.sn-cover.is-blurred img{filter:blur(22px) saturate(1.1);transform:scale(1.12)}
+.sn-cover.is-revealed img{filter:none;transform:none}
+/* Devoilement progressif : un voile qui s'ouvre de bas en haut */
+.sn-cover__veil{
+  position:absolute;inset:0;background:#2A1208;
+  clip-path:inset(0 0 0 0);transition:clip-path var(--sn-dur-reveal) var(--sn-ease);
+}
+.sn-cover.is-revealed .sn-cover__veil{clip-path:inset(0 0 100% 0)}
+
+/* ═══════════════════════════ ETATS DE REPONSE ═══════════════════════════ */
+.sn-is-success{color:var(--sn-success)}
+.sn-is-error{color:var(--sn-error);animation:sn-shake .4s var(--sn-ease)}
+
+/* ═══════════════════════════ ANIMATIONS ═══════════════════════════ */
+/* Repris de sonara.css et landing.css (meme definition, nom prefixe sn-) */
+@keyframes sn-fup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sn-cdp{0%{transform:scale(1.5);opacity:0}55%{transform:scale(.93)}100%{transform:scale(1);opacity:1}}
+@keyframes sn-pfly{0%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-50px)}}
+@keyframes sn-logo-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.03);opacity:.9}}
+@keyframes sn-spin{to{transform:rotate(360deg)}}
+@keyframes sn-breathe{
+  0%  {--sn-g1x:85%;--sn-g1y:95%;--sn-g2x:55%;--sn-g2y:60%;--sn-g3x:75%}
+  50% {--sn-g1x:81%;--sn-g1y:91%;--sn-g2x:59%;--sn-g2y:57%;--sn-g3x:71%}
+  100%{--sn-g1x:88%;--sn-g1y:93%;--sn-g2x:52%;--sn-g2y:63%;--sn-g3x:78%}
+}
+@keyframes sn-vy-spin{to{transform:rotate(360deg)}}
+@keyframes sn-caret{50%{opacity:0}}
+@keyframes sn-bars{50%{transform:scaleY(.35)}}
+/* Nouveaux : pop de score, secousse d'erreur, devoilement de pochette */
+@keyframes sn-pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+@keyframes sn-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+@keyframes sn-reveal{from{filter:blur(22px);transform:scale(1.12)}to{filter:none;transform:none}}
+
+/* Classes utilitaires */
+.sn-anim-fup{animation:sn-fup var(--sn-dur-slow) var(--sn-ease) both}
+.sn-anim-pop{animation:sn-pop var(--sn-dur-base) var(--sn-ease) both}
+.sn-anim-fly{animation:sn-pfly 1s var(--sn-ease) forwards}
+.sn-anim-shake{animation:sn-shake .4s var(--sn-ease)}
+.sn-anim-countdown{animation:sn-cdp .7s ease}
+.sn-anim-pulse{animation:sn-logo-pulse 3s ease-in-out infinite}
+.sn-anim-spin{animation:sn-spin 1s linear infinite}
+.sn-anim-reveal{animation:sn-reveal var(--sn-dur-reveal) var(--sn-ease) both}
+.sn-caret{display:inline-block;width:2px;height:1em;margin-left:2px;vertical-align:-.12em;background:currentColor;animation:sn-caret 1s steps(1) infinite}
+.sn-bars{display:inline-flex;align-items:flex-end;gap:2px;height:14px}
+.sn-bars i{width:3px;background:var(--sn-orange);transform-origin:bottom;animation:sn-bars 1s ease-in-out infinite}
+.sn-bars i:nth-child(1){height:40%}
+.sn-bars i:nth-child(2){height:100%;animation-delay:-.3s}
+.sn-bars i:nth-child(3){height:65%;animation-delay:-.6s}
+/* Cascade : --sn-i = rang de l'element */
+.sn-stagger > *{animation:sn-fup var(--sn-dur-slow) var(--sn-ease) both;animation-delay:calc(var(--sn-i, 0) * var(--sn-stagger))}
+
+/* Sans animation : tout est affiche directement */
+@media (prefers-reduced-motion:reduce){
+  .sn-bg-hero,.sn-anim-fup,.sn-anim-pop,.sn-anim-fly,.sn-anim-shake,.sn-anim-countdown,.sn-anim-pulse,
+  .sn-anim-spin,.sn-anim-reveal,.sn-caret,.sn-bars i,.sn-stagger > *,.sn-input.is-error,.sn-is-error{animation:none}
+  .sn-btn,.sn-chip,.sn-input,.sn-cover img,.sn-cover__veil,.sn-timer-ring__val{transition:none}
+}

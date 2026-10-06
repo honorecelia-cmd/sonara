@@ -171,10 +171,11 @@
    les pages non refaites (multijoueur, chargement, modals)
    et ne doit pas etre touche sans refaire ces ecrans. ── */
 :root{
-  --accent:#C34503;
-  --cream:#fdddb8;
-  --cream-soft:rgba(253,221,184,.5);
-  --ink:#2d1002;
+  /* alias des tokens du kit (sonara-kit.css) */
+  --accent:var(--sn-accent);
+  --cream:var(--sn-cream);
+  --cream-soft:var(--sn-cream-soft);
+  --ink:var(--sn-ink);
   --green:#80F40C;
   --border:rgba(255,255,255,.85);
 }
