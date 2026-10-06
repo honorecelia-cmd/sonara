@@ -685,7 +685,7 @@ html{scroll-padding-top:var(--hd-h)}
 }
 .nb-sat-live .nb-avatars{margin:0}
 .nb-live{
-  padding:6px 12px;border-radius:999px;background:#FF9AD5;color:#111;
+  padding:6px 12px;border-radius:999px;background:var(--accent);color:var(--cream);
   font-family:var(--f-text);font-size:12px;font-weight:600;
 }
 .nb-s02-create{left:auto;right:16vw;top:38vw}
