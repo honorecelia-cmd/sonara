@@ -17,7 +17,7 @@ try {
   html = fs.readFileSync(htmlPath, 'utf8');
   if (html.length < 500) fail('sonara.html trop court (' + html.length + ' octets)');
   else ok('sonara.html present (' + html.length + ' octets)');
-  if (!/<script\s+src=["']sonara\.js["']/.test(html)) fail('sonara.html : <script src="sonara.js"> manquant');
+  if (!/<script\s+src=["']\/?sonara\.js["']/.test(html)) fail('sonara.html : <script src="sonara.js"> manquant');
   else ok('sonara.html reference sonara.js');
   if (!/<\/html>\s*$/.test(html)) fail('sonara.html : </html> final manquant (fichier tronque ?)');
   else ok('sonara.html se termine par </html>');
