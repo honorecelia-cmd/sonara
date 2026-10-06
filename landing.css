@@ -987,7 +987,6 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-s05-text{position:absolute;right:var(--neb-margin);bottom:2vw;width:24vw}
 .nb-s05 .nb-label{color:rgba(253,221,184,.55)}
 .nb-s05 .nb-body{color:rgba(253,221,184,.8)}
-.nb-s05-phrase{margin:12vw 0 0 36vw;width:55vw}
 
 @media (prefers-reduced-motion:reduce){
   .nb-rev-caret,.nb-rev-bars i{animation:none}
@@ -1002,7 +1001,6 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-s05-phone{--pw:58vw;position:relative;left:auto;top:auto;align-self:center}
   .nb-s05-bar{display:none}
   .nb-s05-text{position:static;width:auto}
-  .nb-s05-phrase{margin:64px 16px 0;width:auto}
 }
 
 /* ── Sections sur fond creme : texte brun fonce (--ink) ── */
@@ -1024,15 +1022,11 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-sec--light .nb-phrase{color:var(--ink)}
 
 /* Sections sans pied de section : marge basse equivalente */
-.nb-s02,.nb-s05{padding-bottom:10vw}
+.nb-s02{padding-bottom:10vw}
+.nb-s05{padding-bottom:5vw}   /* footer juste apres */
 .nb-s04{padding-bottom:5vw}   /* vide sous les etapes */
-@media (max-width:760px){.nb-s02,.nb-s05{padding-bottom:64px}.nb-s04{padding-bottom:40px}}
+@media (max-width:760px){.nb-s02{padding-bottom:64px}.nb-s05{padding-bottom:40px}.nb-s04{padding-bottom:40px}}
 
-/* ── Fin de section 05 : grand bouton Jouer ── */
-.nb-s05-cta{margin:4vw 0 0 36vw}
-.nb-pill--xl{padding:22px 56px;font-size:20px}
-.nb-s05 .nb-pill--cta{background:var(--cream);color:var(--ink)}
-.nb-s05 .nb-pill--cta:hover{background:#fff;color:var(--ink)}
 
 /* ═══════════════════════════════════════════════════════════════
    FOOTER : carte creme sur le brun de la derniere section
@@ -1084,8 +1078,6 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-ft-time{font-variant-numeric:tabular-nums;color:var(--cream)}
 
 @media (max-width:760px){
-  .nb-s05-cta{margin:40px 16px 0}
-  .nb-pill--xl{width:100%;padding:20px 0}
   .nb-footer{padding:0 12px 24px}
   .nb-ft-card{border-radius:28px;padding:36px 22px 0}
   .nb-ft-top{grid-template-columns:1fr;gap:32px}
