@@ -97,7 +97,24 @@ var UNIVERS = [
     discover.setAttribute('aria-label','Découvrir l\'univers '+u.nom);
   }
   function paintSides(){prevVy.innerHTML=vinyl(at(idx-1),false);nextVy.innerHTML=vinyl(at(idx+1),false);}
-  function paintCount(){num.textContent=pad(idx+1);}
+  // Rangee des 9 univers : l'actif est mis en evidence
+  var tabs=$('uv-tabs');
+  tabs.innerHTML=UNIVERS.map(function(u,k){return '<button type="button" class="uv-tab" data-k="'+k+'">'+esc(u.nom)+'</button>';}).join('');
+  tabs.addEventListener('click',function(e){
+    var b=e.target.closest('.uv-tab');if(!b)return;
+    var k=+b.getAttribute('data-k');
+    go(k>idx?1:-1,false,k);
+  });
+  function paintTabs(){
+    [].forEach.call(tabs.children,function(b,k){
+      var on=k===idx;b.classList.toggle('is-on',on);
+      if(on)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');
+    });
+    // rangee defilante (mobile) : l'univers actif reste visible, sans bouger la page
+    var on=tabs.children[idx];
+    if(on&&tabs.scrollWidth>tabs.clientWidth)tabs.scrollTo({left:on.offsetLeft-(tabs.clientWidth-on.offsetWidth)/2,behavior:reduce.matches?'auto':'smooth'});
+  }
+  function paintCount(){num.textContent=pad(idx+1);paintTabs();}
   function paintAll(){paintColor();paintGiant();paintCenter();paintSides();paintCount();}
 
   function anim(el,frames,opt){return el.animate(frames,Object.assign({duration:400,easing:EASE,fill:'forwards'},opt||{}));}
@@ -105,12 +122,13 @@ var UNIVERS = [
   function clearTimers(){timers.forEach(clearTimeout);timers=[];}
 
   // ── Transition A : changer d'univers ─────────────────────────
-  function go(dir,auto){
+  function go(dir,auto,target){
     if(busy||open)return;
+    if(target===idx)return;
     busy=true;
     countEl.setAttribute('aria-live',auto?'off':'polite');
     if(!auto)holdAuto();
-    idx=(idx+dir+N)%N;
+    idx=target!=null?target:(idx+dir+N)%N;
     paintColor();                      // le fond change en meme temps (0,6 s)
     if(reduce.matches){
       anim(flip,[{opacity:1},{opacity:0}],{duration:200,easing:'linear'}).finished.then(function(){

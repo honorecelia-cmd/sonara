@@ -38,7 +38,7 @@
   text-align:center;white-space:nowrap;pointer-events:none;
   font-family:'MuseoModerno',sans-serif;font-weight:900;line-height:.85;letter-spacing:-.02em;
   font-size:var(--uv-fs,22vw);
-  color:color-mix(in srgb, var(--uv-c) 80%, #000);
+  color:color-mix(in srgb, var(--uv-c) 58%, #000);   /* decor, mais lisible */
 }
 
 .uv-stage{position:absolute;inset:0;perspective:1200px}
@@ -153,6 +153,24 @@
 
 /* Couleur claire (Mix, Soca...) : le texte reste blanc, lisible sur aplat chaud */
 
+/* Rangee des 9 univers */
+.uv-tabs{
+  position:absolute;left:50%;bottom:5vh;transform:translateX(-50%);
+  display:flex;justify-content:flex-start;gap:6px;width:auto;padding:0;   /* annule nav{} de sonara.css */
+  max-width:calc(100% - 2 * var(--neb-margin) - 380px);
+  overflow-x:auto;scrollbar-width:none;
+}
+.uv-tabs::-webkit-scrollbar{display:none}
+.uv-tab{
+  flex-shrink:0;padding:9px 14px;border-radius:999px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;
+  font-family:var(--f-text);font-size:13px;font-weight:600;white-space:nowrap;
+  transition:background-color .25s ease,color .25s ease,border-color .25s ease;
+}
+.uv-tab:hover{border-color:#fff}
+.uv-tab.is-on{background:#fff;color:var(--ink);border-color:#fff}
+.uv-tab:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
 /* ── Mobile ── */
 @media (max-width:767px){
   .uv{--uv-d:70vw;min-height:600px}
@@ -163,6 +181,8 @@
   .uv-arrow--prev{left:auto;right:calc(16px + 56px)}
   .uv-arrow--next{right:16px}
   .uv-countbar{left:16px;gap:12px}
+  .uv-tabs{left:0;right:0;bottom:calc(5vh + 62px);transform:none;max-width:none;padding:0 16px}
+  .uv-discover{top:calc(50% + var(--uv-d) / 2 + 10px)}
   .uv-secnum{left:16px;top:76px}
     .uv-panel{
     left:16px;right:16px;top:calc(var(--uv-d) * .6 + 110px);bottom:16px;transform:none;
