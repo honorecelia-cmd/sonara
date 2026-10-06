@@ -218,6 +218,17 @@ const server = http.createServer(function(req, res) {
     return;
   }
 
+  // Polices hebergees localement (fonts.css + fichiers woff2)
+  if (/^\/fonts\/[a-z0-9-]+\.(woff2|css)$/.test(p.pathname)) {
+    fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
+      if (err) { res.writeHead(404); res.end('Not found'); return; }
+      var css = p.pathname.endsWith('.css');
+      res.writeHead(200, {'Content-Type': css ? 'text/css; charset=utf-8' : 'font/woff2', 'Cache-Control': 'public, max-age=31536000'});
+      res.end(data);
+    });
+    return;
+  }
+
   if (p.pathname.startsWith('/audio/')) {
     fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
       if (err) { res.writeHead(404); res.end('Not found'); return; }
