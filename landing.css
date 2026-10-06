@@ -795,7 +795,7 @@ html{scroll-padding-top:var(--hd-h)}
 
 /* hauteur minimale + bloc "Comment jouer" dans le flux : la zone grandit
    avec son texte, les etapes ne peuvent plus le chevaucher */
-.nb-s04-stage{position:relative;display:flow-root;min-height:70vw;margin-top:-9vw;padding-bottom:2vw}
+.nb-s04-stage{position:relative;display:flow-root;min-height:70vw;margin-top:-3.2vw;   /* telephone sous "Devine.", sans chevauchement */padding-bottom:2vw}
 /* au-dessus du fond degrade (positionne) */
 .nb-steps,.nb-s04-right,.nb-s04 .nb-secfoot{position:relative}
 .nb-s04-left{position:absolute;left:var(--neb-margin);top:22vw;width:28vw;font-size:3.6vw}
@@ -917,7 +917,7 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-s04-head .nb-secnum{margin:0}
   .nb-mega{font-size:14vw}
   .nb-s04-mega{margin-top:40px}
-  .nb-s04-stage{height:auto;margin-top:4vw;padding:0 16px;display:flex;flex-direction:column;align-items:center;gap:40px}
+  .nb-s04-stage{height:auto;margin-top:5vw;padding:0 16px;display:flex;flex-direction:column;align-items:center;gap:40px}
   .nb-s04-phone{--pw:58vw;position:relative;left:auto;top:auto;order:1}
   .nb-s04-left{position:static;width:auto;align-self:stretch;font-size:7vw;order:2}
   .nb-s04-rules{position:static;width:auto;min-width:0;margin:0;align-self:stretch;order:3}
