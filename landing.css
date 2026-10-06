@@ -1078,3 +1078,15 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-ft-word{margin-top:40px}
   .nb-ft-bottom{flex-direction:column;gap:8px}
 }
+
+/* ── Grands titres de section : MuseoModerno 800, comme le titre du hero ──
+   Le sans-serif fin (Inter 300) reste pour les accroches et paragraphes. */
+.nb-title{font-family:var(--f-display);font-weight:800;line-height:.95;letter-spacing:-.03em}
+.nb-s01-idea .nb-title{font-size:4vw}
+.nb-phrase--list.nb-title{font-size:3.4vw}
+.nb-s02-big.nb-title{font-size:3.7vw}
+.nb-s04-mega.nb-title{font-weight:800}
+@media (max-width:760px){
+  .nb-s01-idea .nb-title,.nb-s02-big.nb-title{font-size:6.6vw}
+  .nb-phrase--list.nb-title{font-size:8vw}
+}
