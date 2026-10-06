@@ -276,18 +276,13 @@ var UNIVERS = [
   var AUTO=UV_DELAI_AUTO, RESUME=4000;
   var userPaused=false, hovering=false, kbFocus=false, holdUntil=0, lastTurn=performance.now();
   function holdAuto(){holdUntil=performance.now()+RESUME;}
-  // TEMPORAIRE : messages console pour verifier l'autoplay (a retirer)
-  var wasPaused=null;
-  console.log('autoplay : démarrage');
   setInterval(function(){
     var now=performance.now();
-    var why=reduce.matches?'reduced-motion':userPaused?'bouton':open?'univers ouvert':!inView?'section hors écran':document.hidden?'onglet masqué':hovering?'survol panneau':kbFocus?'focus clavier':now<holdUntil?'inactivité':busy?'transition':'';
-    if(why&&why!=='transition'){if(wasPaused!==true)console.log('autoplay : pause ('+why+')');wasPaused=true;lastTurn=now;return;}
-    if(why)return;   // transition en cours : le delai continue de courir
-    if(wasPaused!==false){console.log('autoplay : reprise');wasPaused=false;}
-    if(now-lastTurn>=AUTO){lastTurn=now;console.log('autoplay : univers suivant');go(1,true);}
+    if(reduce.matches||userPaused||open||!inView||document.hidden||hovering||kbFocus||now<holdUntil){lastTurn=now;return;}
+    if(busy)return;   // transition en cours : le delai continue de courir
+    if(now-lastTurn>=AUTO){lastTurn=now;go(1,true);}
   },100);
-  // Survol : seulement le vinyle central et le panneau ouvert (la section
+  // Survol : seulement le panneau ouvert (la section
   // occupe tout l'ecran, la souris y est presque toujours)
   // Survol : seulement le panneau ouvert (le vinyle central est au centre
   // de l'ecran, la souris y est souvent posee)
