@@ -112,7 +112,6 @@
   var header=document.getElementById('nb-header');
   var hand=document.getElementById('nb-hand');
   var thumb=document.getElementById('nb-thumb');
-  var slogan=document.getElementById('nb-slogan');
   var giant=document.getElementById('nb-giant');
   var nat=null,ticking=false,pS=0,snap=true;
 
@@ -165,7 +164,6 @@
     if(y<hero.offsetHeight&&giant.offsetParent){
       var par='translate3d(0,'+(y*.25).toFixed(1)+'px,0)';
       giant.style.transform=par;
-      if(getComputedStyle(slogan).position==='absolute')slogan.style.transform=par;
     }
   }
   function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(update);}}

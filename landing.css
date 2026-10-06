@@ -223,6 +223,8 @@ html{scroll-padding-top:var(--hd-h)}
   font-family:var(--f-text);font-weight:300;font-size:1.95vw;line-height:1.15;letter-spacing:-.01em;
   color:#fff;
 }
+.nb-hero-lede .nb-pill--cta{background:var(--cream);color:var(--ink)}
+.nb-hero-lede .nb-pill--cta:hover{background:#fff;color:var(--ink)}
 .nb-hero-lede .ld-badge-row{justify-content:flex-start;padding:0;margin:18px 0 0}
 .nb-hero-lede .ld-badge{font-size:14px;color:#fff}
 
