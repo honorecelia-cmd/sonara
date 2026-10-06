@@ -1047,9 +1047,9 @@ html{scroll-padding-top:var(--hd-h)}
 }
 .nb-ft-col a:hover,.nb-ft-linkbtn:hover{text-decoration:underline;text-underline-offset:4px}
 .nb-ft-socials{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-/* Suivez-nous : cale a droite de la carte */
-.nb-ft-follow{justify-self:end;align-items:flex-end;text-align:right}
-.nb-ft-follow .nb-ft-socials{align-items:flex-end}
+/* Suivez-nous : bloc cale a droite de la carte */
+.nb-ft-follow{justify-self:end;align-items:flex-start;text-align:left}   /* bloc a droite, titre aligne sur les pastilles */
+.nb-ft-follow .nb-ft-socials{align-items:flex-start}
 .nb-ft-socials .nb-ft-social{
   display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 10px;border-radius:999px;
   background:var(--ink);color:var(--cream);font-size:13px;
