@@ -213,7 +213,14 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-hero-lede .nb-pill--cta{background:var(--cream);color:var(--ink)}
 .nb-hero-lede .nb-pill--cta:hover{background:#fff;color:var(--ink)}
 .nb-hero-lede .ld-badge-row{justify-content:flex-start;padding:0;margin:18px 0 0}
-.nb-hero-lede .ld-badge{font-size:14px;color:#fff}
+/* Message "Rejoins [univers]" (lien Entre proches) : pastille aux codes de la landing */
+.nb-hero-lede .ld-badge{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 12px;border-radius:999px;
+  background:var(--ink);color:var(--cream);
+  font-family:var(--f-text);font-size:13px;font-weight:600;
+}
+.nb-hero-lede #ltxt{color:var(--cream)}
+.nb-hero-lede .ld-dot{width:8px;height:8px;background:var(--neb-orange)}
 
 /* Metadonnees flottantes */
 .nb-float{
