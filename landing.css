@@ -1047,6 +1047,9 @@ html{scroll-padding-top:var(--hd-h)}
 }
 .nb-ft-col a:hover,.nb-ft-linkbtn:hover{text-decoration:underline;text-underline-offset:4px}
 .nb-ft-socials{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+/* Suivez-nous : cale a droite de la carte */
+.nb-ft-follow{justify-self:end;align-items:flex-end;text-align:right}
+.nb-ft-follow .nb-ft-socials{align-items:flex-end}
 .nb-ft-socials .nb-ft-social{
   display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 10px;border-radius:999px;
   background:var(--ink);color:var(--cream);font-size:13px;
@@ -1070,6 +1073,8 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-ft-card{border-radius:28px;padding:36px 22px 0}
   .nb-ft-top{grid-template-columns:1fr;gap:32px}
   .nb-ft-socials{flex-direction:row;flex-wrap:wrap}
+  .nb-ft-follow{justify-self:start;align-items:flex-start;text-align:left}
+  .nb-ft-follow .nb-ft-socials{align-items:flex-start}
   .nb-ft-word{margin-top:40px}
   .nb-ft-bottom{flex-direction:column;gap:8px}
 }
