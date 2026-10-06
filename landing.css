@@ -1055,18 +1055,10 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-ft-social svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nb-ft-social svg .fill{fill:currentColor;stroke:none}
 .nb-ft-play{justify-self:end;text-align:right}
-.nb-ft-playbtn{
-  display:inline-flex;align-items:center;gap:14px;padding:0;border:none;background:none;cursor:pointer;
-  font-family:var(--f-display);font-weight:800;font-size:clamp(40px,4.2vw,64px);line-height:1;color:var(--accent);
-}
-.nb-ft-arrow{
-  width:.8em;height:.8em;border-radius:50%;background:var(--accent);
-  display:inline-flex;align-items:center;justify-content:center;transition:transform .25s ease;
-}
-.nb-ft-arrow svg{width:50%;height:50%;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-.nb-ft-playbtn:hover .nb-ft-arrow{transform:rotate(45deg)}
-.nb-ft-playbtn:focus-visible,.nb-ft-col a:focus-visible,.nb-ft-linkbtn:focus-visible,.nb-ft-social:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
-.nb-ft-sub{margin-top:10px !important;font-size:14px;color:rgba(45,16,2,.6)}
+.nb-footer .nb-ft-playbtn{background:var(--accent);color:#fff}
+.nb-footer .nb-ft-playbtn:hover{background:var(--ink);color:var(--cream)}
+.nb-ft-col a:focus-visible,.nb-ft-linkbtn:focus-visible,.nb-ft-social:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.nb-ft-sub{margin-bottom:16px !important;font-size:14px;color:rgba(45,16,2,.6)}
 /* Mot geant coupe par le bas de la carte */
 .nb-ft-word{display:block;width:100%;height:auto;margin:56px 0 -6%;color:var(--ink)}
 .nb-ft-bottom{
