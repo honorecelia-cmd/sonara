@@ -1101,3 +1101,32 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-s01-idea .nb-title,.nb-s02-big.nb-title{font-size:6.6vw}
   .nb-phrase--list.nb-title{font-size:8vw}
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Animations de bas de page (landing.js ajoute .nb-anim sur <html>,
+   sauf avec prefers-reduced-motion : tout reste alors affiche).
+   Easing et durees du haut de page : cubic-bezier(.65,0,.35,1), .6s.
+   ═══════════════════════════════════════════════════════════════ */
+:root{--ease-nb:cubic-bezier(.65,0,.35,1)}
+/* phrase finale : mots grises qui s'allument au defilement */
+.nb-anim .nb-s05-phrase .nb-w{color:rgba(255,255,255,.22);transition:color .4s var(--ease-nb)}
+.nb-anim .nb-s05-phrase .nb-w.is-on{color:#fff}
+/* bouton Jouer : glisse depuis la droite une fois la phrase allumee */
+.nb-anim .nb-s05-cta{opacity:0;transform:translateX(48px);transition:opacity .6s var(--ease-nb),transform .6s var(--ease-nb)}
+.nb-anim .nb-s05-cta.is-in{opacity:1;transform:none}
+/* footer : "SONARA" monte depuis le bas de la carte, lettre par lettre */
+.nb-ft-l{transform-box:fill-box}
+.nb-anim .nb-ft-l{transform:translateY(115%);transition:transform .6s var(--ease-nb)}
+.nb-anim .nb-ft-word.is-in .nb-ft-l{transform:none}
+.nb-ft-l:nth-child(2){transition-delay:.07s}
+.nb-ft-l:nth-child(3){transition-delay:.14s}
+.nb-ft-l:nth-child(4){transition-delay:.21s}
+.nb-ft-l:nth-child(5){transition-delay:.28s}
+.nb-ft-l:nth-child(6){transition-delay:.35s}
+/* Comment jouer : etapes 1 a 5 l'une apres l'autre */
+.nb-anim .nb-steps li{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease-nb),transform .6s var(--ease-nb)}
+.nb-anim .nb-steps.is-in li{opacity:1;transform:none}
+.nb-steps li:nth-child(2){transition-delay:.09s}
+.nb-steps li:nth-child(3){transition-delay:.18s}
+.nb-steps li:nth-child(4){transition-delay:.27s}
+.nb-steps li:nth-child(5){transition-delay:.36s}

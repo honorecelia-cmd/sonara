@@ -258,4 +258,47 @@
   window.addEventListener('scroll',onFx,{passive:true});
   window.addEventListener('resize',onFx);
   fx();
+
+  // ── 6. Animations de bas de page ─────────────────────────────
+  // Sans animation (prefers-reduced-motion) : rien n'est masque.
+  (function(){
+    if(reduce.matches)return;
+    document.documentElement.classList.add('nb-anim');
+    // a. phrase finale : chaque mot s'allume au fil du defilement
+    var phrase=document.getElementById('nb-s05-phrase'), cta=document.getElementById('nb-s05-cta');
+    var words=[];
+    if(phrase){
+      [].forEach.call(phrase.children,function(line){
+        var parts=line.textContent.split(' ');
+        line.textContent='';
+        parts.forEach(function(w,k){
+          var s=document.createElement('span');s.className='nb-w';s.textContent=w;
+          line.appendChild(s);
+          if(k<parts.length-1)line.appendChild(document.createTextNode(' '));
+          words.push(s);
+        });
+      });
+    }
+    var wTick=false;
+    function lightWords(){
+      wTick=false;
+      if(!phrase||landing.offsetParent===null)return;
+      var r=phrase.getBoundingClientRect(), vh=window.innerHeight;
+      // de "haut de phrase a 85 % de l'ecran" a "bas de phrase a 70 %"
+      var t=(vh*.85-r.top)/(vh*.85-vh*.7+r.height);
+      t=Math.max(0,Math.min(1,t));
+      var n=Math.round(t*words.length);
+      words.forEach(function(w,k){w.classList.toggle('is-on',k<n);});
+      if(cta)cta.classList.toggle('is-in',n===words.length);
+    }
+    function onWords(){if(!wTick){wTick=true;requestAnimationFrame(lightWords);}}
+    window.addEventListener('scroll',onWords,{passive:true});
+    window.addEventListener('resize',onWords);
+    lightWords();
+    // b. "SONARA" du footer et etapes de "Comment jouer" : a l'entree a l'ecran
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target);}});
+    },{threshold:.35});
+    ['.nb-ft-word','.nb-steps'].forEach(function(s){var el=document.querySelector(s);if(el)io.observe(el);});
+  })();
 })();
