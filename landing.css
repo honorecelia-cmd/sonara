@@ -784,7 +784,7 @@ html{scroll-padding-top:var(--hd-h)}
    avec son texte, les etapes ne peuvent plus le chevaucher */
 .nb-s04-stage{position:relative;display:flow-root;min-height:70vw;margin-top:-3.2vw;   /* telephone sous "Devine.", sans chevauchement */padding-bottom:2vw}
 /* au-dessus du fond degrade (positionne) */
-.nb-steps,.nb-s04-right,.nb-s04 .nb-secfoot{position:relative}
+.nb-steps,.nb-s04 .nb-secfoot{position:relative}
 .nb-s04-left{position:absolute;left:var(--neb-margin);top:22vw;width:28vw;font-size:3.6vw}
 .nb-s04-orbits{top:28vw}
 .nb-s04-orbits i{border:1px dashed rgba(17,17,17,.22)}
@@ -882,11 +882,6 @@ html{scroll-padding-top:var(--hd-h)}
   display:flex;align-items:center;justify-content:center;
   background:var(--accent);color:#fff;font-weight:700;
 }
-.nb-s04-right{
-  margin:6vw var(--neb-margin) 0 auto;width:max-content;text-align:right;
-  font-family:var(--f-text);font-weight:300;font-size:2.4vw;line-height:1.15;color:#111;
-}
-.nb-s04-right span{color:inherit}
 .nb-secfoot--light .nb-globe{stroke:rgba(17,17,17,.7)}
 .nb-secfoot--light p{color:rgba(17,17,17,.55)}
 
@@ -910,7 +905,6 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-s04-rules{position:static;width:auto;min-width:0;margin:0;align-self:stretch;order:3}
   .nb-s04-orbits,.nb-orbit-tag,.nb-s04-knobs{display:none}
   .nb-steps{margin:48px 16px 0;justify-content:flex-start}
-  .nb-s04-right{margin:48px 16px 0;font-size:6vw;width:auto;text-align:left}
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1024,11 +1018,10 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-sec--light .nb-globe{stroke:rgba(45,16,2,.7)}
 .nb-sec--light .nb-s04-pts{color:var(--ink)}
 .nb-sec--light .nb-s04-pts li{border-top-color:rgba(45,16,2,.14)}
-.nb-sec--light .nb-s04-right{color:var(--ink)}
 
 .nb-sec--light .nb-phrase{color:var(--ink)}
 
 /* Sections sans pied de section : marge basse equivalente */
 .nb-s02,.nb-s05{padding-bottom:10vw}
-.nb-s04{padding-bottom:5vw}   /* moins de vide sous "Un jeu simple..." */
+.nb-s04{padding-bottom:5vw}   /* vide sous les etapes */
 @media (max-width:760px){.nb-s02,.nb-s05{padding-bottom:64px}.nb-s04{padding-bottom:40px}}
