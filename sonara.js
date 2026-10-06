@@ -424,35 +424,16 @@ function launchFromModal(btn) {
 }
 
 // ── DEEZER ──────────────────────────────────────────
-var PROXIES=['https://api.allorigins.win/get?url=','https://corsproxy.io/?'];
 function dSearch(q,lim){
-  lim=lim||5;
-  // Essayer d'abord notre proxy serveur (fonctionne sur Railway)
-  var serverProxy='/deezer?q='+encodeURIComponent(q);
-  var tries=[
-    fetch(serverProxy,{signal:AbortSignal.timeout(8000)})
-      .then(function(r){return r.json()})
-      .then(function(j){
-        var data=(j.data||[]).filter(function(t){return t.preview&&t.preview.length>5});
-        if(!data.length)throw new Error('empty');
-        return data;
-      })
-  ];
-  // Fallback : proxies externes
-  PROXIES.forEach(function(proxy){
-    var durl='https://api.deezer.com/search?q='+encodeURIComponent(q)+'&limit='+lim;
-    tries.push(
-      fetch(proxy+encodeURIComponent(durl),{signal:AbortSignal.timeout(8000)})
-        .then(function(r){return r.json()})
-        .then(function(j){
-          var raw=j.contents?JSON.parse(j.contents):j;
-          var data=(raw.data||[]).filter(function(t){return t.preview&&t.preview.length>5});
-          if(!data.length)throw new Error('empty');
-          return data;
-        })
-    );
-  });
-  return Promise.any(tries).catch(function(){return[];});
+  // Recherche Deezer uniquement via le proxy de notre serveur (/deezer) :
+  // aucun proxy public tiers.
+  return fetch('/deezer?q='+encodeURIComponent(q),{signal:AbortSignal.timeout(8000)})
+    .then(function(r){return r.json()})
+    .then(function(j){
+      var data=(j.data||[]).filter(function(t){return t.preview&&t.preview.length>5});
+      return data.slice(0,lim||5);
+    })
+    .catch(function(){return[];});
 }
 function fetchTracks(query){
   var parts=query.split(' OR ').map(function(s){return s.trim()});

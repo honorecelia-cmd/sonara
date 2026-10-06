@@ -562,3 +562,88 @@ Section intégrée maintenant, avec du lorem ipsum dans les cartes. Le contenu r
 | Script italique | Mèsi ! |
 | Titre Black | An nou / jwé ! |
 | CTA | Jouer |
+
+---
+
+## 9. Codes de la landing (référentiel pour tous les écrans du jeu)
+
+État validé au commit `17acf58`. Toute nouvelle page ou tout écran refait reprend ces codes ; rien d'autre.
+
+### 9.1 Règles générales
+
+- Aucun emoji. Aucun « -- » ni « — » dans les textes. « Sonara » en casse normale ; seul le logo est en capitales.
+- Aplats uniquement. Seules exceptions : le dégradé du hero (et lui seul), la texture des sillons et le reflet des vinyles.
+- Formes rondes partout : pills `999px`, cercles `50%`, cartes `20–24px`, grande carte `40px`, pochettes `16px`.
+- Pas de compteur « joueurs en ligne », pas de vert néon, pas de bleu nuit.
+
+### 9.2 Palette et variables CSS
+
+| Variable | Valeur | Usage |
+|---|---|---|
+| `--accent` | `#C34503` | bouton principal sur fond clair, liens actifs, pastilles numérotées, badge « En direct » |
+| `--cream` | `#FDDDB8` | fond crème, texte sur fond sombre, bouton « Jouer » sur fond sombre ou orange |
+| `--ink` | `#2D1002` | brun très sombre : fond brun, texte sur crème, pastilles sombres |
+| `--neb-orange` | `#E85E16` | orange vif : bouton « Jouer » du header, curseurs, icônes, anneaux |
+| `--neb-black` | `#080808` | noir de fond (header fixe, boutons noirs) |
+| `--neb-card` | `#111111` | cartes et pastilles sombres (son-nom, satellites) |
+| `--neb-ctrl` | `#1F1F1F` | cases de contrôle dans les maquettes |
+| `--fond-orange` | `var(--neb-core)` = `#DE5810` | aplat orange de section |
+| `--fond-brun` | `var(--ink)` | aplat brun de section (texte blanc ou crème) |
+| `--fond-creme` | `var(--cream)` | aplat crème de section (texte `--ink`) |
+| `--univers-*` | voir `univers.css` | une couleur pleine par univers (dancehall `#C34503`, soca `#E85E16`, zouk `#A10D01`, reggae `#6B3A0E`, trap `#2D1002`, rap `#5A2318`, mix `#F35524`, kompa `#860100`, shatta `#D3561A`) |
+
+Dégradé du hero (exception) : `--neb-ink #200000`, `--neb-wine #860100`, `--neb-brick #C23401`, `--neb-core #DE5810`, `--neb-hot #F35524`, `--neb-peach #E6C789`, animé lentement sur 12 s, avec grain SVG à 8 % en `soft-light`.
+
+Textes secondaires : sur fond sombre `rgba(255,255,255,.55–.62)` ; sur fond crème `rgba(45,16,2,.55–.82)`.
+
+### 9.3 Typographie
+
+| Rôle | Police | Graisse | Taille (desktop / mobile) | Interligne / approche |
+|---|---|---|---|---|
+| Titre hero | MuseoModerno | 800 | 5.3vw / 9.2vw | .95 / -.03em |
+| Grands titres de section (`.nb-title`) | MuseoModerno | 800 | 3.4–6.4vw / 6.6–13vw | .95 / -.03em |
+| Méga-titre (« Écoute. Devine. ») | MuseoModerno | 800 | 11vw / 14vw | .9 / -.04em |
+| Titres de carte, footer | MuseoModerno | 800 | 22–30px | 1.05–1.1 / -.02em |
+| Grandes phrases et accroches (`.nb-phrase`) | Inter | 300 | 4.5vw (2.2–2.4vw en petit) / 6–7vw | 1.05–1.15 / -.02em |
+| Paragraphes (`.nb-body`) | Inter | 400 | 15px | 1.45 |
+| Micro-labels « Label / » (`.nb-label`) | Inter | 400 | 14px | |
+| Numéro + nom de section (`.nb-secnum`) | Inter | 400 / 500 | 14px | « 01 / » au-dessus du nom |
+| Boutons, pastilles | Inter | 600 | 13–15px | |
+| Textes dans les maquettes de téléphone | Inter | 600–700 | en fraction de la largeur du téléphone | |
+
+Polices chargées : MuseoModerno 400–900 et Inter 300–900 (Google Fonts). Ne jamais utiliser Syne ni DM Sans.
+
+### 9.4 Composants
+
+- **Bouton principal (`.nb-pill`)** : pill `999px`, Inter 600 15px, `padding:16px 30px`, hauteur 47px. Survol : monte de 2px. Focus : contour blanc 2px décalé de 3px.
+  - Sur fond sombre ou orange : crème `--cream`, texte `--ink` (survol blanc).
+  - Sur fond crème : orange `--accent`, texte blanc (survol `--ink` + texte crème).
+  - Header fixe : `--neb-orange`, texte blanc, `.nb-pill--sm` (`11px 22px`, 14px).
+- **Champ de saisie (`.nb-input`)** : pill `999px`, hauteur 52px, `padding:0 22px`, fond `#1a1a1a`, bord `rgba(255,255,255,.14)`, focus bord orange.
+- **Pastilles d'étape** : pill `--ink`, texte crème Inter 600 14px, rond numéroté 40px `--accent` chiffre blanc.
+- **Pastilles réseaux** : pill `--ink`, icône trait 18px + texte crème 13px ; survol `--accent`.
+- **Badge** (« En direct ») : pill `--accent`, texte crème, Inter 600 12px, `6px 12px`.
+- **Pastille satellite** (« Créer une salle ») : pill `--neb-card`, texte crème, anneau 40px orange avec « + ».
+- **Cartes** : rayon 24px, fond `--neb-card` sur fond sombre ou `#fff6ea` sur fond crème, `padding:16–36px`. Grande carte du footer : crème, rayon 40px.
+- **Fenêtre (son-nom)** : carte `--neb-card`, rayon 24px, `max-width:520px`, fond flouté `rgba(8,8,8,.6)` + `blur(10px)`.
+- **Header fixe** : 64px (56px mobile), fond `rgba(8,8,8,.72)` + `blur(14px)`, logo à gauche, un seul bouton « Jouer ».
+- **Vinyle (`.vy`)** : étiquette-pochette 33 %, trou 2,5 %, sillons fins, reflet fixe, 8 s par tour.
+- **Pochettes** : rayon 16px, `object-fit: cover`.
+
+### 9.5 Espacements et grille
+
+- Marge latérale : `--neb-margin` = 4.85vw (16px sur mobile).
+- Colonnes repères : 20.4vw, 36vw, 61–67vw.
+- Haut de section : 7–11vw ; bas de section : 5–10vw (40–64px sur mobile).
+- Écart entre blocs : 3–5vw ; entre pastilles : 6–12px ; entre colonnes : 40px.
+- Point de rupture mobile : 760px (767px pour les univers) ; colonnes empilées, satellites masqués.
+- `scroll-padding-top` = hauteur du header.
+
+### 9.6 Animations
+
+- Easing commun : `--ease-nb: cubic-bezier(.65,0,.35,1)`.
+- Durées : 0.25s (survols), 0.4s (couleurs), 0.5s (changement d'univers), 0.6s (apparitions), 0.9s (dévoilement de pochette), 12s (respiration du hero), 8s par tour de vinyle.
+- Décalages en cascade : 70 ms (lettres), 90 ms (étapes).
+- Apparitions : opacité 0 → 1 et translation 18–48px.
+- Défilement : lissage du téléphone du hero, mots qui s'allument au fil du défilement.
+- `prefers-reduced-motion` : tout est affiché directement, aucune animation.
