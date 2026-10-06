@@ -691,6 +691,8 @@ html{scroll-padding-top:var(--hd-h)}
   font-family:var(--f-text);font-size:12px;font-weight:600;
 }
 .nb-s02-create{left:auto;right:16vw;top:38vw}
+/* pastille sombre sur section creme : texte creme (comme en section 01) */
+.nb-sec--light .nb-sat-create{color:var(--cream)}
 .nb-s02-label{position:absolute;left:20.4vw;bottom:2vw;width:20vw}
 .nb-crumbs{
   position:absolute;left:67vw;bottom:2.4vw;margin:0;
