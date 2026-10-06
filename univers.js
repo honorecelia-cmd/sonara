@@ -23,19 +23,19 @@ var UNIVERS = [
   {nom:'Reggae', slug:'reggae', couleur:'var(--univers-reggae)', image:'/img/cover_reggae.jpg',
    origine:'Jamaïque', epoque:'fin des années 1960', signature:'le contretemps et le message',
    texte:"Issu du ska et du rocksteady, le reggae ralentit le tempo et accentue le contretemps, le fameux « skank ». Porté par le mouvement rastafari, il devient une musique de message, de spiritualité et de résistance. Bob Marley l'emmène sur toute la planète dans les années 70. En 2018, l'UNESCO l'inscrit au patrimoine culturel immatériel de l'humanité."},
-  {nom:'Trap', slug:'trap', couleur:'var(--univers-trap)', image:null,
+  {nom:'Trap', slug:'trap', couleur:'var(--univers-trap)', image:'/img/cover_dancehall.jpg',   // provisoire : pochette d'un autre univers
    origine:'Atlanta, États-Unis', epoque:'début des années 2000', signature:'808, basses lourdes, charlestons en rafale',
    texte:"Le nom vient des « traps », les lieux de deal dont parlent les premiers textes du genre dans le Sud des États-Unis. Sa signature : la boîte à rythmes TR-808, des basses profondes et des charlestons en rafale. Dans les années 2010, la trap devient le son dominant du rap mondial, et les Antilles se l'approprient en la mêlant au dancehall et au créole."},
   {nom:'Rap', slug:'rap', couleur:'var(--univers-rap)', image:'/img/cover_rap.jpg',
    origine:'le Bronx, New York', epoque:'années 1970', signature:'le flow sur le beat',
    texte:"Dans les block parties du Bronx, DJ Kool Herc, né en Jamaïque, isole les breaks des disques pendant que des MC prennent le micro. Le rap est né, avec un héritage direct du toasting des sound systems jamaïcains. Le genre conquiert le monde et s'installe aux Antilles dans les années 90, où il se fait en créole comme en français, entre conscience et ego trip."},
-  {nom:'Mix', slug:'mix', couleur:'var(--univers-mix)', image:null,
+  {nom:'Mix', slug:'mix', couleur:'var(--univers-mix)', image:'/img/cover_zouk.jpg',   // provisoire : pochette d'un autre univers
    origine:'Sonara', epoque:'maintenant', signature:'tous les univers en une partie',
    texte:"L'univers qui casse les frontières. Mix réunit tous les univers Sonara dans une même partie : un zouk peut succéder à un classique du reggae, puis à un shatta. C'est le reflet de nos playlists, de nos soirées et de la Caraïbe elle-même, faite de rencontres et de mélanges. Le mode pour ceux qui connaissent tout, ou qui veulent tout découvrir."},
   {nom:'Kompa', slug:'kompa', couleur:'var(--univers-kompa)', image:'/img/cover_kompa.jpg',
    origine:'Haïti', epoque:'1955', signature:'la danse en couple par excellence',
    texte:"En 1955, le saxophoniste haïtien Nemours Jean-Baptiste crée le « konpa dirèk », un rythme de danse régulier et chaloupé inspiré du méringue. Guitares, cuivres, puis claviers : le kompa voyage avec la diaspora haïtienne et s'installe durablement aux Antilles, où il a nourri la cadence et le zouk. Aujourd'hui encore, c'est la danse en couple par excellence."},
-  {nom:'Shatta', slug:'shatta', couleur:'var(--univers-shatta)', image:null,
+  {nom:'Shatta', slug:'shatta', couleur:'var(--univers-shatta)', image:'/img/cover_soca.jpg',   // provisoire : pochette d'un autre univers
    origine:'Martinique', epoque:'années 2010', signature:'minimaliste, percussif, fait pour le dancefloor',
    texte:"Né en Martinique, le shatta est un enfant du dancehall : plus minimaliste, plus percussif, pensé pour faire bouger le dancefloor, avec des textes crus et beaucoup d'humour. Longtemps réservé aux soirées locales, il explose dans l'Hexagone au début des années 2020, porté notamment par Maureen et Bamby. C'est la touche martiniquaise de Sonara."}
 ];
