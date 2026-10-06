@@ -1026,10 +1026,19 @@ html{scroll-padding-top:var(--hd-h)}
 @media (max-width:760px){.nb-s02{padding-bottom:64px}.nb-s05{padding-bottom:40px}.nb-s04{padding-bottom:40px}}
 
 
+/* ── Appel a jouer : meme degrade que le hero (exception aux aplats) ── */
+.nb-cta{position:relative;overflow:hidden;padding:9vw var(--neb-margin);text-align:center;color:#fff}
+.nb-cta-bg{position:absolute;inset:0;pointer-events:none}
+.nb-cta > *:not(.nb-cta-bg){position:relative}
+.nb-cta-t{margin:0 auto 22px;max-width:16ch;font-size:5.3vw;color:#fff}
+.nb-cta-txt{margin:0 auto 34px;max-width:520px;font-family:var(--f-text);font-weight:300;font-size:20px;line-height:1.35}
+/* meme bouton que celui du hero */
+.nb-cta .nb-pill--cta{background:var(--cream);color:var(--ink)}
+.nb-cta .nb-pill--cta:hover{background:#fff;color:var(--ink)}
 /* ═══════════════════════════════════════════════════════════════
    FOOTER : carte creme sur le brun de la derniere section
    ═══════════════════════════════════════════════════════════════ */
-.nb-footer{background:var(--fond-brun);color:var(--cream);padding:0 var(--neb-margin) 28px;font-family:var(--f-text)}
+.nb-footer{background:var(--fond-brun);color:var(--cream);padding:4vw var(--neb-margin) 28px;font-family:var(--f-text)}
 .nb-ft-card{
   background:var(--cream);color:var(--ink);border-radius:40px;overflow:hidden;
   padding:56px 48px 0;
@@ -1067,7 +1076,10 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-ft-time{font-variant-numeric:tabular-nums;color:var(--cream)}
 
 @media (max-width:760px){
-  .nb-footer{padding:0 12px 24px}
+  .nb-footer{padding:28px 12px 24px}
+  .nb-cta{padding:72px 16px}
+  .nb-cta-t{font-size:10vw}
+  .nb-cta-txt{font-size:17px}
   .nb-ft-card{border-radius:28px;padding:36px 22px 0}
   .nb-ft-top{grid-template-columns:1fr;gap:32px}
   .nb-ft-socials{flex-direction:row;flex-wrap:wrap}
