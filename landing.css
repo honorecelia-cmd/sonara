@@ -93,7 +93,7 @@ html{scroll-padding-top:var(--hd-h)}
   /* Telephone : largeur, position (reutilisees par la main) */
   --pw:24vw; --px:38vw; --pt:31vw;
   position:relative;
-  height:117.14vw;               /* ratio 1400 x 1640 */
+  height:90vw;                   /* resserre : la section 01 arrive juste apres le telephone */
   min-height:100vh;
   flex-shrink:0;
 }
@@ -390,7 +390,7 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-hero{
     --pw:58vw;
     height:auto;min-height:0;
-    padding:20px 16px 34vw;
+    padding:20px 16px 18vw;
     display:flex;flex-direction:column;
   }
   .nb-meta{position:relative;top:auto;height:auto;display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;margin-bottom:36px}
