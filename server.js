@@ -206,6 +206,18 @@ const server = http.createServer(function(req, res) {
     return;
   }
 
+  // Pages legales
+  var legal={'/mentions-legales':'mentions-legales.html','/politique-de-confidentialite':'politique-confidentialite.html'};
+  if (legal[p.pathname] || p.pathname === '/legal.css') {
+    var lf=legal[p.pathname]||'legal.css';
+    fs.readFile(path.join(__dirname, lf), function(err, data) {
+      if (err) { res.writeHead(404); res.end('Not found'); return; }
+      res.writeHead(200, {'Content-Type': (lf.endsWith('.css')?'text/css':'text/html')+'; charset=utf-8'});
+      res.end(data);
+    });
+    return;
+  }
+
   if (p.pathname.startsWith('/audio/')) {
     fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
       if (err) { res.writeHead(404); res.end('Not found'); return; }

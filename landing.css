@@ -1027,3 +1027,55 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-s02,.nb-s05{padding-bottom:10vw}
 .nb-s04{padding-bottom:5vw}   /* vide sous les etapes */
 @media (max-width:760px){.nb-s02,.nb-s05{padding-bottom:64px}.nb-s04{padding-bottom:40px}}
+
+/* ── Fin de section 05 : grand bouton Jouer ── */
+.nb-s05-cta{margin:4vw 0 0 36vw}
+.nb-pill--xl{padding:22px 56px;font-size:20px}
+.nb-s05 .nb-pill--cta{background:var(--cream);color:var(--ink)}
+.nb-s05 .nb-pill--cta:hover{background:#fff;color:var(--ink)}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════════ */
+.nb-footer{
+  position:relative;background:var(--neb-black);color:#fff;
+  padding:8vw var(--neb-margin) 40px;font-family:var(--f-text);
+}
+.nb-footer .nb-footer-hello{
+  margin:0 0 6vw;font-family:var(--f-display);font-weight:800;
+  font-size:6vw !important;line-height:1 !important;letter-spacing:-.03em;color:#fff;
+}
+.nb-footer-grid{
+  display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:32px;
+  padding-top:32px;border-top:1px solid rgba(255,255,255,.14);
+}
+.nb-footer-logo{display:block;height:44px;width:auto;margin-bottom:16px}
+.nb-footer p{margin:0;font-size:14px;line-height:1.5}
+.nb-footer-brand span{color:rgba(255,255,255,.6)}
+.nb-footer-social p:first-child{color:rgba(255,255,255,.6);margin-bottom:8px}
+.nb-footer-handle{display:flex;align-items:center;gap:10px;font-weight:600}
+.nb-footer-rs{
+  /* /img/rs.png (6250 px) n'a ses icones que dans la bande x 1693-4830,
+     y 2729-3520 : on affiche uniquement cette bande, a --rs-h de haut */
+  --rs-h:24px;
+  display:block;flex-shrink:0;overflow:hidden;
+  height:var(--rs-h);width:calc(var(--rs-h) * 3137 / 791);
+}
+.nb-footer-rs img{
+  display:block;max-width:none;
+  width:calc(var(--rs-h) * 6250 / 791);height:auto;
+  margin:calc(var(--rs-h) * -2729 / 791) 0 0 calc(var(--rs-h) * -1693 / 791);
+}
+.nb-footer-links{display:flex;flex-direction:column;align-items:flex-start;gap:10px;width:auto;max-width:none;padding:0;justify-content:flex-start;text-align:left}
+.nb-footer-links a{color:#fff;font-size:14px;text-decoration:none}
+.nb-footer-links a:hover{text-decoration:underline;text-underline-offset:4px}
+.nb-footer-links a:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.nb-footer-copy{margin-top:40px !important;color:rgba(255,255,255,.45);font-size:13px !important}
+
+@media (max-width:760px){
+  .nb-s05-cta{margin:40px 16px 0}
+  .nb-pill--xl{width:100%;padding:20px 0}
+  .nb-footer{padding:64px 16px 32px}
+  .nb-footer .nb-footer-hello{font-size:11vw !important;margin-bottom:40px}
+  .nb-footer-grid{grid-template-columns:1fr;gap:28px}
+}
