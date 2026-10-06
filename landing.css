@@ -467,7 +467,7 @@ html{scroll-padding-top:var(--hd-h)}
 /* Pied de section : globe + texte, trio lecteur miniature */
 .nb-secfoot{
   display:flex;justify-content:space-between;align-items:flex-end;
-  padding:10vw var(--neb-margin) 32px;
+  padding:6vw var(--neb-margin) 32px;
 }
 .nb-globe{width:28px;height:28px;fill:none;stroke:rgba(255,255,255,.7);stroke-width:1.2}
 .nb-secfoot p{margin:10px 0 0;font-family:var(--f-text);font-size:13px;line-height:1.35;color:rgba(255,255,255,.5)}
@@ -486,13 +486,13 @@ html{scroll-padding-top:var(--hd-h)}
    01 / QU'EST-CE QUE SONARA
    ═══════════════════════════════════════════════════════════════ */
 .nb-s01{background:var(--fond-brun)}
-.nb-s01-intro{position:relative;padding-top:11vw}
-.nb-s01-intro .nb-secnum{position:absolute;left:var(--neb-margin);top:11vw}
-.nb-s01-icon{position:absolute;left:32vw;top:11vw}
+.nb-s01-intro{position:relative;padding-top:7vw}
+.nb-s01-intro .nb-secnum{position:absolute;left:var(--neb-margin);top:7vw}
+.nb-s01-icon{position:absolute;left:32vw;top:7vw}
 .nb-s01-idea{margin-left:36vw;width:59vw}
 
 /* Rangee B : telephone accueil + satellites */
-.nb-s01-stage{position:relative;height:66vw;margin-top:9vw}
+.nb-s01-stage{position:relative;height:56vw;margin-top:4vw}
 .nb-s01-home{--pw:24vw;position:absolute;left:38vw;top:0;width:var(--pw);z-index:1}
 .nb-s01-about{position:absolute;left:var(--neb-margin);bottom:5vw;width:17vw}
 
@@ -577,11 +577,8 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-sat-tile .nb-home-play{--pw:11vw;right:auto;bottom:auto;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;width:3.4vw;height:3.4vw}
 
 /* Rangee C : classement, mission, partie qui sort du cadre */
-.nb-s01-row2{position:relative;height:60vw}
-.nb-s01-rank{--pw:20vw;position:absolute;left:20.4vw;top:2vw;width:var(--pw)}
-.nb-s01-mission{position:absolute;left:61vw;top:4vw}
-.nb-s01-mission .nb-label{color:rgba(255,255,255,.45)}
-.nb-s01-game{--pw:22vw;position:absolute;left:70vw;top:28vw;width:var(--pw)}
+.nb-s01-row2{display:flex;align-items:flex-start;gap:8vw;padding:2vw var(--neb-margin) 0 20.4vw}
+.nb-s01-rank{--pw:20vw;position:relative;width:var(--pw);flex-shrink:0}
 .nb-screen--rank{background:#120706}
 .nb-rank-tabs{top:calc(var(--pw) * .17)}
 .nb-podium{
@@ -613,14 +610,15 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-rank-list em{font-style:normal;color:rgba(255,255,255,.45)}
 
 /* Rangee D : l'histoire */
-.nb-s01-story{margin:11vw 0 0 var(--neb-margin);width:64vw}
-.nb-s01-story .nb-phrase--sm{font-size:2.2vw}
+.nb-s01-story{flex:1;max-width:42vw;padding-top:3vw}
+.nb-s01-story-txt{margin:0;font-family:var(--f-text);font-weight:300;font-size:1.65vw;line-height:1.35;color:#fff}
+.nb-s01-mission-t{margin:3.2vw 0 14px !important;color:rgba(255,255,255,.55)}
 
 /* ── Sections : mobile ── */
 @media (max-width:760px){
   .nb-band{top:22px;left:16px;right:16px;font-size:12px}
   .nb-phrase{font-size:7vw}
-  .nb-phrase--sm,.nb-s01-story .nb-phrase--sm{font-size:6vw}
+  .nb-phrase--sm{font-size:6vw}
   .nb-secfoot{padding:64px 16px 24px}
 
   .nb-s01-intro{padding:76px 16px 0}
@@ -631,11 +629,11 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-s01-home{--pw:62vw;position:relative;left:auto;margin:0 auto}
   .nb-s01-about{position:static;width:auto;margin-top:48px}
   .nb-sat{display:none}
-  .nb-s01-row2{height:auto;overflow:visible;padding:64px 16px 0;display:flex;flex-direction:column;gap:48px}
-  .nb-s01-mission{position:static;order:-1}
-  .nb-s01-rank{--pw:56vw;position:relative;left:auto;top:auto;margin:0 auto}
-  .nb-s01-game{display:none}
-  .nb-s01-story{margin:72px 16px 0;width:auto}
+  .nb-s01-row2{padding:48px 16px 0;flex-direction:column;gap:40px}
+  .nb-s01-rank{--pw:56vw;margin:0 auto}
+  .nb-s01-story{max-width:none;padding-top:0}
+  .nb-s01-story-txt{font-size:5.2vw}
+  .nb-s01-mission-t{margin:28px 0 12px !important}
 }
 
 /* ═══════════════════════════════════════════════════════════════
