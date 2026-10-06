@@ -155,16 +155,15 @@
 
 /* Rangee des 9 univers */
 .uv-tabs{
-  position:absolute;left:50%;bottom:5vh;transform:translateX(-50%);
-  display:flex;justify-content:flex-start;gap:6px;width:auto;padding:0;   /* annule nav{} de sonara.css */
-  max-width:calc(100% - 2 * var(--neb-margin) - 380px);
-  overflow-x:auto;scrollbar-width:none;
+  /* entre le compteur (a gauche) et le bord droit ; 2 lignes si besoin */
+  position:absolute;left:calc(var(--neb-margin) + 270px);right:var(--neb-margin);bottom:5vh;
+  display:flex;flex-wrap:wrap;justify-content:center;gap:6px;width:auto;max-width:none;padding:0;   /* annule nav{} de sonara.css */
 }
 .uv-tabs::-webkit-scrollbar{display:none}
 .uv-tab{
-  flex-shrink:0;padding:9px 14px;border-radius:999px;cursor:pointer;
+  flex-shrink:0;padding:8px 13px;border-radius:999px;cursor:pointer;
   border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;
-  font-family:var(--f-text);font-size:13px;font-weight:600;white-space:nowrap;
+  font-family:var(--f-text);font-size:12.5px;font-weight:600;white-space:nowrap;
   transition:background-color .25s ease,color .25s ease,border-color .25s ease;
 }
 .uv-tab:hover{border-color:#fff}
@@ -181,7 +180,11 @@
   .uv-arrow--prev{left:auto;right:calc(16px + 56px)}
   .uv-arrow--next{right:16px}
   .uv-countbar{left:16px;gap:12px}
-  .uv-tabs{left:0;right:0;bottom:calc(5vh + 62px);transform:none;max-width:none;padding:0 16px}
+  /* mobile : une ligne qui defile, fondu sur le bord droit pour le signaler */
+  .uv-tabs{left:0;right:0;bottom:calc(5vh + 62px);flex-wrap:nowrap;justify-content:flex-start;padding:0 16px;
+    overflow-x:auto;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);
+    mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent)}
   .uv-discover{top:calc(50% + var(--uv-d) / 2 + 10px)}
   .uv-secnum{left:16px;top:76px}
     .uv-panel{
