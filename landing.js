@@ -68,27 +68,6 @@
   });
   document.addEventListener('click',function(e){if(!e.target.closest('.nb-menu'))closeMenus();});
 
-  // ── Vinyle "Decouvrir" : ~6 s par tour, plus vite au survol ──
-  var vinyl=document.getElementById('nb-vinyl');
-  var vsvg=vinyl.querySelector('.vy-spin');
-  var vAngle=0,vSpeed=60,vTarget=60,vLast=0;   // degres par seconde
-  vinyl.addEventListener('mouseenter',function(){vTarget=240;});
-  vinyl.addEventListener('mouseleave',function(){vTarget=60;});
-  vinyl.addEventListener('click',function(e){
-    e.stopPropagation();
-    var target=document.getElementById('univers');
-    if(target)target.scrollIntoView({behavior:reduce.matches?'auto':'smooth'});
-    else landing.querySelector('[aria-controls="nb-menu-univ"]').click();  // section a venir
-  });
-  (function spin(now){
-    var dt=vLast?Math.min(.1,(now-vLast)/1000):0; vLast=now;
-    if(!reduce.matches&&landing.offsetParent!==null){
-      vSpeed+=(vTarget-vSpeed)*Math.min(1,dt*4);
-      vAngle=(vAngle+vSpeed*dt)%360;
-      vsvg.style.transform='rotate('+vAngle.toFixed(2)+'deg)';
-    }else if(reduce.matches)vsvg.style.transform='';
-    requestAnimationFrame(spin);
-  })(0);
   form.addEventListener('submit',function(e){
     e.preventDefault();
     var v=input.value.trim();

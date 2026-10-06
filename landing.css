@@ -192,17 +192,6 @@ html{scroll-padding-top:var(--hd-h)}
   font-family:var(--f-text);font-size:14px;color:rgba(255,255,255,.82);
   transition:background-color .2s ease,color .2s ease;
 }
-/* Vinyle "Decouvrir" (tout a droite du menu) : composant .vy + libelle */
-.nb-vinyl{
-  position:relative;margin-left:auto;flex-shrink:0;
-  display:inline-flex;align-items:center;gap:10px;
-  padding:0;border:none;background:none;cursor:pointer;color:#fff;
-  font-family:var(--f-text);font-size:13px;font-weight:500;
-  -webkit-tap-highlight-color:transparent;
-}
-.nb-vinyl .vy{width:44px;--vy-label:var(--accent);--vy-hole:#7a1a02}
-.nb-vinyl:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:999px}
-.nb-vinyl:hover .nb-vinyl-txt{text-decoration:underline;text-underline-offset:4px}
 .nb-menu-list button:hover,.nb-menu-list button:focus-visible{background:var(--neb-orange);color:#fff;outline:none}
 
 /* Titre 3 lignes : blanc chaud qui s'estompe vers le rose-orange translucide */
@@ -408,11 +397,7 @@ html{scroll-padding-top:var(--hd-h)}
   }
   .nb-meta{position:relative;top:auto;height:auto;display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;margin-bottom:36px}
   .nb-meta-col{position:static;font-size:12px}
-  .nb-meta{grid-template-columns:auto auto auto 1fr;align-items:center;gap:12px 22px;padding:0}
-  .nb-vinyl{justify-self:end}
-  .nb-vinyl{position:static}
-  .nb-vinyl .vy{width:40px}
-  .nb-vinyl-txt{display:none}
+  .nb-meta{grid-template-columns:auto auto 1fr;align-items:center;gap:12px 22px;padding:0}
   .nb-meta-logo{position:static}
   .nb-meta-logo img{height:28px}
   .nb-meta .nb-meta-col{position:relative;left:auto}
