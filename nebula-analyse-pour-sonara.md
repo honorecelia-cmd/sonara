@@ -509,8 +509,8 @@ Les textes entre crochets [ ] sont des emplacements à remplir avec le contenu r
 | Méga-titre | Écoute. / Devine. |
 | Phrase gauche (4 lignes) | Trouve le titre, / trouve l'artiste / et grimpe / au classement ! |
 | 5 pills d'étapes | Choisis ton son-nom · Choisis ton univers · Écoute l'extrait · Trouve titre et artiste · Monte sur le podium |
-| Label + texte | Comment jouer / Il faut trouver le titre et l'artiste pour passer au morceau suivant. Plus tu réponds vite, plus tu marques. |
-| Liste « Les points » | Trouve l'artiste ou le titre : 15 points. / Les deux : 30 points. / Réponds vite pour multiplier tes points : ×3 en moins de 5 secondes, ×2 en moins de 10. |
+| Label + texte | Comment jouer / Écoute l'extrait et tape l'artiste, le titre, ou les deux. La manche s'arrête dès que tout le monde a trouvé, ou au bout de 30 secondes. |
+| Liste « Les points » | Artiste ou titre : 15 points chacun. / Les deux d'un coup : 30 points. / Réponds vite pour multiplier tes points : ×3 dans les 5 premières secondes, ×2 entre 5 et 10 secondes. / Jusqu'à 90 points par morceau. |
 | Potards | Rapidité · Précision · Série · Score |
 | Étiquettes sur les orbites | Réponse rapide · Fautes tolérées · Score en direct · Podium final |
 | Texte droite | Un jeu simple à comprendre / Difficile à lâcher |
