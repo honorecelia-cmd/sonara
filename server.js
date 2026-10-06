@@ -51,16 +51,22 @@ function fetchDeezer(q, cb) {
   req.end();
 }
 
+// Lit UNE trame WebSocket au debut de buf. Renvoie null si elle est
+// incomplete ; sinon { opcode, payload, size } (size = octets consommes).
+// Plusieurs trames peuvent arriver collees dans un meme paquet TCP.
 function parseWsFrame(buf) {
+  if (buf.length < 2) return null;
   const masked = (buf[1] & 0x80) !== 0;
   let len = buf[1] & 0x7f;
   let offset = 2;
-  if (len === 126) { len = buf.readUInt16BE(2); offset = 4; }
+  if (len === 126) { if (buf.length < 4) return null; len = buf.readUInt16BE(2); offset = 4; }
+  else if (len === 127) { if (buf.length < 10) return null; len = Number(buf.readBigUInt64BE(2)); offset = 10; }
+  if (buf.length < offset + (masked ? 4 : 0) + len) return null;
   const mask = masked ? buf.slice(offset, offset + 4) : null;
   if (masked) offset += 4;
-  const payload = buf.slice(offset, offset + len);
+  const payload = Buffer.from(buf.slice(offset, offset + len));
   if (masked) for (let i = 0; i < payload.length; i++) payload[i] ^= mask[i % 4];
-  return { opcode: buf[0] & 0x0f, payload: payload.toString() };
+  return { opcode: buf[0] & 0x0f, payload: payload.toString(), size: offset + len };
 }
 
 function makeWsFrame(data) {
@@ -79,14 +85,42 @@ function broadcastAll(code, data) {
   rooms[code].players.forEach(function(p) { wsSend(p.socket, data); });
 }
 
-function startQuestionTimer(code) {
-  if (!rooms[code]) return;
-  if (rooms[code].questionTimer) clearTimeout(rooms[code].questionTimer);
-  rooms[code].questionTimer = setTimeout(function() {
-    if (!rooms[code]) return;
-    rooms[code].players.forEach(function(x){ x.answered = true; });
-    broadcastAll(code, { type: 'reveal_now' });
-  }, 35000);
+// ── Deroulement d'une partie multijoueur : decide uniquement par le serveur ──
+// Les navigateurs appliquent : game_start, reveal_now {index}, next_question {index}.
+// Durees alignees sur le navigateur (sonara.js) :
+const COUNTDOWN_MS = 3300;   // decompte 3-2-1 avant la 1re manche (doCD)
+const BREAK_MS     = 5000;   // pause entre deux manches (doBreak)
+const QUESTION_MS  = 30000;  // temps de reponse (G.td = 30 s)
+const AUDIO_GRACE  = 2000;   // marge de chargement de l'extrait
+const REVEAL_MS    = 5000;   // revelation (4 s pour la derniere manche)
+// Un joueur part : si tous les joueurs restants ont fini, on revele
+function checkAllDone(code) {
+  var room = rooms[code];
+  if (room && room.phase === 'question' && room.players.length && room.players.every(function(x){ return x.answered; })) revealQuestion(code);
+}
+function clearRoomTimer(room) { if (room.questionTimer) { clearTimeout(room.questionTimer); room.questionTimer = null; } }
+// Ouvre la manche room.question ; filet de securite si un joueur ne repond jamais
+function startQuestion(code, delayBefore) {
+  var room = rooms[code]; if (!room) return;
+  clearRoomTimer(room);
+  room.phase = 'question';
+  room.players.forEach(function(x){ x.answered = false; });
+  room.questionTimer = setTimeout(function(){ revealQuestion(code); }, delayBefore + QUESTION_MS + AUDIO_GRACE);
+}
+// Revele la manche en cours (une seule fois), puis enchaine la suivante
+function revealQuestion(code) {
+  var room = rooms[code]; if (!room || room.phase !== 'question') return;
+  clearRoomTimer(room);
+  room.phase = 'reveal';
+  var idx = room.question, isLast = idx >= room.trackCount - 1;
+  broadcastAll(code, { type: 'reveal_now', index: idx });
+  room.questionTimer = setTimeout(function(){
+    var r = rooms[code]; if (!r) return;
+    r.question = idx + 1;
+    broadcastAll(code, { type: 'next_question', index: r.question });
+    if (r.question >= r.trackCount) { r.phase = 'done'; r.questionTimer = null; }
+    else startQuestion(code, BREAK_MS);
+  }, isLast ? REVEAL_MS - 1000 : REVEAL_MS);
 }
 
 const server = http.createServer(function(req, res) {
@@ -257,11 +291,20 @@ server.on('upgrade', function(req, socket) {
   const player = { id: playerId, name: playerName, socket, score: 0 };
   rooms[code].players.push(player);
   broadcastAll(code, { type: 'player_joined', players: rooms[code].players.map(function(pl){ return { id: pl.id, name: pl.name, score: pl.score }; }) });
+  let pending = Buffer.alloc(0);
   socket.on('data', function(buf) {
+    pending = Buffer.concat([pending, buf]);
+    let frame;
+    while ((frame = parseWsFrame(pending))) {
+      pending = pending.slice(frame.size);
+      handleFrame(frame);
+    }
+  });
+  function handleFrame(frame) {
     try {
-      const frame = parseWsFrame(buf);
       if (frame.opcode === 8) {
         rooms[code].players = rooms[code].players.filter(function(pl){ return pl.id !== playerId; });
+        checkAllDone(code);
         broadcastAll(code, { type: 'player_left', id: playerId, players: rooms[code].players.map(function(pl){ return { id: pl.id, name: pl.name, score: pl.score }; }) });
         return;
       }
@@ -278,38 +321,30 @@ server.on('upgrade', function(req, socket) {
           var tmp = indices[ti]; indices[ti] = indices[tj]; indices[tj] = tmp;
         }
         var trackOrder = indices.slice(0, trackCount);
+        rooms[code].trackCount = trackOrder.length;
+        rooms[code].question = 0;
         broadcastAll(code, { type: 'game_start', theme: rooms[code].theme, trackOrder: trackOrder });
-        startQuestionTimer(code);
+        startQuestion(code, COUNTDOWN_MS);
       }
       if (msg.type === 'answer') {
         var pl = rooms[code].players.find(function(x){ return x.id === playerId; });
-        if (pl) {
+        // reponse d'une autre manche (message en retard) : ignoree
+        var staleAnswer = typeof msg.index === 'number' && msg.index !== rooms[code].question;
+        if (pl && !staleAnswer) {
           pl.score = (pl.score||0) + (msg.points||0);
           if (msg.done) pl.answered = true;
           broadcastAll(code, { type: 'score_update', players: rooms[code].players.map(function(x){ return { id: x.id, name: x.name, score: x.score, done: !!x.answered }; }) });
-          if (msg.done) {
+          if (msg.done && rooms[code].phase === 'question') {
             var allDone = rooms[code].players.every(function(x){ return x.answered; });
-            if (allDone) {
-              if (rooms[code].questionTimer) clearTimeout(rooms[code].questionTimer);
-              broadcastAll(code, { type: 'reveal_now' });
-            }
-            // Sinon on attend le timer
+            if (allDone) revealQuestion(code);   // sinon : fin du temps (filet du serveur)
           }
         }
       }
-      if (msg.type === 'reveal_done') {
-        var nextIdx = msg.index + 1;
-        if (nextIdx !== rooms[code].question) {
-          rooms[code].question = nextIdx;
-          rooms[code].players.forEach(function(x){ x.answered = false; });
-          broadcastAll(code, { type: 'next_question', index: nextIdx });
-          startQuestionTimer(code);
-        }
-      }
+      // 'reveal_done' (ancien client) : ignore, le serveur enchaine seul les manches
     } catch(e) {}
-  });
+  }
   socket.on('error', function(){
-    if (rooms[code]) rooms[code].players = rooms[code].players.filter(function(pl){ return pl.id !== playerId; });
+    if (rooms[code]) { rooms[code].players = rooms[code].players.filter(function(pl){ return pl.id !== playerId; }); checkAllDone(code); }
   });
 });
 

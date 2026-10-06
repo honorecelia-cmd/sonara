@@ -766,7 +766,7 @@ function tryGuess(v,byUser){
     var chip=document.querySelector('.pchip[data-n="'+G.ps+'"]');if(chip)chip.classList.add('ans');
     updateHdr();renderPstrip();
     if(WS&&WS.readyState===1&&G_MULTI.code){
-      WS.send(JSON.stringify({type:'answer',points:0,done:true}));
+      WS.send(JSON.stringify({type:'answer',points:0,done:true,index:G.cq}));
       var wm=$('wmsg');wm.textContent='En attente des autres joueurs…';wm.className='wmsg waiting';wm.style.display='block';
       // serveur envoie reveal_now
     } else {
@@ -806,7 +806,7 @@ function updateFoundScore(what){
   }
   updateHdr();renderPstrip();
   if(WS&&WS.readyState===1&&G_MULTI.code&&pts>0){
-    WS.send(JSON.stringify({type:'answer',points:pts,done:false}));
+    WS.send(JSON.stringify({type:'answer',points:pts,done:false,index:G.cq}));
   }
 }
 function addFoundTag(txt,type){
@@ -842,7 +842,7 @@ function doSub(v,byUser,src){
   var chip=document.querySelector('.pchip[data-n="'+G.ps+'"]');if(chip)chip.classList.add('ans');
   updateHdr();renderPstrip();
   if(WS&&WS.readyState===1&&G_MULTI.code){
-    WS.send(JSON.stringify({type:'answer',points:0,done:true}));
+    WS.send(JSON.stringify({type:'answer',points:0,done:true,index:G.cq}));
     var wm=$('wmsg');wm.textContent='En attente des autres joueurs…';wm.className='wmsg waiting';wm.style.display='block';
     // serveur envoie reveal_now
   } else {
@@ -941,14 +941,12 @@ function doReveal(){
   bl.textContent=isLast?'Résultats dans 4s…':'Prochaine question dans 5s…';
   fi.style.transition='none';fi.style.width='0%';
   requestAnimationFrame(function(){fi.style.transition='width '+(delay/1000)+'s linear';fi.style.width='100%'});
+  // Multijoueur : c'est le serveur qui envoie la manche suivante (next_question)
+  if(WS&&WS.readyState===1&&G_MULTI.code)return;
   setTimeout(function(){
     G.cq++;G.pl.forEach(function(p){p.ans=false});
     G.ans=false;G.foundA=false;G.foundT=false;G._revealed=false;
-    if(WS&&WS.readyState===1&&G_MULTI.code){
-      WS.send(JSON.stringify({type:'reveal_done',index:G.cq-1}));
-    } else {
-      if(G.cq>=G.qs.length)doResults();else doBreak(G.cq,doQ);
-    }
+    if(G.cq>=G.qs.length)doResults();else doBreak(G.cq,doQ);
   },delay);
 }
 function doResults(){
@@ -1294,9 +1292,12 @@ function connectWS(code) {
       updateHdr(); renderPstrip();
     }
     if (msg.type === 'reveal_now') {
+      if (typeof msg.index === 'number' && msg.index !== G.cq) return;   // autre manche : ignore
       if(!G._revealed){if(G._questionActive){G._revealed=true;doReveal();}else{G._pendingReveal=true;}}
     }
     if (msg.type === 'next_question') {
+      if (msg.index <= G._multiIdx) return;   // deja appliquee
+      G._multiIdx = msg.index;
       var wm2=$('wmsg');if(wm2){wm2.style.display='none';wm2.className='wmsg';}
       G.cq = msg.index;
       G.pl.forEach(function(p){ p.ans = false; });
@@ -1388,7 +1389,7 @@ function launchMultiGame(trackOrder) {
   } else {
     G.pl = [{ id: G_MULTI.playerId, n: G.ps, av: '🎵', s: 0, c: 0, me: true, ans: false }];
   }
-  G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false;
+  G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false; G._multiIdx = 0;
   showPage('s-game'); setAM('free'); updateHdr(); renderPstrip(); doCD();
 }
 
