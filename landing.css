@@ -1035,47 +1035,62 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-s05 .nb-pill--cta:hover{background:#fff;color:var(--ink)}
 
 /* ═══════════════════════════════════════════════════════════════
-   FOOTER
+   FOOTER : carte creme sur le brun de la derniere section
    ═══════════════════════════════════════════════════════════════ */
-.nb-footer{
-  position:relative;background:var(--neb-black);color:#fff;
-  padding:8vw var(--neb-margin) 40px;font-family:var(--f-text);
+.nb-footer{background:var(--fond-brun);color:var(--cream);padding:0 var(--neb-margin) 28px;font-family:var(--f-text)}
+.nb-ft-card{
+  background:var(--cream);color:var(--ink);border-radius:40px;overflow:hidden;
+  padding:56px 48px 0;
 }
-.nb-footer .nb-footer-hello{
-  margin:0 0 6vw;font-family:var(--f-display);font-weight:800;
-  font-size:6vw !important;line-height:1 !important;letter-spacing:-.03em;color:#fff;
+.nb-ft-top{display:grid;grid-template-columns:1.3fr 1fr 1.2fr 1.2fr;gap:40px;align-items:start}
+.nb-footer p{margin:0}
+.nb-ft-tagline{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,2vw,30px);line-height:1.1;letter-spacing:-.02em;max-width:300px}
+.nb-ft-col{display:flex;flex-direction:column;align-items:flex-start;gap:10px;width:auto;max-width:none;padding:0;justify-content:flex-start}
+.nb-ft-h{font-size:13px;font-weight:600;color:rgba(45,16,2,.55);margin-bottom:6px !important}
+.nb-ft-col a,.nb-ft-linkbtn{
+  color:var(--ink);font-size:16px;font-weight:600;text-decoration:none;
+  background:none;border:none;padding:0;cursor:pointer;font-family:inherit;
 }
-.nb-footer-grid{
-  display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:32px;
-  padding-top:32px;border-top:1px solid rgba(255,255,255,.14);
+.nb-ft-col a:hover,.nb-ft-linkbtn:hover{text-decoration:underline;text-underline-offset:4px}
+.nb-ft-socials{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.nb-ft-socials .nb-ft-social{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 10px;border-radius:999px;
+  background:var(--ink);color:var(--cream);font-size:13px;
 }
-.nb-footer-logo{display:block;height:44px;width:auto;margin-bottom:16px}
-.nb-footer p{margin:0;font-size:14px;line-height:1.5}
-.nb-footer-brand span{color:rgba(255,255,255,.6)}
-.nb-footer-social p:first-child{color:rgba(255,255,255,.6);margin-bottom:8px}
-.nb-footer-handle{display:flex;align-items:center;gap:10px;font-weight:600}
-.nb-footer-rs{
-  /* /img/rs.png (6250 px) n'a ses icones que dans la bande x 1693-4830,
-     y 2729-3520 : on affiche uniquement cette bande, a --rs-h de haut */
-  --rs-h:24px;
-  display:block;flex-shrink:0;overflow:hidden;
-  height:var(--rs-h);width:calc(var(--rs-h) * 3137 / 791);
+.nb-ft-socials .nb-ft-social:hover{background:var(--accent);text-decoration:none}
+.nb-ft-social svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nb-ft-social svg .fill{fill:currentColor;stroke:none}
+.nb-ft-play{justify-self:end;text-align:right}
+.nb-ft-playbtn{
+  display:inline-flex;align-items:center;gap:14px;padding:0;border:none;background:none;cursor:pointer;
+  font-family:var(--f-display);font-weight:800;font-size:clamp(40px,4.2vw,64px);line-height:1;color:var(--accent);
 }
-.nb-footer-rs img{
-  display:block;max-width:none;
-  width:calc(var(--rs-h) * 6250 / 791);height:auto;
-  margin:calc(var(--rs-h) * -2729 / 791) 0 0 calc(var(--rs-h) * -1693 / 791);
+.nb-ft-arrow{
+  width:.8em;height:.8em;border-radius:50%;background:var(--accent);
+  display:inline-flex;align-items:center;justify-content:center;transition:transform .25s ease;
 }
-.nb-footer-links{display:flex;flex-direction:column;align-items:flex-start;gap:10px;width:auto;max-width:none;padding:0;justify-content:flex-start;text-align:left}
-.nb-footer-links a{color:#fff;font-size:14px;text-decoration:none}
-.nb-footer-links a:hover{text-decoration:underline;text-underline-offset:4px}
-.nb-footer-links a:focus-visible{outline:2px solid #fff;outline-offset:3px}
-.nb-footer-copy{margin-top:40px !important;color:rgba(255,255,255,.45);font-size:13px !important}
+.nb-ft-arrow svg{width:50%;height:50%;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.nb-ft-playbtn:hover .nb-ft-arrow{transform:rotate(45deg)}
+.nb-ft-playbtn:focus-visible,.nb-ft-col a:focus-visible,.nb-ft-linkbtn:focus-visible,.nb-ft-social:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.nb-ft-sub{margin-top:10px !important;font-size:14px;color:rgba(45,16,2,.6)}
+/* Mot geant coupe par le bas de la carte */
+.nb-ft-word{display:block;width:100%;height:auto;margin:56px 0 -6%;color:var(--ink)}
+.nb-ft-bottom{
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding-top:22px;font-size:13px;color:rgba(253,221,184,.6);
+}
+.nb-ft-bottom a{color:inherit;text-decoration:none}
+.nb-ft-bottom a:hover{color:var(--cream);text-decoration:underline;text-underline-offset:3px}
+.nb-ft-time{font-variant-numeric:tabular-nums;color:var(--cream)}
 
 @media (max-width:760px){
   .nb-s05-cta{margin:40px 16px 0}
   .nb-pill--xl{width:100%;padding:20px 0}
-  .nb-footer{padding:64px 16px 32px}
-  .nb-footer .nb-footer-hello{font-size:11vw !important;margin-bottom:40px}
-  .nb-footer-grid{grid-template-columns:1fr;gap:28px}
+  .nb-footer{padding:0 12px 24px}
+  .nb-ft-card{border-radius:28px;padding:36px 22px 0}
+  .nb-ft-top{grid-template-columns:1fr;gap:32px}
+  .nb-ft-socials{flex-direction:row;flex-wrap:wrap}
+  .nb-ft-play{justify-self:start;text-align:left}
+  .nb-ft-word{margin-top:40px}
+  .nb-ft-bottom{flex-direction:column;gap:8px}
 }
