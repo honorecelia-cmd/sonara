@@ -313,4 +313,22 @@ server.on('upgrade', function(req, socket) {
   });
 });
 
+// ── Conservation des scores : 12 mois apres la partie ──
+// Au demarrage puis une fois par jour. Un score sans date (ancien format)
+// recoit la date du jour : il est conserve 12 mois a partir d'aujourd'hui.
+function purgeScores() {
+  var now = Date.now(), changed = false;
+  var limit = new Date(now); limit.setMonth(limit.getMonth() - 12);
+  var cutoff = limit.getTime();
+  var list = store.data.leaderboard || [];
+  list.forEach(function (e) { if (!e.at) { e.at = now; changed = true; } });
+  var kept = list.filter(function (e) { return e.at >= cutoff; });
+  if (kept.length !== list.length) changed = true;
+  store.data.leaderboard = kept;
+  if (changed) store.save();
+  return list.length - kept.length;
+}
+purgeScores();
+setInterval(purgeScores, 24 * 60 * 60 * 1000);
+
 server.listen(PORT, function(){ console.log('SONARA on port ' + PORT); });
