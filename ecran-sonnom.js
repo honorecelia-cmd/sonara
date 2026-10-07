@@ -14,7 +14,7 @@
   var $=function(id){return document.getElementById(id);};
   var flow=F.state, MODES=F.modes, idxOf=F.indexOf;
   var MODE_HELP={
-    solo:'Dix extraits rien que pour toi, à ton rythme.',
+    solo:'',
     multi:'Tous en même temps, avec un code de salle.',
     entre:'Un lien à envoyer, chacun joue quand il veut.'
   };
@@ -40,7 +40,7 @@
   var modeBtns=[].slice.call(scr.querySelectorAll('[data-sn-mode]'));
   var STORE='sonara-son-nom', MAX=16;
   var PREFIXES=['Mister','Miss','Reine du','Roi du','DJ'];
-  var stored='', showError=false;
+  var showError=false;
 
   // Espaces en trop supprimes, caracteres de controle retires
   function clean(v){return String(v||'').replace(/[\u0000-\u001F\u007F]/g,'').replace(/\s+/g,' ').trim();}
@@ -49,8 +49,7 @@
   function load(){try{return clean(window.localStorage.getItem(STORE));}catch(e){return '';}}
   function save(v){try{window.localStorage.setItem(STORE,v);}catch(e){}}
 
-  // Compteur discret ; message seulement en cas d'erreur (ou pour dire que
-  // le champ est prerempli avec le dernier son-nom de l'appareil)
+  // Compteur discret ; message seulement en cas d'erreur
   function check(){
     var v=clean(inp.value), n=size(v), ok=valid(v);
     if(ok)showError=false;
@@ -58,9 +57,7 @@
     count.textContent=n+'/'+MAX;
     inp.setAttribute('aria-invalid',String(showError));
     hint.classList.toggle('is-error',showError);
-    if(showError)hint.textContent='2 caractères minimum.';
-    else if(stored&&v===stored)hint.textContent='Ton dernier son-nom';
-    else hint.textContent='';
+    hint.textContent=showError?'2 caractères minimum.':'';
   }
   inp.addEventListener('input',check);
   inp.addEventListener('blur',function(){
@@ -89,6 +86,7 @@
       b.tabIndex=on?0:-1;
     });
     modeHelp.textContent=MODE_HELP[flow.mode];
+    modeHelp.hidden=!MODE_HELP[flow.mode];   // pas de description : rien d'affiche
     play.textContent=MODE_CTA[flow.mode];
     var multi=flow.mode==='multi';
     join.setAttribute('aria-hidden',String(!multi));
@@ -126,8 +124,7 @@
     if(flow.preset)mNote.textContent='Mode '+MODES[flow.preset]+' choisi depuis le menu. Tu peux encore le changer.';
     // Valeur preremplie : dernier son-nom de l'appareil ; sinon le champ est
     // vide et affiche un exemple (placeholder)
-    stored=load();
-    if(!clean(inp.value))inp.value=stored;
+    if(!clean(inp.value))inp.value=load();
     var ex=EXEMPLES[u.slug]||EXEMPLES.mix;
     inp.placeholder='Ex. '+ex[Math.floor(Math.random()*ex.length)];
     showError=false;
