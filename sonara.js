@@ -181,7 +181,7 @@ var THEMES = {
     {t:'Y\'a quoi',a:'N\'ken',preview:'/audio/Nken-Ya_quoi.mp3',cover:'',e:'⚡'},
     {t:'Jetski',a:'Meryl',preview:'/audio/Meryl-Jetski.mp3',cover:'',e:'⚡'},
     {t:'Grosse bécane',a:'Latop',preview:'/audio/Latop-Grosse_becane.mp3',cover:'',e:'⚡'},
-    {t:'Batché a boy',a:'Krissy',preview:'/audio/Krissy-Batche_a_boy.mp3',cover:'',e:'⚡'},
+    {t:'Batché a boy',a:'Krissy',preview:'/audio/Kryssy-Batche_a_boy.mp3',cover:'',e:'⚡'},
     {t:'Manawa',a:'Aknose',preview:'/audio/Aknose-Manawa.mp3',cover:'',e:'⚡'},
     {t:'Tic',a:'Maureen',preview:'/audio/Maureen-Tic.mp3',cover:'',e:'⚡'},
     {t:'Pum fat',a:'Maureen',preview:'/audio/Maureen-Pum_fat.mp3',cover:'',e:'⚡'},
