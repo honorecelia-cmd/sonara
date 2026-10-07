@@ -989,18 +989,38 @@ function doResults(){
 // ── Classement persistant : enregistre le score et affiche le top ──
 function submitScore(){
   var gt=$('glb-top');if(gt)gt.innerHTML='';
+  G._topHtml='';clearTimeout(G._topRefresh);
   fetch('/score',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({name:G.ps,score:G.sc,theme:themeSlug()})})
   .then(function(r){return r.json();})
   .then(function(d){
-    if(!gt||!d||!d.top||!d.top.length)return;
-    var rows=d.top.map(function(e,i){
-      var me=e.name===G.ps&&e.score===G.sc;
-      return '<div class="glb-row'+(me?' me':'')+'"><span class="glb-rk">'+(i+1)+'</span>'+
-        '<span class="glb-nm">'+esc(e.name)+'</span><span class="glb-sc">'+e.score+'</span></div>';
-    }).join('');
-    gt.innerHTML='<div class="fig-section-lbl">MEILLEURS SCORES · '+esc(G.theme)+'</div>'+rows;
+    if(d&&d.top)renderTop(d.top,false);
   }).catch(function(){});
+  // Les autres joueurs envoient leur score au meme moment : la liste recue
+  // ci-dessus peut ne pas les contenir encore. On la recharge 2,5 s plus tard.
+  G._topRefresh=setTimeout(refreshTop,2500);
+}
+// Liste "Meilleurs scores" (reponse de /score ou de /leaderboard) ; fade :
+// fondu des lignes si la liste a change
+function renderTop(top,fade){
+  var gt=$('glb-top');if(!gt||!top||!top.length)return;
+  var rows=top.map(function(e,i){
+    var me=e.name===G.ps&&e.score===G.sc;
+    return '<div class="glb-row'+(me?' me':'')+'"><span class="glb-rk">'+(i+1)+'</span>'+
+      '<span class="glb-nm">'+esc(e.name)+'</span><span class="glb-sc">'+e.score+'</span></div>';
+  }).join('');
+  var html='<div class="fig-section-lbl">MEILLEURS SCORES · '+esc(G.theme)+'</div>'+rows;
+  if(html===G._topHtml)return;
+  G._topHtml=html;gt.innerHTML=html;
+  if(fade){gt.classList.remove('is-refresh');void gt.offsetWidth;gt.classList.add('is-refresh');}
+}
+// Rechargement de la liste (lecture seule), seulement si l'ecran de resultats est encore affiche
+function refreshTop(){
+  if(G.page!=='s-res')return;
+  fetch('/leaderboard?theme='+encodeURIComponent(themeSlug()))
+  .then(function(r){return r.json();})
+  .then(function(d){if(G.page==='s-res'&&d&&d.top)renderTop(d.top,true);})
+  .catch(function(){});
 }
 function doReplay(){sfxC();buildQs();G.sc=0;G.cb=0;G.mx=1;G.cq=0;G.ans=false;G.history=[];G.foundA=false;G.foundT=false;G.pl.forEach(function(p){p.s=0;p.c=0;p.ans=false});showPage('s-game');setAM(G.amode);updateHdr();renderPstrip();doCD()}
 function doQuit(){

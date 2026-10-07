@@ -332,6 +332,8 @@
 #s-res .glb-top .fig-section-lbl{margin:0 0 10px;font-size:12px;color:#fff;letter-spacing:0}
 #s-res .glb-row{border-radius:999px;padding-left:16px;padding-right:16px;background:rgba(255,255,255,.08);color:#fff}
 #s-res .glb-row.me{background:var(--cream);color:var(--ink)}
+/* Rechargement de la liste : fondu discret des lignes */
+#s-res .glb-top.is-refresh .glb-row{animation:rs-fade .5s var(--sn-ease) both}
 
 /* Mobile : colonne unique, podium au centre, classement dessous */
 @media (max-width:767px){
@@ -352,6 +354,6 @@
 }
 /* Sans animation : tout s'affiche directement */
 @media (prefers-reduced-motion:reduce){
-  .rs-band .nb-giant,.rs-step,.rs-step--1 .sn-avatar,.rs-step--1 .rs-score,.rs-solo,.rs-rest,.rs-btns,.rs-after{animation:none}
+  #s-res .glb-top.is-refresh .glb-row,.rs-band .nb-giant,.rs-step,.rs-step--1 .sn-avatar,.rs-step--1 .rs-score,.rs-solo,.rs-rest,.rs-btns,.rs-after{animation:none}
   .rs-step--1 .sn-avatar{box-shadow:0 0 0 2px var(--accent)}
 }
