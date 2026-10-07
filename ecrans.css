@@ -180,3 +180,132 @@
   .pc[data-step="1"] .pc-step2{transform:none}
   .pc-card .pc-play:not(:disabled):hover{transform:none}
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   RESULTATS (#s-res, ecran-resultats.js)
+   Fond : degrade du hero (sans respiration). Derriere : mosaique des
+   pochettes de la partie, voilees, devoilees en cascade. Devant : podium
+   qui monte (3e, 2e, puis 1er), puis le reste du classement.
+   Minutage : variables --d (delai) posees par ecran-resultats.js.
+   ═══════════════════════════════════════════════════════════════ */
+.page.rs{padding:0;align-items:stretch;background:var(--sn-ink);color:#fff;font-family:var(--f-text);overflow:hidden}
+.rs-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.rs-bg .nb-hero-bg{animation:none}            /* degrade fixe, sans halos animes */
+
+/* Mosaique : grille de pochettes carrees, voile #120706 a 55 % */
+.rs-mosaic{
+  position:absolute;left:0;right:0;top:0;z-index:0;pointer-events:none;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;
+  padding:14px;min-height:100vh;align-content:center;
+}
+.rs-tile{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--rs-c,var(--accent))}
+.rs-tile img{display:block;width:100%;height:100%;object-fit:cover}
+.rs-tile::after{content:"";position:absolute;inset:0;background:rgba(18,7,6,.55)}
+/* Devoilement : meme transition que la revelation en jeu (flou -> net) */
+.rs-tile > *{animation:sn-reveal var(--sn-dur-reveal) var(--sn-ease) var(--d,0ms) both}
+
+/* Contenu */
+.rs-main{
+  position:relative;z-index:2;width:100%;max-width:1040px;margin:0 auto;
+  display:flex;flex-direction:column;align-items:center;gap:22px;
+  padding:28px var(--neb-margin) 48px;min-height:100vh;justify-content:center;
+}
+.rs-top{display:flex;justify-content:center}
+.rs-top img{display:block;height:28px}
+.rs-head{text-align:center}
+.rs-head .pc-step{margin:0 0 6px}
+.rs-head h1{
+  margin:0;font-family:var(--f-display);font-weight:800;color:#fff;
+  font-size:clamp(30px,3.4vw,48px);line-height:.95;letter-spacing:-.03em;
+}
+.rs-msg{
+  display:inline-block;margin:12px 0 0;padding:7px 16px;border-radius:999px;
+  font-size:15px;line-height:1.4;color:#fff;
+  background:rgba(17,17,17,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+}
+.rs-msg:empty{display:none}
+#s-res .rs-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:0;max-width:none;width:auto}
+#s-res .rs-badges .bdg{
+  padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;line-height:1.2;color:#fff;
+  background:rgba(17,17,17,.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:none;
+}
+
+/* Podium : ordre visuel 2e, 1er, 3e ; ordre du DOM 1, 2, 3 */
+.rs-podium{display:flex;justify-content:center;align-items:flex-end;gap:14px;width:100%;max-width:640px;margin:0;padding:0;list-style:none}
+.rs-podium[hidden]{display:none}
+.rs-step{
+  flex:1 1 0;min-width:0;max-width:200px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;
+  padding:16px 10px 18px;border-radius:24px 24px 18px 18px;text-align:center;
+  background:rgba(17,17,17,.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;
+  animation:rs-rise .6s var(--sn-ease) var(--d,0ms) both;
+}
+.rs-step--1{order:2;height:270px;background:var(--cream);color:var(--ink);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.rs-step--2{order:1;height:226px}
+.rs-step--3{order:3;height:196px}
+.rs-rank{font-family:var(--f-display);font-weight:900;font-size:44px;line-height:.9}
+.rs-step .sn-avatar{width:48px;height:48px;font-size:20px}
+.rs-step--1 .sn-avatar{width:58px;height:58px;font-size:24px;animation:rs-ring .35s var(--sn-ease) var(--d-end,0ms) both}
+.rs-name{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:600}
+.rs-score{font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1}
+.rs-score small{font-family:var(--f-text);font-size:12px;font-weight:500;opacity:.8}
+/* Arrivee du 1er : leger pop du score + anneau orange, rien d'autre */
+.rs-step--1 .rs-score{animation:sn-pop var(--sn-dur-base) var(--sn-ease) var(--d-end,0ms) both}
+@keyframes rs-rise{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:none}}
+@keyframes rs-ring{from{box-shadow:0 0 0 0 var(--accent)}to{box-shadow:0 0 0 2px var(--accent)}}
+
+/* Solo : score en grand */
+.rs-solo{
+  text-align:center;padding:26px 40px 24px;border-radius:24px;
+  background:rgba(17,17,17,.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  animation:rs-rise .6s var(--sn-ease) var(--d,0ms) both;
+}
+.rs-solo[hidden]{display:none}
+.rs-solo-score{display:block;font-family:var(--f-display);font-weight:900;font-size:clamp(88px,12vw,160px);line-height:.85;letter-spacing:-.04em;color:var(--cream)}
+.rs-solo-pts{display:block;margin-top:6px;font-size:16px;font-weight:600}
+.rs-solo-found{margin:12px 0 0;font-size:15px;color:rgba(255,255,255,.88)}
+
+/* Reste du classement (4e et suivants) : lignes joueurs du kit, en fondu */
+.rs-rest{width:100%;max-width:480px;margin:0;padding:0;list-style:none;animation:rs-fade .5s var(--sn-ease) var(--d,0ms) both}
+.rs-rest:empty{display:none}
+.rs-rest .sn-player-row{background:rgba(17,17,17,.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.rs-rest .sn-player-row__rank{color:rgba(255,255,255,.75)}
+.rs-rest .sn-player-row__pts{color:rgba(255,255,255,.85)}
+@keyframes rs-fade{from{opacity:0}to{opacity:1}}
+
+/* Boutons : sur le degrade, pilules creme ; Partager en ghost */
+.rs-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;animation:rs-fade .5s var(--sn-ease) var(--d,0ms) both}
+.rs-btns .sn-btn{background:var(--cream);color:var(--ink)}
+.rs-btns .sn-btn:hover{background:var(--sn-white);color:var(--ink)}
+.rs-btns .sn-btn--ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.rs-btns .sn-btn--ghost:hover{background:rgba(255,255,255,.12);color:#fff}
+.rs-btns .sn-btn:focus-visible{outline:2px solid #fff}
+
+/* Meilleurs scores de l'univers (submitScore) */
+#s-res .glb-top{width:100%;max-width:480px;padding:0}
+#s-res .glb-top .fig-section-lbl{font-size:12px;color:#fff;letter-spacing:0}
+#s-res .glb-row{border-radius:999px;padding-left:16px;padding-right:16px}
+
+/* Mobile : podium au centre, mosaique 3 colonnes derriere, classement dessous */
+@media (max-width:767px){
+  .rs-mosaic{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:8px;min-height:0;align-content:start}
+  .rs-main{padding:20px 16px 40px;gap:18px;justify-content:flex-start}
+  .rs-podium{gap:8px}
+  .rs-step{padding:12px 6px 14px;border-radius:20px 20px 14px 14px}
+  .rs-step--1{height:220px}
+  .rs-step--2{height:186px}
+  .rs-step--3{height:162px}
+  .rs-rank{font-size:34px}
+  .rs-step .sn-avatar{width:40px;height:40px;font-size:17px}
+  .rs-step--1 .sn-avatar{width:48px;height:48px;font-size:20px}
+  .rs-name{font-size:13px}
+  .rs-score{font-size:19px}
+}
+/* Sans animation : tout s'affiche directement */
+@media (prefers-reduced-motion:reduce){
+  .rs-tile > *,.rs-step,.rs-step--1 .sn-avatar,.rs-step--1 .rs-score,.rs-solo,.rs-rest,.rs-btns{animation:none}
+  .rs-step--1 .sn-avatar{box-shadow:0 0 0 2px var(--accent)}
+}

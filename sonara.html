@@ -13,7 +13,6 @@
 </head>
 <body>
 <canvas id="bg"></canvas>
-<div class="cfbox" id="cfbox"></div>
 
 <!-- ═══ LANDING ═══
      Refonte d'apres la maquette Nebula : voir nebula-analyse-pour-sonara.md
@@ -757,42 +756,33 @@
 </section>
 
 <!-- ═══ RESULTS ═══ -->
-<section class="page" id="s-res">
-  <div class="fignav"><img src="/img/logo_sonara.png" class="fig-logo" alt="SONARA"><div class="fig-online"><span class="fig-odot"></span><span class="online-count">246 joueurs en ligne</span></div></div>
-  <div class="fig-res-head">
-    <div class="fig-res-theme" id="fig-res-theme">BLINDTEST</div>
-    <div class="fig-res-sub">Résultats</div>
-    <div class="fig-res-end">Fin de partie</div>
-    <div class="rmsg" id="rmsg"></div>
-  </div>
-  <div class="pod" id="pod"></div>
-  <div class="rtbl" id="rtbl"></div>
-  <div class="bdgs" id="bdgs"></div>
-  <div class="glb-top" id="glb-top"></div>
-  <div class="fig-countdown" id="fig-countdown">Prochaine partie dans<br><span id="fig-cdown-num">5, 4, 3, 2, 1</span></div>
-  <div class="fig-univ-block">
-    <div class="fig-univ-title">Changer d'univers</div>
-    <div class="fig-univ-sub">et tester vos potes sur des classiques caribéens</div>
-    <div class="fig-mini-grid">
-      <div class="fig-mini-tc" onclick="selectSoloTheme('kompa')"><img src="/img/cover_kompa.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Kompa</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('zouk')"><img src="/img/cover_zouk.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Zouk</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('mix')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Mix</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('reggae')"><img src="/img/cover_reggae.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Reggae</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('dancehall')"><img src="/img/cover_dancehall.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Dancehall</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('trap')"><img src="/img/cover_dancehall.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Trap</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('rap')"><img src="/img/cover_rap.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Rap</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('soca')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Soca</span></div>
+<!-- ═══ RESULTATS (ecrans.css, ecran-resultats.js) ═══
+     Mosaique des pochettes de la partie + podium qui monte. Les id rmsg,
+     pod, rtbl, bdgs, glb-top, btn-* sont remplis ou cables par sonara.js. -->
+<section class="page rs" id="s-res" aria-labelledby="rs-t">
+  <div class="rs-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
+  <div class="rs-mosaic" id="rs-mosaic" aria-hidden="true"></div>
+  <div class="rs-main">
+    <div class="rs-top"><img src="/img/logo_sonara.svg" alt="sonara"></div>
+    <header class="rs-head">
+      <p class="pc-step" id="fig-res-theme"></p>
+      <h1 id="rs-t">Fin de partie</h1>
+      <p class="rs-msg" id="rmsg"></p>
+    </header>
+    <div class="rs-badges" id="bdgs"></div>
+    <div class="rs-solo" id="rs-solo" hidden>
+      <span class="rs-solo-score" id="rs-solo-score">0</span>
+      <span class="rs-solo-pts">points</span>
+      <p class="rs-solo-found" id="rs-solo-found"></p>
     </div>
-    <div class="fig-mini-tc fig-mini-solo" onclick="showEntreProches()"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Entre proches</span></div>
-  </div>
-  <div class="rbtns">
-    <button class="rb m" id="btn-replay">Rejouer</button>
-    <button class="rb s" id="btn-home" style="display:none">Changer d'univers</button>
-    <button class="rb s" id="btn-share" style="display:none">Partager</button>
-  </div>
-  <div class="ld-footer">
-    <div class="ld-suivez-line">Suivez-nous :</div>
-    <div class="ld-handle-line"><img src="/img/rs.png" class="ld-rs" alt=""><span class="ld-handle">sonara_blindtest</span></div>
+    <ol class="rs-podium" id="pod" aria-label="Podium"></ol>
+    <ol class="rs-rest" id="rtbl" aria-label="Suite du classement"></ol>
+    <div class="rs-btns" id="rs-btns">
+      <button class="sn-btn" type="button" id="btn-replay">Rejouer</button>
+      <button class="sn-btn" type="button" id="btn-home">Changer d'univers</button>
+      <button class="sn-btn sn-btn--ghost" type="button" id="btn-share">Partager</button>
+    </div>
+    <div class="glb-top" id="glb-top"></div>
   </div>
 </section>
 
@@ -955,6 +945,7 @@
 <script src="/sonara-kit.js"></script>
 <script src="/ecran-univers.js"></script>
 <script src="/ecran-sonnom.js"></script>
+<script src="/ecran-resultats.js"></script>
 <script src="/footer.js"></script>
 </body>
 </html>

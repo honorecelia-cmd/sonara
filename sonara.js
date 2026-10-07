@@ -961,7 +961,7 @@ function universeCover(key){
   return null;
 }
 function doResults(){
-  clearInterval(G.ti);stopA();showPage('s-res');doConf();
+  clearInterval(G.ti);stopA();showPage('s-res');
   G.pl.forEach(function(p){if(p.me)p.s=G.sc;});
   var sorted=G.pl.slice().sort(function(a,b){return b.s-a.s});G.res=sorted;
   var me=sorted.filter(function(p){return p.me})[0]||sorted[0];var mr=sorted.indexOf(me)+1;
@@ -975,12 +975,8 @@ function doResults(){
   else if(pct>0)rmsgTxt=me.n+', continue comme ça !';
   else rmsgTxt=me.n+', la prochaine fois sera la bonne !';
   $('rmsg').textContent=rmsgTxt;
-  var top=sorted.slice(0,Math.min(3,sorted.length));
-  var order=top.length>=2?[top[1],top[0],top[2]].filter(Boolean):[top[0]];
-  var cls=top.length>=2?['p2','p1','p3']:['p1'],ht=top.length>=2?['ph2','ph1','ph3']:['ph1'];
-  var pns=top.length>=2?['2ème','1er','3ème']:['1er'];
-  $('pod').innerHTML=order.map(function(p,i){return '<div class="pcol '+ht[i]+'"><div class="pcard '+cls[i]+'">'+'<div class="pav">'+ini(p.n)+'</div><div class="pnm">'+p.n+(p.me?' (toi)':'')+'</div><div class="psc">'+(p.me?G.sc:p.s)+'</div><div class="prk">'+pns[i]+'</div></div></div>'}).join('');
-  $('rtbl').innerHTML='<div class="rtblh"><span>#</span><span></span><span>Joueur</span><span>Score</span><span>Trouvés</span></div>'+sorted.map(function(p,i){return '<div class="rtblr'+(p.me?' me':'')+'"><div class="rrk'+(i===0?' g':'')+'">'+(i+1)+'</div><div class="rav2">'+ini(p.n)+'</div><div class="rnm2">'+p.n+(p.me?' (toi)':'')+'</div><div class="rsc2">'+(p.me?G.sc:p.s)+'</div><div class="rct">'+((p.me?(G.pl.filter(function(x){return x.me})[0]||{}).c:p.c)||0)+'/'+G.qs.length+'</div></div>'}).join('');
+  // Affichage (mosaique, podium, classement) : ecran-resultats.js
+  if(window.SonaraResultats)SonaraResultats.render(sorted);
   var mc=(G.pl.filter(function(p){return p.me})[0]||{}).c||0,pos=sorted.findIndex(function(p){return p.me}),bg=[];
   if(pos===0)bg.push('Sé mwen ki win !');
   if(mc===G.qs.length)bg.push('Kokiy : 100 % !');
@@ -1006,30 +1002,6 @@ function submitScore(){
     gt.innerHTML='<div class="fig-section-lbl">MEILLEURS SCORES · '+esc(G.theme)+'</div>'+rows;
   }).catch(function(){});
 }
-function doConf(){
-  var w=$('cfbox');w.innerHTML='';
-  // Confettis colorés stylés
-  var colors=['#B3FF53','#FF4E6A','#FF9F43','#60A5FA','#A78BFA','#53FFD4','#FFD700','#FF6B6B'];
-  // Confettis géométriques
-  for(var i=0;i<80;i++){
-    var el=document.createElement('div');
-    var color=colors[Math.floor(Math.random()*colors.length)];
-    var size=6+Math.random()*10;
-    var left=Math.random()*100;
-    var delay=Math.random()*1.5;
-    var dur=2.5+Math.random()*2;
-    var rotate=Math.random()*720;
-    el.style.cssText='position:absolute;left:'+left+'%;top:-20px;width:'+size+'px;height:'+size+'px;background:'+color+';border-radius:'+(Math.random()>0.5?'50%':'2px')+';animation:cffall '+dur+'s ease '+delay+'s forwards;transform:rotate('+rotate+'deg);opacity:0.9;';
-    w.appendChild(el);
-  }
-  // Message de victoire au centre
-  var msg=document.createElement('div');
-  msg.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:MuseoModerno,sans-serif;font-size:clamp(32px,8vw,64px);font-weight:800;color:#fff;z-index:301;pointer-events:none;white-space:nowrap;';
-  msg.textContent='Bravo !';
-  w.appendChild(msg);
-  setTimeout(function(){w.style.transition='opacity .6s';w.style.opacity='0';},2200);
-  setTimeout(function(){w.innerHTML='';w.style.opacity='';w.style.transition='';},2900);
-}
 function doReplay(){sfxC();buildQs();G.sc=0;G.cb=0;G.mx=1;G.cq=0;G.ans=false;G.history=[];G.foundA=false;G.foundT=false;G.pl.forEach(function(p){p.s=0;p.c=0;p.ans=false});showPage('s-game');setAM(G.amode);updateHdr();renderPstrip();doCD()}
 function doQuit(){
   // Confirmer si en pleine partie
@@ -1043,7 +1015,6 @@ function doQuit(){
 function doHome(){
   sfxC();
   clearInterval(G.ti);stopA();
-  var cf=$('cfbox');if(cf)cf.innerHTML='';
   // Reset état jeu
   G.ans=false;G.foundA=false;G.foundT=false;
   // Afficher landing, masquer tout le reste
