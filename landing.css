@@ -14,12 +14,14 @@
   --neb-core:var(--sn-hero-core);
   --neb-hot:var(--sn-hero-hot);
   --neb-peach:var(--sn-peach);
-  --neb-cream:var(--sn-paper);
-  --neb-black:var(--sn-black);
-  --neb-card:var(--sn-card);
-  --neb-ctrl:var(--sn-ctrl);
-  --neb-btn-cream:var(--sn-cream-btn);
-  --neb-orange:var(--sn-orange);
+  /* Teintes propres a la landing validee (hors kit, a ne pas reprendre
+     dans les ecrans du jeu) */
+  --neb-cream:#CCC5B8;
+  --neb-black:#080808;
+  --neb-card:#111111;
+  --neb-ctrl:#1F1F1F;
+  --neb-btn-cream:#E9E1DB;
+  --neb-orange:#E85E16;
   --neb-margin:4.85vw;
   --f-display:var(--sn-font-display);  /* titres */
   --f-text:var(--sn-font-body);

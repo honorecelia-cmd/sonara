@@ -15,6 +15,18 @@
   }
 
   var SonaraKit={
+    // Rond de joueur : premiere lettre du son-nom (sans symbole), "?" si vide
+    initial:function(name){
+      var m=String(name||'').trim().match(/[\p{L}\p{N}]/u);
+      return m?m[0].toLocaleUpperCase('fr'):'?';
+    },
+    // Remplit un .sn-avatar avec l'initiale et le nom complet pour les lecteurs d'ecran
+    avatar:function(el,name){
+      if(!el)return;
+      el.textContent=SonaraKit.initial(name);
+      el.setAttribute('aria-hidden','true');
+      el.title=String(name||'');
+    },
     // Cascade d'apparition : numerote les enfants (--sn-i) d'un conteneur .sn-stagger
     stagger:function(container){
       if(!container)return;
