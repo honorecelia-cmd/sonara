@@ -12,8 +12,11 @@
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
 
   // ── 1. Parcours : "Jouer" mene au choix de l'univers (ecrans.js) ──
+  // Un univers affiche dans la section 03 (a l'ecran) est preselectionne
   function play(opts){
     closeMenus();
+    opts=opts||{};
+    if(window.uvLanding&&uvLanding.inView())opts.theme=uvLanding.current().slug;
     if(window.SonaraFlow)SonaraFlow.toUnivers(opts);
   }
   landing.addEventListener('click',function(e){

@@ -52,22 +52,67 @@ function uvVinyl(u,spin){
     '<span class="vy-sheen"></span></span>';
 }
 
-(function(){
+// ── Composant carrousel des univers ─────────────────────────────
+// Utilise par la section 03 de la landing et par l'ecran "Choisis ton
+// univers" du parcours (ecran-univers.js). Construit lui-meme sa scene
+// (aplat, nom geant, vinyles) et son interface (fleches, compteur,
+// bouton, pastilles) dans `sec` ; le reste du balisage (titre, panneau
+// "Decouvrir") vient de la page.
+// Options :
+//   auto     defilement automatique + bouton pause (landing)
+//   panel    panneau "Decouvrir" present dans `sec` (landing)
+//   cta      libelle du bouton sous le vinyle ("Découvrir", "Choisir cet univers")
+//   onCta(u)         clic sur ce bouton (defaut : ouvrir le panneau)
+//   onCenter(u)      clic sur le vinyle central
+//   onSide(u,dir)    clic sur un vinyle voisin (dir -1 ou 1)
+//   active()         le clavier pilote-t-il ce carrousel ? (defaut : section a l'ecran)
+//   centerLabel, ctaLabel : debut des aria-label du vinyle et du bouton
+// Retourne {current, index, setIndex, inView, go}.
+function uvSkeleton(o){
+  var n=UNIVERS.length, total=(n<10?'0':'')+n;
+  var chev=function(d){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+d+'"/></svg>';};
+  return {
+    back:'<div class="uv-bg"></div><p class="uv-giant" aria-hidden="true"></p>',
+    front:
+      '<div class="uv-stage">'+
+        '<div class="uv-side uv-side--prev" aria-hidden="true"></div>'+
+        '<div class="uv-side uv-side--next" aria-hidden="true"></div>'+
+        '<button class="uv-center" type="button"><span class="uv-flip"></span></button>'+
+        '<div class="uv-sleeve" aria-hidden="true"></div>'+
+      '</div>'+
+      '<div class="uv-ui">'+
+        '<button class="uv-arrow uv-arrow--prev" type="button" aria-label="Univers précédent">'+chev('M15 5l-7 7 7 7')+'</button>'+
+        '<button class="uv-arrow uv-arrow--next" type="button" aria-label="Univers suivant">'+chev('M9 5l7 7-7 7')+'</button>'+
+        '<div class="uv-countbar">'+
+          '<p class="uv-count" aria-live="off"><b>01</b><span>/ '+total+'</span></p>'+
+          (o.auto?'<button class="uv-auto" type="button" aria-pressed="false" aria-label="Mettre en pause le défilement automatique">'+
+            '<svg class="uv-ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>'+
+            '<svg class="uv-ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg></button>':'')+
+        '</div>'+
+        '<button class="nb-pill uv-discover" type="button">'+uvEsc(o.cta||'Découvrir')+'</button>'+
+        '<nav class="uv-tabs" aria-label="Choisir un univers"></nav>'+
+      '</div>'
+  };
+}
+function uvCarrousel(sec,o){
   'use strict';
-  var sec=document.getElementById('univers');
-  if(!sec)return;
+  o=o||{};
   var N=UNIVERS.length;
+  var sk=uvSkeleton(o), panelEl=sec.querySelector('.uv-panel');
+  sec.insertAdjacentHTML('afterbegin',sk.back);
+  if(panelEl)panelEl.insertAdjacentHTML('beforebegin',sk.front);
+  else sec.insertAdjacentHTML('beforeend',sk.front);
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
   var mobile=window.matchMedia('(max-width: 767px)');
   var EASE='cubic-bezier(.65,0,.35,1)';
-  var $=function(id){return document.getElementById(id);};
-  var bg=$('uv-bg'), giant=$('uv-giant'), center=$('uv-center'), flip=$('uv-flip');
-  var prevVy=$('uv-prev-vy'), nextVy=$('uv-next-vy'), sleeve=$('uv-sleeve'), ui=$('uv-ui');
-  var num=$('uv-num'), discover=$('uv-discover'), panel=$('uv-panel');
-  var pTitle=$('uv-p-title'), pMeta=$('uv-p-meta'), pText=$('uv-p-text'), pInfos=$('uv-p-infos');
-  var pPlay=$('uv-play'), pBack=$('uv-back');
+  var q=function(s){return sec.querySelector(s);};
+  var bg=q('.uv-bg'), giant=q('.uv-giant'), center=q('.uv-center'), flip=q('.uv-flip');
+  var prevVy=q('.uv-side--prev'), nextVy=q('.uv-side--next'), sleeve=q('.uv-sleeve'), ui=q('.uv-ui');
+  var num=q('.uv-count b'), discover=q('.uv-discover'), panel=o.panel?panelEl:null;
+  var pTitle=q('.uv-p-title'), pMeta=q('.uv-p-meta'), pText=q('.uv-p-text'), pInfos=q('.uv-p-infos');
+  var pPlay=q('.uv-play'), pBack=q('.uv-back');
   var idx=0, busy=false, open=false, timers=[], held=[];
-  var countEl=$('uv-count'), autoBtn=$('uv-auto'), inView=false;
+  var countEl=q('.uv-count'), autoBtn=q('.uv-auto'), inView=false;
 
   // Precharge des pochettes
   UNIVERS.forEach(function(u){if(u.image){var im=new Image();im.src=u.image;}});
@@ -94,12 +139,12 @@ function uvVinyl(u,spin){
   function paintCenter(){
     var u=at(idx);
     flip.innerHTML=vinyl(u,true);
-    center.setAttribute('aria-label','Jouer en '+u.nom);
-    discover.setAttribute('aria-label','Découvrir l\'univers '+u.nom);
+    center.setAttribute('aria-label',(o.centerLabel||'Jouer en ')+u.nom);
+    discover.setAttribute('aria-label',(o.ctaLabel||'Découvrir l\'univers ')+u.nom);
   }
   function paintSides(){prevVy.innerHTML=vinyl(at(idx-1),false);nextVy.innerHTML=vinyl(at(idx+1),false);}
   // Rangee des 9 univers : l'actif est mis en evidence
-  var tabs=$('uv-tabs');
+  var tabs=q('.uv-tabs');
   tabs.innerHTML=UNIVERS.map(function(u,k){return '<button type="button" class="uv-tab" data-k="'+k+'">'+esc(u.nom)+'</button>';}).join('');
   tabs.addEventListener('click',function(e){
     var b=e.target.closest('.uv-tab');if(!b)return;
@@ -277,7 +322,7 @@ function uvVinyl(u,spin){
   var AUTO=UV_DELAI_AUTO, RESUME=4000;
   var userPaused=false, hovering=false, kbFocus=false, holdUntil=0, lastTurn=performance.now();
   function holdAuto(){holdUntil=performance.now()+RESUME;}
-  setInterval(function(){
+  if(o.auto)setInterval(function(){
     var now=performance.now();
     if(reduce.matches||userPaused||open||!inView||document.hidden||hovering||kbFocus||now<holdUntil){lastTurn=now;return;}
     if(busy)return;   // transition en cours : le delai continue de courir
@@ -287,12 +332,14 @@ function uvVinyl(u,spin){
   // occupe tout l'ecran, la souris y est presque toujours)
   // Survol : seulement le panneau ouvert (le vinyle central est au centre
   // de l'ecran, la souris y est souvent posee)
-  panel.addEventListener('mouseenter',function(){hovering=true;});
-  panel.addEventListener('mouseleave',function(){hovering=false;holdAuto();});
+  if(panel){
+    panel.addEventListener('mouseenter',function(){hovering=true;});
+    panel.addEventListener('mouseleave',function(){hovering=false;holdAuto();});
+  }
   sec.addEventListener('touchstart',holdAuto,{passive:true});
   sec.addEventListener('focusin',function(e){if(e.target.matches(':focus-visible'))kbFocus=true;});
   sec.addEventListener('focusout',function(e){if(!sec.contains(e.relatedTarget)){kbFocus=false;holdAuto();}});
-  autoBtn.addEventListener('click',function(){
+  if(autoBtn)autoBtn.addEventListener('click',function(){
     userPaused=!userPaused;
     autoBtn.setAttribute('aria-pressed',String(userPaused));
     autoBtn.setAttribute('aria-label',userPaused?'Reprendre le défilement automatique':'Mettre en pause le défilement automatique');
@@ -301,27 +348,26 @@ function uvVinyl(u,spin){
   // ── Interactions ─────────────────────────────────────────────
   sec.querySelector('.uv-arrow--prev').addEventListener('click',function(){go(-1);});
   sec.querySelector('.uv-arrow--next').addEventListener('click',function(){go(1);});
-  // Clic sur un vinyle : ecran Son-nom avec cet univers preselectionne
-  function playIn(u){if(window.SonaraFlow)SonaraFlow.toSonnom(u.slug);}
-  center.addEventListener('click',function(){if(!open&&!busy)playIn(at(idx));});
-  prevVy.addEventListener('click',function(){if(!open&&!busy)playIn(at(idx-1));});
-  nextVy.addEventListener('click',function(){if(!open&&!busy)playIn(at(idx+1));});
-  discover.addEventListener('click',openUniverse);
-  pBack.addEventListener('click',closeUniverse);
-  pPlay.addEventListener('click',function(){
-    playIn(at(idx));
-  });
-  // Clic hors panneau (ni pochette, ni vinyle) : fermer
-  sec.addEventListener('click',function(e){
-    if(!open||busy)return;
-    if(panel.contains(e.target)||sleeve.contains(e.target)||center.contains(e.target))return;
-    closeUniverse();
-  });
+  // Clics sur les vinyles et le bouton : comportement fourni par la page
+  center.addEventListener('click',function(){if(!open&&!busy&&o.onCenter)o.onCenter(at(idx));});
+  prevVy.addEventListener('click',function(){if(!open&&!busy&&o.onSide)o.onSide(at(idx-1),-1);});
+  nextVy.addEventListener('click',function(){if(!open&&!busy&&o.onSide)o.onSide(at(idx+1),1);});
+  discover.addEventListener('click',function(){if(o.onCta){if(!busy)o.onCta(at(idx));}else openUniverse();});
+  if(panel){
+    pBack.addEventListener('click',closeUniverse);
+    pPlay.addEventListener('click',function(){if(o.onCenter)o.onCenter(at(idx));});
+    // Clic hors panneau (ni pochette, ni vinyle) : fermer
+    sec.addEventListener('click',function(e){
+      if(!open||busy)return;
+      if(panel.contains(e.target)||sleeve.contains(e.target)||center.contains(e.target))return;
+      closeUniverse();
+    });
+  }
   // Clavier : fleches quand la section est a l'ecran, Echap pour fermer
   new IntersectionObserver(function(es){inView=es[0].intersectionRatio>=.5;},{threshold:[0,.5,1]}).observe(sec);
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape'&&open){closeUniverse();return;}
-    if(!inView||open)return;
+    if(!(o.active?o.active():inView)||open)return;
     var tag=(document.activeElement&&document.activeElement.tagName)||'';
     if(tag==='INPUT'||tag==='TEXTAREA')return;
     if(e.key==='ArrowLeft'){e.preventDefault();go(-1);}
@@ -338,4 +384,26 @@ function uvVinyl(u,spin){
 
   bg.style.transitionDuration=UV_DUREE_TRANSITION+'ms';
   paintAll();
+  return {
+    current:function(){return at(idx);},
+    index:function(){return idx;},
+    // Place le carrousel sur un univers, sans animation
+    setIndex:function(k){
+      if(open)return;
+      [flip,giant,prevVy,nextVy].forEach(function(el){el.getAnimations().forEach(function(a){a.cancel();});});
+      busy=false;idx=(k+N)%N;paintAll();
+    },
+    inView:function(){return inView;},
+    go:function(dir){go(dir);}
+  };
+}
+
+// ── Section 03 de la landing ─────────────────────────────────────
+(function(){
+  var sec=document.getElementById('univers');
+  if(!sec)return;
+  // Clic sur un vinyle (ou "Jouer en ..." du panneau) : parcours, ecran
+  // Son-nom avec cet univers preselectionne
+  function playIn(u){if(window.SonaraFlow)SonaraFlow.toSonnom(u.slug);}
+  window.uvLanding=uvCarrousel(sec,{auto:true,panel:true,cta:'Découvrir',onCenter:playIn,onSide:playIn});
 })();

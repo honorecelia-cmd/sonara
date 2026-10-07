@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    SONARA, ecrans du parcours refaits avec le kit (sonara-kit.css)
-   1. Choix de l'univers (#s-univers) : aplat brun, carrousel de vinyles
+   1. Choisis ton univers (#s-parcours) : composant de la section 03
    2. Choisis ton son-nom (#s-sonnom) : fond du hero, son-nom et mode
    Comportement : ecran-univers.js et ecran-sonnom.js. Vinyle : composant .vy (landing.css).
    Charge apres sonara.css : neutralise l'ancien habillage des .page.
@@ -36,55 +36,45 @@
 .sn-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sn-topbar-logo{display:block;height:28px;width:auto}
 
-/* ═══════════════════════ 1. CHOIX DE L'UNIVERS ═══════════════════════ */
-.cu-head{padding:4px var(--sn-margin) 0;text-align:center}
-.cu-lede{
-  margin:12px auto 0;max-width:36ch;
-  font-family:var(--sn-font-body);font-weight:300;font-size:var(--sn-fs-lg);line-height:1.4;color:var(--sn-muted);
+/* ═══════════════════════ 1. CHOISIS TON UNIVERS ═══════════════════════
+   #s-parcours : composant .uv de la section 03 (univers.css), plein ecran,
+   avec les tokens de la landing (--neb-*, --f-*, --univers-*). */
+.page.pc{padding:0;align-items:stretch;background:var(--sn-ink);font-family:var(--f-text)}
+.uv--jeu{width:100%;height:100vh;height:100dvh;min-height:520px}
+.pc-top{
+  position:absolute;left:0;right:0;top:0;z-index:5;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px var(--neb-margin);
 }
-.cu-stage{
-  --cu-d:min(42vh, 64vw, 440px);                 /* diametre du vinyle central */
-  position:relative;flex:1;min-height:calc(var(--cu-d) + 32px);
-  perspective:1200px;touch-action:pan-y;
+.pc-back{
+  display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 16px 0 10px;
+  border:none;border-radius:999px;background:transparent;color:#fff;cursor:pointer;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);
+  font-family:var(--f-text);font-size:14px;font-weight:500;
+  transition:background-color .25s ease,color .25s ease;
 }
-.cu-center,.cu-side{
-  position:absolute;top:50%;padding:0;border:none;background:none;cursor:pointer;border-radius:50%;
-  -webkit-tap-highlight-color:transparent;
+.pc-back:hover{background:#fff;color:var(--ink)}
+.pc-back:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.pc-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pc-logo{display:block;height:28px;width:auto}
+/* Repere editorial + titre, comme les en-tetes de section de la landing */
+.pc-head{position:absolute;left:var(--neb-margin);top:84px;z-index:4;pointer-events:none}
+.pc-head .nb-secnum span{color:rgba(255,255,255,.7)}
+.pc-head .nb-secnum p{margin:6px 0 0;font-family:var(--f-text);font-size:14px;font-weight:500;color:#fff}
+.pc-head h1{
+  margin:14px 0 0;font-family:var(--f-display);font-weight:800;color:#fff;
+  font-size:clamp(30px,3.4vw,48px);line-height:.95;letter-spacing:-.03em;
 }
-.cu-center{
-  left:50%;width:var(--cu-d);height:var(--cu-d);margin:calc(var(--cu-d) / -2) 0 0 calc(var(--cu-d) / -2);z-index:2;
-}
-.cu-center:focus-visible,.cu-side:focus-visible{outline:2px solid var(--sn-cream);outline-offset:6px}
-.cu-flip{display:block;width:100%;height:100%;transform-style:preserve-3d;will-change:transform}
-/* Voisins : plus petits, coupes par les bords de l'ecran (comme la landing) */
-.cu-side{
-  --cu-ds:calc(var(--cu-d) * .62);
-  width:var(--cu-ds);height:var(--cu-ds);margin-top:calc(var(--cu-ds) / -2);z-index:1;
-}
-.cu-side--prev{left:calc(var(--cu-ds) / -2)}
-.cu-side--next{left:calc(100% - var(--cu-ds) / 2)}
-.cu-stage .vy{--vy-hole:var(--sn-ink)}
-.cu-arrow{
-  position:absolute;top:50%;z-index:3;width:56px;height:56px;margin-top:-28px;padding:0;
-  display:flex;align-items:center;justify-content:center;
-  border:none;border-radius:var(--sn-r-round);cursor:pointer;
-  background:var(--sn-ink-high);color:var(--sn-cream);
-  transition:background-color var(--sn-dur-fast) var(--sn-ease-ui), transform var(--sn-dur-fast) var(--sn-ease-ui);
-}
-.cu-arrow:hover{background:var(--sn-accent);color:var(--sn-white)}
-.cu-arrow:focus-visible{outline:2px solid var(--sn-cream);outline-offset:3px}
-.cu-arrow svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.cu-arrow--prev{left:var(--sn-margin)}
-.cu-arrow--next{right:var(--sn-margin)}
-
-.cu-foot{
-  display:flex;flex-direction:column;align-items:center;gap:var(--sn-sp-4);
-  padding:0 var(--sn-margin) max(32px, env(safe-area-inset-bottom));
-}
-.cu-name{
-  margin:0;font-family:var(--sn-font-display);font-weight:800;font-size:var(--sn-fs-xl);line-height:1.1;
-  color:var(--sn-cream);text-align:center;min-height:1.1em;
-}
+.pc h1:focus{outline:none}
+/* Pas de noir neutre dans le jeu : fleches en brun */
+.uv--jeu .uv-arrow{background:var(--ink)}
+.uv--jeu .uv-arrow:hover{background:var(--accent)}
+/* "Choisir cet univers" : pilule blanche, lisible sur les 9 couleurs (3,4:1 a 17,7:1) */
+.uv--jeu .uv-discover{background:#fff;color:var(--ink);font-weight:600;white-space:nowrap}
+.uv--jeu .uv-discover:hover{background:var(--cream);color:var(--ink)}
+.uv--jeu .uv-discover:focus-visible{outline:2px solid #fff;outline-offset:3px}
+/* Sans bouton pause, les pastilles commencent plus pres du compteur */
+.uv--jeu .uv-tabs{left:calc(var(--neb-margin) + 200px)}
 
 /* ═══════════════════════ 2. SON-NOM ═══════════════════════ */
 .sn-sonnom-body{
@@ -132,12 +122,12 @@
 /* ── Mobile ── */
 @media (max-width:767px){
   .sn-topbar{padding:14px 16px}
-  .cu-stage{--cu-d:min(40vh, 64vw)}
-  .cu-arrow{width:44px;height:44px;margin-top:-22px}
-  .cu-lede{font-size:16px}
+  .pc-top{padding:14px 16px}
+  .pc-head{left:16px;top:66px}
+  .uv--jeu .uv-tabs{left:0}
   .sn-sonnom-card{padding:var(--sn-sp-5) var(--sn-sp-4)}
   .sn-name-row .sn-btn{padding:0 16px}
 }
 @media (prefers-reduced-motion:reduce){
-  .cu-arrow,.sn-back,.sn-uchip{transition:none}
+  .pc-back,.sn-back,.sn-uchip{transition:none}
 }

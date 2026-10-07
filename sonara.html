@@ -302,30 +302,9 @@
 
   <!-- ── LES UNIVERS : carrousel de vinyles ── (univers.css / univers.js) -->
   <section class="uv" id="univers" aria-labelledby="uv-sec-t" aria-roledescription="carrousel">
-    <div class="uv-bg" id="uv-bg"></div>
-    <p class="uv-giant" id="uv-giant" aria-hidden="true"></p>
+    <!-- Aplat, nom geant, vinyles, fleches, compteur et pastilles : generes
+         par uvCarrousel() (univers.js), partage avec l'ecran du parcours -->
     <div class="nb-secnum uv-secnum"><span>03 /</span><h2 id="uv-sec-t">Nos univers</h2></div>
-    <div class="uv-stage">
-      <div class="uv-side uv-side--prev" id="uv-prev-vy" aria-hidden="true"></div>
-      <div class="uv-side uv-side--next" id="uv-next-vy" aria-hidden="true"></div>
-      <button class="uv-center" id="uv-center" type="button" aria-label="Découvrir l'univers"><span class="uv-flip" id="uv-flip"></span></button>
-      <div class="uv-sleeve" id="uv-sleeve" aria-hidden="true"></div>
-    </div>
-    <div class="uv-ui" id="uv-ui">
-      <button class="uv-arrow uv-arrow--prev" type="button" aria-label="Univers précédent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <button class="uv-arrow uv-arrow--next" type="button" aria-label="Univers suivant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-      <div class="uv-countbar">
-        <p class="uv-count" id="uv-count" aria-live="off"><b id="uv-num">01</b><span>/ 09</span></p>
-        <!-- Defilement automatique : pause / lecture -->
-        <button class="uv-auto" id="uv-auto" type="button" aria-pressed="false" aria-label="Mettre en pause le défilement automatique">
-          <svg class="uv-ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>
-          <svg class="uv-ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg>
-        </button>
-      </div>
-      <button class="nb-pill uv-discover" id="uv-discover" type="button">Découvrir</button>
-      <!-- Les 9 univers, cliquables (remplie par univers.js) -->
-      <nav class="uv-tabs" id="uv-tabs" aria-label="Choisir un univers"></nav>
-    </div>
     <div class="uv-panel" id="uv-panel" role="region" aria-labelledby="uv-p-title" hidden>
       <h2 class="uv-p-title" id="uv-p-title" tabindex="-1"></h2>
       <p class="uv-p-meta" id="uv-p-meta"></p>
@@ -499,26 +478,20 @@
 
 </section>
 
-<!-- ═══ CHOIX DE L'UNIVERS (kit) : ecrans.css ═══ -->
-<section class="page sn-screen sn-bg-ink" id="s-univers" aria-labelledby="cu-t">
-  <div class="sn-topbar">
-    <button class="sn-back" type="button" id="cu-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
-    <img class="sn-topbar-logo" src="/img/logo_sonara.svg" alt="sonara">
-  </div>
-  <div class="cu-head">
-    <h1 id="cu-t" tabindex="-1">Choisis ton univers</h1>
-    <p class="cu-lede">Fais tourner les vinyles et choisis la musique de ta partie.</p>
-  </div>
-  <div class="cu-stage" id="cu-stage" role="group" aria-roledescription="carrousel" aria-label="Univers">
-    <button class="cu-side cu-side--prev" type="button" id="cu-prev-vy" tabindex="-1"></button>
-    <button class="cu-center" type="button" id="cu-center"><span class="cu-flip" id="cu-flip"></span></button>
-    <button class="cu-side cu-side--next" type="button" id="cu-next-vy" tabindex="-1"></button>
-    <button class="cu-arrow cu-arrow--prev" type="button" aria-label="Univers précédent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <button class="cu-arrow cu-arrow--next" type="button" aria-label="Univers suivant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-  </div>
-  <div class="cu-foot">
-    <p class="cu-name" id="cu-name" aria-live="polite"></p>
-    <button class="sn-btn" type="button" id="cu-choose">Choisir cet univers</button>
+<!-- ═══ PARCOURS : CHOISIS TON UNIVERS (ecrans.css, ecran-univers.js) ═══
+     Meme composant que la section 03 de la landing (uvCarrousel, univers.js) :
+     aplat de l'univers, nom geant, vinyles, compteur et pastilles generes
+     dans #pc-uv. -->
+<section class="page pc" id="s-parcours" data-step="1" aria-labelledby="pc-t1">
+  <div class="uv uv--jeu" id="pc-uv" aria-roledescription="carrousel" aria-label="Univers">
+    <div class="pc-top">
+      <button class="pc-back" type="button" id="pc-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
+      <img class="pc-logo" src="/img/logo_sonara.svg" alt="sonara">
+    </div>
+    <div class="pc-head pc-head--1">
+      <div class="nb-secnum"><span>01 /</span><p>Ton univers</p></div>
+      <h1 id="pc-t1" tabindex="-1">Choisis ton univers</h1>
+    </div>
   </div>
 </section>
 
