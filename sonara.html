@@ -496,9 +496,10 @@
     <div class="pc-hero" aria-hidden="true">
       <div class="nb-hero-bg"></div>
       <div class="nb-grain"></div>
-      <div class="pc-deco" id="sn-deco"></div>
     </div>
     <div class="pc-step2">
+      <div class="pc-grid">
+      <div class="pc-deco" id="sn-deco" aria-hidden="true"></div>
       <div class="pc-s2">
       <p class="pc-step">Étape 2 sur 3</p>
       <h1 id="pc-t2" tabindex="-1">Choisis ton son-nom</h1>
@@ -530,6 +531,7 @@
         <button class="sn-btn sn-btn--block pc-play" type="submit" id="sn-play" disabled aria-describedby="sn-play-help">Jouer</button>
         <p class="pc-play-help" id="sn-play-help">Choisis un son-nom pour jouer</p>
       </form>
+      </div>
       </div>
     </div>
   </div>
@@ -757,15 +759,20 @@
 
 <!-- ═══ RESULTS ═══ -->
 <!-- ═══ RESULTATS (ecrans.css, ecran-resultats.js) ═══
-     Mosaique des pochettes de la partie + podium qui monte. Les id rmsg,
+     Grand logo en filigrane + podium qui monte. Les id rmsg,
      pod, rtbl, bdgs, glb-top, btn-* sont remplis ou cables par sonara.js. -->
 <section class="page rs" id="s-res" aria-labelledby="rs-t">
-  <div class="rs-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
-  <div class="rs-mosaic" id="rs-mosaic" aria-hidden="true"></div>
+  <!-- Fond : degrade du hero (fige) et grand logo en filigrane, le meme
+       composant que le hero de la landing (.nb-giant, rogne par le bas) -->
+  <div class="rs-bg" aria-hidden="true">
+    <div class="nb-hero-bg"></div><div class="nb-grain"></div>
+    <img class="nb-giant" src="/img/logo_sonara.svg" alt="">
+  </div>
   <div class="rs-main">
     <div class="rs-top"><img src="/img/logo_sonara.svg" alt="Sonara"></div>
+    <div class="rs-col">
     <header class="rs-head">
-      <p class="pc-step" id="fig-res-theme"></p>
+      <p class="pc-step" id="rs-theme"></p>
       <h1 id="rs-t">Fin de partie</h1>
     </header>
     <div class="rs-solo" id="rs-solo" hidden>
@@ -784,7 +791,9 @@
       <button class="sn-btn sn-btn--ghost" type="button" id="btn-home">Changer d'univers</button>
       <button class="rs-share" type="button" id="btn-share">Partager</button>
     </div>
-    <div class="glb-top" id="glb-top"></div>
+    </div>
+    <!-- Colonne de droite (ordinateur) : meilleurs scores de l'univers -->
+    <aside class="rs-side"><div class="glb-top" id="glb-top"></div></aside>
   </div>
 </section>
 

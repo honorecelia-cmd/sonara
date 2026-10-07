@@ -63,28 +63,37 @@
 /* ═══════════════════════ 2. CHOISIS TON SON-NOM ═══════════════════════ */
 /* Fond : degrade + grain du hero (classes .nb-hero-bg et .nb-grain de la landing) */
 .pc-hero{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
-/* Decor (ordinateur) : vinyle de l'univers choisi, qui tourne lentement derriere la carte */
+/* Grille comme le hero de la landing : bloc son-nom a gauche, vinyle de
+   l'univers choisi a droite, centres verticalement, marges de la landing.
+   Mobile : tout centre et empile, vinyle au-dessus. */
+.pc-step2{
+  position:absolute;inset:0;z-index:4;overflow-y:auto;
+  display:flex;align-items:center;
+  padding:76px var(--neb-margin) 24px;
+}
+.pc-grid{
+  width:100%;margin:auto 0;
+  display:grid;grid-template-columns:minmax(0,460px) minmax(0,1fr);
+  align-items:center;column-gap:4vw;
+}
+.pc-s2{grid-column:1;grid-row:1;width:100%;max-width:460px;justify-self:start}
 .pc-deco{
-  --pc-dd:min(84vh, 700px);
-  position:absolute;left:calc(50% + 250px);top:52%;
-  width:var(--pc-dd);height:var(--pc-dd);margin:calc(var(--pc-dd) / -2) 0 0 calc(var(--pc-dd) / -2);
-  opacity:.9;
+  grid-column:2;grid-row:1;justify-self:end;
+  width:min(70vh, 40vw, 620px);aspect-ratio:1;
 }
 .pc-deco .vy-spin{animation-duration:30s}
 .pc-deco .vy{--vy-hole:var(--neb-core)}
-
-/* Titre + indicateur d'etape + carte, centres ensemble */
-.pc-step2{
-  position:absolute;inset:0;z-index:4;overflow-y:auto;
-  display:flex;align-items:center;justify-content:center;
-  padding:76px var(--neb-margin) 24px;
-}
-.pc-s2{width:100%;max-width:460px;margin:auto 0}
-/* Indicateur d'etape, commun aux deux etapes */
 .pc-step{margin:0 0 6px;font-family:var(--f-text);font-size:14px;color:rgba(255,255,255,.8)}
 .pc-s2 h1{
   margin:0 0 16px;font-family:var(--f-display);font-weight:800;color:#fff;
   font-size:clamp(30px,3.4vw,44px);line-height:.95;letter-spacing:-.03em;
+}
+@media (max-width:1099px){
+  .pc-step2{align-items:flex-start}
+  .pc-grid{grid-template-columns:minmax(0,1fr);justify-items:center;row-gap:20px}
+  .pc-deco{grid-column:1;grid-row:1;justify-self:center;width:min(46vw, 34vh, 280px)}
+  .pc-s2{grid-column:1;grid-row:2;justify-self:center}
+  .pc-s2 > .pc-step,.pc-s2 > h1{text-align:center}
 }
 /* Carte : creme tres clair (la creme de la landing eclaircie), ombre douce.
    Exception provisoire a la regle "pas d'ombre portee" du kit, limitee a
@@ -169,7 +178,6 @@
   .pc-top{padding:14px 16px}
   .pc-head{left:16px;top:66px}
   .uv--jeu .uv-tabs{left:0}
-  .pc-deco{display:none}
   .pc-step2{padding:68px 16px 16px}
   .pc-s2 h1{font-size:30px;margin-bottom:14px}
   .pc-card{padding:18px 16px 14px}
@@ -183,35 +191,44 @@
 
 /* ═══════════════════════════════════════════════════════════════
    RESULTATS (#s-res, ecran-resultats.js)
-   Fond : degrade du hero (sans respiration). Derriere : mosaique des
-   pochettes de la partie, voilees, devoilees en cascade. Devant : podium
-   qui monte (3e, 2e, puis 1er), puis le reste du classement.
+   Fond : degrade du hero (sans respiration) et grand logo en filigrane
+   (.nb-giant). Devant : podium qui monte (3e, 2e, puis 1er), puis le reste
+   du classement ; meilleurs scores a droite des 1100 px.
    Minutage : variables --d (delai) posees par ecran-resultats.js.
    ═══════════════════════════════════════════════════════════════ */
 .page.rs{padding:0;align-items:stretch;background:var(--sn-ink);color:#fff;font-family:var(--f-text);overflow:hidden}
 .rs-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .rs-bg .nb-hero-bg{animation:none}            /* degrade fixe, sans halos animes */
 
-/* Mosaique : bande de pochettes en haut de l'ecran, lignes completes,
-   fondue dans le degrade vers le bas (mask-image) ; voile #120706 a 55 % */
-.rs-mosaic{
-  position:absolute;left:0;right:0;top:0;z-index:0;pointer-events:none;
-  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;padding:14px;
-  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 100%);
-  mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 100%);
-}
-.rs-x5{display:none}
-.rs-tile{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--rs-c,var(--accent))}
-.rs-tile img{display:block;width:100%;height:100%;object-fit:cover}
-.rs-tile::after{content:"";position:absolute;inset:0;background:rgba(18,7,6,.55)}
-/* Devoilement : meme transition que la revelation en jeu (flou -> net) */
-.rs-tile > *{animation:sn-reveal var(--sn-dur-reveal) var(--sn-ease) var(--d,0ms) both}
+/* Filigrane : le grand logo du hero (.nb-giant, landing.css), meme opacite ;
+   ses variables le placent sur toute la largeur, rogne par le bas de l'ecran */
+.rs-bg{--neb-margin:4vw;--pw:0px;--logo-w:92vw;--pt:calc(100vh - var(--logo-w) * .713 * .88)}
+.rs-bg .nb-giant{display:block;animation:rs-giant .6s var(--sn-ease) both}
+@keyframes rs-giant{from{opacity:0}}
 
-/* Contenu */
+/* Contenu : une colonne (meme ordre) sous 1100 px, deux colonnes au-dessus */
 .rs-main{
-  position:relative;z-index:2;width:100%;max-width:1040px;margin:0 auto;
+  position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;
   display:flex;flex-direction:column;align-items:center;gap:22px;
   padding:28px var(--neb-margin) 48px;min-height:100vh;justify-content:center;
+}
+.rs-col{width:100%;display:flex;flex-direction:column;align-items:center;gap:22px}
+.rs-side{width:100%;max-width:480px}
+/* Meilleurs scores : meme verre depoli que les marches 2 et 3 */
+#s-res .glb-top{
+  width:100%;max-width:none;padding:18px 18px 12px;border-radius:24px;
+  background:rgba(17,17,17,.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+}
+#s-res .glb-top:empty{display:none}
+@media (min-width:1100px){
+  .rs-main{
+    display:grid;grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr);
+    grid-template-areas:"top top" "col side";align-items:start;column-gap:48px;row-gap:24px;
+  }
+  .rs-top{grid-area:top}
+  .rs-col{grid-area:col}
+  .rs-side{grid-area:side;max-width:none;align-self:center}
 }
 .rs-top{display:flex;justify-content:center}
 .rs-top img{display:block;height:28px}
@@ -302,15 +319,13 @@
 .rs-share:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:4px}
 
 /* Meilleurs scores de l'univers (submitScore) */
-#s-res .glb-top{width:100%;max-width:480px;padding:0}
-#s-res .glb-top .fig-section-lbl{font-size:12px;color:#fff;letter-spacing:0}
-#s-res .glb-row{border-radius:999px;padding-left:16px;padding-right:16px}
+#s-res .glb-top .fig-section-lbl{margin:0 0 10px;font-size:12px;color:#fff;letter-spacing:0}
+#s-res .glb-row{border-radius:999px;padding-left:16px;padding-right:16px;background:rgba(255,255,255,.08);color:#fff}
+#s-res .glb-row.me{background:var(--cream);color:var(--ink)}
 
-/* Mobile : podium au centre, mosaique 3 colonnes derriere, classement dessous */
+/* Mobile : colonne unique, podium au centre, classement dessous */
 @media (max-width:767px){
-  .rs-mosaic{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:8px}
-  .rs-x5{display:block}
-  .rs-x3{display:none}
+  .rs-bg{--logo-w:96vw;--pt:calc(100vh - var(--logo-w) * .713 * .88)}
   .rs-btns{grid-template-columns:1fr;max-width:320px}
   .rs-main{padding:20px 16px 40px;gap:18px;justify-content:flex-start}
   .rs-podium{gap:8px}
@@ -326,6 +341,6 @@
 }
 /* Sans animation : tout s'affiche directement */
 @media (prefers-reduced-motion:reduce){
-  .rs-tile > *,.rs-step,.rs-step--1 .sn-avatar,.rs-step--1 .rs-score,.rs-solo,.rs-rest,.rs-btns,.rs-after{animation:none}
+  .rs-bg .nb-giant,.rs-step,.rs-step--1 .sn-avatar,.rs-step--1 .rs-score,.rs-solo,.rs-rest,.rs-btns,.rs-after{animation:none}
   .rs-step--1 .sn-avatar{box-shadow:0 0 0 2px var(--accent)}
 }
