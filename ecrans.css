@@ -1,40 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════
-   SONARA, ecrans du parcours refaits avec le kit (sonara-kit.css)
-   1. Choisis ton univers (#s-parcours) : composant de la section 03
-   2. Choisis ton son-nom (#s-sonnom) : fond du hero, son-nom et mode
-   Comportement : ecran-univers.js et ecran-sonnom.js. Vinyle : composant .vy (landing.css).
-   Charge apres sonara.css : neutralise l'ancien habillage des .page.
+   SONARA, parcours avant la partie (#s-parcours)
+   Etape 1, Choisis ton univers : composant .uv de la section 03 (univers.css)
+   Etape 2, Choisis ton son-nom : meme aplat et meme nom geant, seule la
+   carte change (data-step="2" sur la section).
+   Comportement : ecran-univers.js et ecran-sonnom.js. Tokens de la landing
+   et du kit uniquement. Charge apres sonara.css et univers.css.
    ═══════════════════════════════════════════════════════════════ */
-
-/* Ecran du parcours : pleine hauteur, sans l'image de fond des anciennes pages */
-.page.sn-screen{
-  align-items:stretch;min-height:100vh;min-height:100dvh;overflow:hidden;
-  font-family:var(--sn-font-body);
-}
-.page.sn-bg-ink{background:var(--sn-ink);color:var(--sn-cream)}
-.page.sn-bg-hero{background:var(--sn-grad-hero);color:var(--sn-cream)}
-.sn-screen h1{
-  margin:0;font-family:var(--sn-font-display);font-weight:800;color:var(--sn-cream);
-  font-size:var(--sn-fs-2xl);line-height:1;letter-spacing:var(--sn-track-display);
-}
-.sn-screen h1:focus{outline:none}
-
-/* Barre du haut : retour + logo */
-.sn-topbar{
-  display:flex;align-items:center;justify-content:space-between;gap:var(--sn-sp-4);
-  padding:18px var(--sn-margin);
-}
-.sn-back{
-  display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 16px 0 10px;
-  border:none;border-radius:var(--sn-r-pill);background:transparent;color:inherit;cursor:pointer;
-  box-shadow:inset 0 0 0 1px var(--sn-w-22);
-  font-family:var(--sn-font-body);font-size:14px;font-weight:500;
-  transition:background-color var(--sn-dur-fast) var(--sn-ease-ui);
-}
-.sn-back:hover{background:var(--sn-w-08)}
-.sn-back:focus-visible{outline:2px solid var(--sn-cream);outline-offset:3px}
-.sn-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.sn-topbar-logo{display:block;height:28px;width:auto}
 
 /* ═══════════════════════ 1. CHOISIS TON UNIVERS ═══════════════════════
    #s-parcours : composant .uv de la section 03 (univers.css), plein ecran,
@@ -76,58 +47,99 @@
 /* Sans bouton pause, les pastilles commencent plus pres du compteur */
 .uv--jeu .uv-tabs{left:calc(var(--neb-margin) + 200px)}
 
-/* ═══════════════════════ 2. SON-NOM ═══════════════════════ */
-.sn-sonnom-body{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--sn-sp-5);
-  padding:8px var(--sn-margin) max(40px, env(safe-area-inset-bottom));
+/* ═══════════════════════ PASSAGE D'UNE ETAPE A L'AUTRE ═══════════════════════
+   L'aplat et le nom geant restent en place ; l'interface du carrousel
+   s'efface, la carte apparait. */
+.pc .uv-stage,.pc .uv-ui,.pc-head,.pc-step2{transition:opacity .35s var(--sn-ease),visibility 0s linear,transform .35s var(--sn-ease)}
+.pc .uv-giant{transition:opacity .45s var(--sn-ease)}
+.pc[data-step="2"] .uv-stage,.pc[data-step="2"] .uv-ui,.pc[data-step="2"] .pc-head--1,
+.pc[data-step="1"] .pc-head--2,.pc[data-step="1"] .pc-step2{
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .25s var(--sn-ease),visibility 0s linear .25s,transform .25s var(--sn-ease);
 }
-.sn-sonnom-head{width:100%;max-width:520px;display:flex;flex-direction:column;align-items:flex-start;gap:var(--sn-sp-5)}
-/* Rappel de l'univers : petit vinyle + nom, ramene au carrousel */
-.sn-uchip{
-  display:inline-flex;align-items:center;gap:12px;padding:6px 18px 6px 6px;
-  border:none;border-radius:var(--sn-r-pill);cursor:pointer;
-  background:var(--sn-glass);box-shadow:inset 0 0 0 1px var(--sn-w-14);color:var(--sn-cream);
-  -webkit-backdrop-filter:blur(var(--sn-blur-sm));backdrop-filter:blur(var(--sn-blur-sm));
-  font-family:var(--sn-font-body);text-align:left;
-  transition:box-shadow var(--sn-dur-fast) var(--sn-ease-ui);
-}
-.sn-uchip:hover{box-shadow:inset 0 0 0 1px var(--sn-cream)}
-.sn-uchip:focus-visible{outline:2px solid var(--sn-cream);outline-offset:3px}
-.sn-uchip-vy{display:block;width:44px;height:44px;flex-shrink:0}
-.sn-uchip-vy .vy{--vy-hole:var(--sn-ink)}
-.sn-uchip-txt{display:flex;flex-direction:column;line-height:1.2}
-.sn-uchip-txt small{font-size:12px;color:var(--sn-muted)}
-.sn-uchip-txt b{font-size:15px;font-weight:600}
-.sn-uchip-edit{margin-left:8px;font-size:13px;color:var(--sn-muted);text-decoration:underline;text-underline-offset:3px}
+.pc[data-step="1"] .pc-step2{transform:translateY(16px)}
+.pc[data-step="2"] .pc-step2,.pc[data-step="2"] .pc-head--2{transition-delay:.12s}
+/* Nom geant en filigrane derriere la carte */
+.pc[data-step="2"] .uv-giant{opacity:.32}
 
-.sn-sonnom-card{width:100%;max-width:520px;padding:var(--sn-sp-6)}
-.sn-flabel{display:block;margin:0 0 10px;padding:0;font-size:13px;font-weight:500;color:var(--sn-muted)}
-.sn-name-row{display:flex;gap:10px;align-items:center}
-.sn-name-row .sn-input{flex:1;min-width:0;padding:0 20px}
-.sn-name-row .sn-btn{height:52px;flex-shrink:0;padding:0 22px}
-.sn-help{margin:8px 0 0;min-height:1.3em;font-size:13px;line-height:1.3;color:var(--sn-muted)}
-.sn-help.is-warn{color:var(--sn-cream)}
-.sn-modes{margin:var(--sn-sp-5) 0 0;padding:0;border:0;min-width:0}
-.sn-mode-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.sn-mode-row .sn-btn{padding:14px 8px;font-size:14px;line-height:1.2;white-space:normal}
-.sn-mode-help{margin:10px 0 0;font-size:13px;font-weight:300;line-height:1.4;color:var(--sn-muted)}
-.sn-note{
-  margin:12px 0 0;padding:10px 14px;border-radius:var(--sn-r-md);
-  background:rgba(195,69,3,.22);box-shadow:var(--sn-line-accent);
-  font-size:13px;line-height:1.4;color:var(--sn-cream);
+/* ═══════════════════════ 2. CHOISIS TON SON-NOM ═══════════════════════ */
+/* Carte creme centree verticalement sous l'en-tete */
+.pc-step2{
+  position:absolute;inset:0;z-index:4;overflow-y:auto;
+  display:flex;align-items:center;justify-content:center;
+  padding:200px var(--neb-margin) 24px;
 }
-.sn-note[hidden]{display:none}
-.sn-play{margin-top:var(--sn-sp-6)}
+.pc-card{
+  width:100%;max-width:470px;margin:auto 0;padding:24px 26px 26px;
+  background:var(--cream);color:var(--ink);border-radius:var(--sn-r-card);
+  box-shadow:inset 0 0 0 1px rgba(45,16,2,.3);   /* contour fin, visible sur Mix et Soca */
+  font-family:var(--f-text);
+}
+/* Petits textes : brun a 72 % (6,2:1 sur la creme, 7,2:1 sur le blanc) */
+.pc-card{--pc-muted:var(--sn-muted-ink);--pc-line:rgba(45,16,2,.5)}
+
+/* Rappel de l'univers : seul retour vers le carrousel */
+.pc-uchip{
+  display:flex;align-items:center;gap:12px;width:100%;padding:6px 14px 6px 6px;margin:0 0 18px;
+  border:none;border-radius:999px;cursor:pointer;text-align:left;
+  background:rgba(45,16,2,.06);color:var(--ink);box-shadow:inset 0 0 0 1px var(--pc-line);
+  font-family:var(--f-text);transition:background-color .25s ease;
+}
+.pc-uchip:hover{background:rgba(45,16,2,.12)}
+.pc-uchip:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.pc-uchip-vy{display:block;width:44px;height:44px;flex-shrink:0}
+.pc-uchip-vy .vy{--vy-hole:var(--cream)}
+.pc-uchip-txt{flex:1;display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.pc-uchip-txt small{font-size:12px;color:var(--pc-muted)}
+.pc-uchip-txt b{font-size:15px;font-weight:600}
+.pc-uchip-edit{font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+
+.pc-note{margin:-6px 0 14px;padding:9px 12px;border-radius:14px;background:rgba(195,69,3,.12);font-size:13px;line-height:1.35}
+.pc-note[hidden]{display:none}
+
+/* Champ son-nom */
+.pc-name-row{display:flex;gap:8px;align-items:center}
+.pc-name-row .sn-input{flex:1;min-width:0;height:50px;padding:0 18px;box-shadow:inset 0 0 0 1px var(--pc-line)}
+.pc-name-row .sn-input:focus-within{box-shadow:inset 0 0 0 2px var(--accent)}
+.pc-name-row .sn-input input{color:var(--ink);font-weight:500}
+.pc-name-row .sn-input input::placeholder{color:var(--pc-muted);font-weight:400}
+.pc-name-row .sn-btn{height:50px;flex-shrink:0;padding:0 18px;font-size:14px}
+.pc-card .sn-btn--ghost{color:var(--ink);box-shadow:inset 0 0 0 1px var(--pc-line)}
+/* Ligne d'etat : indication ou erreur a gauche, compteur a droite (hauteur fixe) */
+.pc-meta{display:flex;justify-content:space-between;gap:12px;min-height:18px;margin:6px 4px 0;font-size:12.5px;line-height:18px;color:var(--pc-muted)}
+.pc-meta .is-error{color:var(--ink);font-weight:600}
+.pc-count{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* Modes */
+.pc-modes{margin:14px 0 0;padding:0;border:0;min-width:0}
+.pc-modes legend{margin:0 0 8px;padding:0;font-size:13px;font-weight:500;color:var(--pc-muted)}
+.pc-mode-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.pc-mode-row .sn-btn{min-height:46px;padding:8px 6px;font-size:13.5px;line-height:1.2;white-space:normal;color:var(--ink);box-shadow:inset 0 0 0 1px var(--pc-line)}
+.pc-mode-row .sn-btn:hover{background:rgba(45,16,2,.06)}
+.pc-mode-row .sn-btn[aria-checked="true"]{background:var(--accent);color:#fff;box-shadow:none}
+.pc-mode-row .sn-btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+/* Description : 2 lignes reservees, le lien "code de salle" a sa ligne reservee */
+.pc-mode-help{margin:10px 2px 0;min-height:calc(2 * 1.4em);font-size:13px;line-height:1.4;color:var(--pc-muted)}
+.pc-join{
+  display:inline-block;margin:2px 2px 0;padding:0;border:none;background:none;cursor:pointer;
+  font-family:var(--f-text);font-size:13px;font-weight:600;line-height:20px;color:var(--ink);
+  text-decoration:underline;text-underline-offset:3px;
+}
+.pc-join[aria-hidden="true"]{visibility:hidden}
+.pc-join:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}
+.pc-play{margin-top:16px}
 
 /* ── Mobile ── */
 @media (max-width:767px){
-  .sn-topbar{padding:14px 16px}
   .pc-top{padding:14px 16px}
   .pc-head{left:16px;top:66px}
   .uv--jeu .uv-tabs{left:0}
-  .sn-sonnom-card{padding:var(--sn-sp-5) var(--sn-sp-4)}
-  .sn-name-row .sn-btn{padding:0 16px}
+  .pc-step2{padding:156px 16px 16px;align-items:flex-start}
+  .pc-card{padding:18px 16px 18px}
+  .pc-name-row .sn-btn{padding:0 14px}
+  .pc-mode-row .sn-btn{font-size:13px}
 }
 @media (prefers-reduced-motion:reduce){
-  .pc-back,.sn-back,.sn-uchip{transition:none}
+  .pc .uv-stage,.pc .uv-ui,.pc-head,.pc-step2,.pc .uv-giant,.pc-back,.pc-uchip{transition-duration:0s !important;transition-delay:0s !important}
+  .pc[data-step="1"] .pc-step2{transform:none}
 }

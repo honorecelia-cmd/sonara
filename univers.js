@@ -375,7 +375,7 @@ function uvCarrousel(sec,o){
   });
   // Swipe horizontal (mobile)
   var sx=0,sy=0,tracking=false;
-  sec.addEventListener('touchstart',function(e){if(open)return;tracking=true;sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+  sec.addEventListener('touchstart',function(e){if(open||(o.active&&!o.active()))return;tracking=true;sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
   sec.addEventListener('touchend',function(e){
     if(!tracking)return;tracking=false;
     var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;

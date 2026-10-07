@@ -11,12 +11,12 @@
   if(!scr||typeof uvCarrousel==='undefined')return;
   var $=function(id){return document.getElementById(id);};
   var N=UNIVERS.length;
-  var MODES={solo:'Solo',multi:'Multijoueur',entre:'Entre proches'};
+  var MODES={solo:'Solo',multi:'Salle en direct',entre:'Défi à partager'};
 
   // Etat du parcours en cours
   // theme : slug de l'univers ; mode : solo, multi ou entre ;
   // preset : mode deja choisi ailleurs (menu Mode de la landing) ;
-  // shared : univers impose par un lien "Entre proches" recu
+  // shared : univers impose par un lien de defi recu ("Entre proches")
   var flow={theme:null, mode:'solo', preset:null, shared:false};
 
   function idxOf(slug){for(var k=0;k<N;k++)if(UNIVERS[k].slug===slug)return k;return 0;}
@@ -54,6 +54,8 @@
     modes:MODES,
     indexOf:idxOf,
     showUnivers:showUnivers,
+    // Aplat et nom geant de l'univers choisi (etape 2)
+    setIndexFor:function(slug){car.setIndex(idxOf(slug));},
     showSonnom:null,                 // fourni par ecran-sonnom.js
     // Tous les "Jouer" de la landing. opts.mode : mode choisi dans le menu
     // Mode ; opts.theme : univers affiche dans la section 03 (preselection).

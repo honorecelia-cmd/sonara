@@ -478,58 +478,52 @@
 
 </section>
 
-<!-- ═══ PARCOURS : CHOISIS TON UNIVERS (ecrans.css, ecran-univers.js) ═══
+<!-- ═══ PARCOURS : CHOISIS TON UNIVERS PUIS TON SON-NOM (ecrans.css, ecran-univers.js, ecran-sonnom.js) ═══
      Meme composant que la section 03 de la landing (uvCarrousel, univers.js) :
      aplat de l'univers, nom geant, vinyles, compteur et pastilles generes
      dans #pc-uv. -->
 <section class="page pc" id="s-parcours" data-step="1" aria-labelledby="pc-t1">
   <div class="uv uv--jeu" id="pc-uv" aria-roledescription="carrousel" aria-label="Univers">
     <div class="pc-top">
-      <button class="pc-back" type="button" id="pc-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
+      <button class="pc-back" type="button" id="pc-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Accueil</button>
       <img class="pc-logo" src="/img/logo_sonara.svg" alt="sonara">
     </div>
     <div class="pc-head pc-head--1">
       <div class="nb-secnum"><span>01 /</span><p>Ton univers</p></div>
       <h1 id="pc-t1" tabindex="-1">Choisis ton univers</h1>
     </div>
-  </div>
-</section>
-
-<!-- ═══ CHOISIS TON SON-NOM (kit) : ecrans.css ═══ -->
-<section class="page sn-screen sn-bg-hero" id="s-sonnom" aria-labelledby="sn-t">
-  <div class="sn-topbar">
-    <button class="sn-back" type="button" id="sn-back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Univers</button>
-    <img class="sn-topbar-logo" src="/img/logo_sonara.svg" alt="sonara">
-  </div>
-  <div class="sn-sonnom-body">
-    <div class="sn-sonnom-head">
-      <button class="sn-uchip" type="button" id="sn-uchip">
-        <span class="sn-uchip-vy" id="sn-uchip-vy"></span>
-        <span class="sn-uchip-txt"><small>Univers</small><b id="sn-uchip-name"></b></span>
-        <span class="sn-uchip-edit">Changer</span>
-      </button>
-      <h1 id="sn-t" tabindex="-1">Choisis ton son-nom</h1>
+    <!-- Etape 2 : meme aplat, meme nom geant ; seule la carte change -->
+    <div class="pc-head pc-head--2">
+      <div class="nb-secnum"><span>02 /</span><p>Ton son-nom</p></div>
+      <h1 id="pc-t2" tabindex="-1">Choisis ton son-nom</h1>
     </div>
-    <form class="sn-glass sn-sonnom-card" id="sn-form" novalidate>
-      <p class="sn-note" id="sn-unote" hidden></p>
-      <label class="sn-flabel" for="sn-name">Ton son-nom</label>
-      <div class="sn-name-row">
-        <div class="sn-input sn-input--dark"><input id="sn-name" type="text" maxlength="16" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Ton son-nom" aria-describedby="sn-help"></div>
-        <button class="sn-btn sn-btn--ghost" type="button" id="sn-random">Au hasard</button>
-      </div>
-      <p class="sn-help" id="sn-help" aria-live="polite">De 2 à 16 caractères.</p>
-      <fieldset class="sn-modes">
-        <legend class="sn-flabel">Mode de jeu</legend>
-        <div class="sn-mode-row" role="radiogroup" aria-label="Mode de jeu">
-          <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="true" data-sn-mode="solo">Solo</button>
-          <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="false" data-sn-mode="multi" tabindex="-1">Multijoueur</button>
-          <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="false" data-sn-mode="entre" tabindex="-1">Entre proches</button>
+    <div class="pc-step2">
+      <form class="pc-card" id="sn-form" novalidate>
+        <button class="pc-uchip" type="button" id="sn-uchip">
+          <span class="pc-uchip-vy" id="sn-uchip-vy"></span>
+          <span class="pc-uchip-txt"><small>Univers</small><b id="sn-uchip-name"></b></span>
+          <span class="pc-uchip-edit">Changer</span>
+        </button>
+        <p class="pc-note" id="sn-unote" hidden></p>
+        <div class="pc-name-row">
+          <div class="sn-input"><input id="sn-name" type="text" maxlength="16" autocomplete="off" autocapitalize="words" spellcheck="false" aria-label="Ton son-nom, de 2 à 16 caractères" aria-describedby="sn-hint sn-count"></div>
+          <button class="sn-btn sn-btn--ghost" type="button" id="sn-random">Au hasard</button>
         </div>
-        <p class="sn-note" id="sn-mnote" hidden></p>
-        <p class="sn-mode-help" id="sn-mode-help"></p>
-      </fieldset>
-      <button class="sn-btn sn-btn--block sn-play" type="submit" id="sn-play" disabled>Jouer</button>
-    </form>
+        <p class="pc-meta"><span id="sn-hint" aria-live="polite"></span><span class="pc-count" id="sn-count">0/16</span></p>
+        <fieldset class="pc-modes">
+          <legend>Mode de jeu</legend>
+          <div class="pc-mode-row" role="radiogroup" aria-label="Mode de jeu">
+            <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="true" data-sn-mode="solo">Solo</button>
+            <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="false" data-sn-mode="multi" tabindex="-1">Salle en direct</button>
+            <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="false" data-sn-mode="entre" tabindex="-1">Défi à partager</button>
+          </div>
+          <p class="pc-note" id="sn-mnote" hidden></p>
+          <p class="pc-mode-help" id="sn-mode-help"></p>
+          <button class="pc-join" type="button" id="sn-join" aria-hidden="true" tabindex="-1">J'ai un code de salle</button>
+        </fieldset>
+        <button class="sn-btn sn-btn--block pc-play" type="submit" id="sn-play" disabled>Jouer</button>
+      </form>
+    </div>
   </div>
 </section>
 

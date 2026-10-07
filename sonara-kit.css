@@ -39,7 +39,7 @@
   --sn-success:var(--sn-peach);            /* bonne reponse (+ pop ou envol du score) */
   --sn-error:rgba(253,221,184,.55);        /* erreur discrete (creme attenue + secousse) */
   --sn-muted:rgba(253,221,184,.6);         /* texte attenue sur brun */
-  --sn-muted-ink:rgba(45,16,2,.6);         /* texte attenue sur creme */
+  --sn-muted-ink:rgba(45,16,2,.72);        /* texte attenue sur creme (6,2:1, AA) */
 
   /* ── Blancs translucides (lignes fines sur brun) ── */
   --sn-white:#FFFFFF;
