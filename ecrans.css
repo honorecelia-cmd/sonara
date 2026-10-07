@@ -38,9 +38,9 @@
 /* Pas de noir neutre dans le jeu : fleches en brun */
 .uv--jeu .uv-arrow{background:var(--ink)}
 .uv--jeu .uv-arrow:hover{background:var(--accent)}
-/* "Choisir cet univers" : pilule blanche, lisible sur les 9 couleurs (3,4:1 a 17,7:1) */
-.uv--jeu .uv-discover{background:#fff;color:var(--ink);font-weight:600;white-space:nowrap}
-.uv--jeu .uv-discover:hover{background:var(--cream);color:var(--ink)}
+/* "Choisir cet univers" : regle de la landing, sur fond orange une pilule creme, texte brun */
+.uv--jeu .uv-discover{background:var(--cream);color:var(--ink);font-weight:600;white-space:nowrap}
+.uv--jeu .uv-discover:hover{background:var(--sn-white);color:var(--ink)}
 .uv--jeu .uv-discover:focus-visible{outline:2px solid #fff;outline-offset:3px}
 /* Sans bouton pause, les pastilles commencent plus pres du compteur */
 .uv--jeu .uv-tabs{left:calc(var(--neb-margin) + 200px)}
@@ -144,6 +144,7 @@
 .pc-mode-row .sn-btn[aria-checked="true"]{background:var(--accent);color:#fff;box-shadow:none}
 .pc-mode-row .sn-btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 /* Description : une ligne reservee (phrases courtes, rien ne saute) */
+.pc-mode-help[hidden]{display:none}
 .pc-mode-help{margin:8px 2px 0;min-height:1.4em;font-size:13px;line-height:1.4;color:var(--pc-muted)}
 .pc-join{
   padding:0;border:none;background:none;cursor:pointer;
