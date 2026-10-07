@@ -50,7 +50,7 @@
           return '<li class="rs-step rs-step--'+rank+'" style="--d:'+d+'ms;--d-end:'+end+'ms">'+
             '<b class="rs-rank">'+rank+'</b>'+
             '<span class="sn-avatar'+(rank===1?'':' sn-avatar--d')+'" aria-hidden="true">'+esc(initial(p.n))+'</span>'+
-            '<span class="rs-name">'+esc(p.n)+(p.me?' (toi)':'')+'</span>'+
+            '<span class="rs-name">'+esc(p.n)+'</span>'+(p.me?'<span class="rs-me">(toi)</span>':'')+
             '<span class="rs-score">'+score(p)+' <small>pts</small></span>'+
           '</li>';
         }).join('');

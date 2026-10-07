@@ -95,9 +95,8 @@
   .pc-s2{grid-column:1;grid-row:2;justify-self:center}
   .pc-s2 > .pc-step,.pc-s2 > h1{text-align:center}
 }
-/* Carte : creme tres clair (la creme de la landing eclaircie), ombre douce.
-   Exception provisoire a la regle "pas d'ombre portee" du kit, limitee a
-   cette carte (voir sonara-kit.css) : ne pas l'etendre aux autres ecrans. */
+/* Carte : creme tres clair (la creme de la landing eclaircie), contour fin,
+   sans ombre portee (regle du kit) */
 .pc-card{
   --pc-bg:color-mix(in srgb, var(--cream) 30%, #fff);
   --pc-muted:var(--sn-muted-ink);
@@ -105,7 +104,7 @@
   --pc-u:var(--accent);                 /* couleur de l'univers choisi (JS) */
   width:100%;padding:22px 24px 18px;
   background:var(--pc-bg);color:var(--ink);border-radius:var(--sn-r-card);
-  box-shadow:0 24px 60px rgba(45,16,2,.32),0 2px 8px rgba(45,16,2,.12);
+  box-shadow:inset 0 0 0 1px rgba(45,16,2,.3);
   font-family:var(--f-text);
 }
 
@@ -196,21 +195,28 @@
    du classement ; meilleurs scores a droite des 1100 px.
    Minutage : variables --d (delai) posees par ecran-resultats.js.
    ═══════════════════════════════════════════════════════════════ */
+/* #s-res : annule aussi l'ancien padding de sonara.css (#s-res{padding:0 20px 60px}) */
+#s-res.page.rs{padding:0}
 .page.rs{padding:0;align-items:stretch;background:var(--sn-ink);color:#fff;font-family:var(--f-text);overflow:hidden}
 .rs-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .rs-bg .nb-hero-bg{animation:none}            /* degrade fixe, sans halos animes */
 
-/* Filigrane : le grand logo du hero (.nb-giant, landing.css), meme opacite ;
-   ses variables le placent sur toute la largeur, rogne par le bas de l'ecran */
-.rs-bg{--neb-margin:4vw;--pw:0px;--logo-w:92vw;--pt:calc(100vh - var(--logo-w) * .713 * .88)}
-.rs-bg .nb-giant{display:block;animation:rs-giant .6s var(--sn-ease) both}
+/* Filigrane : le grand logo du hero (.nb-giant, landing.css), meme opacite,
+   dans une bande pleine largeur en bas de la page, sous tout le contenu :
+   la bande remplit l'espace restant et rogne le logo par le bas */
+.rs-band{
+  --neb-margin:4vw;--pw:0px;--pt:0px;--logo-w:92vw;
+  position:relative;overflow:hidden;pointer-events:none;
+  width:100vw;flex:1 0 auto;min-height:clamp(120px, 16vw, 260px);
+}
+.rs-band .nb-giant{display:block;animation:rs-giant .6s var(--sn-ease) both}
 @keyframes rs-giant{from{opacity:0}}
 
 /* Contenu : une colonne (meme ordre) sous 1100 px, deux colonnes au-dessus */
 .rs-main{
   position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;
   display:flex;flex-direction:column;align-items:center;gap:22px;
-  padding:28px var(--neb-margin) 48px;min-height:100vh;justify-content:center;
+  padding:28px var(--neb-margin) 0;min-height:100vh;justify-content:flex-start;
 }
 .rs-col{width:100%;display:flex;flex-direction:column;align-items:center;gap:22px}
 .rs-side{width:100%;max-width:480px}
@@ -224,8 +230,10 @@
 @media (min-width:1100px){
   .rs-main{
     display:grid;grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr);
-    grid-template-areas:"top top" "col side";align-items:start;column-gap:48px;row-gap:24px;
+    grid-template-areas:"top top" "col side" "band band";grid-template-rows:auto auto 1fr;
+    align-items:start;column-gap:48px;row-gap:24px;
   }
+  .rs-band{grid-area:band;justify-self:center;align-self:stretch}
   .rs-top{grid-area:top}
   .rs-col{grid-area:col}
   .rs-side{grid-area:side;max-width:none;align-self:center}
@@ -264,13 +272,15 @@
   -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;
   animation:rs-rise .6s var(--sn-ease) var(--d,0ms) both;
 }
-.rs-step--1{order:2;height:270px;background:var(--cream);color:var(--ink);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
-.rs-step--2{order:1;height:226px}
-.rs-step--3{order:3;height:196px}
+.rs-step--1{order:2;min-height:270px;background:var(--cream);color:var(--ink);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.rs-step--2{order:1;min-height:226px}
+.rs-step--3{order:3;min-height:196px}
 .rs-rank{font-family:var(--f-display);font-weight:900;font-size:44px;line-height:.9}
 .rs-step .sn-avatar{width:48px;height:48px;font-size:20px}
 .rs-step--1 .sn-avatar{width:58px;height:58px;font-size:24px;animation:rs-ring .35s var(--sn-ease) var(--d-end,0ms) both}
-.rs-name{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:600}
+/* Nom jamais tronque : jusqu'a 2 lignes ; "(toi)" sur sa propre ligne */
+.rs-name{max-width:100%;white-space:normal;overflow-wrap:anywhere;font-size:14px;line-height:1.2;font-weight:600}
+.rs-me{margin-top:-6px;font-size:12px;line-height:1.2;font-weight:500;opacity:.85}
 .rs-score{font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1}
 .rs-score small{font-family:var(--f-text);font-size:12px;font-weight:500;opacity:.8}
 /* Arrivee du 1er : leger pop du score + anneau orange, rien d'autre */
@@ -325,22 +335,23 @@
 
 /* Mobile : colonne unique, podium au centre, classement dessous */
 @media (max-width:767px){
-  .rs-bg{--logo-w:96vw;--pt:calc(100vh - var(--logo-w) * .713 * .88)}
+  .rs-band{--logo-w:96vw;--neb-margin:2vw}
   .rs-btns{grid-template-columns:1fr;max-width:320px}
-  .rs-main{padding:20px 16px 40px;gap:18px;justify-content:flex-start}
+  .rs-main{padding:20px 16px 0;gap:18px;justify-content:flex-start}
   .rs-podium{gap:8px}
   .rs-step{padding:12px 6px 14px;border-radius:20px 20px 14px 14px}
-  .rs-step--1{height:220px}
-  .rs-step--2{height:186px}
-  .rs-step--3{height:162px}
+  .rs-step--1{min-height:232px}
+  .rs-step--2{min-height:200px}
+  .rs-step--3{min-height:176px}
   .rs-rank{font-size:34px}
   .rs-step .sn-avatar{width:40px;height:40px;font-size:17px}
   .rs-step--1 .sn-avatar{width:48px;height:48px;font-size:20px}
-  .rs-name{font-size:13px}
+  .rs-name{font-size:12.5px}
+  .rs-me{font-size:11.5px}
   .rs-score{font-size:19px}
 }
 /* Sans animation : tout s'affiche directement */
 @media (prefers-reduced-motion:reduce){
-  .rs-bg .nb-giant,.rs-step,.rs-step--1 .sn-avatar,.rs-step--1 .rs-score,.rs-solo,.rs-rest,.rs-btns,.rs-after{animation:none}
+  .rs-band .nb-giant,.rs-step,.rs-step--1 .sn-avatar,.rs-step--1 .rs-score,.rs-solo,.rs-rest,.rs-btns,.rs-after{animation:none}
   .rs-step--1 .sn-avatar{box-shadow:0 0 0 2px var(--accent)}
 }

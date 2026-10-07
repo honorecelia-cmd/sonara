@@ -762,11 +762,10 @@
      Grand logo en filigrane + podium qui monte. Les id rmsg,
      pod, rtbl, bdgs, glb-top, btn-* sont remplis ou cables par sonara.js. -->
 <section class="page rs" id="s-res" aria-labelledby="rs-t">
-  <!-- Fond : degrade du hero (fige) et grand logo en filigrane, le meme
-       composant que le hero de la landing (.nb-giant, rogne par le bas) -->
+  <!-- Fond : degrade du hero (fige) ; le grand logo en filigrane est dans
+       .rs-band, en bas de .rs-main -->
   <div class="rs-bg" aria-hidden="true">
     <div class="nb-hero-bg"></div><div class="nb-grain"></div>
-    <img class="nb-giant" src="/img/logo_sonara.svg" alt="">
   </div>
   <div class="rs-main">
     <div class="rs-top"><img src="/img/logo_sonara.svg" alt="Sonara"></div>
@@ -794,6 +793,9 @@
     </div>
     <!-- Colonne de droite (ordinateur) : meilleurs scores de l'univers -->
     <aside class="rs-side"><div class="glb-top" id="glb-top"></div></aside>
+    <!-- Filigrane : grand logo du hero (.nb-giant), cale en bas sous tout le
+         contenu (jamais derriere un texte ou un bouton), rogne par le bas -->
+    <div class="rs-band" aria-hidden="true"><img class="nb-giant" src="/img/logo_sonara.svg" alt=""></div>
   </div>
 </section>
 
