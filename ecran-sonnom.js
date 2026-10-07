@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════
 // SONARA, parcours avant la partie (#s-parcours), etape 2 : "Choisis ton
-// son-nom". Meme aplat et meme nom geant que l'etape 1 : seule la carte
-// change (data-step="2").
+// son-nom". Fond du hero de la landing (degrade + grain), carte claire et
+// vinyle de l'univers choisi en decor (data-step="2").
 // La partie n'est pas touchee : le bouton principal passe la main aux
 // fonctions existantes de sonara.js (selectSoloTheme, createRoom,
 // showEntreProches) avec les memes donnees qu'avant (G.ps, univers).
@@ -15,8 +15,8 @@
   var flow=F.state, MODES=F.modes, idxOf=F.indexOf;
   var MODE_HELP={
     solo:'Dix extraits rien que pour toi, à ton rythme.',
-    multi:'Tout le monde joue en même temps, avec un code de salle.',
-    entre:'Un lien à envoyer : chacun joue quand il veut.'
+    multi:'Tous en même temps, avec un code de salle.',
+    entre:'Un lien à envoyer, chacun joue quand il veut.'
   };
   var MODE_CTA={solo:'Jouer', multi:'Créer la salle', entre:'Générer le lien'};
   // Exemples de son-nom (placeholder) : neutres, lies a l'univers, jamais un
@@ -36,6 +36,7 @@
   var form=$('sn-form'), inp=$('sn-name'), hint=$('sn-hint'), count=$('sn-count'), play=$('sn-play');
   var chipVy=$('sn-uchip-vy'), chipName=$('sn-uchip-name'), chip=$('sn-uchip');
   var uNote=$('sn-unote'), mNote=$('sn-mnote'), modeHelp=$('sn-mode-help'), join=$('sn-join');
+  var deco=$('sn-deco');
   var modeBtns=[].slice.call(scr.querySelectorAll('[data-sn-mode]'));
   var STORE='sonara-son-nom', MAX=16;
   var PREFIXES=['Mister','Miss','Reine du','Roi du','DJ'];
@@ -111,6 +112,9 @@
   F.showSonnom=function(){
     var u=UNIVERS[idxOf(flow.theme)];
     chipVy.innerHTML=uvVinyl(u,false);
+    // Teinte de l'univers sur la pastille, et grand vinyle qui tourne derriere la carte
+    form.style.setProperty('--pc-u',u.couleur);
+    deco.innerHTML=uvVinyl(u,true);
     chipName.textContent=u.nom;
     chip.setAttribute('aria-label','Univers choisi : '+u.nom+'. Changer d\'univers');
     // Univers impose par un lien de defi recu

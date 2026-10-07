@@ -48,53 +48,75 @@
 .uv--jeu .uv-tabs{left:calc(var(--neb-margin) + 200px)}
 
 /* ═══════════════════════ PASSAGE D'UNE ETAPE A L'AUTRE ═══════════════════════
-   L'aplat et le nom geant restent en place ; l'interface du carrousel
-   s'efface, la carte apparait. */
-.pc .uv-stage,.pc .uv-ui,.pc-head,.pc-step2{transition:opacity .35s var(--sn-ease),visibility 0s linear,transform .35s var(--sn-ease)}
+   Etape 1 : aplat de l'univers. Etape 2 : le degrade du hero de la landing
+   apparait en fondu par-dessus, l'interface du carrousel s'efface, la carte
+   arrive. */
+.pc .uv-stage,.pc .uv-ui,.pc-head,.pc-step2,.pc-hero{transition:opacity .35s var(--sn-ease),visibility 0s linear,transform .35s var(--sn-ease)}
 .pc .uv-giant{transition:opacity .45s var(--sn-ease)}
 .pc[data-step="2"] .uv-stage,.pc[data-step="2"] .uv-ui,.pc[data-step="2"] .pc-head--1,
-.pc[data-step="1"] .pc-head--2,.pc[data-step="1"] .pc-step2{
+.pc[data-step="1"] .pc-step2,.pc[data-step="1"] .pc-hero{
   opacity:0;visibility:hidden;pointer-events:none;
   transition:opacity .25s var(--sn-ease),visibility 0s linear .25s,transform .25s var(--sn-ease);
 }
 .pc[data-step="1"] .pc-step2{transform:translateY(16px)}
-.pc[data-step="2"] .pc-step2,.pc[data-step="2"] .pc-head--2{transition-delay:.12s}
-/* Nom geant en filigrane derriere la carte */
-.pc[data-step="2"] .uv-giant{opacity:.32}
+.pc[data-step="2"] .pc-step2{transition-delay:.12s}
+.pc[data-step="2"] .uv-giant{opacity:0}
 
 /* ═══════════════════════ 2. CHOISIS TON SON-NOM ═══════════════════════ */
-/* Carte creme centree verticalement sous l'en-tete */
+/* Fond : degrade + grain du hero (classes .nb-hero-bg et .nb-grain de la landing) */
+.pc-hero{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+/* Decor (ordinateur) : vinyle de l'univers choisi, qui tourne lentement derriere la carte */
+.pc-deco{
+  --pc-dd:min(84vh, 700px);
+  position:absolute;left:calc(50% + 250px);top:52%;
+  width:var(--pc-dd);height:var(--pc-dd);margin:calc(var(--pc-dd) / -2) 0 0 calc(var(--pc-dd) / -2);
+  opacity:.9;
+}
+.pc-deco .vy-spin{animation-duration:30s}
+.pc-deco .vy{--vy-hole:var(--neb-core)}
+
+/* Titre + indicateur d'etape + carte, centres ensemble */
 .pc-step2{
   position:absolute;inset:0;z-index:4;overflow-y:auto;
   display:flex;align-items:center;justify-content:center;
-  padding:200px var(--neb-margin) 24px;
+  padding:76px var(--neb-margin) 24px;
 }
+.pc-s2{width:100%;max-width:460px;margin:auto 0}
+.pc-step{margin:0 0 6px;font-family:var(--f-text);font-size:14px;color:rgba(255,255,255,.8)}
+.pc-s2 h1{
+  margin:0 0 16px;font-family:var(--f-display);font-weight:800;color:#fff;
+  font-size:clamp(30px,3.4vw,44px);line-height:.95;letter-spacing:-.03em;
+}
+/* Carte : creme tres clair (la creme de la landing eclaircie), ombre douce */
 .pc-card{
-  width:100%;max-width:470px;margin:auto 0;padding:24px 26px 26px;
-  background:var(--cream);color:var(--ink);border-radius:var(--sn-r-card);
-  box-shadow:inset 0 0 0 1px rgba(45,16,2,.3);   /* contour fin, visible sur Mix et Soca */
+  --pc-bg:color-mix(in srgb, var(--cream) 30%, #fff);
+  --pc-muted:var(--sn-muted-ink);
+  --pc-line:rgba(45,16,2,.5);
+  --pc-u:var(--accent);                 /* couleur de l'univers choisi (JS) */
+  width:100%;padding:22px 24px 18px;
+  background:var(--pc-bg);color:var(--ink);border-radius:var(--sn-r-card);
+  box-shadow:0 24px 60px rgba(45,16,2,.32),0 2px 8px rgba(45,16,2,.12);
   font-family:var(--f-text);
 }
-/* Petits textes : brun a 72 % (6,2:1 sur la creme, 7,2:1 sur le blanc) */
-.pc-card{--pc-muted:var(--sn-muted-ink);--pc-line:rgba(45,16,2,.5)}
 
-/* Rappel de l'univers : seul retour vers le carrousel */
+/* Rappel de l'univers : teinte de l'univers + bordure marquee ; seul retour au carrousel */
 .pc-uchip{
-  display:flex;align-items:center;gap:12px;width:100%;padding:6px 14px 6px 6px;margin:0 0 18px;
+  display:flex;align-items:center;gap:12px;width:100%;padding:6px 14px 6px 6px;margin:0 0 16px;
   border:none;border-radius:999px;cursor:pointer;text-align:left;
-  background:rgba(45,16,2,.06);color:var(--ink);box-shadow:inset 0 0 0 1px var(--pc-line);
+  background:color-mix(in srgb, var(--pc-u) 13%, var(--pc-bg));color:var(--ink);
+  box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--pc-u) 60%, var(--ink));
   font-family:var(--f-text);transition:background-color .25s ease;
 }
-.pc-uchip:hover{background:rgba(45,16,2,.12)}
+.pc-uchip:hover{background:color-mix(in srgb, var(--pc-u) 22%, var(--pc-bg))}
 .pc-uchip:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .pc-uchip-vy{display:block;width:44px;height:44px;flex-shrink:0}
-.pc-uchip-vy .vy{--vy-hole:var(--cream)}
+.pc-uchip-vy .vy{--vy-hole:var(--pc-bg)}
 .pc-uchip-txt{flex:1;display:flex;flex-direction:column;line-height:1.2;min-width:0}
 .pc-uchip-txt small{font-size:12px;color:var(--pc-muted)}
 .pc-uchip-txt b{font-size:15px;font-weight:600}
 .pc-uchip-edit{font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 
-.pc-note{margin:-6px 0 14px;padding:9px 12px;border-radius:14px;background:rgba(195,69,3,.12);font-size:13px;line-height:1.35}
+.pc-note{margin:-4px 0 12px;padding:9px 12px;border-radius:14px;background:rgba(195,69,3,.12);font-size:13px;line-height:1.35}
 .pc-note[hidden]{display:none}
 
 /* Champ son-nom */
@@ -105,41 +127,54 @@
 .pc-name-row .sn-input input::placeholder{color:var(--pc-muted);font-weight:400}
 .pc-name-row .sn-btn{height:50px;flex-shrink:0;padding:0 18px;font-size:14px}
 .pc-card .sn-btn--ghost{color:var(--ink);box-shadow:inset 0 0 0 1px var(--pc-line)}
+.pc-card .sn-btn--ghost:hover{background:rgba(45,16,2,.06)}
 /* Ligne d'etat : indication ou erreur a gauche, compteur a droite (hauteur fixe) */
 .pc-meta{display:flex;justify-content:space-between;gap:12px;min-height:18px;margin:6px 4px 0;font-size:12.5px;line-height:18px;color:var(--pc-muted)}
 .pc-meta .is-error{color:var(--ink);font-weight:600}
 .pc-count{font-variant-numeric:tabular-nums;white-space:nowrap}
 
-/* Modes */
-.pc-modes{margin:14px 0 0;padding:0;border:0;min-width:0}
-.pc-modes legend{margin:0 0 8px;padding:0;font-size:13px;font-weight:500;color:var(--pc-muted)}
+/* Modes : meme hauteur, une ligne chacun */
+.pc-modes{margin:10px 0 0}
+.pc-modes-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 8px}
+.pc-modes-head span{font-size:13px;font-weight:500;color:var(--pc-muted)}
 .pc-mode-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.pc-mode-row .sn-btn{min-height:46px;padding:8px 6px;font-size:13.5px;line-height:1.2;white-space:normal;color:var(--ink);box-shadow:inset 0 0 0 1px var(--pc-line)}
+.pc-mode-row .sn-btn{height:46px;padding:0 8px;font-size:14px;white-space:nowrap;color:var(--ink);box-shadow:inset 0 0 0 1px var(--pc-line)}
 .pc-mode-row .sn-btn:hover{background:rgba(45,16,2,.06)}
 .pc-mode-row .sn-btn[aria-checked="true"]{background:var(--accent);color:#fff;box-shadow:none}
 .pc-mode-row .sn-btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-/* Description : 2 lignes reservees, le lien "code de salle" a sa ligne reservee */
-.pc-mode-help{margin:10px 2px 0;min-height:calc(2 * 1.4em);font-size:13px;line-height:1.4;color:var(--pc-muted)}
+/* Description : une ligne reservee (phrases courtes, rien ne saute) */
+.pc-mode-help{margin:8px 2px 0;min-height:1.4em;font-size:13px;line-height:1.4;color:var(--pc-muted)}
 .pc-join{
-  display:inline-block;margin:2px 2px 0;padding:0;border:none;background:none;cursor:pointer;
-  font-family:var(--f-text);font-size:13px;font-weight:600;line-height:20px;color:var(--ink);
-  text-decoration:underline;text-underline-offset:3px;
+  padding:0;border:none;background:none;cursor:pointer;
+  font-family:var(--f-text);font-size:13px;font-weight:600;color:var(--ink);
+  text-decoration:underline;text-underline-offset:3px;white-space:nowrap;
 }
 .pc-join[aria-hidden="true"]{visibility:hidden}
 .pc-join:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}
-.pc-play{margin-top:16px}
+
+/* Bouton principal : orange fonce plein comme le mode choisi, animation des
+   boutons de la landing (leger soulevement au survol, appui au clic) */
+.pc-play{margin-top:14px}
+.pc-card .pc-play:not(:disabled):hover{background:var(--accent);transform:translateY(-2px)}
+.pc-card .pc-play:not(:disabled):active{transform:translateY(0) scale(.98)}
+/* Desactive : lisible (brun sur creme grisee, AA), sans opacite */
+.pc-card .pc-play:disabled{opacity:1;background:color-mix(in srgb, var(--ink) 12%, var(--pc-bg));color:rgba(45,16,2,.78)}
+.pc-play-help{margin:6px 0 0;min-height:18px;font-size:12.5px;line-height:18px;text-align:center;color:var(--pc-muted)}
+.pc-play:not(:disabled) + .pc-play-help{visibility:hidden}
 
 /* ── Mobile ── */
 @media (max-width:767px){
   .pc-top{padding:14px 16px}
   .pc-head{left:16px;top:66px}
   .uv--jeu .uv-tabs{left:0}
-  .pc-step2{padding:156px 16px 16px;align-items:flex-start}
-  .pc-card{padding:18px 16px 18px}
+  .pc-deco{display:none}
+  .pc-step2{padding:68px 16px 16px}
+  .pc-s2 h1{font-size:30px;margin-bottom:14px}
+  .pc-card{padding:18px 16px 14px}
   .pc-name-row .sn-btn{padding:0 14px}
-  .pc-mode-row .sn-btn{font-size:13px}
 }
 @media (prefers-reduced-motion:reduce){
-  .pc .uv-stage,.pc .uv-ui,.pc-head,.pc-step2,.pc .uv-giant,.pc-back,.pc-uchip{transition-duration:0s !important;transition-delay:0s !important}
+  .pc .uv-stage,.pc .uv-ui,.pc-head,.pc-step2,.pc-hero,.pc .uv-giant,.pc-back,.pc-uchip{transition-duration:0s !important;transition-delay:0s !important}
   .pc[data-step="1"] .pc-step2{transform:none}
+  .pc-card .pc-play:not(:disabled):hover{transform:none}
 }

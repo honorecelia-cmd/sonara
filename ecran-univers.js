@@ -11,7 +11,7 @@
   if(!scr||typeof uvCarrousel==='undefined')return;
   var $=function(id){return document.getElementById(id);};
   var N=UNIVERS.length;
-  var MODES={solo:'Solo',multi:'Salle en direct',entre:'Défi à partager'};
+  var MODES={solo:'Solo',multi:'En direct',entre:'Défi'};
 
   // Etat du parcours en cours
   // theme : slug de l'univers ; mode : solo, multi ou entre ;
