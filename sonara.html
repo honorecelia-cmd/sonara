@@ -24,7 +24,7 @@
   <!-- Header fixe : apparait au defilement ; le telephone du hero vient se
        loger dans .nb-hd-slot (voir landing.js). -->
   <header class="nb-header" id="nb-header">
-    <a class="nb-hd-logo" href="#landing" aria-label="SONARA"><img src="/img/logo_sonara.svg" alt="SONARA"></a>
+    <a class="nb-hd-logo" href="#landing" aria-label="Sonara"><img src="/img/logo_sonara.svg" alt="Sonara"></a>
     <div class="nb-hd-right">
       <span class="nb-hd-slot" id="nb-hd-slot" aria-hidden="true"></span>
       <button class="nb-pill nb-pill--cta nb-pill--sm" type="button" data-nb-play>Jouer</button>
@@ -48,7 +48,7 @@
 
 
     <nav class="nb-meta" aria-label="Menu principal">
-      <a class="nb-meta-logo" href="#landing"><img src="/img/logo_sonara.svg" alt="SONARA"></a>
+      <a class="nb-meta-logo" href="#landing"><img src="/img/logo_sonara.svg" alt="Sonara"></a>
       <a class="nb-meta-col nb-menu-link nb-menu-link--univ" href="#univers">Univers</a>
       <div class="nb-meta-col nb-menu">
         <button class="nb-menu-btn" type="button" aria-expanded="false" aria-controls="nb-menu-mode">Mode<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -539,12 +539,12 @@
 <section class="page" id="s-solo">
   <div class="fig-nav">
     <button class="btn-back" onclick="showPage('landing')">← Retour</button>
-    <img src="/img/logo_sonara.png" class="fig-logo" alt="SONARA">
+    <img src="/img/logo_sonara.png" class="fig-logo" alt="Sonara">
     <div class="fig-online"><span class="fig-odot"></span><span class="online-count" data-short="1">246 en ligne</span></div>
   </div>
   <div class="fig-solo-body">
     <p class="ld-eyebrow">1er blindtest caribéen</p>
-    <img src="/img/logo_sonara.png" class="ld-logo" alt="SONARA">
+    <img src="/img/logo_sonara.png" class="ld-logo" alt="Sonara">
     <p class="fig-solo-eyebrow">Chaque univers, une fréquence différente.<br>À toi de choisir !</p>
     <div class="fig-tgrid">
       <div class="fig-tc active" onclick="selectSoloTheme('kompa')"><img src="/img/cover_kompa.jpg" class="fig-tc-img" alt="Kompa"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">KOMPA</span></div>
@@ -706,7 +706,7 @@
 <!-- ═══ GAME ═══ -->
 <section class="page" id="s-game">
   <div class="ghdr">
-    <img src="/img/logo_sonara.png" class="fig-logo" alt="SONARA">
+    <img src="/img/logo_sonara.png" class="fig-logo" alt="Sonara">
     <div class="fig-online"><span class="fig-odot"></span><span class="online-count">246 joueurs en ligne</span></div>
   </div>
   <div class="fig-game-header">
@@ -763,13 +763,11 @@
   <div class="rs-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="rs-mosaic" id="rs-mosaic" aria-hidden="true"></div>
   <div class="rs-main">
-    <div class="rs-top"><img src="/img/logo_sonara.svg" alt="sonara"></div>
+    <div class="rs-top"><img src="/img/logo_sonara.svg" alt="Sonara"></div>
     <header class="rs-head">
       <p class="pc-step" id="fig-res-theme"></p>
       <h1 id="rs-t">Fin de partie</h1>
-      <p class="rs-msg" id="rmsg"></p>
     </header>
-    <div class="rs-badges" id="bdgs"></div>
     <div class="rs-solo" id="rs-solo" hidden>
       <span class="rs-solo-score" id="rs-solo-score">0</span>
       <span class="rs-solo-pts">points</span>
@@ -777,10 +775,14 @@
     </div>
     <ol class="rs-podium" id="pod" aria-label="Podium"></ol>
     <ol class="rs-rest" id="rtbl" aria-label="Suite du classement"></ol>
+    <div class="rs-after" id="rs-after">
+      <p class="rs-msg" id="rmsg"></p>
+      <div class="rs-badges" id="bdgs"></div>
+    </div>
     <div class="rs-btns" id="rs-btns">
       <button class="sn-btn" type="button" id="btn-replay">Rejouer</button>
-      <button class="sn-btn" type="button" id="btn-home">Changer d'univers</button>
-      <button class="sn-btn sn-btn--ghost" type="button" id="btn-share">Partager</button>
+      <button class="sn-btn sn-btn--ghost" type="button" id="btn-home">Changer d'univers</button>
+      <button class="rs-share" type="button" id="btn-share">Partager</button>
     </div>
     <div class="glb-top" id="glb-top"></div>
   </div>
@@ -790,7 +792,7 @@
 <section class="page" id="s-entre">
   <div class="fig-nav">
     <button class="btn-back" onclick="showPage('s-res')">← Retour</button>
-    <img src="/img/logo_sonara.png" class="fig-logo" alt="SONARA">
+    <img src="/img/logo_sonara.png" class="fig-logo" alt="Sonara">
     <div class="fig-online"><span class="fig-odot"></span><span class="online-count">246 joueurs en ligne</span></div>
   </div>
   <div class="fig-entre-body">

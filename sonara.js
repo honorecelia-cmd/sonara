@@ -341,7 +341,7 @@ document.addEventListener('click', function(e) {
   if(e.target.id==='vbtn') { freeSubmit(); return; }
   // Résultats
   if(e.target.id==='btn-replay')    { doReplay(); return; }
-  if(e.target.id==='btn-home')      { doHome(); return; }
+  if(e.target.id==='btn-home')      { doHome(); if(window.SonaraFlow)SonaraFlow.toUnivers({theme:themeSlug()}); return; }   // ecran Univers (son-nom garde)
   if(e.target.id==='btn-share')     { doShare(); return; }
   if(e.target.id==='btn-quit')      { doQuit(); return; }
   if(e.target.id==='btn-load-back') { doHome(); return; }

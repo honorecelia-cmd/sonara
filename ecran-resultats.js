@@ -32,10 +32,14 @@
     });
   }
 
+  // Bande de pochettes en lignes completes : une pochette qui ne remplit pas
+  // sa ligne est masquee (3 colonnes sur mobile, 5 sur ordinateur, voir CSS)
   function renderMosaic(list){
+    var full3=Math.floor(list.length/3)*3, full5=Math.floor(list.length/5)*5;
     $('rs-mosaic').innerHTML=list.map(function(t,i){
       var d='--d:'+(i*STAGGER)+'ms';
-      return '<div class="rs-tile" style="--rs-c:'+t.color+'">'+
+      var cls='rs-tile'+(i>=full3?' rs-x3':'')+(i>=full5?' rs-x5':'');
+      return '<div class="'+cls+'" style="--rs-c:'+t.color+'">'+
         (t.src?'<img src="'+esc(t.src)+'" alt="" style="'+d+'" onerror="this.remove()">':'<span style="'+d+';display:block;width:100%;height:100%"></span>')+
         '</div>';
     }).join('');
@@ -47,8 +51,9 @@
     render:function(sorted){
       var list=tiles();
       renderMosaic(list);
-      // Fin de la mosaique : derniere pochette nette
-      var mosaicEnd=list.length?(list.length-1)*STAGGER+REVEAL:0;
+      // Fin de la mosaique : derniere pochette affichee nette (lignes completes)
+      var shown=Math.floor(list.length/(window.matchMedia('(max-width: 767px)').matches?3:5))*(window.matchMedia('(max-width: 767px)').matches?3:5);
+      var mosaicEnd=shown?(shown-1)*STAGGER+REVEAL:0;
       $('fig-res-theme').textContent='Univers '+(G.theme||'');
       var pod=$('pod'), solo=$('rs-solo'), rest=$('rtbl'), btns=$('rs-btns');
       var end;
@@ -64,7 +69,7 @@
         solo.hidden=false;
         solo.style.setProperty('--d',Math.max(0,mosaicEnd-RISE)+'ms');
         $('rs-solo-score').textContent=G.sc;
-        $('rs-solo-found').textContent=plural(titles,'titre','titres')+' et '+plural(artists,'artiste','artistes')+' trouvés sur '+(G.qs||[]).length+' extraits';
+        $('rs-solo-found').textContent=plural(titles,'titre','titres')+' et '+plural(artists,'artiste','artistes')+' trouvés';
         end=Math.max(0,mosaicEnd-RISE)+RISE;
       }else{
         // Podium : 2 ou 3 marches, classement de doResults tel quel
@@ -94,6 +99,7 @@
         }).join('');
       }
       btns.style.setProperty('--d',end+'ms');
+      $('rs-after').style.setProperty('--d',end+'ms');
     }
   };
 })();

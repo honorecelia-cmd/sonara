@@ -192,12 +192,15 @@
 .rs-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .rs-bg .nb-hero-bg{animation:none}            /* degrade fixe, sans halos animes */
 
-/* Mosaique : grille de pochettes carrees, voile #120706 a 55 % */
+/* Mosaique : bande de pochettes en haut de l'ecran, lignes completes,
+   fondue dans le degrade vers le bas (mask-image) ; voile #120706 a 55 % */
 .rs-mosaic{
   position:absolute;left:0;right:0;top:0;z-index:0;pointer-events:none;
-  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;
-  padding:14px;min-height:100vh;align-content:center;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;padding:14px;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 100%);
 }
+.rs-x5{display:none}
 .rs-tile{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--rs-c,var(--accent))}
 .rs-tile img{display:block;width:100%;height:100%;object-fit:cover}
 .rs-tile::after{content:"";position:absolute;inset:0;background:rgba(18,7,6,.55)}
@@ -218,8 +221,10 @@
   margin:0;font-family:var(--f-display);font-weight:800;color:#fff;
   font-size:clamp(30px,3.4vw,48px);line-height:.95;letter-spacing:-.03em;
 }
+/* Message et badges : sous la carte du score ou le podium */
+.rs-after{display:flex;flex-direction:column;align-items:center;gap:10px;animation:rs-fade .5s var(--sn-ease) var(--d,0ms) both}
 .rs-msg{
-  display:inline-block;margin:12px 0 0;padding:7px 16px;border-radius:999px;
+  display:inline-block;margin:0;padding:7px 16px;border-radius:999px;
   font-size:15px;line-height:1.4;color:#fff;
   background:rgba(17,17,17,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
 }
@@ -276,13 +281,25 @@
 .rs-rest .sn-player-row__pts{color:rgba(255,255,255,.85)}
 @keyframes rs-fade{from{opacity:0}to{opacity:1}}
 
-/* Boutons : sur le degrade, pilules creme ; Partager en ghost */
-.rs-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;animation:rs-fade .5s var(--sn-ease) var(--d,0ms) both}
-.rs-btns .sn-btn{background:var(--cream);color:var(--ink)}
+/* Boutons : Rejouer en pilule creme (action principale), Changer d'univers
+   en pilule ghost de meme largeur, cote a cote sur ordinateur ; Partager en
+   lien discret dessous */
+.rs-btns{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;max-width:460px;
+  animation:rs-fade .5s var(--sn-ease) var(--d,0ms) both;
+}
+.rs-btns .sn-btn{width:100%;background:var(--cream);color:var(--ink)}
 .rs-btns .sn-btn:hover{background:var(--sn-white);color:var(--ink)}
-.rs-btns .sn-btn--ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.rs-btns .sn-btn--ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
 .rs-btns .sn-btn--ghost:hover{background:rgba(255,255,255,.12);color:#fff}
 .rs-btns .sn-btn:focus-visible{outline:2px solid #fff}
+.rs-share{
+  grid-column:1 / -1;justify-self:center;margin-top:2px;padding:4px 6px;border:none;background:none;cursor:pointer;
+  font-family:var(--f-text);font-size:14px;font-weight:500;color:#fff;
+  text-decoration:underline;text-underline-offset:4px;
+}
+.rs-share:hover{text-decoration-thickness:2px}
+.rs-share:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:4px}
 
 /* Meilleurs scores de l'univers (submitScore) */
 #s-res .glb-top{width:100%;max-width:480px;padding:0}
@@ -291,7 +308,10 @@
 
 /* Mobile : podium au centre, mosaique 3 colonnes derriere, classement dessous */
 @media (max-width:767px){
-  .rs-mosaic{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:8px;min-height:0;align-content:start}
+  .rs-mosaic{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:8px}
+  .rs-x5{display:block}
+  .rs-x3{display:none}
+  .rs-btns{grid-template-columns:1fr;max-width:320px}
   .rs-main{padding:20px 16px 40px;gap:18px;justify-content:flex-start}
   .rs-podium{gap:8px}
   .rs-step{padding:12px 6px 14px;border-radius:20px 20px 14px 14px}
@@ -306,6 +326,6 @@
 }
 /* Sans animation : tout s'affiche directement */
 @media (prefers-reduced-motion:reduce){
-  .rs-tile > *,.rs-step,.rs-step--1 .sn-avatar,.rs-step--1 .rs-score,.rs-solo,.rs-rest,.rs-btns{animation:none}
+  .rs-tile > *,.rs-step,.rs-step--1 .sn-avatar,.rs-step--1 .rs-score,.rs-solo,.rs-rest,.rs-btns,.rs-after{animation:none}
   .rs-step--1 .sn-avatar{box-shadow:0 0 0 2px var(--accent)}
 }
