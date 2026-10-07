@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
 // SONARA — landing (refonte d'apres la maquette Nebula)
-// 1. Choix du son-nom apres le clic sur "Jouer" (ou un choix du menu)
+// 1. "Jouer" et menu Mode : vers le choix de l'univers (ecrans.js)
 // 2. Telephone du hero qui monte puis se loge dans le header au defilement
 // 3. Trio lecteur : pilote l'apercu de partie du telephone (aucun son)
 // Spec : nebula-analyse-pour-sonara.md
@@ -11,40 +11,21 @@
   if(!landing)return;
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  // ── 1. Son-nom ──────────────────────────────────────────────
-  var dlg=document.getElementById('nb-sonnom');
-  var form=document.getElementById('nb-sonnom-form');
-  var input=document.getElementById('landing-pseudo');
-  var lastFocus=null;
-  // Ce qui suit le son-nom : {theme:'zouk'} (menu Univers), {mode:'multi'}
-  // (menu Mode) ou null = parcours normal (choix de l'univers)
-  var pending=null;
-  function openSonnom(next){
-    pending=next||null;
+  // ── 1. Parcours : "Jouer" mene au choix de l'univers (ecrans.js) ──
+  function play(opts){
     closeMenus();
-    lastFocus=document.activeElement;
-    dlg.hidden=false;
-    setTimeout(function(){input.focus();},30);
-  }
-  window.nbOpenSonnom=openSonnom;   // utilise par univers.js ("Jouer en ...")
-  function closeSonnom(){
-    dlg.hidden=true;
-    if(lastFocus&&lastFocus.focus)lastFocus.focus();
+    if(window.SonaraFlow)SonaraFlow.toUnivers(opts);
   }
   landing.addEventListener('click',function(e){
     var t=e.target, b;
-    if(t.closest('[data-nb-play]'))openSonnom(null);
-    else if(t.closest('[data-nb-close]')||t===dlg)closeSonnom();
-    else if((b=t.closest('[data-nb-univ]')))openSonnom({theme:b.getAttribute('data-nb-univ')});
-    else if((b=t.closest('[data-nb-mode]')))openSonnom(b.getAttribute('data-nb-mode')==='multi'?{mode:'multi'}:null);
+    if(t.closest('[data-nb-play]'))play(null);
+    else if((b=t.closest('[data-nb-mode]')))play({mode:b.getAttribute('data-nb-mode')});
   });
   document.addEventListener('keydown',function(e){
-    if(e.key!=='Escape')return;
-    if(!dlg.hidden)closeSonnom();
-    else closeMenus(true);
+    if(e.key==='Escape')closeMenus(true);
   });
 
-  // ── Menus Univers / Mode ──
+  // ── Menu Mode ──
   var menuBtns=landing.querySelectorAll('.nb-menu-btn');
   function closeMenus(refocus){
     menuBtns.forEach(function(btn){
@@ -67,22 +48,6 @@
     });
   });
   document.addEventListener('click',function(e){if(!e.target.closest('.nb-menu'))closeMenus();});
-
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    var v=input.value.trim();
-    if(pending&&v){
-      G.ps=v;
-      if(pending.theme)selectSoloTheme(pending.theme);
-      else if(pending.mode==='multi'){
-        ['multi-pseudo','join-pseudo'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=v;});
-        showPage('s-multi');
-      }
-    }else startFromLanding();
-    // startFromLanding() quitte la landing si le son-nom est valide
-    if(window.G&&G.page!=='landing')dlg.hidden=true;
-  });
-  input.addEventListener('input',function(){input.style.borderColor='';});
 
   // ── 2. Telephone -> header ──────────────────────────────────
   var hero=document.getElementById('nb-hero');
@@ -152,7 +117,7 @@
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(measure);
   measure();
   // Telephone loge dans le header : raccourci vers "Jouer"
-  wrap.addEventListener('click',function(){if(wrap.classList.contains('nb-wrap-docked'))openSonnom();});
+  wrap.addEventListener('click',function(){if(wrap.classList.contains('nb-wrap-docked'))play(null);});
   // Retour sur la landing (showPage) : la page reapparait, on remesure
   new MutationObserver(function(){if(landing.style.display!=='none')measure();})
     .observe(landing,{attributes:true,attributeFilter:['style']});

@@ -56,6 +56,7 @@
 .uv-side{
   --uv-ds:calc(var(--uv-d) * .62);
   width:var(--uv-ds);height:var(--uv-ds);margin-top:calc(var(--uv-ds) / -2);z-index:1;
+  cursor:pointer;   /* clic : jouer dans cet univers */
 }
 .uv-side--prev{left:calc(var(--uv-ds) / -2)}
 .uv-side--next{left:calc(100% - var(--uv-ds) / 2)}

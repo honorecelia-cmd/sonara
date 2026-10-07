@@ -1,0 +1,97 @@
+/* ═══════════════════════════════════════════════════════════════
+   SONARA, ecrans du parcours refaits avec le kit (sonara-kit.css)
+   1. Choix de l'univers (#s-univers) : aplat brun, carrousel de vinyles
+   Comportement : ecran-univers.js. Vinyle : composant .vy (landing.css).
+   Charge apres sonara.css : neutralise l'ancien habillage des .page.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Ecran du parcours : pleine hauteur, sans l'image de fond des anciennes pages */
+.page.sn-screen{
+  align-items:stretch;min-height:100vh;min-height:100dvh;overflow:hidden;
+  font-family:var(--sn-font-body);
+}
+.page.sn-bg-ink{background:var(--sn-ink);color:var(--sn-cream)}
+.page.sn-bg-hero{background:var(--sn-grad-hero);color:var(--sn-cream)}
+.sn-screen h1{
+  margin:0;font-family:var(--sn-font-display);font-weight:800;color:var(--sn-cream);
+  font-size:var(--sn-fs-2xl);line-height:1;letter-spacing:var(--sn-track-display);
+}
+.sn-screen h1:focus{outline:none}
+
+/* Barre du haut : retour + logo */
+.sn-topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--sn-sp-4);
+  padding:18px var(--sn-margin);
+}
+.sn-back{
+  display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 16px 0 10px;
+  border:none;border-radius:var(--sn-r-pill);background:transparent;color:inherit;cursor:pointer;
+  box-shadow:inset 0 0 0 1px var(--sn-w-22);
+  font-family:var(--sn-font-body);font-size:14px;font-weight:500;
+  transition:background-color var(--sn-dur-fast) var(--sn-ease-ui);
+}
+.sn-back:hover{background:var(--sn-w-08)}
+.sn-back:focus-visible{outline:2px solid var(--sn-cream);outline-offset:3px}
+.sn-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sn-topbar-logo{display:block;height:28px;width:auto}
+
+/* ═══════════════════════ 1. CHOIX DE L'UNIVERS ═══════════════════════ */
+.cu-head{padding:4px var(--sn-margin) 0;text-align:center}
+.cu-lede{
+  margin:12px auto 0;max-width:36ch;
+  font-family:var(--sn-font-body);font-weight:300;font-size:var(--sn-fs-lg);line-height:1.4;color:var(--sn-muted);
+}
+.cu-stage{
+  --cu-d:min(42vh, 64vw, 440px);                 /* diametre du vinyle central */
+  position:relative;flex:1;min-height:calc(var(--cu-d) + 32px);
+  perspective:1200px;touch-action:pan-y;
+}
+.cu-center,.cu-side{
+  position:absolute;top:50%;padding:0;border:none;background:none;cursor:pointer;border-radius:50%;
+  -webkit-tap-highlight-color:transparent;
+}
+.cu-center{
+  left:50%;width:var(--cu-d);height:var(--cu-d);margin:calc(var(--cu-d) / -2) 0 0 calc(var(--cu-d) / -2);z-index:2;
+}
+.cu-center:focus-visible,.cu-side:focus-visible{outline:2px solid var(--sn-cream);outline-offset:6px}
+.cu-flip{display:block;width:100%;height:100%;transform-style:preserve-3d;will-change:transform}
+/* Voisins : plus petits, coupes par les bords de l'ecran (comme la landing) */
+.cu-side{
+  --cu-ds:calc(var(--cu-d) * .62);
+  width:var(--cu-ds);height:var(--cu-ds);margin-top:calc(var(--cu-ds) / -2);z-index:1;
+}
+.cu-side--prev{left:calc(var(--cu-ds) / -2)}
+.cu-side--next{left:calc(100% - var(--cu-ds) / 2)}
+.cu-stage .vy{--vy-hole:var(--sn-ink)}
+.cu-arrow{
+  position:absolute;top:50%;z-index:3;width:56px;height:56px;margin-top:-28px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  border:none;border-radius:var(--sn-r-round);cursor:pointer;
+  background:var(--sn-ink-high);color:var(--sn-cream);
+  transition:background-color var(--sn-dur-fast) var(--sn-ease-ui), transform var(--sn-dur-fast) var(--sn-ease-ui);
+}
+.cu-arrow:hover{background:var(--sn-accent);color:var(--sn-white)}
+.cu-arrow:focus-visible{outline:2px solid var(--sn-cream);outline-offset:3px}
+.cu-arrow svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cu-arrow--prev{left:var(--sn-margin)}
+.cu-arrow--next{right:var(--sn-margin)}
+
+.cu-foot{
+  display:flex;flex-direction:column;align-items:center;gap:var(--sn-sp-4);
+  padding:0 var(--sn-margin) max(32px, env(safe-area-inset-bottom));
+}
+.cu-name{
+  margin:0;font-family:var(--sn-font-display);font-weight:800;font-size:var(--sn-fs-xl);line-height:1.1;
+  color:var(--sn-cream);text-align:center;min-height:1.1em;
+}
+
+/* ── Mobile ── */
+@media (max-width:767px){
+  .sn-topbar{padding:14px 16px}
+  .cu-stage{--cu-d:min(40vh, 64vw)}
+  .cu-arrow{width:44px;height:44px;margin-top:-22px}
+  .cu-lede{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  .cu-arrow,.sn-back{transition:none}
+}

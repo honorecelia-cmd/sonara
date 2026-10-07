@@ -347,41 +347,6 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-trio [aria-pressed="true"] .nb-ic-play{display:block}
 .nb-trio [aria-pressed="true"] .nb-ic-pause{display:none}
 
-/* ── Choix du son-nom ── */
-.nb-sonnom{
-  position:fixed;inset:0;z-index:60;
-  display:flex;align-items:center;justify-content:center;padding:16px;
-  background:rgba(8,8,8,.6);
-  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-}
-.nb-sonnom[hidden]{display:none}
-.nb-sonnom-card{
-  position:relative;width:100%;max-width:520px;
-  background:var(--neb-card);border:1px solid rgba(255,255,255,.08);
-  border-radius:24px;padding:36px 32px 32px;
-}
-.nb-sonnom-t{
-  margin:10px 0 26px;
-  font-family:var(--f-display);font-weight:800;font-size:clamp(30px,3.4vw,44px);line-height:.95;letter-spacing:-.03em;color:#F3E3DC;
-}
-.nb-sonnom-row{display:flex;gap:10px}
-.nb-input{
-  flex:1;min-width:0;height:52px;padding:0 22px;
-  border-radius:999px;border:1px solid rgba(255,255,255,.14);
-  background:#1a1a1a;color:#fff;
-  font-family:var(--f-text);font-size:16px;outline:none;
-}
-.nb-input::placeholder{color:rgba(255,255,255,.35)}
-.nb-input:focus{border-color:var(--neb-orange)}
-.nb-sonnom .nb-pill--cta{background:var(--neb-orange);height:52px;padding:0 26px}
-.nb-sonnom .nb-pill--cta:hover{background:var(--accent)}
-.nb-sonnom-x{
-  position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.14);background:transparent;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-}
-.nb-sonnom-x svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
-
 /* ── Tablette ── */
 @media (max-width:1100px){
   .nb-hero-lede p{font-size:2.3vw}
@@ -426,8 +391,6 @@ html{scroll-padding-top:var(--hd-h)}
   .nb-trio--hero{top:auto;bottom:40px;right:16px;gap:10px}
   .nb-trio--hero button{width:48px;height:48px}
 
-  .nb-sonnom-row{flex-direction:column}
-  .nb-sonnom-card{padding:32px 20px 22px}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -904,6 +867,7 @@ html{scroll-padding-top:var(--hd-h)}
 @media (max-width:1100px){.nb-s04-knobs{display:none}}
 @media (max-width:760px){
   .nb-menu-link{display:none}
+  .nb-menu-link--univ{display:inline}
   .nb-s04-head{padding:76px 16px 0}
   .nb-s04-head .nb-secnum{margin:0}
   .nb-mega{font-size:14vw}

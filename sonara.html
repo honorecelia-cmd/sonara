@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="/sonara.css">
 <link rel="stylesheet" href="/landing.css">
 <link rel="stylesheet" href="/univers.css">
+<link rel="stylesheet" href="/ecrans.css">
 </head>
 <body>
 <canvas id="bg"></canvas>
@@ -49,20 +50,7 @@
 
     <nav class="nb-meta" aria-label="Menu principal">
       <a class="nb-meta-logo" href="#landing"><img src="/img/logo_sonara.svg" alt="SONARA"></a>
-      <div class="nb-meta-col nb-menu">
-        <button class="nb-menu-btn" type="button" aria-expanded="false" aria-controls="nb-menu-univ">Univers<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
-        <ul class="nb-menu-list" id="nb-menu-univ" hidden>
-          <li><button type="button" data-nb-univ="dancehall">Dancehall</button></li>
-          <li><button type="button" data-nb-univ="kompa">Kompa</button></li>
-          <li><button type="button" data-nb-univ="zouk">Zouk</button></li>
-          <li><button type="button" data-nb-univ="rap">Rap</button></li>
-          <li><button type="button" data-nb-univ="trap">Trap</button></li>
-          <li><button type="button" data-nb-univ="soca">Soca</button></li>
-          <li><button type="button" data-nb-univ="reggae">Reggae</button></li>
-          <li><button type="button" data-nb-univ="shatta">Shatta</button></li>
-          <li><button type="button" data-nb-univ="mix">Mix</button></li>
-        </ul>
-      </div>
+      <a class="nb-meta-col nb-menu-link nb-menu-link--univ" href="#univers">Univers</a>
       <div class="nb-meta-col nb-menu">
         <button class="nb-menu-btn" type="button" aria-expanded="false" aria-controls="nb-menu-mode">Mode<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
         <ul class="nb-menu-list" id="nb-menu-mode" hidden>
@@ -509,18 +497,28 @@
     </div>
   </footer>
 
-  <!-- Choix du son-nom : s'ouvre au clic sur "Jouer" (consigne : le son-nom
-       se choisit apres le clic). #landing-pseudo est lu par startFromLanding(). -->
-  <div class="nb-sonnom" id="nb-sonnom" role="dialog" aria-modal="true" aria-labelledby="nb-sonnom-t" hidden>
-    <div class="nb-sonnom-card">
-      <button class="nb-sonnom-x" type="button" data-nb-close aria-label="Fermer"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-      <p class="nb-label">Avant de jouer /</p>
-      <h2 class="nb-sonnom-t" id="nb-sonnom-t">Choisis ton son-nom</h2>
-      <form class="nb-sonnom-row" id="nb-sonnom-form">
-        <input id="landing-pseudo" class="nb-input" type="text" placeholder="#SON-SENSEI" maxlength="20" autocomplete="off" aria-label="Ton son-nom">
-        <button class="nb-pill nb-pill--cta" type="submit">C'est parti</button>
-      </form>
-    </div>
+</section>
+
+<!-- ═══ CHOIX DE L'UNIVERS (kit) : ecrans.css ═══ -->
+<section class="page sn-screen sn-bg-ink" id="s-univers" aria-labelledby="cu-t">
+  <div class="sn-topbar">
+    <button class="sn-back" type="button" id="cu-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
+    <img class="sn-topbar-logo" src="/img/logo_sonara.svg" alt="sonara">
+  </div>
+  <div class="cu-head">
+    <h1 id="cu-t" tabindex="-1">Choisis ton univers</h1>
+    <p class="cu-lede">Fais tourner les vinyles et choisis la musique de ta partie.</p>
+  </div>
+  <div class="cu-stage" id="cu-stage" role="group" aria-roledescription="carrousel" aria-label="Univers">
+    <button class="cu-side cu-side--prev" type="button" id="cu-prev-vy" tabindex="-1"></button>
+    <button class="cu-center" type="button" id="cu-center"><span class="cu-flip" id="cu-flip"></span></button>
+    <button class="cu-side cu-side--next" type="button" id="cu-next-vy" tabindex="-1"></button>
+    <button class="cu-arrow cu-arrow--prev" type="button" aria-label="Univers précédent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="cu-arrow cu-arrow--next" type="button" aria-label="Univers suivant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+  <div class="cu-foot">
+    <p class="cu-name" id="cu-name" aria-live="polite"></p>
+    <button class="sn-btn" type="button" id="cu-choose">Choisir cet univers</button>
   </div>
 </section>
 
@@ -942,6 +940,8 @@
 <script src="/sonara.js"></script>
 <script src="/landing.js"></script>
 <script src="/univers.js"></script>
+<script src="/sonara-kit.js"></script>
+<script src="/ecran-univers.js"></script>
 <script src="/footer.js"></script>
 </body>
 </html>

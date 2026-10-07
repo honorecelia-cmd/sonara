@@ -40,6 +40,18 @@ var UNIVERS = [
    texte:"Né en Martinique, le shatta est un enfant du dancehall : plus minimaliste, plus percussif, pensé pour faire bouger le dancefloor, avec des textes crus et beaucoup d'humour. Longtemps réservé aux soirées locales, il explose dans l'Hexagone au début des années 2020, porté notamment par Maureen et Bamby. C'est la touche martiniquaise de Sonara."}
 ];
 
+// Vinyle d'un univers (aussi utilise par l'ecran Choix de l'univers, ecrans.js)
+function uvEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function uvVinyl(u,spin){
+  var disc='color-mix(in srgb, '+u.couleur+' 70%, #000)';
+  var label=u.image
+    ? '<img src="'+u.image+'" alt="" data-ph="'+uvEsc(u.nom)+'">'
+    : '<span class="vy-label-txt">'+uvEsc(u.nom)+'</span>';
+  return '<span class="vy'+(spin?' vy--spin':'')+'" style="--vy-color:'+disc+';--vy-label:'+u.couleur+'">'+
+    '<span class="vy-spin"><span class="vy-disc"></span><span class="vy-label">'+label+'</span><span class="vy-hole"></span></span>'+
+    '<span class="vy-sheen"></span></span>';
+}
+
 (function(){
   'use strict';
   var sec=document.getElementById('univers');
@@ -60,18 +72,7 @@ var UNIVERS = [
   // Precharge des pochettes
   UNIVERS.forEach(function(u){if(u.image){var im=new Image();im.src=u.image;}});
 
-  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function disc(u){return 'color-mix(in srgb, '+u.couleur+' 70%, #000)';}
-  function label(u){
-    return u.image
-      ? '<img src="'+u.image+'" alt="" data-ph="'+esc(u.nom)+'">'
-      : '<span class="vy-label-txt">'+esc(u.nom)+'</span>';
-  }
-  function vinyl(u,spin){
-    return '<span class="vy'+(spin?' vy--spin':'')+'" style="--vy-color:'+disc(u)+';--vy-label:'+u.couleur+'">'+
-      '<span class="vy-spin"><span class="vy-disc"></span><span class="vy-label">'+label(u)+'</span><span class="vy-hole"></span></span>'+
-      '<span class="vy-sheen"></span></span>';
-  }
+  var esc=uvEsc, vinyl=uvVinyl;
   // Image absente ou en erreur : placeholder propre
   sec.addEventListener('error',function(e){
     var im=e.target;
@@ -93,7 +94,7 @@ var UNIVERS = [
   function paintCenter(){
     var u=at(idx);
     flip.innerHTML=vinyl(u,true);
-    center.setAttribute('aria-label','Découvrir l\'univers '+u.nom);
+    center.setAttribute('aria-label','Jouer en '+u.nom);
     discover.setAttribute('aria-label','Découvrir l\'univers '+u.nom);
   }
   function paintSides(){prevVy.innerHTML=vinyl(at(idx-1),false);nextVy.innerHTML=vinyl(at(idx+1),false);}
@@ -300,11 +301,15 @@ var UNIVERS = [
   // ── Interactions ─────────────────────────────────────────────
   sec.querySelector('.uv-arrow--prev').addEventListener('click',function(){go(-1);});
   sec.querySelector('.uv-arrow--next').addEventListener('click',function(){go(1);});
-  center.addEventListener('click',function(){if(!open)openUniverse();});
+  // Clic sur un vinyle : ecran Son-nom avec cet univers preselectionne
+  function playIn(u){if(window.SonaraFlow)SonaraFlow.toSonnom(u.slug);}
+  center.addEventListener('click',function(){if(!open&&!busy)playIn(at(idx));});
+  prevVy.addEventListener('click',function(){if(!open&&!busy)playIn(at(idx-1));});
+  nextVy.addEventListener('click',function(){if(!open&&!busy)playIn(at(idx+1));});
   discover.addEventListener('click',openUniverse);
   pBack.addEventListener('click',closeUniverse);
   pPlay.addEventListener('click',function(){
-    if(window.nbOpenSonnom)window.nbOpenSonnom({theme:at(idx).slug});
+    playIn(at(idx));
   });
   // Clic hors panneau (ni pochette, ni vinyle) : fermer
   sec.addEventListener('click',function(e){
@@ -315,8 +320,6 @@ var UNIVERS = [
   // Clavier : fleches quand la section est a l'ecran, Echap pour fermer
   new IntersectionObserver(function(es){inView=es[0].intersectionRatio>=.5;},{threshold:[0,.5,1]}).observe(sec);
   document.addEventListener('keydown',function(e){
-    var son=document.getElementById('nb-sonnom');
-    if(son&&!son.hidden)return;
     if(e.key==='Escape'&&open){closeUniverse();return;}
     if(!inView||open)return;
     var tag=(document.activeElement&&document.activeElement.tagName)||'';

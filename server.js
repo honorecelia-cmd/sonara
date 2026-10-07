@@ -218,7 +218,7 @@ const server = http.createServer(function(req, res) {
   }
 
   // Fichiers statiques CSS / JS
-  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js' || p.pathname === '/landing.css' || p.pathname === '/landing.js' || p.pathname === '/univers.css' || p.pathname === '/univers.js' || p.pathname === '/footer.js' || p.pathname === '/sonara-kit.css' || p.pathname === '/sonara-kit.js') {
+  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js' || p.pathname === '/landing.css' || p.pathname === '/landing.js' || p.pathname === '/univers.css' || p.pathname === '/univers.js' || p.pathname === '/footer.js' || p.pathname === '/sonara-kit.css' || p.pathname === '/sonara-kit.js' || p.pathname === '/ecrans.css' || p.pathname === '/ecran-univers.js') {
     fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
       if (err) { res.writeHead(404); res.end('Not found'); return; }
       var ct = p.pathname.endsWith('.css') ? 'text/css' : 'application/javascript';
