@@ -9,6 +9,9 @@
    degrade du hero sur l'ecran Son-nom uniquement, une seule couleur
    d'action (orange --sn-accent), une seule creme, aucune ombre portee
    (contours fins et anneau orange uniquement), aucun symbole decoratif.
+   Exception provisoire : ombre douce sur la carte son-nom (.pc-card,
+   ecrans.css), a reevaluer. Elle ne s'etend a aucun autre ecran ni
+   composant ; la regle generale reste "pas d'ombre portee".
    Demo : /kit.html (non liee sur le site).
    ═══════════════════════════════════════════════════════════════ */
 

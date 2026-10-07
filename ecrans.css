@@ -28,12 +28,10 @@
 .pc-back:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .pc-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .pc-logo{display:block;height:28px;width:auto}
-/* Repere editorial + titre, comme les en-tetes de section de la landing */
+/* Indicateur d'etape (.pc-step, comme l'etape 2) + titre */
 .pc-head{position:absolute;left:var(--neb-margin);top:84px;z-index:4;pointer-events:none}
-.pc-head .nb-secnum span{color:rgba(255,255,255,.7)}
-.pc-head .nb-secnum p{margin:6px 0 0;font-family:var(--f-text);font-size:14px;font-weight:500;color:#fff}
 .pc-head h1{
-  margin:14px 0 0;font-family:var(--f-display);font-weight:800;color:#fff;
+  margin:0;font-family:var(--f-display);font-weight:800;color:#fff;
   font-size:clamp(30px,3.4vw,48px);line-height:.95;letter-spacing:-.03em;
 }
 .pc h1:focus{outline:none}
@@ -82,12 +80,15 @@
   padding:76px var(--neb-margin) 24px;
 }
 .pc-s2{width:100%;max-width:460px;margin:auto 0}
+/* Indicateur d'etape, commun aux deux etapes */
 .pc-step{margin:0 0 6px;font-family:var(--f-text);font-size:14px;color:rgba(255,255,255,.8)}
 .pc-s2 h1{
   margin:0 0 16px;font-family:var(--f-display);font-weight:800;color:#fff;
   font-size:clamp(30px,3.4vw,44px);line-height:.95;letter-spacing:-.03em;
 }
-/* Carte : creme tres clair (la creme de la landing eclaircie), ombre douce */
+/* Carte : creme tres clair (la creme de la landing eclaircie), ombre douce.
+   Exception provisoire a la regle "pas d'ombre portee" du kit, limitee a
+   cette carte (voir sonara-kit.css) : ne pas l'etendre aux autres ecrans. */
 .pc-card{
   --pc-bg:color-mix(in srgb, var(--cream) 30%, #fff);
   --pc-muted:var(--sn-muted-ink);
