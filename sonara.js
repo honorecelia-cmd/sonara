@@ -1086,7 +1086,7 @@ function showEntreProches(){
   showPage('s-entre');
   var a=document.getElementById('entre-link');
   if(a){a.textContent='Génération du lien…';a.removeAttribute('href');}
-  var b=document.getElementById('entre-copy');if(b)b.textContent='COPIER';
+  var b=document.getElementById('entre-copy');if(b)b.textContent='Copier';
   ensureEntreCode(function(code){
     var url=entreLinkFromCode(code);
     if(a){a.textContent=url;a.href=url;}
@@ -1094,7 +1094,7 @@ function showEntreProches(){
 }
 function copyEntreLink(){
   var b=document.getElementById('entre-copy');
-  function ok(){if(b){b.textContent='COPIÉ !';setTimeout(function(){b.textContent='COPIER';},2000);}}
+  function ok(){if(b){b.textContent='Copié !';setTimeout(function(){b.textContent='Copier';},2000);}}
   ensureEntreCode(function(code){
     var url=entreLinkFromCode(code);
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(ok).catch(function(){prompt('Copie le lien :',url);});}

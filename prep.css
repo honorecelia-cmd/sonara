@@ -67,7 +67,7 @@
 
 /* Pilules de choix (univers) : comme les modes du son-nom */
 .pp-pills{display:flex;flex-wrap:wrap;gap:6px}
-.pp .tc{
+.pp .tc,.pp .pp-pill{
   display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:none;border-radius:999px;cursor:pointer;
   background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(45,16,2,.5);
   font-family:var(--f-text);font-size:14px;font-weight:600;text-decoration:none;
@@ -78,11 +78,11 @@
   margin:0;padding:0;background:none;letter-spacing:0;text-transform:none;
   font-family:var(--f-text);font-size:14px;font-weight:600;line-height:1;color:inherit;-webkit-text-fill-color:currentColor;
 }
-.pp .tc::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--pp-u,var(--accent));flex-shrink:0}
-.pp .tc:hover{background:rgba(45,16,2,.06)}
+.pp .tc::before,.pp .pp-pill::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--pp-u,var(--accent));flex-shrink:0}
+.pp .tc:hover,.pp .pp-pill:hover{background:rgba(45,16,2,.06)}
 .pp .tc.selected{background:var(--accent);color:#fff;box-shadow:none}
 .pp .tc.selected::before{box-shadow:0 0 0 2px #fff}
-.pp .tc:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.pp .tc:focus-visible,.pp .pp-pill:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
 /* Boutons : principal orange dans la carte, secondaire en contour fin */
 .pp .pc-card .sn-btn{
@@ -121,7 +121,7 @@
   background:#fff;box-shadow:inset 0 0 0 1px rgba(45,16,2,.5);
 }
 .pp-link a{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;color:var(--ink);text-decoration:none}
-.pp-link .sn-btn{width:auto !important;flex-shrink:0;height:38px;padding:0 16px;font-size:13px}
+.pp .pc-card .pp-link .sn-btn{width:auto;flex-shrink:0;height:38px;padding:0 16px;font-size:13px}
 
 /* ── Chargement : fond des ecrans de jeu, halo de l'univers, logo qui pulse ── */
 .page.pp-load{

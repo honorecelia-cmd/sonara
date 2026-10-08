@@ -823,35 +823,40 @@
 </section>
 
 <!-- ═══ ENTRE PROCHES ═══ -->
-<section class="page" id="s-entre">
-  <div class="fig-nav">
-    <button class="btn-back" onclick="showPage('s-res')">← Retour</button>
-    <img src="/img/logo_sonara.png" class="fig-logo" alt="Sonara">
-    <div class="fig-online"><span class="fig-odot"></span><span class="online-count">246 joueurs en ligne</span></div>
+<!-- ═══ DEFI A PARTAGER (prep.css, ecran-prep.js) ═══
+     showEntreProches() ecrit le lien dans #entre-link ; #entre-copy et
+     #entre-share appellent copyEntreLink() et shareEntreLink(). -->
+<section class="page pp" id="s-entre" aria-labelledby="pp-entre-t">
+  <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
+  <div class="pp-top">
+    <button class="pc-back" type="button" onclick="showPage('s-res')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
+    <img src="/img/logo_sonara.svg" alt="Sonara">
   </div>
-  <div class="fig-entre-body">
-    <div class="fig-entre-title">ENTRE PROCHES</div>
-    <p class="fig-entre-desc">Envoie ce lien à tes proches et retrouve-les dans ton univers !</p>
-    <div class="fig-link-box">
-      <a class="fig-link-url" id="entre-link" href="#" target="_blank" rel="noopener">https://sonara-blindtest.fr/fr/custom-xxxx</a>
-      <button class="fig-copy-btn" id="entre-copy" onclick="copyEntreLink()">COPIER</button>
+  <div class="pp-grid">
+    <div class="pp-main">
+      <h1 id="pp-entre-t">Défi à partager</h1>
+      <p class="pp-lede">Envoie ce lien à tes proches : chacun joue quand il veut, sur ton univers.</p>
+      <div class="pc-card">
+        <p class="pp-k">Ton lien</p>
+        <div class="pp-link"><a id="entre-link" href="#" target="_blank" rel="noopener">Génération du lien…</a><button class="sn-btn" id="entre-copy" type="button" onclick="copyEntreLink()">Copier</button></div>
+        <div class="pp-actions"><button class="sn-btn" id="entre-share" type="button" onclick="shareEntreLink()">Partager</button></div>
+        <div class="pp-block" style="margin-top:18px">
+          <p class="pp-k">Ou joue tout de suite en solo</p>
+          <div class="pp-pills">
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-kompa)" onclick="selectSoloTheme('kompa')">Kompa</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-zouk)" onclick="selectSoloTheme('zouk')">Zouk</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-mix)" onclick="selectSoloTheme('mix')">Mix</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-reggae)" onclick="selectSoloTheme('reggae')">Reggae</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-dancehall)" onclick="selectSoloTheme('dancehall')">Dancehall</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-soca)" onclick="selectSoloTheme('soca')">Soca</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-shatta)" onclick="selectSoloTheme('shatta')">Shatta</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-trap)" onclick="selectSoloTheme('trap')">Trap</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-rap)" onclick="selectSoloTheme('rap')">Rap</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="fig-mini-grid">
-      <div class="fig-mini-tc" onclick="selectSoloTheme('kompa')"><img src="/img/cover_kompa.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Kompa</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('zouk')"><img src="/img/cover_zouk.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Zouk</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('mix')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Mix</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('reggae')"><img src="/img/cover_reggae.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Reggae</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('dancehall')"><img src="/img/cover_dancehall.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Dancehall</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('trap')"><img src="/img/cover_dancehall.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Trap</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('rap')"><img src="/img/cover_rap.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Rap</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('soca')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Soca</span></div>
-    </div>
-    <button class="fig-entre-share" id="entre-share" onclick="shareEntreLink()">Partager</button>
-  </div>
-  <div class="ld-soar-txt" aria-hidden="true">SO<br>AR</div>
-  <div class="ld-footer">
-    <div class="ld-suivez-line">Suivez-nous :</div>
-    <div class="ld-handle-line"><img src="/img/rs.png" class="ld-rs" alt=""><span class="ld-handle">sonara_blindtest</span></div>
+    <div class="pp-deco" id="pp-entre-deco" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -859,25 +864,25 @@
 
 
 <!-- ═══ MULTIJOUEUR — CHOIX ═══ -->
-<section class="page" id="s-multi">
-  <nav>
-    <button class="btn-back" onclick="showPage('landing')">← Retour</button>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div style="width:80px"></div>
-  </nav>
-  <div class="hero" style="padding-bottom:8px">
-    <h1 style="font-size:clamp(24px,6vw,36px)">Multijoueur</h1>
-    <p class="hero-sub">Joue avec tes amis, où qu'ils soient.</p>
+<!-- ═══ JOUER EN DIRECT : creer ou rejoindre (prep.css, ecran-prep.js) ═══ -->
+<section class="page pp" id="s-multi" aria-labelledby="pp-multi-t">
+  <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
+  <div class="pp-top">
+    <button class="pc-back" type="button" onclick="showPage('landing')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Accueil</button>
+    <img src="/img/logo_sonara.svg" alt="Sonara">
   </div>
-  <div class="multi-choice-grid">
-    <button class="multi-choice-card" onclick="showPage('s-create')">
-      <span style="font-family:MuseoModerno,sans-serif;font-size:16px;font-weight:800;color:var(--txt)">Créer</span>
-      <span style="font-size:12px;color:var(--mut)">Lance une nouvelle salle</span>
-    </button>
-    <button class="multi-choice-card" onclick="showPage('s-join')">
-      <span style="font-family:MuseoModerno,sans-serif;font-size:16px;font-weight:800;color:var(--txt)">Rejoindre</span>
-      <span style="font-size:12px;color:var(--mut)">Entre le code d'une salle</span>
-    </button>
+  <div class="pp-grid">
+    <div class="pp-main">
+      <h1 id="pp-multi-t">Jouer en direct</h1>
+      <p class="pp-lede">Une salle, un code, et tout le monde joue en même temps.</p>
+      <div class="pc-card">
+        <div class="pp-actions" style="margin-top:0">
+          <button class="sn-btn" type="button" onclick="showPage('s-create')">Créer une salle</button>
+          <button class="sn-btn sn-btn--ghost" type="button" onclick="showPage('s-join')">Rejoindre une salle</button>
+        </div>
+      </div>
+    </div>
+    <div class="pp-deco" id="pp-multi-deco" aria-hidden="true"></div>
   </div>
 </section>
 
