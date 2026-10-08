@@ -729,13 +729,13 @@ function tryGuess(v,byUser){
   if(matchA&&matchT){
     // Les deux d'un coup — bonus !
     G.foundA=true;G.foundT=true;
-    addChatMsg(G.ps+' a trouvé les deux !','found');
+    addChatMsg('Tu as trouvé les deux !','found');
     sfxOk();
     addFoundTag(q.a,'artist');addFoundTag(q.t,'title');
     updateFoundScore('both');
   } else if(matchA){
     G.foundA=true;
-    addChatMsg(G.ps+' a trouvé l\'artiste, maintenant le titre !','found');
+    addChatMsg('Tu as trouvé l\'artiste, maintenant le titre !','found');
     sfxOk();
     addFoundTag(q.a,'artist');
     if(G.foundT){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}
@@ -744,7 +744,7 @@ function tryGuess(v,byUser){
     if(byUser&&!G.foundT){var ani=$('ani');ani.value='';ani.placeholder='Maintenant le titre…';ani.focus();}
   } else if(matchT){
     G.foundT=true;
-    addChatMsg(G.ps+' a trouvé le titre, maintenant l\'artiste !','found');
+    addChatMsg('Tu as trouvé le titre, maintenant l\'artiste !','found');
     sfxOk();
     addFoundTag(q.t,'title');
     if(G.foundA){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}
@@ -910,11 +910,17 @@ function doReveal(){
   hideG();$('rvsc').classList.add('on');
   var q=G.qs[G.cq];
   $('rvtit').textContent=q.t;$('rvar').textContent=q.a;$('rvmt').textContent=q.y||'';$('remoji').textContent='';
-  var reva=$('reva');reva.querySelectorAll('img').forEach(function(i){i.remove()});
-  // Pochette du morceau si connue, sinon pochette de son univers (UNIVERS, univers.js)
-  var cov=q.cover||universeCover(q.u||themeSlug());
-  $('remoji').style.display=cov?'none':'';
-  if(cov){var img=document.createElement('img');img.src=cov;img.alt='';img.onerror=function(){img.remove();$('remoji').style.display=''};reva.appendChild(img)}
+  var reva=$('reva');reva.querySelectorAll('img,.vy').forEach(function(i){i.remove()});
+  // Pochette propre du morceau si elle existe ; sinon le vinyle de son univers
+  // (la pochette de l'univers n'est pas celle du morceau revele)
+  $('remoji').style.display='none';
+  function showVinyl(){
+    var key=q.u||themeSlug(),list=window.UNIVERS||[],u=null;
+    for(var i=0;i<list.length;i++)if(list[i].slug===key)u=list[i];
+    if(u&&window.uvVinyl)reva.insertAdjacentHTML('beforeend',uvVinyl(u,true));
+  }
+  if(q.cover){var img=document.createElement('img');img.src=q.cover;img.alt='';img.onerror=function(){img.remove();showVinyl()};reva.appendChild(img)}
+  else showVinyl();
   var v=$('rvv');
   if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='Les deux trouvés en '+(G.td-G.tl)+'s. Sé ou !'}
   else if(G.foundA){v.className='revv vok';v.textContent='Artiste trouvé : '+q.a+'. Titre manquant : '+q.t}
@@ -944,7 +950,7 @@ function doReveal(){
       }).join('');
   }
   var fi=$('pbfi'),bl=$('pbl'),isLast=G.cq>=G.qs.length-1,delay=isLast?4000:5000;
-  bl.textContent=isLast?'Résultats dans 4s…':'Prochaine question dans 5s…';
+  bl.textContent=isLast?'Résultats dans 4 s':'Prochaine manche dans 5 s';
   fi.style.transition='none';fi.style.width='0%';
   requestAnimationFrame(function(){fi.style.transition='width '+(delay/1000)+'s linear';fi.style.width='100%'});
   // Multijoueur : c'est le serveur qui envoie la manche suivante (next_question)

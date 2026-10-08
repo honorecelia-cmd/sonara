@@ -57,8 +57,15 @@
 
 /* ── Grille commune manche / revelation : une colonne (mobile), deux des 1100 px ── */
 .jg-grid{grid-template-columns:minmax(0,1fr);gap:18px;align-items:start;width:100%;max-width:560px;margin:0 auto}
-.jg-media{display:flex;justify-content:center}
+.jg-media{position:relative;display:flex;justify-content:center}
+/* Halo statique de la couleur de l'univers, derriere la pochette (manche) */
+.qsc .jg-media::before,.jg-lobby-main::before{
+  content:"";position:absolute;inset:-18%;z-index:-1;pointer-events:none;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--jg-u,var(--accent)) 15%, transparent), transparent);
+}
+.jg-media > *{position:relative}
 .jg-panel{display:flex;flex-direction:column;gap:14px;min-width:0}
+.jg-grid{isolation:isolate}
 
 /* Pochette : arrondi 16px, floutee pendant l'ecoute (pochette de l'univers) */
 .jg-cover{
@@ -68,14 +75,17 @@
 .jg-cover img{display:block;width:100%;height:100%;object-fit:cover}
 .jg .sn-cover.is-blurred img{filter:blur(22px) saturate(1.1);transform:scale(1.12)}
 .jg-cover--reveal .remoji{display:none}
+.jg-cover--reveal{display:grid;place-items:center}
+.jg-cover--reveal .vy{width:84%;--vy-hole:var(--jg-surface)}
+.jg-cover--reveal .vy--spin .vy-spin{animation-duration:12s}
 /* Revelation : de floute a net (0,9 s, courbe de la landing) */
 .jg-cover--reveal img{animation:sn-reveal .9s cubic-bezier(.65,0,.35,1) both}
 
 /* Ligne du haut de la manche : ecoute, multiplicateur, compte rond */
 .jg-row{display:flex;align-items:center;gap:12px}
 .jg-listen{flex:1;display:flex;align-items:center;gap:10px;min-width:0;font-size:13px;color:var(--jg-muted)}
-.jg-bars{display:inline-flex;align-items:flex-end;gap:2px;height:16px;flex-shrink:0}
-.jg-bars .eqb{display:block;width:3px;background:var(--accent);transform-origin:bottom;animation:nb-bars 1s ease-in-out infinite}
+.jg-bars{display:inline-flex;align-items:flex-end;gap:3px;height:20px;flex-shrink:0}
+.jg-bars .eqb{display:block;width:4px;border-radius:1px;background:var(--accent);transform-origin:bottom;animation:nb-bars 1s ease-in-out infinite}
 .jg-bars .eqb:nth-child(1){height:40%}
 .jg-bars .eqb:nth-child(2){height:100%;animation-delay:-.3s}
 .jg-bars .eqb:nth-child(3){height:65%;animation-delay:-.6s}
@@ -113,14 +123,15 @@
 /* Champ de reponse : pilule blanche + bouton rond orange */
 .jg-input{
   position:relative;display:flex;align-items:center;gap:8px;height:56px;padding:0 6px 0 22px;
-  border-radius:999px;background:#fff;overflow:hidden;
+  border-radius:999px;background:color-mix(in srgb, var(--cream) 30%, #fff);overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(195,69,3,.55);
 }
 .jg-input:focus-within{box-shadow:0 0 0 2px var(--accent)}
 .jg .ani{
   flex:1;min-width:0;height:100%;padding:0;border:none;outline:none;background:transparent;
   font-family:var(--f-text);font-size:16px;color:var(--ink);
 }
-.jg .ani::placeholder{color:rgba(45,16,2,.6)}
+.jg .ani::placeholder{color:var(--sn-muted-ink)}
 .jg .ani:disabled{opacity:.6}
 .jg .ani-prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);pointer-events:none}
 .jg .vbtn{
@@ -133,13 +144,13 @@
 .jg .vbtn:disabled{opacity:.45;cursor:default}
 .jg .vbtn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 
-/* Gain de points : pop (pfly) */
-.jg .panch{position:relative;height:0}
+/* Gain de points : au-dessus du champ, aligne a droite, creme ; pfly le fait
+   monter (translate compense le decalage horizontal de la keyframe) */
+.jg .panch{position:relative;height:0;margin-bottom:-14px}
 .jg .spop{
-  position:absolute;left:50%;top:-34px;white-space:nowrap;pointer-events:none;
-  padding:4px 12px;border-radius:999px;background:var(--accent);
-  font-size:15px;font-weight:700;color:#fff;
-  animation:sn-pfly 1.1s var(--sn-ease) forwards;
+  position:absolute;right:8px;bottom:6px;white-space:nowrap;pointer-events:none;translate:50% 0;
+  font-family:var(--f-display);font-size:20px;font-weight:800;color:var(--cream);
+  animation:sn-pfly 1.2s var(--sn-ease) forwards;
 }
 .jg-chat{max-height:72px;overflow-y:auto;font-size:13px;line-height:1.5;color:var(--jg-muted)}
 .jg-chat .is-found{color:var(--cream)}
@@ -191,7 +202,7 @@
   position:relative;z-index:1;flex:1;width:100%;max-width:560px;margin:0 auto;
   display:flex;flex-direction:column;gap:28px;padding:8px var(--neb-margin) 40px;
 }
-.jg-lobby-main{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.jg-lobby-main{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
 .jg-lobby-tags{display:flex;flex-wrap:wrap;gap:8px}
 .jg-badge-live{
   padding:6px 12px;border-radius:999px;background:var(--accent);color:var(--cream);
@@ -205,8 +216,8 @@
 .jg-univ:empty{display:none}
 .jg-lobby .jg-k{margin:6px 0 0}
 .jg-code{
-  font-family:var(--f-display);font-weight:900;font-size:clamp(72px,12vw,140px);line-height:.9;
-  letter-spacing:.06em;color:var(--cream);font-variant-numeric:tabular-nums;
+  margin:0 0 14px;font-family:var(--f-text);font-weight:800;font-size:clamp(64px,10vw,120px);line-height:1.05;
+  letter-spacing:.12em;color:var(--cream);font-variant-numeric:tabular-nums;
 }
 .jg-code-btns{display:flex;flex-wrap:wrap;gap:10px}
 .jg-code-btns .sn-btn{color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}

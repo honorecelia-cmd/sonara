@@ -54,6 +54,7 @@
     var key=currentKey(), u=univ(key);
     var src=(G.qs[G.cq]&&G.qs[G.cq].cover)||(typeof universeCover==='function'?universeCover(key):null);
     coverBox.style.background=u?u.couleur:'';
+    game.style.setProperty('--jg-u',u?u.couleur:'var(--accent)');   // halo de la pochette
     if(src){coverImg.hidden=false;if(coverImg.getAttribute('src')!==src)coverImg.src=src;}
     else coverImg.hidden=true;
     // Puces "Artiste ?" / "Titre ?" (sonara.js les passe a "trouve")
@@ -94,6 +95,7 @@
     var u=univ(window.G_MULTI&&G_MULTI.theme), chip=$('jg-lobby-univ');
     chip.textContent=u?u.nom:'';
     chip.style.setProperty('--jg-u',u?u.couleur:'');
+    lobby.style.setProperty('--jg-u',u?u.couleur:'var(--accent)');   // halo derriere le code
     var code=$('lobby-code').textContent.trim();
     if(code!==lastCode){seen={};lastCode=code;}
   });
