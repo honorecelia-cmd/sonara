@@ -856,7 +856,8 @@ function doSub(v,byUser,src){
 function popScore(txt){
   var a=$('panch'),el=document.createElement('div');
   el.className='spop g';el.textContent=txt;a.appendChild(el);
-  setTimeout(function(){el.remove()},1200);
+  el.addEventListener('animationend',function(){el.remove()});
+  setTimeout(function(){el.remove()},1400);   // filet si l'animation est desactivee
 }
 function simBots(dur){
   G.pl.filter(function(p){return p.bot}).forEach(function(b){
@@ -917,16 +918,19 @@ function doReveal(){
   function showVinyl(){
     var key=q.u||themeSlug(),list=window.UNIVERS||[],u=null;
     for(var i=0;i<list.length;i++)if(list[i].slug===key)u=list[i];
-    if(u&&window.uvVinyl)reva.insertAdjacentHTML('beforeend',uvVinyl(u,true));
+    if(!u||!window.uvVinyl)return;
+    // etiquette neutre : couleur de l'univers et logo Sonara, aucune pochette reelle
+    reva.insertAdjacentHTML('beforeend',uvVinyl({nom:u.nom,couleur:u.couleur,image:null},true));
+    var lab=reva.querySelector('.vy-label');if(lab)lab.innerHTML='<span class="jg-vy-logo" role="img" aria-label="Sonara"></span>';
   }
   if(q.cover){var img=document.createElement('img');img.src=q.cover;img.alt='';img.onerror=function(){img.remove();showVinyl()};reva.appendChild(img)}
   else showVinyl();
   var v=$('rvv');
-  if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='Les deux trouvés en '+(G.td-G.tl)+'s. Sé ou !'}
-  else if(G.foundA){v.className='revv vok';v.textContent='Artiste trouvé : '+q.a+'. Titre manquant : '+q.t}
-  else if(G.foundT){v.className='revv vok';v.textContent='Titre trouvé : '+q.t+'. Artiste manquant : '+q.a}
-  else if($('ani').value.trim()||document.querySelector('.qb.wrong')){v.className='revv vno';v.textContent='C\'était : '+q.t+', '+q.a}
-  else{v.className='revv vmh';v.textContent='Temps écoulé : '+q.t+' · '+q.a}
+  if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='Les deux trouvés en '+(G.td-G.tl)+' s. Sé ou !'}
+  else if(G.foundA){v.className='revv vok';v.textContent='Artiste trouvé, titre manqué'}
+  else if(G.foundT){v.className='revv vok';v.textContent='Titre trouvé, artiste manqué'}
+  else if($('ani').value.trim()||document.querySelector('.qb.wrong')){v.className='revv vno';v.textContent='Pas trouvé cette fois'}
+  else{v.className='revv vmh';v.textContent='Pas trouvé cette fois'}
   var sorted=G.pl.slice().sort(function(a,b){return b.s-a.s});
   $('rnkm').innerHTML='<p class="jg-k">Classement</p>'+sorted.slice(0,5).map(function(p,i){
     return '<div class="rnkr'+(p.me?' me':'')+'" data-n="'+esc(p.n)+'"><span class="rpos">'+(i+1)+'</span><span class="rav">'+ini(p.n)+'</span><span class="rnm">'+esc(p.n)+(p.me?' (toi)':'')+'</span><span class="rsc">'+(p.me?G.sc:p.s)+'</span></div>';
