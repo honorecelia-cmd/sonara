@@ -75,6 +75,8 @@
 
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{background:var(--sn-ink);color:#fff;font-family:var(--sn-font-body);min-height:100vh}
+/* Champs et boutons : police du texte (sinon police systeme du navigateur) */
+button,input,textarea,select{font-family:inherit}
 #bg{position:fixed;inset:0;pointer-events:none;z-index:0;display:none}   /* ancien fond a particules : plus visible */
 
 /* ── SYSTÈME DE PAGES PAR ANCRES CSS ────────────────────
