@@ -1252,9 +1252,9 @@ function joinRoom() {
     var codeInp = document.getElementById('join-code');
     var errMsg = document.getElementById('join-error');
     codeInp.style.borderColor = 'var(--red)';
-    if(errMsg) { errMsg.textContent = 'Code introuvable. Vérifie et réessaie.'; errMsg.style.display='block'; }
+    if(errMsg) { errMsg.textContent = 'Aucune salle ne porte ce code. Vérifie-le auprès de la personne qui t\'invite.'; errMsg.style.display='block'; }
     var btn = document.querySelector('#s-join .bgo');
-    if(btn) { btn.disabled=false; btn.textContent='Rejoindre →'; }
+    if(btn) { btn.disabled=false; btn.textContent='Rejoindre'; }
   });
 }
 

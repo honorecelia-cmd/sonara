@@ -85,7 +85,13 @@
 .pp .tc:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
 /* Boutons : principal orange dans la carte, secondaire en contour fin */
-.pp .pc-card .sn-btn{width:100%}
+.pp .pc-card .sn-btn{
+  width:100%;height:auto;margin:0;border:none;border-radius:999px;
+  font-family:var(--f-text);font-size:15px;font-weight:600;letter-spacing:0;text-transform:none;
+}
+/* Bouton principal (dont "#s-join .bgo", classe gardee pour joinRoom) : orange */
+.pp .pc-card .sn-btn:not(.sn-btn--ghost){background:var(--accent);color:#fff}
+.pp .pc-card .sn-btn:not(.sn-btn--ghost):hover:not(:disabled){background:var(--sn-accent-press)}
 .pp-actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}
 .pp .pc-card .sn-btn--ghost{color:var(--ink);box-shadow:inset 0 0 0 1px rgba(45,16,2,.5);background:transparent}
 .pp .pc-card .sn-btn--ghost:hover{background:rgba(45,16,2,.06)}

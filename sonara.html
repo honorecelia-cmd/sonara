@@ -922,20 +922,35 @@
 </section>
 
 <!-- ═══ REJOINDRE UNE SALLE ═══ -->
-<section class="page" id="s-join">
-  <nav>
-    <button class="btn-back" onclick="showPage('s-multi')">← Retour</button>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div style="width:80px"></div>
-  </nav>
-  <div style="width:100%;max-width:440px;padding:24px 16px 40px">
-    <h2 style="font-family:MuseoModerno,sans-serif;font-size:22px;font-weight:800;margin-bottom:24px">Rejoindre une salle</h2>
-    <label class="flbl">Ton pseudo</label>
-    <input class="finp" id="join-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:20px">
-    <label class="flbl">Code de la salle</label>
-    <input style="background:var(--s2);border:1px solid var(--bd2);border-radius:10px;padding:14px;font-size:28px;font-weight:800;font-family:MuseoModerno,sans-serif;color:var(--txt);text-align:center;letter-spacing:6px;width:100%;text-transform:uppercase;margin-top:8px" id="join-code" type="text" placeholder="KALI" maxlength="4">
-    <button class="bgo" style="margin-top:20px" onclick="joinRoom()">Rejoindre →</button>
-    <div id="join-error" style="display:none;margin-top:12px;color:var(--red);font-size:13px;font-weight:600;text-align:center"></div>
+<!-- ═══ REJOINDRE UNE SALLE (prep.css, ecran-prep.js) ═══
+     joinRoom() lit #join-pseudo et #join-code, change le texte de
+     "#s-join .bgo" et affiche #join-error. -->
+<section class="page pp" id="s-join" aria-labelledby="pp-join-t">
+  <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
+  <div class="pp-top">
+    <button class="pc-back" type="button" onclick="showPage('s-multi')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
+    <img src="/img/logo_sonara.svg" alt="Sonara">
+  </div>
+  <div class="pp-grid">
+    <div class="pp-main">
+      <h1 id="pp-join-t">Rejoindre une salle</h1>
+      <div class="pc-card">
+        <p class="pp-me" id="pp-join-me" hidden>Tu joues en tant que <b id="pp-join-me-name"></b><button type="button" id="pp-join-change">Changer</button></p>
+        <div class="pp-block" id="pp-join-name" hidden>
+          <label class="pp-k" for="join-pseudo">Ton son-nom</label>
+          <div class="pp-field"><input id="join-pseudo" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton son-nom"></div>
+        </div>
+        <div class="pp-block">
+          <label class="pp-k" for="join-code">Code de la salle</label>
+          <div class="pp-code"><input id="join-code" type="text" maxlength="4" inputmode="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="K7MZ" aria-describedby="join-error"></div>
+          <div class="pp-err" id="join-error" style="display:none" role="alert"></div>
+        </div>
+        <div class="pp-actions">
+          <button class="sn-btn bgo" type="button" onclick="joinRoom()" disabled>Rejoindre</button>
+        </div>
+      </div>
+    </div>
+    <div class="pp-deco" id="pp-join-deco" aria-hidden="true"></div>
   </div>
 </section>
 
