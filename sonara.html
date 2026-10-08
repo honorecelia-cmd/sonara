@@ -697,13 +697,15 @@
 </div>
 
 <!-- ═══ LOADING ═══ -->
-<section class="page" id="s-load">
-  <div class="ldbox">
-    <div class="ldlogo">SON<b>A</b>RA</div>
-    <div class="spin"></div>
-    <div id="ldt" style="font-size:14px;color:var(--mut);font-weight:500">Chargement…</div>
-    <div id="lds" style="font-size:11px;color:var(--mut);margin-top:5px;opacity:.7"></div>
-    <button id="btn-load-back" style="margin-top:24px;background:none;border:1px solid var(--bd);border-radius:8px;padding:8px 20px;color:var(--mut);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">← Annuler</button>
+<!-- ═══ CHARGEMENT (prep.css, ecran-prep.js) ═══
+     sonara.js ecrit #lds (univers) et #ldt ; #btn-load-back ramene a l'accueil. -->
+<section class="page pp-load" id="s-load" aria-live="polite">
+  <div class="nb-grain" aria-hidden="true"></div>
+  <div class="pp-load-box">
+    <img class="pp-load-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <p id="lds"></p>
+    <p id="ldt">Prépare tes oreilles…</p>
+    <button class="sn-btn sn-btn--ghost sn-btn--sm" id="btn-load-back" type="button">Annuler</button>
   </div>
 </section>
 

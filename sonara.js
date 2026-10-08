@@ -369,8 +369,8 @@ function launchFromModal(btn) {
   // Fermer la modal
   history.pushState(null,'','#s-load');
   showPage('s-load');
-  $('ldt').textContent = 'Chargement…';
-  $('lds').textContent = t.n;
+  $('ldt').textContent = 'Prépare tes oreilles…';
+  $('lds').textContent = 'Univers '+t.n;
 
   var done = false;
   // Si le thème a des tracks fixes → les utiliser directement, pas besoin de Deezer
