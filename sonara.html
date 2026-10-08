@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="/landing.css">
 <link rel="stylesheet" href="/univers.css">
 <link rel="stylesheet" href="/ecrans.css">
+<link rel="stylesheet" href="/jeu.css">
 </head>
 <body>
 <canvas id="bg"></canvas>
@@ -706,52 +707,71 @@
 </section>
 
 <!-- ═══ GAME ═══ -->
-<section class="page" id="s-game">
-  <div class="ghdr">
-    <img src="/img/logo_sonara.png" class="fig-logo" alt="Sonara">
-    <div class="fig-online"><span class="fig-odot"></span><span class="online-count">246 joueurs en ligne</span></div>
-  </div>
-  <div class="fig-game-header">
-    <div class="fig-game-title" id="fig-theme-title">BLINDTEST</div>
-    <div class="fig-game-sub">Devine l'artiste et le titre de la chanson.</div>
-  </div>
-  <div style="display:none">
-    <button id="btn-quit" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:7px 12px;color:var(--mut);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px">← Quitter</button>
-    <div class="gq">Q.<span id="gqc">1</span>/<span id="gqt">10</span></div>
-    <div class="gsw"><div class="gpts" id="gpts">0</div><div class="gcmb" id="gcmb">×<span id="cmbn">1.0</span></div></div>
-  </div>
-  <div class="gbody">
+<!-- ═══ JEU : compte a rebours, manche, revelation (jeu.css, ecran-jeu.js) ═══
+     D'apres les maquettes de la landing (telephones des sections 01, 04 et 05).
+     Tous les id sont remplis ou cables par sonara.js : ne pas les renommer. -->
+<section class="page jg" id="s-game">
+  <div class="nb-grain" aria-hidden="true"></div>
+  <header class="jg-top">
+    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <p class="pc-step jg-step"><span id="fig-theme-title"></span> · Manche <span id="gqc">1</span>/<span id="gqt">10</span></p>
+    <button class="jg-quit" id="btn-quit" type="button">Quitter</button>
+  </header>
+  <!-- Score et combo de l'ancien en-tete : mis a jour par sonara.js, non affiches -->
+  <div class="jg-off" aria-hidden="true"><div class="gsw"><div class="gpts" id="gpts">0</div><div class="gcmb" id="gcmb">×<span id="cmbn">1.0</span></div></div></div>
+  <div class="gbody jg-body">
     <div class="pstrip" id="pstrip"></div>
-    <div class="cds on" id="cds"><div class="cdth" id="cdth"></div><div class="cdn" id="cdn">3</div><div class="cdlbl">Prépare tes oreilles !</div></div>
-    <div class="brksc" id="brksc"><div class="brklbl" id="brklbl">QUESTION 1/10</div><div class="brknum" id="brknum">5</div><div class="brksub">Prépare-toi…</div><div class="brktrack"><div class="brkfill" id="brkfill"></div></div><div class="brkready">En écoute dans</div></div>
-    <div class="qsc" id="qsc">
-      <div class="ald" id="ald"><div class="adot"></div><div class="adot"></div><div class="adot"></div><span>Chargement…</span></div>
+    <div class="cds on jg-cd" id="cds"><p class="jg-cd-th" id="cdth"></p><div class="cdn jg-cd-n" id="cdn">3</div><p class="jg-cd-l">Prépare tes oreilles</p></div>
+    <div class="brksc jg-cd" id="brksc"><p class="jg-cd-th" id="brklbl">Manche 1/10</p><div class="jg-cd-n" id="brknum">5</div><div class="jg-brk-track"><div class="jg-brk-fill" id="brkfill"></div></div><p class="jg-cd-l">En écoute dans un instant</p></div>
 
-      <div class="eq" id="eq"><div class="eqb" style="height:28%"></div><div class="eqb" style="height:58%"></div><div class="eqb" style="height:82%"></div><div class="eqb" style="height:44%"></div><div class="eqb" style="height:68%"></div><div class="eqb" style="height:52%"></div><div class="eqb" style="height:88%"></div><div class="eqb" style="height:36%"></div><div class="eqb" style="height:62%"></div><div class="eqb" style="height:48%"></div></div>
-      <div class="apbar"><div class="apfill" id="apfill"></div></div>
-      <div class="astatus" id="astatus"></div>
-      <div class="tmo"><svg class="tsvg" width="92" height="92" viewBox="0 0 92 92"><circle class="ttrk" cx="46" cy="46" r="40"/><circle class="tprog" id="tprog" cx="46" cy="46" r="40" stroke="#B3FF53"/></svg><div class="tnum" id="tnum">20</div></div>
-      <!-- mode texte libre -->
-      <div id="qcmw" class="qcmg" style="display:none"></div>
-      <!-- Chat log des tentatives -->
-      <div id="chat-log" style="max-height:110px;overflow-y:auto;padding:8px 12px;background:var(--s2);border-radius:12px;margin-bottom:10px;border:1px solid var(--bd);display:none"></div>
-      <div id="found-tags" style="display:flex;gap:8px;margin-bottom:8px;min-height:26px;flex-wrap:wrap"></div>
-      <div class="ani-wrap">
-        <span class="ani-prog" id="ani-prog"></span>
-        <input class="ani" id="ani" type="text" placeholder="Artiste ou titre…" autocomplete="off" autocorrect="off" spellcheck="false">
+    <!-- Manche : pochette a gauche (ordinateur), minuteur, question, reponse et scores a droite -->
+    <div class="qsc jg-grid" id="qsc">
+      <div class="jg-media">
+        <figure class="jg-cover sn-cover is-blurred" id="jg-cover"><img id="jg-cover-img" alt=""></figure>
       </div>
-      <button class="vbtn" id="vbtn">Envoyer →</button>
-      <div class="panch" id="panch"></div>
-      <div class="wmsg" id="wmsg">Les deux trouvés ! Révélation dans quelques secondes…</div>
-      <div id="live-rank" style="display:none;margin-top:14px;background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;width:100%"></div>
+      <div class="jg-panel">
+        <div class="jg-row">
+          <div class="jg-listen">
+            <span class="jg-ald" id="ald">Chargement de l'extrait</span>
+            <span class="astatus" id="astatus"></span>
+          </div>
+          <div class="eq jg-bars" id="eq" aria-hidden="true"><i class="eqb"></i><i class="eqb"></i><i class="eqb"></i></div>
+          <span class="jg-mult" id="jg-mult" aria-live="polite"></span>
+          <div class="jg-ring" aria-hidden="true"><svg viewBox="0 0 92 92"><circle class="jg-ring-track" cx="46" cy="46" r="40"/><circle class="jg-ring-val" id="tprog" cx="46" cy="46" r="40"/></svg><b id="tnum">30</b></div>
+        </div>
+        <h2 class="jg-q">Qui chante ?</h2>
+        <div class="jg-bar"><span class="jg-bar-fill" id="apfill"></span></div>
+        <div class="jg-times"><span id="jg-t">0:00</span><span>0:30</span></div>
+        <div id="qcmw" class="qcmg" style="display:none"></div>
+        <div class="jg-found-row">
+          <div id="found-tags" class="jg-found"></div>
+          <div class="panch" id="panch" aria-live="polite"></div>
+        </div>
+        <div class="jg-input">
+          <span class="ani-prog" id="ani-prog" aria-hidden="true"></span>
+          <input class="ani" id="ani" type="text" placeholder="Titre ou artiste…" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Titre ou artiste">
+          <button class="vbtn" id="vbtn" type="button" aria-label="Envoyer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div id="chat-log" class="jg-chat" style="display:none"></div>
+        <div class="wmsg" id="wmsg">Les deux trouvés ! Révélation dans quelques secondes…</div>
+        <div id="live-rank" class="jg-live" style="display:none"></div>
+      </div>
     </div>
-    <div class="rvsc" id="rvsc">
-      <div class="revc"><div class="reva" id="reva"><span class="remoji" id="remoji"></span></div><div class="revb"><div class="revtit" id="rvtit"></div><div class="revar" id="rvar"></div><div class="revmt" id="rvmt"></div><div class="revv" id="rvv"></div></div></div>
-      <div class="pbw"><div class="pbl" id="pbl">Prochaine…</div><div class="pbtr"><div class="pbfi" id="pbfi"></div></div></div>
-      <div class="fig-section-lbl">LE CLASSEMENT</div>
-      <div class="rnkm" id="rnkm"></div>
-      <div class="fig-section-lbl" style="margin-top:12px">HISTORIQUE</div>
-      <div id="hist-list" style="margin-top:6px;width:100%"></div>
+
+    <!-- Revelation : la pochette se devoile, le titre et l'artiste en grand -->
+    <div class="rvsc jg-grid" id="rvsc">
+      <div class="jg-media">
+        <div class="reva jg-cover jg-cover--reveal" id="reva"><span class="remoji" id="remoji"></span></div>
+      </div>
+      <div class="jg-panel">
+        <p class="jg-rv-k">La réponse</p>
+        <h2 class="jg-rv-t" id="rvtit"></h2>
+        <p class="jg-rv-by">par <b id="rvar"></b> <span class="jg-rv-year" id="rvmt"></span></p>
+        <div class="jg-rv-me"><div class="revv" id="rvv"></div><p class="jg-rv-pts" id="jg-rv-pts"></p></div>
+        <div class="rnkm jg-rank" id="rnkm"></div>
+        <div class="jg-next"><p class="pbl" id="pbl"></p><div class="jg-bar"><span class="jg-bar-fill pbfi" id="pbfi"></span></div></div>
+        <div id="hist-list" class="jg-hist"></div>
+      </div>
     </div>
   </div>
   <audio id="aud" preload="auto"></audio>
@@ -904,28 +924,34 @@
 </section>
 
 <!-- ═══ SALLE D'ATTENTE ═══ -->
-<section class="page" id="s-lobby">
-  <nav>
-    <button class="btn-back" onclick="showPage('s-multi')">← Retour</button>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div style="width:80px"></div>
-  </nav>
-  <div style="width:100%;max-width:440px;padding:20px 16px 40px">
-    <div style="text-align:center;margin-bottom:20px">
-      <div style="font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:2px">Code de la salle</div>
-      <div id="lobby-code" style="font-family:MuseoModerno,sans-serif;font-size:52px;font-weight:800;color:var(--grn);letter-spacing:10px;margin:8px 0">····</div>
-      <button id="btn-copy-code" onclick="copyLobbyCode()" style="margin-top:4px;background:var(--accent);border:none;border-radius:10px;padding:9px 22px;font-family:MuseoModerno,sans-serif;font-size:13px;font-weight:800;color:#fff;cursor:pointer;letter-spacing:.5px">Copier le code</button>
+<section class="page jg jg-lobby" id="s-lobby">
+  <div class="nb-grain" aria-hidden="true"></div>
+  <header class="jg-top">
+    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <p class="pc-step jg-step">Salle de jeu</p>
+    <button class="jg-quit" type="button" onclick="showPage('s-multi')">Quitter</button>
+  </header>
+  <div class="jg-lobby-grid">
+    <div class="jg-lobby-main">
+      <div class="jg-lobby-tags"><span class="jg-badge-live">En direct</span><span class="jg-univ" id="jg-lobby-univ"></span></div>
+      <p class="jg-k">Code de la salle</p>
+      <div class="jg-code" id="lobby-code">····</div>
+      <div class="jg-code-btns">
+        <button class="sn-btn sn-btn--ghost" id="btn-copy-code" type="button" onclick="copyLobbyCode()">Copier le code</button>
+        <button class="sn-btn sn-btn--ghost" id="jg-invite" type="button">Inviter</button>
+      </div>
+      <div class="jg-lobby-act" id="lobby-host-actions" style="display:none">
+        <button class="sn-btn sn-btn--block" id="btn-start-multi" type="button" onclick="startMultiGame()" disabled>En attente de joueurs...</button>
+        <p class="jg-hint">Il faut au moins 2 joueurs dans la salle pour lancer la partie.</p>
+      </div>
+      <div class="jg-lobby-act" id="lobby-guest-msg" style="display:none">
+        <button class="sn-btn sn-btn--block" id="btn-ready" type="button" onclick="guestReady()">Je suis prêt</button>
+        <p class="jg-hint jg-wait" id="lobby-waiting" style="display:none">En attente de l'hôte…</p>
+      </div>
     </div>
-    <div style="background:var(--s1);border:1px solid var(--bd2);border-radius:16px;padding:20px">
-      <div style="font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Joueurs connectés</div>
-      <div id="lobby-players" style="display:flex;flex-direction:column;gap:8px"></div>
-    </div>
-    <div id="lobby-host-actions" style="display:none;margin-top:16px">
-      <button class="bgo" id="btn-start-multi" onclick="startMultiGame()" disabled>En attente de joueurs...</button>
-    </div>
-    <div id="lobby-guest-msg" style="display:none;text-align:center;margin-top:20px">
-      <button id="btn-ready" onclick="guestReady()" class="bgo" style="margin-bottom:12px">Je suis prêt</button>
-      <div id="lobby-waiting" style="display:none;color:var(--mut);font-size:14px">En attente que le host lance la partie...</div>
+    <div class="jg-lobby-side">
+      <p class="jg-k">Joueurs</p>
+      <ul class="jg-players" id="lobby-players"></ul>
     </div>
   </div>
 </section>
@@ -959,6 +985,7 @@
 <script src="/ecran-univers.js"></script>
 <script src="/ecran-sonnom.js"></script>
 <script src="/ecran-resultats.js"></script>
+<script src="/ecran-jeu.js"></script>
 <script src="/footer.js"></script>
 </body>
 </html>

@@ -541,7 +541,7 @@ function hideG(){
 }
 function doCD(){
   hideG();$('cds').classList.add('on');
-  $('cdth').textContent=G.theme.toUpperCase();
+  $('cdth').textContent='Univers '+G.theme;
   var n=3,el=$('cdn');el.textContent=n;sfxCd();
   var iv=setInterval(function(){n--;
     if(n>0){el.textContent=n;el.style.animation='none';el.offsetHeight;el.style.animation='cdp .7s ease';sfxCd()}
@@ -550,7 +550,7 @@ function doCD(){
 }
 function doBreak(nextIdx,cb){
   hideG();$('brksc').classList.add('on');
-  $('brklbl').textContent='QUESTION '+(nextIdx+1)+'/'+G.qs.length;
+  $('brklbl').textContent='Manche '+(nextIdx+1)+'/'+G.qs.length;
   var t=5;$('brknum').textContent=t;
   var fill=$('brkfill');fill.style.transition='none';fill.style.width='0%';
   requestAnimationFrame(function(){fill.style.transition='width 5s linear';fill.style.width='100%'});
@@ -562,7 +562,7 @@ function doQ(){
   G.ans=false;G._revealed=false;G._questionActive=false;G._pendingReveal=false;
   var dur=G.td; // 30s fixe pour chaque question
   $('gqc').textContent=G.cq+1;$('gqt').textContent=G.qs.length;
-  var ani=$('ani');ani.value='';ani.disabled=false;ani.className='ani';ani.placeholder='Artiste ou titre…';
+  var ani=$('ani');ani.value='';ani.disabled=false;ani.className='ani';ani.placeholder='Titre ou artiste…';
   $('vbtn').disabled=true;
   G.foundA=false;G.foundT=false;
   var ft=$('found-tags');if(ft)ft.innerHTML='';
@@ -729,13 +729,13 @@ function tryGuess(v,byUser){
   if(matchA&&matchT){
     // Les deux d'un coup — bonus !
     G.foundA=true;G.foundT=true;
-    addChatMsg(G.ps+' a trouvé les deux !','found');
+    addChatMsg('Tu as trouvé les deux !','found');
     sfxOk();
     addFoundTag(q.a,'artist');addFoundTag(q.t,'title');
     updateFoundScore('both');
   } else if(matchA){
     G.foundA=true;
-    addChatMsg(G.ps+' a trouvé l\'artiste, maintenant le titre !','found');
+    addChatMsg('Tu as trouvé l\'artiste, maintenant le titre !','found');
     sfxOk();
     addFoundTag(q.a,'artist');
     if(G.foundT){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}
@@ -744,7 +744,7 @@ function tryGuess(v,byUser){
     if(byUser&&!G.foundT){var ani=$('ani');ani.value='';ani.placeholder='Maintenant le titre…';ani.focus();}
   } else if(matchT){
     G.foundT=true;
-    addChatMsg(G.ps+' a trouvé le titre, maintenant l\'artiste !','found');
+    addChatMsg('Tu as trouvé le titre, maintenant l\'artiste !','found');
     sfxOk();
     addFoundTag(q.t,'title');
     if(G.foundA){var mec=G.pl.filter(function(p){return p.me})[0];if(mec)mec.c=(mec.c||0)+1;}
@@ -813,18 +813,20 @@ function updateFoundScore(what){
 }
 function addFoundTag(txt,type){
   var ft=$('found-tags');if(!ft)return;
-  var tag=document.createElement('span');
-  tag.style.cssText='display:inline-flex;align-items:center;gap:4px;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:700;'+(type==='artist'?'background:rgba(179,255,83,.12);color:var(--grn);border:1px solid rgba(179,255,83,.3)':'background:rgba(96,165,250,.12);color:var(--blu);border:1px solid rgba(96,165,250,.3)');
-  tag.textContent=txt;
-  ft.appendChild(tag);
+  var k=type==='artist'?'artist':'title';
+  var tag=ft.querySelector('[data-k="'+k+'"]');
+  if(!tag){tag=document.createElement('span');tag.className='jg-chip';tag.setAttribute('data-k',k);ft.appendChild(tag);}
+  tag.classList.add('is-ok');
+  tag.textContent=k==='artist'?'Artiste trouvé':'Titre trouvé';
+  tag.title=txt;
 }
 function addChatMsg(txt,type){
   // Afficher dans la zone de statut sous le champ
   var box=$('chat-log');
   if(!box)return;
   var el=document.createElement('div');
-  if(type==='found')el.style.color='var(--grn)';
-  else if(type==='close')el.style.color='var(--ora)';
+  if(type==='found')el.className='is-found';
+  else if(type==='close')el.className='is-close';
   var m=String(txt).match(/^([^:]{1,20}) : (.*)$/);
   if(m)el.innerHTML='<b>'+esc(m[1])+'</b> : '+esc(m[2]);
   else el.textContent=txt;
@@ -854,7 +856,8 @@ function doSub(v,byUser,src){
 function popScore(txt){
   var a=$('panch'),el=document.createElement('div');
   el.className='spop g';el.textContent=txt;a.appendChild(el);
-  setTimeout(function(){el.remove()},1200);
+  el.addEventListener('animationend',function(){el.remove()});
+  setTimeout(function(){el.remove()},1400);   // filet si l'animation est desactivee
 }
 function simBots(dur){
   G.pl.filter(function(p){return p.bot}).forEach(function(b){
@@ -872,10 +875,10 @@ function simBots(dur){
 function uTm(t,tot){
   var C=251,p=Math.max(0,t)/tot;
   $('tprog').style.strokeDashoffset=C*(1-p);
-  $('tprog').style.stroke=p>.5?'#B3FF53':p>.2?'#FF9F43':'#FF4E6A';
   $('tnum').textContent=Math.max(0,Math.round(t));
+  if(window.SonaraJeu)SonaraJeu.tick(t,tot);   // affichage : temps ecoule et multiplicateur
 }
-function updateHdr(){var ft=document.getElementById("fig-theme-title");if(ft&&G.theme)ft.textContent=G.theme.toUpperCase();var frt=document.getElementById("fig-res-theme");if(frt&&G.theme)frt.textContent=G.theme.toUpperCase();
+function updateHdr(){var ft=document.getElementById("fig-theme-title");if(ft&&G.theme)ft.textContent="Univers "+G.theme;var frt=document.getElementById("fig-res-theme");if(frt&&G.theme)frt.textContent=G.theme.toUpperCase();
   $('gpts').textContent=G.sc;
   var cb=$('gcmb');
   if(G.cb>=2){cb.style.display='block';$('cmbn').textContent=G.mx.toFixed(1)}else cb.style.display='none';
@@ -887,18 +890,17 @@ function renderPstrip(){
   var lr=$('live-rank');
   if(!lr)return;
   if(G.pl.length<2){lr.style.display='none';return;}
-  if(G.pl.every(function(p){return(p.me?G.sc:p.s)===0;})){lr.style.display='none';return;}
   var sorted=G.pl.slice().sort(function(a,b){return(b.me?G.sc:b.s)-(a.me?G.sc:a.s);});
   lr.style.display='block';
-  lr.innerHTML='<div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--mut);margin-bottom:6px;text-transform:uppercase">Classement</div>'+
+  lr.innerHTML='<p class="jg-k">Scores en direct</p>'+
     sorted.map(function(p,i){
       var sc=p.me?G.sc:p.s;
-      return '<div class="lrrow">'+
-        '<div class="lrpos'+(i===0?' g':'')+'">'+['1','2','3','4','5'][i]+'</div>'+
-        '<div class="lrav">'+ini(p.n)+'</div>'+
-        '<div class="lrnm'+(p.me?' me':'')+'">'+esc(p.n.length>10?p.n.slice(0,9)+'…':p.n)+'</div>'+
-        '<div class="lrans'+(p.ans?' on':'')+'"></div>'+
-        '<div class="lrsc">'+sc+'</div>'+
+      return '<div class="lrrow'+(p.me?' me':'')+(p.ans?' ans':'')+'" data-n="'+esc(p.n)+'">'+
+        '<span class="lrpos">'+(i+1)+'</span>'+
+        '<span class="lrav">'+ini(p.n)+'</span>'+
+        '<span class="lrnm">'+esc(p.n)+(p.me?' (toi)':'')+'</span>'+
+        '<span class="lrans" title="A repondu"></span>'+
+        '<span class="lrsc">'+sc+'</span>'+
       '</div>';
     }).join('');
 }
@@ -909,20 +911,29 @@ function doReveal(){
   hideG();$('rvsc').classList.add('on');
   var q=G.qs[G.cq];
   $('rvtit').textContent=q.t;$('rvar').textContent=q.a;$('rvmt').textContent=q.y||'';$('remoji').textContent='';
-  var reva=$('reva');reva.querySelectorAll('img').forEach(function(i){i.remove()});
-  // Pochette du morceau si connue, sinon pochette de son univers (UNIVERS, univers.js)
-  var cov=q.cover||universeCover(q.u||themeSlug());
-  $('remoji').style.display=cov?'none':'';
-  if(cov){var img=document.createElement('img');img.src=cov;img.alt='';img.onerror=function(){img.remove();$('remoji').style.display=''};reva.appendChild(img)}
+  var reva=$('reva');reva.querySelectorAll('img,.vy').forEach(function(i){i.remove()});
+  // Pochette propre du morceau si elle existe ; sinon le vinyle de son univers
+  // (la pochette de l'univers n'est pas celle du morceau revele)
+  $('remoji').style.display='none';
+  function showVinyl(){
+    var key=q.u||themeSlug(),list=window.UNIVERS||[],u=null;
+    for(var i=0;i<list.length;i++)if(list[i].slug===key)u=list[i];
+    if(!u||!window.uvVinyl)return;
+    // etiquette neutre : couleur de l'univers et logo Sonara, aucune pochette reelle
+    reva.insertAdjacentHTML('beforeend',uvVinyl({nom:u.nom,couleur:u.couleur,image:null},true));
+    var lab=reva.querySelector('.vy-label');if(lab)lab.innerHTML='<span class="jg-vy-logo" role="img" aria-label="Sonara"></span>';
+  }
+  if(q.cover){var img=document.createElement('img');img.src=q.cover;img.alt='';img.onerror=function(){img.remove();showVinyl()};reva.appendChild(img)}
+  else showVinyl();
   var v=$('rvv');
-  if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='Les deux trouvés en '+(G.td-G.tl)+'s. Sé ou !'}
-  else if(G.foundA){v.className='revv vok';v.textContent='Artiste trouvé : '+q.a+'. Titre manquant : '+q.t}
-  else if(G.foundT){v.className='revv vok';v.textContent='Titre trouvé : '+q.t+'. Artiste manquant : '+q.a}
-  else if($('ani').value.trim()||document.querySelector('.qb.wrong')){v.className='revv vno';v.textContent='C\'était : '+q.t+', '+q.a}
-  else{v.className='revv vmh';v.textContent='Temps écoulé : '+q.t+' · '+q.a}
+  if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='Les deux trouvés en '+(G.td-G.tl)+' s. Sé ou !'}
+  else if(G.foundA){v.className='revv vok';v.textContent='Artiste trouvé, titre manqué'}
+  else if(G.foundT){v.className='revv vok';v.textContent='Titre trouvé, artiste manqué'}
+  else if($('ani').value.trim()||document.querySelector('.qb.wrong')){v.className='revv vno';v.textContent='Pas trouvé cette fois'}
+  else{v.className='revv vmh';v.textContent='Pas trouvé cette fois'}
   var sorted=G.pl.slice().sort(function(a,b){return b.s-a.s});
-  $('rnkm').innerHTML='<div class="rnkml">Classement</div>'+sorted.slice(0,5).map(function(p,i){
-    return '<div class="rnkr"><div class="rpos'+(i===0?' top':'')+'">'+['1.','2.','3.','4.','5.'][i]+'</div><div class="rav">'+ini(p.n)+'</div><div class="rnm">'+p.n+(p.me?' (toi)':'')+'</div><div class="rsc">'+(p.me?G.sc:p.s)+'</div></div>';
+  $('rnkm').innerHTML='<p class="jg-k">Classement</p>'+sorted.slice(0,5).map(function(p,i){
+    return '<div class="rnkr'+(p.me?' me':'')+'" data-n="'+esc(p.n)+'"><span class="rpos">'+(i+1)+'</span><span class="rav">'+ini(p.n)+'</span><span class="rnm">'+esc(p.n)+(p.me?' (toi)':'')+'</span><span class="rsc">'+(p.me?G.sc:p.s)+'</span></div>';
   }).join('');
   // Historique : enregistrer ce track
   if(!G.history)G.history=[];
@@ -933,7 +944,7 @@ function doReveal(){
     hl.style.display='block';
     var labels={'both':'Les deux','artist':'Artiste','title':'Titre','none':'Raté'};
     var ok2={'both':true,'artist':true,'title':true,'none':false};
-    hl.innerHTML='<div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--mut);margin-bottom:6px;text-transform:uppercase">Joués</div>'+
+    hl.innerHTML='<p class="jg-k">Joués</p>'+
       G.history.slice(0,5).map(function(h){
         return '<div class="hrow">'+
           '<div class="hem">'+h.e+'</div>'+
@@ -943,7 +954,7 @@ function doReveal(){
       }).join('');
   }
   var fi=$('pbfi'),bl=$('pbl'),isLast=G.cq>=G.qs.length-1,delay=isLast?4000:5000;
-  bl.textContent=isLast?'Résultats dans 4s…':'Prochaine question dans 5s…';
+  bl.textContent=isLast?'Résultats dans 4 s':'Prochaine manche dans 5 s';
   fi.style.transition='none';fi.style.width='0%';
   requestAnimationFrame(function(){fi.style.transition='width '+(delay/1000)+'s linear';fi.style.width='100%'});
   // Multijoueur : c'est le serveur qui envoie la manche suivante (next_question)
@@ -1303,10 +1314,12 @@ function connectWS(code) {
 
 function renderLobbyPlayers(players) {
   var html = players.map(function(p) {
-    return '<div style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:10px;padding:10px 14px;font-size:14px">' +
-      '<span>' + ini(p.name) + '</span><span>' + p.name + (p.id === G_MULTI.playerId ? ' (toi)' : '') + '</span>' +
-      (p.id === G_MULTI.playerId && G_MULTI.isHost ? '<span style="margin-left:auto;font-size:10px;background:var(--grn);color:#080B12;border-radius:4px;padding:2px 6px;font-weight:700">Host</span>' : '') +
-      '</div>';
+    var me = p.id === G_MULTI.playerId;
+    return '<li class="jg-player' + (me ? ' is-me' : '') + '" data-id="' + esc(p.id) + '">' +
+      '<span class="sn-avatar' + (me ? '' : ' sn-avatar--d') + '" aria-hidden="true">' + ini(p.name) + '</span>' +
+      '<b>' + esc(p.name) + (me ? ' (toi)' : '') + '</b>' +
+      (me && G_MULTI.isHost ? '<em>Hôte</em>' : '') +
+      '</li>';
   }).join('');
   document.getElementById('lobby-players').innerHTML = html;
   var btn = document.getElementById('btn-start-multi');

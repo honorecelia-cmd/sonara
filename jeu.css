@@ -1,0 +1,282 @@
+/* ═══════════════════════════════════════════════════════════════
+   SONARA, ecrans du coeur du jeu : salle d'attente (#s-lobby),
+   compte a rebours, manche, revelation (#s-game)
+   D'apres les maquettes de la landing : "Salle de jeu" (section 02),
+   "Qui chante ?" (hero et section 04), revelation (section 05).
+   Fond : aplat sombre des maquettes + grain (.nb-grain de la landing),
+   aucun degrade anime. Comportement d'affichage : ecran-jeu.js.
+   Charge apres sonara.css, landing.css, univers.css et ecrans.css.
+   ═══════════════════════════════════════════════════════════════ */
+
+.page.jg{
+  --jg-bg:#120706;                 /* fond des ecrans des maquettes */
+  --jg-surface:#1A0904;            /* fond de la revelation, surfaces */
+  --jg-line:rgba(255,255,255,.14);
+  --jg-muted:rgba(255,255,255,.62);
+  position:relative;padding:0;align-items:stretch;justify-content:flex-start;
+  min-height:100vh;min-height:100dvh;min-height:var(--jg-vvh,100dvh);
+  background:var(--jg-bg);color:#fff;font-family:var(--f-text);overflow-x:hidden;
+}
+.page.jg > .nb-grain{position:absolute;inset:0;z-index:0;pointer-events:none}
+.jg h2,.jg h1{font-family:var(--f-display);font-weight:800;letter-spacing:-.03em;margin:0}
+
+/* ── En-tete discret : logo, surtitre (univers, manche), quitter ── */
+.jg-top{
+  position:relative;z-index:2;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;
+  padding:18px var(--neb-margin);
+}
+.jg-logo{display:block;height:28px;width:auto}
+.jg-step{margin:0;text-align:center;font-size:14px;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jg-quit{
+  height:40px;padding:0 18px;border:none;border-radius:999px;cursor:pointer;
+  background:transparent;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);
+  font-family:var(--f-text);font-size:14px;font-weight:500;transition:background-color .25s ease,color .25s ease;
+}
+.jg-quit:hover{background:#fff;color:var(--ink)}
+.jg-quit:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.jg-off{display:none}
+.jg-k{margin:0 0 10px;font-size:13px;font-weight:500;color:var(--jg-muted)}
+
+/* ── Zone de jeu ── */
+.jg-body{
+  position:relative;z-index:1;flex:1;width:100%;max-width:none;margin:0;
+  display:flex;flex-direction:column;padding:4px var(--neb-margin) 32px;
+}
+.jg .pstrip{display:none}
+.jg .cds,.jg .brksc,.jg .qsc,.jg .rvsc{display:none}
+.jg .cds.on,.jg .brksc.on{display:flex}
+.jg .qsc.on,.jg .rvsc.on{display:grid}
+
+/* Compte a rebours et pause entre deux manches */
+.jg-cd{flex:1;min-height:60vh;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px}
+.jg-cd-th{margin:0;font-size:15px;color:rgba(255,255,255,.8)}
+.jg-cd-n{font-family:var(--f-display);font-weight:900;font-size:clamp(96px,16vw,180px);line-height:.9;letter-spacing:-.04em;color:var(--cream)}
+.jg-cd-l{margin:0;font-size:15px;color:var(--jg-muted)}
+.jg-brk-track{width:min(320px,70vw);height:2px;border-radius:2px;background:rgba(255,255,255,.22);overflow:hidden}
+.jg-brk-fill{display:block;height:100%;width:0;background:var(--cream)}
+
+/* ── Grille commune manche / revelation : une colonne (mobile), deux des 1100 px ── */
+.jg-grid{grid-template-columns:minmax(0,1fr);gap:18px;align-items:start;width:100%;max-width:560px;margin:0 auto}
+.jg-media{position:relative;display:flex;justify-content:center}
+/* Halo statique de la couleur de l'univers, derriere la pochette (manche) */
+.qsc .jg-media::before,.rvsc .jg-media::before,.jg-lobby-main::before{
+  content:"";position:absolute;inset:-18%;z-index:-1;pointer-events:none;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--jg-u,var(--accent)) 15%, transparent), transparent);
+}
+.jg-media > *{position:relative}
+.jg-panel{display:flex;flex-direction:column;gap:14px;min-width:0}
+.jg-grid{isolation:isolate}
+
+/* Pochette : arrondi 16px, floutee pendant l'ecoute (pochette de l'univers) */
+.jg-cover{
+  position:relative;width:min(100%, 42vh, 460px);aspect-ratio:1;margin:0;
+  border-radius:16px;overflow:hidden;background:var(--jg-surface);
+}
+.jg-cover img{display:block;width:100%;height:100%;object-fit:cover}
+.jg .sn-cover.is-blurred img{filter:blur(22px) saturate(1.1);transform:scale(1.12)}
+.jg-cover--reveal .remoji{display:none}
+.jg-cover--reveal{display:grid;place-items:center}
+/* Vinyle de l'univers : pose directement sur l'ecran (et le halo), sans cadre */
+.jg-cover--reveal:has(.vy){background:transparent !important;overflow:visible}
+.jg-cover--reveal .vy{width:92%;--vy-hole:var(--jg-bg)}
+.jg-vy-logo{
+  display:block;width:58%;aspect-ratio:1;background:var(--cream);
+  -webkit-mask:url('/img/logo_sonara.svg') center/contain no-repeat;mask:url('/img/logo_sonara.svg') center/contain no-repeat;
+}
+.jg-cover--reveal .vy--spin .vy-spin{animation-duration:12s}
+/* Revelation : de floute a net (0,9 s, courbe de la landing) */
+.jg-cover--reveal img{animation:sn-reveal .9s cubic-bezier(.65,0,.35,1) both}
+
+/* Ligne du haut de la manche : ecoute, multiplicateur, compte rond */
+.jg-row{display:flex;align-items:center;gap:12px}
+.jg-listen{flex:1;display:flex;align-items:center;gap:10px;min-width:0;font-size:13px;color:var(--jg-muted)}
+.jg-bars{display:inline-flex;align-items:flex-end;gap:3px;height:20px;flex-shrink:0}
+.jg-bars .eqb{display:block;width:4px;border-radius:1px;background:var(--accent);transform-origin:bottom;animation:nb-bars 1s ease-in-out infinite}
+.jg-bars .eqb:nth-child(1){height:40%}
+.jg-bars .eqb:nth-child(2){height:100%;animation-delay:-.3s}
+.jg-bars .eqb:nth-child(3){height:65%;animation-delay:-.6s}
+.jg-bars .eqb.off{animation:none;transform:scaleY(.3);opacity:.5}
+.jg-ald{display:none}
+.jg-ald.on{display:inline}
+.jg .astatus{color:var(--jg-muted)}
+.jg-mult{
+  display:none;align-items:center;justify-content:center;width:44px;height:44px;flex-shrink:0;
+  border-radius:50%;background:var(--accent);color:#fff;font-family:var(--f-text);font-size:15px;font-weight:700;
+}
+.jg-mult.is-on{display:inline-flex}
+.jg-ring{position:relative;width:56px;height:56px;flex-shrink:0}
+.jg-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.jg-ring-track{fill:none;stroke:rgba(255,255,255,.14);stroke-width:6}
+.jg-ring-val{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;stroke-dasharray:251;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear}
+.jg-ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+
+.jg-q{font-size:clamp(30px,3.4vw,44px);line-height:.95}
+/* Barre 0:00 / 0:30 (comme le telephone du hero) */
+.jg-bar{position:relative;height:2px;border-radius:2px;background:rgba(255,255,255,.22)}
+.jg-bar-fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:2px;background:#fff}
+.jg-bar-fill::after{content:"";position:absolute;right:-5px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--accent)}
+.jg-times{display:flex;justify-content:space-between;margin-top:-6px;font-size:12px;color:var(--jg-muted);font-variant-numeric:tabular-nums}
+
+/* Puces "Artiste trouve" / "Titre ?" */
+.jg-found{display:flex;flex-wrap:wrap;gap:8px;min-height:30px}
+.jg-chip{
+  display:inline-flex;align-items:center;padding:6px 14px;border-radius:999px;
+  background:var(--jg-surface);box-shadow:inset 0 0 0 1px var(--jg-line);
+  font-size:13px;font-weight:600;color:var(--jg-muted);
+}
+.jg-chip.is-ok{background:var(--accent);color:#fff;box-shadow:none}
+
+/* Champ de reponse : pilule blanche + bouton rond orange */
+.jg-input{
+  position:relative;display:flex;align-items:center;gap:8px;height:56px;padding:0 6px 0 22px;
+  border-radius:999px;background:color-mix(in srgb, var(--cream) 30%, #fff);overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(195,69,3,.55);
+}
+.jg-input:focus-within{box-shadow:0 0 0 2px var(--accent)}
+.jg .ani{
+  flex:1;min-width:0;height:100%;padding:0;border:none;outline:none;background:transparent;
+  font-family:var(--f-text);font-size:16px;color:var(--ink);
+}
+.jg .ani::placeholder{color:var(--sn-muted-ink)}
+.jg .ani:disabled{opacity:.6}
+.jg .ani-prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);pointer-events:none}
+.jg .vbtn{
+  width:44px;height:44px;flex-shrink:0;padding:0;border:none;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;
+  transition:transform .25s ease;
+}
+.jg .vbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.jg .vbtn:hover:not(:disabled){transform:translateY(-2px)}
+.jg .vbtn:disabled{opacity:.45;cursor:default}
+.jg .vbtn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+/* Gain de points : au-dessus du champ, aligne a droite, creme ; pfly le fait
+   monter (translate compense le decalage horizontal de la keyframe). La zone
+   .panch, a droite des puces, le coupe : il ne touche ni le champ ni les temps */
+.jg-found-row{position:relative}
+.jg .panch{position:absolute;right:0;top:0;bottom:0;width:40%;overflow:hidden;pointer-events:none}
+.jg .spop{
+  position:absolute;right:8px;bottom:2px;white-space:nowrap;pointer-events:none;translate:50% 0;
+  font-family:var(--f-display);font-size:20px;font-weight:800;color:var(--cream);
+  animation:sn-pfly 1.2s var(--sn-ease) forwards;
+}
+.jg-chat{max-height:72px;overflow-y:auto;font-size:13px;line-height:1.5;color:var(--jg-muted)}
+.jg-chat .is-found{color:var(--cream)}
+.jg-chat .is-close{color:var(--cream);opacity:.8}
+.jg .wmsg{display:none;margin:0;padding:10px 16px;border-radius:999px;background:var(--jg-surface);box-shadow:inset 0 0 0 1px var(--jg-line);font-size:14px;color:var(--cream);text-align:center}
+
+/* Scores en direct / classement : lignes compactes, joueur courant en creme */
+.jg-live,.jg-rank{display:flex;flex-direction:column;gap:6px}
+.jg-live:empty,.jg-rank:empty{display:none}
+.jg:not(.jg-multi) .jg-rank{display:none}
+.lrrow,.rnkr{
+  display:grid;grid-template-columns:20px 30px minmax(0,1fr) auto auto;align-items:center;gap:10px;
+  padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.06);
+  font-size:14px;color:#fff;will-change:transform;
+}
+.rnkr{grid-template-columns:20px 30px minmax(0,1fr) auto}
+.lrrow.me,.rnkr.me{background:var(--cream);color:var(--ink)}
+.lrpos,.rpos{font-variant-numeric:tabular-nums;opacity:.7}
+.lrav,.rav{
+  display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;
+  background:var(--cream);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:13px;
+}
+.lrrow.me .lrav,.rnkr.me .rav{background:var(--accent);color:#fff}
+.lrnm,.rnm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrans{width:8px;height:8px;border-radius:50%;background:transparent}
+.lrrow.ans .lrans{background:var(--accent)}
+.lrsc,.rsc{font-weight:700;font-variant-numeric:tabular-nums}
+
+/* ── Revelation ── */
+.jg-rv-k{margin:0;font-size:13px;color:var(--jg-muted)}
+.jg-rv-t{font-size:clamp(34px,4.4vw,60px);line-height:.95;overflow-wrap:anywhere}
+.jg-rv-by{margin:-4px 0 0;font-family:var(--f-text);font-size:clamp(17px,1.6vw,22px);color:rgba(255,255,255,.6)}
+.jg-rv-by b{color:var(--accent);font-weight:700;filter:brightness(1.35)}
+.jg-rv-year{margin-left:6px;font-size:.75em;color:var(--jg-muted)}
+.jg-rv-year:empty{display:none}
+.jg-rv-me{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.jg .revv{padding:8px 16px;border-radius:999px;font-size:14px;font-weight:600;background:var(--jg-surface);box-shadow:inset 0 0 0 1px var(--jg-line);color:var(--cream)}
+.jg .revv.vok{background:var(--cream);color:var(--ink);box-shadow:none}
+.jg-rv-pts{margin:0;font-family:var(--f-display);font-weight:800;font-size:22px;color:var(--cream)}
+.jg-rv-pts:empty{display:none}
+.jg-next{display:flex;flex-direction:column;gap:8px}
+.jg .pbl{margin:0;font-size:13px;color:var(--jg-muted)}
+.jg-next .jg-bar-fill::after{display:none}
+.jg-next .jg-bar-fill{background:var(--cream)}
+.jg-hist{display:none !important}   /* historique des morceaux : hors maquette, non affiche */
+
+/* ── Salle d'attente ── */
+.jg-lobby-grid{
+  position:relative;z-index:1;flex:1;width:100%;max-width:560px;margin:0 auto;
+  display:flex;flex-direction:column;gap:28px;padding:8px var(--neb-margin) 40px;
+}
+.jg-lobby-main{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.jg-lobby-tags{display:flex;flex-wrap:wrap;gap:8px}
+.jg-badge-live{
+  padding:6px 12px;border-radius:999px;background:var(--accent);color:var(--cream);
+  font-size:12px;font-weight:600;
+}
+.jg-univ{
+  display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;
+  background:var(--jg-u,var(--accent));color:#fff;font-size:12px;font-weight:600;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);
+}
+.jg-univ:empty{display:none}
+.jg-lobby .jg-k{margin:6px 0 0}
+.jg-code{
+  margin:0 0 14px;font-family:var(--f-text);font-weight:800;font-size:clamp(64px,10vw,120px);line-height:1.05;
+  letter-spacing:.12em;color:var(--cream);font-variant-numeric:tabular-nums;
+}
+.jg-code-btns{display:flex;flex-wrap:wrap;gap:10px}
+.jg-code-btns .sn-btn{color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
+.jg-code-btns .sn-btn:hover{background:#fff;color:var(--ink)}
+.jg-lobby-act{width:100%;margin-top:8px}
+.jg-hint{margin:10px 0 0;font-size:13px;color:var(--jg-muted)}
+#btn-start-multi:not(:disabled) + .jg-hint{display:none}
+.jg-players{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.jg-player{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:20px;
+  background:rgba(255,255,255,.05);font-size:15px;
+}
+.jg-player.is-me{background:rgba(195,69,3,.22);box-shadow:inset 0 0 0 1px rgba(195,69,3,.6)}
+.jg-player b{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.jg-player em{font-style:normal;font-size:12px;color:var(--jg-muted)}
+.jg-player.is-new{animation:sn-fup .5s var(--sn-ease) both}
+
+/* ── Mobile : clavier ouvert, le champ et le minuteur restent visibles ── */
+/* La pochette retrecit en vignette, la question et les temps se masquent :
+   le minuteur et le champ (toujours pleine taille) tiennent au-dessus du clavier */
+.jg.jg-kbd .jg-top{padding-top:8px;padding-bottom:8px}
+.jg.jg-kbd .jg-grid,.jg.jg-kbd .jg-panel{gap:10px}
+.jg.jg-kbd .jg-cover{width:72px;border-radius:12px}
+.jg.jg-kbd .jg-q,.jg.jg-kbd .jg-times,.jg.jg-kbd .jg-chat{display:none}
+.jg.jg-kbd .jg-live{display:none !important}
+
+/* ── Ordinateur : deux colonnes, marges de la landing ── */
+@media (min-width:1100px){
+  .jg-body{padding:12px var(--neb-margin) 48px;justify-content:center}
+  .jg-grid{
+    max-width:1240px;grid-template-columns:minmax(0,1fr) minmax(360px,520px);
+    column-gap:6vw;align-items:center;min-height:calc(100vh - 140px);
+  }
+  .jg-media{justify-content:flex-start}
+  .jg-cover{width:min(100%, 66vh, 620px)}
+  .jg-lobby-grid{
+    max-width:1240px;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,440px);
+    column-gap:6vw;align-items:center;min-height:calc(100vh - 140px);
+  }
+}
+@media (max-width:767px){
+  .jg-top{padding:12px 16px;gap:10px}
+  .jg-logo{height:24px}
+  .jg-step{font-size:13px}
+  .jg-quit{height:36px;padding:0 14px;font-size:13px}
+  .jg-body{padding:0 16px 24px}
+  .jg-lobby-grid{padding:4px 16px 32px}
+}
+
+/* Sans animation : pas de flou anime ni de deplacement */
+@media (prefers-reduced-motion:reduce){
+  .jg-cover--reveal img,.jg .spop,.jg-player.is-new,.jg-bars .eqb{animation:none}
+  .jg .sn-cover img,.jg-ring-val{transition:none}
+}
