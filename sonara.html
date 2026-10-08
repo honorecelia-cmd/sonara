@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="/univers.css">
 <link rel="stylesheet" href="/ecrans.css">
 <link rel="stylesheet" href="/jeu.css">
+<link rel="stylesheet" href="/prep.css">
 </head>
 <body>
 <canvas id="bg"></canvas>
@@ -879,29 +880,44 @@
 </section>
 
 <!-- ═══ CRÉER UNE SALLE ═══ -->
-<section class="page" id="s-create">
-  <nav>
-    <button class="btn-back" onclick="showPage('s-multi')">← Retour</button>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div style="width:80px"></div>
-  </nav>
-  <div style="width:100%;max-width:440px;padding:24px 16px 40px">
-    <h2 style="font-family:MuseoModerno,sans-serif;font-size:22px;font-weight:800;margin-bottom:24px">Nouvelle salle</h2>
-    <label class="flbl">Ton pseudo</label>
-    <input class="finp" id="multi-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:20px">
-    <div class="slbl" style="margin-bottom:12px">Choisis ton univers</div>
-    <div class="tgrid" id="create-theme-grid">
-      <a class="tc t-mix"       onclick="selectMultiTheme('mix',this)">      <div class="glow"></div><span class="tn">Mix Caribéen</span><span class="ts">Tous styles</span></a>
-      <a class="tc t-zouk"      onclick="selectMultiTheme('zouk',this)">     <div class="glow"></div><span class="tn">Zouk</span><span class="ts">Gwadloup · Matinik</span></a>
-      <a class="tc t-kompa"     onclick="selectMultiTheme('kompa',this)">    <div class="glow"></div><span class="tn">Kompa</span><span class="ts">Haïti</span></a>
-      <a class="tc t-reggae"    onclick="selectMultiTheme('reggae',this)">   <div class="glow"></div><span class="tn">Reggae</span><span class="ts">Jamaïque</span></a>
-      <a class="tc t-dancehall" onclick="selectMultiTheme('dancehall',this)"><div class="glow"></div><span class="tn">Dancehall</span><span class="ts">Jamaïque</span></a>
-      <a class="tc t-soca"      onclick="selectMultiTheme('soca',this)">     <div class="glow"></div><span class="tn">Soca</span><span class="ts">Trinidad &amp; Tobago</span></a>
-      <a class="tc t-shatta"    onclick="selectMultiTheme('shatta',this)">   <div class="glow"></div><span class="tn">Shatta</span><span class="ts">Antilles · Afrique</span></a>
-      <a class="tc t-trap"      onclick="selectMultiTheme('trap',this)">     <div class="glow"></div><span class="tn">Trap Antillais</span><span class="ts">Urban kréyol</span></a>
-      <a class="tc t-rap"       onclick="selectMultiTheme('rap',this)">      <div class="glow"></div><span class="tn">Rap Caribéen</span><span class="ts">Flow antillais</span></a>
+<!-- ═══ CREER UNE SALLE (prep.css, ecran-prep.js) ═══
+     createRoom() lit #multi-pseudo ; selectMultiTheme() bascule .selected sur
+     #create-theme-grid .tc et active #btn-create-room. -->
+<section class="page pp" id="s-create" aria-labelledby="pp-create-t">
+  <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
+  <div class="pp-top">
+    <button class="pc-back" type="button" onclick="showPage('s-multi')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
+    <img src="/img/logo_sonara.svg" alt="Sonara">
+  </div>
+  <div class="pp-grid">
+    <div class="pp-main">
+      <h1 id="pp-create-t">Créer une salle</h1>
+      <div class="pc-card">
+        <div class="pp-block">
+          <label class="pp-k" for="multi-pseudo">Ton son-nom</label>
+          <div class="pp-field"><input id="multi-pseudo" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton son-nom"></div>
+        </div>
+        <div class="pp-block">
+          <p class="pp-k" id="pp-create-univ">Choisis un univers pour ta salle.</p>
+          <div class="pp-pills" id="create-theme-grid" role="group" aria-labelledby="pp-create-univ">
+          <button class="tc t-mix" type="button" style="--pp-u:var(--univers-mix)" onclick="selectMultiTheme('mix',this)"><span class="tn">Mix</span></button>
+          <button class="tc t-zouk" type="button" style="--pp-u:var(--univers-zouk)" onclick="selectMultiTheme('zouk',this)"><span class="tn">Zouk</span></button>
+          <button class="tc t-kompa" type="button" style="--pp-u:var(--univers-kompa)" onclick="selectMultiTheme('kompa',this)"><span class="tn">Kompa</span></button>
+          <button class="tc t-reggae" type="button" style="--pp-u:var(--univers-reggae)" onclick="selectMultiTheme('reggae',this)"><span class="tn">Reggae</span></button>
+          <button class="tc t-dancehall" type="button" style="--pp-u:var(--univers-dancehall)" onclick="selectMultiTheme('dancehall',this)"><span class="tn">Dancehall</span></button>
+          <button class="tc t-soca" type="button" style="--pp-u:var(--univers-soca)" onclick="selectMultiTheme('soca',this)"><span class="tn">Soca</span></button>
+          <button class="tc t-shatta" type="button" style="--pp-u:var(--univers-shatta)" onclick="selectMultiTheme('shatta',this)"><span class="tn">Shatta</span></button>
+          <button class="tc t-trap" type="button" style="--pp-u:var(--univers-trap)" onclick="selectMultiTheme('trap',this)"><span class="tn">Trap</span></button>
+          <button class="tc t-rap" type="button" style="--pp-u:var(--univers-rap)" onclick="selectMultiTheme('rap',this)"><span class="tn">Rap</span></button>
+          </div>
+        </div>
+        <div class="pp-actions">
+          <button class="sn-btn" id="btn-create-room" type="button" style="opacity:.5;pointer-events:none" onclick="createRoom()">Créer la salle</button>
+        </div>
+        <p class="pp-msg" id="pp-create-msg" aria-live="polite"></p>
+      </div>
     </div>
-    <button class="bgo" id="btn-create-room" style="margin-top:20px;opacity:.5;pointer-events:none" onclick="createRoom()">Créer la salle →</button>
+    <div class="pp-deco" id="pp-create-deco" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -986,6 +1002,7 @@
 <script src="/ecran-sonnom.js"></script>
 <script src="/ecran-resultats.js"></script>
 <script src="/ecran-jeu.js"></script>
+<script src="/ecran-prep.js"></script>
 <script src="/footer.js"></script>
 </body>
 </html>
