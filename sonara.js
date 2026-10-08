@@ -920,8 +920,7 @@ function doReveal(){
     for(var i=0;i<list.length;i++)if(list[i].slug===key)u=list[i];
     if(!u||!window.uvVinyl)return;
     // etiquette neutre : couleur de l'univers et logo Sonara, aucune pochette reelle
-    reva.insertAdjacentHTML('beforeend',uvVinyl({nom:u.nom,couleur:u.couleur,image:null},true));
-    var lab=reva.querySelector('.vy-label');if(lab)lab.innerHTML='<span class="jg-vy-logo" role="img" aria-label="Sonara"></span>';
+    reva.insertAdjacentHTML('beforeend',uvVinyl(u,true,true));
   }
   if(q.cover){var img=document.createElement('img');img.src=q.cover;img.alt='';img.onerror=function(){img.remove();showVinyl()};reva.appendChild(img)}
   else showVinyl();

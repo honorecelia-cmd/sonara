@@ -829,8 +829,8 @@
 <section class="page pp" id="s-entre" aria-labelledby="pp-entre-t">
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
-    <button class="pc-back" type="button" onclick="showPage('s-res')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
-    <img src="/img/logo_sonara.svg" alt="Sonara">
+    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <button class="jg-quit" type="button" onclick="showPage('s-res')">Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">
@@ -868,8 +868,8 @@
 <section class="page pp" id="s-multi" aria-labelledby="pp-multi-t">
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
-    <button class="pc-back" type="button" onclick="showPage('landing')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Accueil</button>
-    <img src="/img/logo_sonara.svg" alt="Sonara">
+    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <button class="jg-quit" type="button" onclick="showPage('landing')">Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">
@@ -893,18 +893,20 @@
 <section class="page pp" id="s-create" aria-labelledby="pp-create-t">
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
-    <button class="pc-back" type="button" onclick="showPage('s-multi')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
-    <img src="/img/logo_sonara.svg" alt="Sonara">
+    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <button class="jg-quit" type="button" onclick="showPage('s-multi')">Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">
       <h1 id="pp-create-t">Créer une salle</h1>
       <div class="pc-card">
-        <div class="pp-block">
+        <p class="pp-me" id="pp-create-me" hidden>Tu joues en tant que <b id="pp-create-me-name"></b> · <button type="button" id="pp-create-change-name">Changer</button></p>
+        <div class="pp-block" id="pp-create-name" hidden>
           <label class="pp-k" for="multi-pseudo">Ton son-nom</label>
           <div class="pp-field"><input id="multi-pseudo" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton son-nom"></div>
         </div>
-        <div class="pp-block">
+        <p class="pp-me" id="pp-create-uni" hidden><span class="pp-dot" id="pp-create-dot"></span>Univers : <b id="pp-create-uni-name"></b> · <button type="button" id="pp-create-change-uni">Changer</button></p>
+        <div class="pp-block" id="pp-create-pills" hidden>
           <p class="pp-k" id="pp-create-univ">Choisis un univers pour ta salle.</p>
           <div class="pp-pills" id="create-theme-grid" role="group" aria-labelledby="pp-create-univ">
           <button class="tc t-mix" type="button" style="--pp-u:var(--univers-mix)" onclick="selectMultiTheme('mix',this)"><span class="tn">Mix</span></button>
@@ -935,14 +937,14 @@
 <section class="page pp" id="s-join" aria-labelledby="pp-join-t">
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
-    <button class="pc-back" type="button" onclick="showPage('s-multi')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
-    <img src="/img/logo_sonara.svg" alt="Sonara">
+    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <button class="jg-quit" type="button" onclick="showPage('s-multi')">Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">
       <h1 id="pp-join-t">Rejoindre une salle</h1>
       <div class="pc-card">
-        <p class="pp-me" id="pp-join-me" hidden>Tu joues en tant que <b id="pp-join-me-name"></b><button type="button" id="pp-join-change">Changer</button></p>
+        <p class="pp-me" id="pp-join-me" hidden>Tu joues en tant que <b id="pp-join-me-name"></b> · <button type="button" id="pp-join-change">Changer</button></p>
         <div class="pp-block" id="pp-join-name" hidden>
           <label class="pp-k" for="join-pseudo">Ton son-nom</label>
           <div class="pp-field"><input id="join-pseudo" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton son-nom"></div>

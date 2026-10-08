@@ -23,7 +23,7 @@
   position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;
   padding:18px var(--neb-margin);
 }
-.pp-top img{display:block;height:28px;width:auto}
+/* logo (.jg-logo) et Retour (.jg-quit) : memes styles que les ecrans de jeu (jeu.css) */
 
 /* Grille : carte a gauche, element visuel de l'univers a droite */
 .pp-grid{
@@ -62,7 +62,15 @@
 .pp-msg:empty{min-height:0;margin:0}
 .pp-me{margin:0 0 14px;font-size:14px;color:var(--sn-muted-ink)}
 .pp-me b{color:var(--ink);font-weight:600}
-.pp-me button{margin-left:6px;padding:0;border:none;background:none;cursor:pointer;font:inherit;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.pp-me button{padding:0;border:none;background:none;cursor:pointer;font:inherit;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.pp-dot{display:inline-block;width:10px;height:10px;margin-right:8px;border-radius:50%;vertical-align:0;background:var(--pp-u,var(--accent))}
+/* Creer : rappels, champ ou pilules (seulement l'element manquant), meme ecart */
+#s-create .pc-card{display:flex;flex-direction:column;gap:14px}
+#s-create .pc-card > [hidden]{display:none}
+#s-create .pc-card .pp-me,#s-create .pp-actions{margin:0}
+#s-create .pp-actions{margin-top:4px}
+#s-create .pp-msg{margin:-6px 4px 0}
+#s-create .pp-msg:empty{margin-top:-14px}
 .pp-me button:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}
 
 /* Pilules de choix (univers) : comme les modes du son-nom */
@@ -146,7 +154,7 @@
   .pp-deco{display:none}
 }
 @media (max-width:767px){
-  .pp-top{padding:14px 16px}
+  .pp-top{padding:12px 16px;gap:10px}
   .pp-grid{padding:4px 16px 24px}
   .pp .pc-card{padding:18px 16px}
   .pp-code input{font-size:40px}

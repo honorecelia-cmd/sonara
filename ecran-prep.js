@@ -32,36 +32,60 @@
       was=is;
     }).observe(el,{attributes:true,attributeFilter:['class']});
   }
-  // Vinyle de l'univers ; neutre = etiquette couleur + logo (aucune pochette)
-  function vinyl(box,u,neutral){
+  // Vinyle de l'univers, etiquette neutre (couleur + logo Sonara, aucune pochette)
+  function vinyl(box,u){
     if(!box||!window.uvVinyl)return;
-    var base=u||{nom:'Sonara',couleur:'var(--accent)',image:null};
-    box.innerHTML=uvVinyl(neutral||!u?{nom:base.nom,couleur:base.couleur,image:null}:base,true);
-    if(neutral||!u){var lab=box.querySelector('.vy-label');if(lab)lab.innerHTML='<span class="jg-vy-logo" role="img" aria-label="Sonara"></span>';}
+    box.innerHTML=uvVinyl(u||{nom:'Sonara',couleur:'var(--accent)',image:null},true,true);
   }
   function prefill(input){
     if(input&&!input.value.trim())input.value=(window.G&&G.ps)||storedName();
   }
 
   // ── Jouer en direct (#s-multi) ──
-  onShow($('s-multi'),function(){vinyl($('pp-multi-deco'),null,true);});
+  onShow($('s-multi'),function(){vinyl($('pp-multi-deco'),null);});
 
   // ── Creer une salle (#s-create) ──
+  // Le son-nom et l'univers viennent du parcours (son-nom, etape Univers).
+  // Seul chemin sans son-nom : "J'ai un code de salle" avec un champ vide,
+  // puis Retour, puis Creer. Le champ ou les pilules ne s'affichent que
+  // pour l'element manquant.
   var create=$('s-create');
-  function paintCreate(){
-    var u=univ(window.G_MULTI&&G_MULTI.theme);
-    vinyl($('pp-create-deco'),u,false);
-    var chip=$('pp-create-univ');
-    if(chip)chip.textContent=u?'Univers choisi : '+u.nom:'Choisis un univers pour ta salle.';
+  function flowState(){return (window.SonaraFlow&&SonaraFlow.state)||{};}
+  function createKey(){   // univers choisi dans le parcours, sinon celui de la derniere salle
+    var k=flowState().theme||(window.G_MULTI&&G_MULTI.theme);
+    return k&&typeof THEMES!=='undefined'&&THEMES[k]?k:null;
   }
-  onShow(create,function(){prefill($('multi-pseudo'));$('pp-create-msg').textContent='';paintCreate();});
+  function paintCreate(){
+    var key=createKey(), u=univ(key);
+    // Univers connu : selectionne via la fonction existante (bouton actif)
+    var card=key?document.querySelector('#create-theme-grid .t-'+key):null;
+    if(card)selectMultiTheme(key,card);
+    $('pp-create-uni').hidden=!card;$('pp-create-pills').hidden=!!card;
+    if(u){$('pp-create-uni-name').textContent=u.nom;$('pp-create-uni').style.setProperty('--pp-u',u.couleur);}
+    vinyl($('pp-create-deco'),univ(G_MULTI.theme));
+    // Son-nom : rappel s'il est connu, sinon le champ
+    var inp=$('multi-pseudo');prefill(inp);
+    var v=inp.value.trim();
+    $('pp-create-me').hidden=!v;$('pp-create-name').hidden=!!v;
+    if(v)$('pp-create-me-name').textContent=v;
+  }
+  onShow(create,function(){$('pp-create-msg').textContent='';paintCreate();});
   if(create){
-    $('create-theme-grid').addEventListener('click',function(){setTimeout(paintCreate,0);});
+    $('create-theme-grid').addEventListener('click',function(){setTimeout(function(){vinyl($('pp-create-deco'),univ(G_MULTI.theme));},0);});
     // Son-nom vide : createRoom ne fait rien ; on dit pourquoi
     $('btn-create-room').addEventListener('click',function(){
       if(!$('multi-pseudo').value.trim())$('pp-create-msg').textContent='Choisis un son-nom pour créer la salle.';
     });
     $('multi-pseudo').addEventListener('input',function(){$('pp-create-msg').textContent='';});
+    // "Changer" : retour aux etapes du parcours, en mode En direct
+    function toFlow(){
+      var f=flowState(), k=createKey();
+      if(k)f.theme=k;
+      f.mode='multi';f.preset=null;f.shared=false;
+      return window.SonaraFlow;
+    }
+    $('pp-create-change-name').addEventListener('click',function(){var F=toFlow();if(F&&F.showSonnom)F.showSonnom();});
+    $('pp-create-change-uni').addEventListener('click',function(){var F=toFlow();if(F)F.showUnivers();});
   }
 
   // ── Rejoindre une salle (#s-join) ──
@@ -85,7 +109,7 @@
     if(!codeBox)return;
     prefill($('join-pseudo'));showMe();
     code.value=clean(code.value);syncJoin();
-    vinyl($('pp-join-deco'),null,true);
+    vinyl($('pp-join-deco'),null);
   });
   if(join&&codeBox){
     code.addEventListener('input',function(){
@@ -113,7 +137,7 @@
   }
 
   // ── Defi a partager (#s-entre) ──
-  onShow($('s-entre'),function(){vinyl($('pp-entre-deco'),univ(keyOfTheme()),false);});
+  onShow($('s-entre'),function(){vinyl($('pp-entre-deco'),univ(keyOfTheme()));});
 
   // ── Chargement (#s-load) : halo de la couleur de l'univers ──
   onShow($('s-load'),function(){

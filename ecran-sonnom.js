@@ -109,10 +109,10 @@
 
   F.showSonnom=function(){
     var u=UNIVERS[idxOf(flow.theme)];
-    chipVy.innerHTML=uvVinyl(u,false);
+    chipVy.innerHTML=uvVinyl(u,false,true);
     // Teinte de l'univers sur la pastille, et grand vinyle qui tourne derriere la carte
     form.style.setProperty('--pc-u',u.couleur);
-    deco.innerHTML=uvVinyl(u,true);
+    deco.innerHTML=uvVinyl(u,true,true);
     chipName.textContent=u.nom;
     chip.setAttribute('aria-label','Univers choisi : '+u.nom+'. Changer d\'univers');
     // Univers impose par un lien de defi recu

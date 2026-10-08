@@ -42,9 +42,10 @@ var UNIVERS = [
 
 // Vinyle d'un univers (aussi utilise par l'ecran Choix de l'univers, ecrans.js)
 function uvEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function uvVinyl(u,spin){
+// neutral : etiquette neutre (couleur de l'univers + logo Sonara), aucune pochette
+function uvVinyl(u,spin,neutral){
   var disc='color-mix(in srgb, '+u.couleur+' 70%, #000)';
-  var label=u.image
+  var label=neutral?'<span class="jg-vy-logo" role="img" aria-label="Sonara"></span>':u.image
     ? '<img src="'+u.image+'" alt="" data-ph="'+uvEsc(u.nom)+'">'
     : '<span class="vy-label-txt">'+uvEsc(u.nom)+'</span>';
   return '<span class="vy'+(spin?' vy--spin':'')+'" style="--vy-color:'+disc+';--vy-label:'+u.couleur+'">'+
@@ -67,6 +68,7 @@ function uvVinyl(u,spin){
 //   onSide(u,dir)    clic sur un vinyle voisin (dir -1 ou 1)
 //   active()         le clavier pilote-t-il ce carrousel ? (defaut : section a l'ecran)
 //   centerLabel, ctaLabel : debut des aria-label du vinyle et du bouton
+//   neutral  etiquettes neutres (logo Sonara) au lieu des pochettes
 // Retourne {current, index, setIndex, inView, go}.
 function uvSkeleton(o){
   var n=UNIVERS.length, total=(n<10?'0':'')+n;
@@ -117,7 +119,7 @@ function uvCarrousel(sec,o){
   // Precharge des pochettes
   UNIVERS.forEach(function(u){if(u.image){var im=new Image();im.src=u.image;}});
 
-  var esc=uvEsc, vinyl=uvVinyl;
+  var esc=uvEsc, vinyl=function(u,spin){return uvVinyl(u,spin,o.neutral);};
   // Image absente ou en erreur : placeholder propre
   sec.addEventListener('error',function(e){
     var im=e.target;

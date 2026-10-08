@@ -26,7 +26,7 @@
   // Composant de la section 03 de la landing, sans defilement automatique
   // ni panneau : c'est le joueur qui choisit.
   var car=uvCarrousel($('pc-uv'),{
-    auto:false, panel:false,
+    auto:false, panel:false, neutral:true,
     cta:'Choisir cet univers', ctaLabel:'Choisir l\'univers ', centerLabel:'Choisir l\'univers ',
     onCenter:pick, onCta:pick,
     onSide:function(u,dir){car.go(dir);},
