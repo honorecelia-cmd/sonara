@@ -275,14 +275,6 @@ function notif(txt){
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
-// ── PARTICULES ──────────────────────────────────────
-(function(){
-  var c=$('bg'),x=c.getContext('2d'),W,H,P=[];
-  function rs(){W=c.width=innerWidth;H=c.height=innerHeight;P=[];for(var i=0;i<55;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,r:Math.random()*1.5+.4,a:Math.random()*.18+.04,col:Math.random()>.55?'#B3FF53':'#53FFD4'})}
-  rs();window.addEventListener('resize',rs);
-  (function d(){x.clearRect(0,0,W,H);P.forEach(function(p){p.x=(p.x+p.vx+W)%W;p.y=(p.y+p.vy+H)%H;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=p.col;x.globalAlpha=p.a;x.fill()});x.globalAlpha=1;requestAnimationFrame(d)})();
-})();
-
 // ── SFX ─────────────────────────────────────────────
 var _ac;
 function gac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac}
