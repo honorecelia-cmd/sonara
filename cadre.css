@@ -1,0 +1,94 @@
+/* ═══════════════════════════════════════════════════════════════
+   SONARA, cadre commun des ecrans (telephone plein ecran)
+   - viewport-fit=cover : le fond de chaque ecran passe sous l'encoche et
+     la barre du bas ; le contenu est decale des zones sures (--sa-t, --sa-b).
+   - html et body prennent la couleur du fond de l'ecran affiche.
+   - Telephone : la manche, la revelation et les resultats tiennent dans
+     la hauteur de l'ecran ; seuls les classements defilent, dans leur bloc.
+   Charge en dernier. Couleur de la barre du navigateur : cadre.js.
+   ═══════════════════════════════════════════════════════════════ */
+:root{--sa-t:env(safe-area-inset-top,0px);--sa-b:env(safe-area-inset-bottom,0px)}
+
+/* ── Hauteur des ecrans : 100dvh (100vh en repli) ── */
+.page{min-height:100vh;min-height:100dvh}
+
+/* ── Couleur de html et body = fond de l'ecran affiche ── */
+html:has(#s-game.on),html:has(#s-lobby.on),html:has(#s-load.on){background:#120706}
+html:has(#s-parcours.on),html:has(.page.pp.on),html:has(#s-res.on),html:has(#s-game.on #cds.on),html:has(#s-game.on #brksc.on){
+  background:linear-gradient(180deg,var(--sn-hero-wine),var(--sn-hero-core));
+}
+html:has(#s-game.on),html:has(#s-lobby.on),html:has(#s-load.on),html:has(#s-parcours.on),html:has(.page.pp.on),html:has(#s-res.on){min-height:100%}
+html:has(#s-game.on) body,html:has(#s-lobby.on) body,html:has(#s-load.on) body,
+html:has(#s-parcours.on) body,html:has(.page.pp.on) body,html:has(#s-res.on) body{background:transparent}
+
+/* ── Zones sures : en-tetes sous l'encoche, bas de page au-dessus de la barre ── */
+.nb-header{height:calc(var(--hd-h) + var(--sa-t));padding-top:var(--sa-t)}
+@media (min-width:761px){
+  .nb-meta{top:calc(2.1vw + var(--sa-t))}
+  .nb-footer{padding-bottom:calc(28px + var(--sa-b))}
+}
+@media (max-width:760px){   /* landing.css : en-tete dans le flux, pied de 24px */
+  #landing{padding-top:var(--sa-t)}
+  .nb-footer{padding-bottom:calc(24px + var(--sa-b))}
+}
+.jg-top,.pp-top{padding-top:calc(18px + var(--sa-t))}
+.pc-top{padding-top:calc(18px + var(--sa-t))}
+.pc-head{margin-top:var(--sa-t)}
+.pc-step2{padding-top:calc(76px + var(--sa-t));padding-bottom:calc(24px + var(--sa-b))}
+.jg-body{padding-bottom:calc(32px + var(--sa-b))}
+.jg-lobby-grid{padding-bottom:calc(40px + var(--sa-b))}
+.pp-grid{padding-bottom:calc(40px + var(--sa-b))}
+.page.pp-load{padding-top:var(--sa-t);padding-bottom:var(--sa-b)}
+.rs-main{padding-top:calc(28px + var(--sa-t))}
+.uv--jeu .uv-ui{margin-bottom:var(--sa-b)}
+@media (min-width:1100px){.jg-body{padding-bottom:calc(48px + var(--sa-b))}}
+
+@media (max-width:767px){
+  .jg-top,.pp-top,.pc-top{padding-top:calc(12px + var(--sa-t))}
+  .pc-top{padding-top:calc(14px + var(--sa-t))}
+  .pc-step2{padding-top:calc(68px + var(--sa-t));padding-bottom:calc(16px + var(--sa-b))}
+  .jg-body{padding-bottom:calc(16px + var(--sa-b))}
+  .jg-lobby-grid{padding-bottom:calc(32px + var(--sa-b))}
+  .pp-grid{padding-bottom:calc(24px + var(--sa-b))}
+
+  /* ── Manche et revelation : hauteur de l'ecran, la colonne de droite defile seule ── */
+  #s-game.page.jg{height:100vh;height:100dvh;height:var(--jg-vvh,100dvh);min-height:0;overflow:hidden}
+  #s-game .jg-body{min-height:0}
+  #s-game .qsc.on,#s-game .rvsc.on{display:flex;flex-direction:column;align-items:stretch;flex:1;min-height:0;gap:14px}
+  #s-game .jg-media{flex-shrink:0}
+  #s-game .jg-cover{width:min(100%,28vh,300px);width:min(100%,28dvh,300px)}
+  #s-game .jg-panel{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;gap:12px;padding-bottom:2px}
+  #s-game .jg-cd{min-height:0}
+  .jg-cd-vy{width:min(40vh,72vw,420px);width:min(40dvh,72vw,420px)}
+
+  /* ── Salle d'attente : longue liste de joueurs dans son bloc ── */
+  .jg-players{max-height:34vh;max-height:34dvh;overflow-y:auto;overscroll-behavior:contain}
+
+  /* ── Resultats : tout tient, les meilleurs scores defilent dans leur bloc ── */
+  #s-res.page.rs{height:100vh;height:100dvh;min-height:0}
+  #s-res .rs-main{height:100%;min-height:0;gap:14px;padding-top:calc(16px + var(--sa-t));padding-bottom:calc(12px + var(--sa-b))}
+  #s-res .rs-col{gap:14px;flex-shrink:0}
+  #s-res .rs-side{flex:1 1 0;min-height:0;display:flex;flex-direction:column}
+  #s-res .glb-top{flex:0 1 auto;min-height:118px;overflow-y:auto;overscroll-behavior:contain;padding:14px 14px 8px}
+  #s-res .rs-band{position:absolute;left:0;right:0;bottom:0;z-index:-1;min-height:0;height:clamp(90px,26vw,160px)}
+  #s-res .rs-rest{max-height:22vh;max-height:22dvh;overflow-y:auto;overscroll-behavior:contain}
+  #s-res .rs-btns{grid-template-columns:repeat(2,minmax(0,1fr));max-width:none}
+  #s-res .rs-btns .sn-btn{padding-left:10px;padding-right:10px;white-space:nowrap}
+  #s-res .rs-top img{height:24px}
+}
+/* Petits telephones (iPhone SE) : podium et marges resserres */
+@media (max-width:767px) and (max-height:760px){
+  #s-res .rs-main,#s-res .rs-col{gap:10px}
+  #s-res .rs-head h1{font-size:28px}
+  #s-res .rs-step{gap:5px;padding:10px 6px 10px}
+  #s-res .rs-step--1{min-height:164px}
+  #s-res .rs-step--2{min-height:142px}
+  #s-res .rs-step--3{min-height:124px}
+  #s-res .rs-rank{font-size:28px}
+  #s-res .rs-step .sn-avatar{width:34px;height:34px;font-size:15px}
+  #s-res .rs-step--1 .sn-avatar{width:40px;height:40px;font-size:17px}
+  #s-res .rs-solo{padding:18px 28px 16px}
+  #s-res .rs-solo-score{font-size:76px}
+  .jg-lobby-grid{gap:18px}
+  .jg-code{font-size:56px;margin-bottom:8px}
+}

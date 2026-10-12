@@ -47,13 +47,23 @@
 .jg .cds.on,.jg .brksc.on{display:flex}
 .jg .qsc.on,.jg .rvsc.on{display:grid}
 
-/* Compte a rebours et pause entre deux manches */
-.jg-cd{flex:1;min-height:60vh;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px}
-.jg-cd-th{margin:0;font-size:15px;color:rgba(255,255,255,.8)}
-.jg-cd-n{font-family:var(--f-display);font-weight:900;font-size:clamp(96px,16vw,180px);line-height:.9;letter-spacing:-.04em;color:var(--cream)}
-.jg-cd-l{margin:0;font-size:15px;color:var(--jg-muted)}
-.jg-brk-track{width:min(320px,70vw);height:2px;border-radius:2px;background:rgba(255,255,255,.22);overflow:hidden}
-.jg-brk-fill{display:block;height:100%;width:0;background:var(--cream)}
+/* Compte a rebours et pause entre deux manches : fond du hero plein ecran,
+   vinyle de l'univers (etiquette Sonara) qui prend de la vitesse, anneau
+   creme qui se remplit pendant la duree (aucun chiffre). Animations : ecran-jeu.js */
+.jg-cd-bg{position:fixed;inset:0;z-index:0;opacity:0;pointer-events:none;transition:opacity .5s ease}
+.jg-cd-bg .nb-hero-bg{animation:none}
+.jg:has(#cds.on) .jg-cd-bg,.jg:has(#brksc.on) .jg-cd-bg{opacity:1;transition-duration:.3s}
+.jg-cd{flex:1;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px 0 16px}
+.jg-cd-th{margin:0 0 8px;font-size:15px;font-weight:500;color:rgba(255,255,255,.88)}
+.jg .jg-cd-t{margin:0 0 clamp(20px,4.5vh,44px);font-size:clamp(28px,3.6vw,44px);line-height:1;color:#fff}
+.jg-cd-vy{position:relative;width:min(46vh,72vw,420px);aspect-ratio:1;flex-shrink:0}
+.jg-cd-ring{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.jg-cd-ring circle{fill:none;stroke-width:.6}   /* unites du viewBox : environ 2 px a 400 px */
+.jg-cd-ring-bg{stroke:rgba(253,221,184,.25)}
+.jg-cd-ring-fill{stroke:var(--cream);stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transform:rotate(-90deg);transform-origin:50% 50%}
+.jg-cd-disc{position:absolute;inset:7%}
+.jg-cd-disc .vy{--vy-hole:transparent}
+.jg-cd-disc .jg-vy-logo{width:58%}
 
 /* ── Grille commune manche / revelation : une colonne (mobile), deux des 1100 px ── */
 .jg-grid{grid-template-columns:minmax(0,1fr);gap:18px;align-items:start;width:100%;max-width:560px;margin:0 auto}

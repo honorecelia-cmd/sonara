@@ -218,7 +218,7 @@ const server = http.createServer(function(req, res) {
   }
 
   // Fichiers statiques CSS / JS
-  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js' || p.pathname === '/landing.css' || p.pathname === '/landing.js' || p.pathname === '/univers.css' || p.pathname === '/univers.js' || p.pathname === '/footer.js' || p.pathname === '/sonara-kit.css' || p.pathname === '/sonara-kit.js' || p.pathname === '/ecrans.css' || p.pathname === '/ecran-univers.js' || p.pathname === '/ecran-sonnom.js' || p.pathname === '/ecran-resultats.js' || p.pathname === '/jeu.css' || p.pathname === '/ecran-jeu.js') {
+  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js' || p.pathname === '/landing.css' || p.pathname === '/landing.js' || p.pathname === '/univers.css' || p.pathname === '/univers.js' || p.pathname === '/footer.js' || p.pathname === '/sonara-kit.css' || p.pathname === '/sonara-kit.js' || p.pathname === '/ecrans.css' || p.pathname === '/ecran-univers.js' || p.pathname === '/ecran-sonnom.js' || p.pathname === '/ecran-resultats.js' || p.pathname === '/jeu.css' || p.pathname === '/ecran-jeu.js' || p.pathname === '/prep.css' || p.pathname === '/ecran-prep.js' || p.pathname === '/cadre.css' || p.pathname === '/cadre.js') {
     fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
       if (err) { res.writeHead(404); res.end('Not found'); return; }
       var ct = p.pathname.endsWith('.css') ? 'text/css' : 'application/javascript';
@@ -263,11 +263,31 @@ const server = http.createServer(function(req, res) {
     return;
   }
 
+  // Audio : Safari sur iPhone charge les extraits par morceaux (en-tete Range)
+  // et refuse de les lire si le serveur ne repond pas 206 avec la taille.
   if (p.pathname.startsWith('/audio/')) {
-    fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
-      if (err) { res.writeHead(404); res.end('Not found'); return; }
-      res.writeHead(200, {'Content-Type':'audio/mpeg'});
-      res.end(data);
+    var audioName;
+    try { audioName = path.basename(decodeURIComponent(p.pathname)); } catch (e) { res.writeHead(400); res.end(); return; }
+    var audioFile = path.join(__dirname, 'audio', audioName);
+    fs.stat(audioFile, function(err, st) {
+      if (err || !st.isFile()) { res.writeHead(404); res.end('Not found'); return; }
+      var size = st.size, range = req.headers.range, m = range && /^bytes=(\d*)-(\d*)$/.exec(range);
+      var head = {'Content-Type':'audio/mpeg', 'Accept-Ranges':'bytes'};
+      if (m && (m[1] || m[2])) {
+        var start = m[1] ? parseInt(m[1], 10) : Math.max(0, size - parseInt(m[2], 10));
+        var end = m[1] && m[2] ? Math.min(parseInt(m[2], 10), size - 1) : size - 1;
+        if (start >= size || start > end) { head['Content-Range'] = 'bytes */' + size; res.writeHead(416, head); res.end(); return; }
+        head['Content-Range'] = 'bytes ' + start + '-' + end + '/' + size;
+        head['Content-Length'] = end - start + 1;
+        res.writeHead(206, head);
+        if (req.method === 'HEAD') { res.end(); return; }
+        fs.createReadStream(audioFile, {start: start, end: end}).pipe(res);
+        return;
+      }
+      head['Content-Length'] = size;
+      res.writeHead(200, head);
+      if (req.method === 'HEAD') { res.end(); return; }
+      fs.createReadStream(audioFile).pipe(res);
     });
     return;
   }

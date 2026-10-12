@@ -443,6 +443,8 @@ html{scroll-padding-top:var(--hd-h)}
 }
 .nb-globe{width:28px;height:28px;fill:none;stroke:rgba(255,255,255,.7);stroke-width:1.2}
 .nb-secfoot p{margin:10px 0 0;font-family:var(--f-text);font-size:13px;line-height:1.35;color:rgba(255,255,255,.5)}
+/* Ligne du picto globe : hauteur fixee (elle dependait de la police globale, DM Sans retiree) */
+.nb-secfoot-l{line-height:21px}
 .nb-trio-mini{display:flex;gap:8px}
 .nb-trio-mini span{
   width:24px;height:24px;border-radius:50%;background:var(--neb-orange);

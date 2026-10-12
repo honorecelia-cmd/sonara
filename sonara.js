@@ -1,16 +1,3 @@
-function copyShareUrl(){var inp=document.getElementById("fig-share-url");if(inp){inp.select();try{document.execCommand("copy");}catch(e){}var btn=document.querySelector(".fig-copy-btn");if(btn){btn.textContent="COPIE !";setTimeout(function(){btn.textContent="COPIER";},2000);}}}
-
-function startFromLanding(){
-  var p=document.getElementById("landing-pseudo");
-  var val=p?p.value.trim():"";
-  if(val===""){if(p){p.style.borderColor="red";p.focus();}return;}
-  G.ps=val;G.av="";
-  // Arrive via un lien "Entre proches" -> on lance direct l'univers partage
-  if(G._sharedTheme&&THEMES[G._sharedTheme]&&typeof selectSoloTheme==='function'){
-    selectSoloTheme(G._sharedTheme);return;
-  }
-  showPage("s-solo");
-}
 // Données thèmes — utilisées par les modals générés en JS
 var THEMES = {
   'mix':      {n:'Mix Caribéen',   ic:'', dq:'kassav zouk OR dancehall OR soca OR merengue', tracks:null},
@@ -265,7 +252,6 @@ function showPage(id){
   if(el){el.style.display='flex';el.classList.add('on');}
   G.page=id;
   window.scrollTo(0,0);
-  if(id==='s-solo'&&window._updateSoloActive) setTimeout(window._updateSoloActive,60);
   if(id==='s-game'||id==='s-load'||id==='s-res') history.pushState(null,'','#'+id);
 }
 function notif(txt){
@@ -274,14 +260,6 @@ function notif(txt){
   setTimeout(function(){el.remove()},3100);
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-
-// ── PARTICULES ──────────────────────────────────────
-(function(){
-  var c=$('bg'),x=c.getContext('2d'),W,H,P=[];
-  function rs(){W=c.width=innerWidth;H=c.height=innerHeight;P=[];for(var i=0;i<55;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,r:Math.random()*1.5+.4,a:Math.random()*.18+.04,col:Math.random()>.55?'#B3FF53':'#53FFD4'})}
-  rs();window.addEventListener('resize',rs);
-  (function d(){x.clearRect(0,0,W,H);P.forEach(function(p){p.x=(p.x+p.vx+W)%W;p.y=(p.y+p.vy+H)%H;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=p.col;x.globalAlpha=p.a;x.fill()});x.globalAlpha=1;requestAnimationFrame(d)})();
-})();
 
 // ── SFX ─────────────────────────────────────────────
 var _ac;
@@ -369,8 +347,8 @@ function launchFromModal(btn) {
   // Fermer la modal
   history.pushState(null,'','#s-load');
   showPage('s-load');
-  $('ldt').textContent = 'Chargement…';
-  $('lds').textContent = t.n;
+  $('ldt').textContent = 'Prépare tes oreilles…';
+  $('lds').textContent = 'Univers '+t.n;
 
   var done = false;
   // Si le thème a des tracks fixes → les utiliser directement, pas besoin de Deezer
@@ -920,8 +898,7 @@ function doReveal(){
     for(var i=0;i<list.length;i++)if(list[i].slug===key)u=list[i];
     if(!u||!window.uvVinyl)return;
     // etiquette neutre : couleur de l'univers et logo Sonara, aucune pochette reelle
-    reva.insertAdjacentHTML('beforeend',uvVinyl({nom:u.nom,couleur:u.couleur,image:null},true));
-    var lab=reva.querySelector('.vy-label');if(lab)lab.innerHTML='<span class="jg-vy-logo" role="img" aria-label="Sonara"></span>';
+    reva.insertAdjacentHTML('beforeend',uvVinyl(u,true,true));
   }
   if(q.cover){var img=document.createElement('img');img.src=q.cover;img.alt='';img.onerror=function(){img.remove();showVinyl()};reva.appendChild(img)}
   else showVinyl();
@@ -1086,7 +1063,7 @@ function showEntreProches(){
   showPage('s-entre');
   var a=document.getElementById('entre-link');
   if(a){a.textContent='Génération du lien…';a.removeAttribute('href');}
-  var b=document.getElementById('entre-copy');if(b)b.textContent='COPIER';
+  var b=document.getElementById('entre-copy');if(b)b.textContent='Copier';
   ensureEntreCode(function(code){
     var url=entreLinkFromCode(code);
     if(a){a.textContent=url;a.href=url;}
@@ -1094,7 +1071,7 @@ function showEntreProches(){
 }
 function copyEntreLink(){
   var b=document.getElementById('entre-copy');
-  function ok(){if(b){b.textContent='COPIÉ !';setTimeout(function(){b.textContent='COPIER';},2000);}}
+  function ok(){if(b){b.textContent='Copié !';setTimeout(function(){b.textContent='Copier';},2000);}}
   ensureEntreCode(function(code){
     var url=entreLinkFromCode(code);
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(ok).catch(function(){prompt('Copie le lien :',url);});}
@@ -1252,9 +1229,9 @@ function joinRoom() {
     var codeInp = document.getElementById('join-code');
     var errMsg = document.getElementById('join-error');
     codeInp.style.borderColor = 'var(--red)';
-    if(errMsg) { errMsg.textContent = 'Code introuvable. Vérifie et réessaie.'; errMsg.style.display='block'; }
+    if(errMsg) { errMsg.textContent = 'Aucune salle ne porte ce code. Vérifie-le auprès de la personne qui t\'invite.'; errMsg.style.display='block'; }
     var btn = document.querySelector('#s-join .bgo');
-    if(btn) { btn.disabled=false; btn.textContent='Rejoindre →'; }
+    if(btn) { btn.disabled=false; btn.textContent='Rejoindre'; }
   });
 }
 
@@ -1413,20 +1390,6 @@ function selectSoloTheme(key) {
     if (btn) { launchFromModal(btn); return; }
   }
 }
-function launchSolo() {
-  var pseudo = document.getElementById('solo-pseudo').value.trim();
-  if (!pseudo) { document.getElementById('solo-pseudo').style.borderColor = 'var(--red)'; return; }
-  G.ps = pseudo;
-  var key = G_SOLO_THEME;
-  var modal = document.getElementById('modal-' + key);
-  if (modal) {
-    var inp = modal.querySelector('.pseudo-inp');
-    if (inp) inp.value = pseudo;
-    var btn = modal.querySelector('[data-action="launch"]');
-    if (btn) { launchFromModal(btn); return; }
-  }
-}
-
 /* ─────────────────────────────────── */
 
 function guestReady() {
@@ -1442,26 +1405,3 @@ function guestReady() {
   G_MULTI._audioUnlocked = true;
 }
 
-// ── #s-solo : carte "active" (badge Commencer) suivant le scroll du carrousel ──
-(function(){
-  function updateSoloActive(){
-    var grid=document.querySelector('#s-solo .fig-tgrid');
-    if(!grid)return;
-    var cards=grid.querySelectorAll('.fig-tc');
-    if(!cards.length)return;
-    var gl=grid.getBoundingClientRect().left;
-    var best=cards[0],bestD=Infinity;
-    cards.forEach(function(c){
-      var d=Math.abs(c.getBoundingClientRect().left-gl);
-      if(d<bestD){bestD=d;best=c;}
-    });
-    cards.forEach(function(c){c.classList.toggle('active',c===best);});
-  }
-  window._updateSoloActive=updateSoloActive;
-  window.addEventListener('load',function(){
-    var grid=document.querySelector('#s-solo .fig-tgrid');
-    if(grid)grid.addEventListener('scroll',updateSoloActive,{passive:true});
-    updateSoloActive();
-  });
-  window.addEventListener('resize',updateSoloActive);
-})();

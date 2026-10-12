@@ -2,7 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#200000">
 <title>Sonara, THE Blind test</title>
 <link rel="stylesheet" href="/fonts/fonts.css">
 <link rel="stylesheet" href="/sonara-kit.css">
@@ -11,9 +12,10 @@
 <link rel="stylesheet" href="/univers.css">
 <link rel="stylesheet" href="/ecrans.css">
 <link rel="stylesheet" href="/jeu.css">
+<link rel="stylesheet" href="/prep.css">
+<link rel="stylesheet" href="/cadre.css">
 </head>
 <body>
-<canvas id="bg"></canvas>
 
 <!-- ═══ LANDING ═══
      Refonte d'apres la maquette Nebula : voir nebula-analyse-pour-sonara.md
@@ -539,37 +541,6 @@
 </section>
 
 <!-- ═══ SOLO — CHOIX UNIVERS ═══ -->
-<section class="page" id="s-solo">
-  <div class="fig-nav">
-    <button class="btn-back" onclick="showPage('landing')">← Retour</button>
-    <img src="/img/logo_sonara.png" class="fig-logo" alt="Sonara">
-    <div class="fig-online"><span class="fig-odot"></span><span class="online-count" data-short="1">246 en ligne</span></div>
-  </div>
-  <div class="fig-solo-body">
-    <p class="ld-eyebrow">1er blindtest caribéen</p>
-    <img src="/img/logo_sonara.png" class="ld-logo" alt="Sonara">
-    <p class="fig-solo-eyebrow">Chaque univers, une fréquence différente.<br>À toi de choisir !</p>
-    <div class="fig-tgrid">
-      <div class="fig-tc active" onclick="selectSoloTheme('kompa')"><img src="/img/cover_kompa.jpg" class="fig-tc-img" alt="Kompa"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">KOMPA</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('dancehall')"><img src="/img/cover_dancehall.jpg" class="fig-tc-img" alt="Dancehall"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">DANCEHALL</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('zouk')"><img src="/img/cover_zouk.jpg" class="fig-tc-img" alt="Zouk"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">ZOUK</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('reggae')"><img src="/img/cover_reggae.jpg" class="fig-tc-img" alt="Reggae"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">REGGAE</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('soca')"><img src="/img/cover_soca.jpg" class="fig-tc-img" alt="Soca"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">SOCA</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('rap')"><img src="/img/cover_rap.jpg" class="fig-tc-img" alt="Rap"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">RAP</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('mix')"><div class="fig-tc-noimg"></div><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">MIX</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('shatta')"><div class="fig-tc-noimg"></div><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">SHATTA</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('trap')"><div class="fig-tc-noimg"></div><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">TRAP</span></div>
-    </div>
-    <p class="fig-swipe-hint">Swipe pour explorer les univers →</p>
-  </div>
-  <img src="/img/explor.svg" class="solo-expl" alt="" aria-hidden="true">
-  <div class="ld-footer">
-    <div class="ld-suivez-line">Suivez-nous :</div>
-    <div class="ld-handle-line"><img src="/img/rs.png" class="ld-rs" alt=""><span class="ld-handle">sonara_blindtest</span></div>
-  </div>
-</section>
-
-<!-- ═══ SOLO — CHOIX UNIVERS ═══ -->
 
 
 <!-- ═══ MODALS PAR THÈME ═══ -->
@@ -696,13 +667,15 @@
 </div>
 
 <!-- ═══ LOADING ═══ -->
-<section class="page" id="s-load">
-  <div class="ldbox">
-    <div class="ldlogo">SON<b>A</b>RA</div>
-    <div class="spin"></div>
-    <div id="ldt" style="font-size:14px;color:var(--mut);font-weight:500">Chargement…</div>
-    <div id="lds" style="font-size:11px;color:var(--mut);margin-top:5px;opacity:.7"></div>
-    <button id="btn-load-back" style="margin-top:24px;background:none;border:1px solid var(--bd);border-radius:8px;padding:8px 20px;color:var(--mut);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">← Annuler</button>
+<!-- ═══ CHARGEMENT (prep.css, ecran-prep.js) ═══
+     sonara.js ecrit #lds (univers) et #ldt ; #btn-load-back ramene a l'accueil. -->
+<section class="page pp-load" id="s-load" aria-live="polite">
+  <div class="nb-grain" aria-hidden="true"></div>
+  <div class="pp-load-box">
+    <img class="pp-load-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <p id="lds"></p>
+    <p id="ldt">Prépare tes oreilles…</p>
+    <button class="sn-btn sn-btn--ghost sn-btn--sm" id="btn-load-back" type="button">Annuler</button>
   </div>
 </section>
 
@@ -711,6 +684,8 @@
      D'apres les maquettes de la landing (telephones des sections 01, 04 et 05).
      Tous les id sont remplis ou cables par sonara.js : ne pas les renommer. -->
 <section class="page jg" id="s-game">
+  <!-- Fond du compte a rebours et de la pause : degrade du hero + grain, plein ecran -->
+  <div class="jg-cd-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="nb-grain" aria-hidden="true"></div>
   <header class="jg-top">
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
@@ -721,8 +696,11 @@
   <div class="jg-off" aria-hidden="true"><div class="gsw"><div class="gpts" id="gpts">0</div><div class="gcmb" id="gcmb">×<span id="cmbn">1.0</span></div></div></div>
   <div class="gbody jg-body">
     <div class="pstrip" id="pstrip"></div>
-    <div class="cds on jg-cd" id="cds"><p class="jg-cd-th" id="cdth"></p><div class="cdn jg-cd-n" id="cdn">3</div><p class="jg-cd-l">Prépare tes oreilles</p></div>
-    <div class="brksc jg-cd" id="brksc"><p class="jg-cd-th" id="brklbl">Manche 1/10</p><div class="jg-cd-n" id="brknum">5</div><div class="jg-brk-track"><div class="jg-brk-fill" id="brkfill"></div></div><p class="jg-cd-l">En écoute dans un instant</p></div>
+    <!-- Compte a rebours et pause : vinyle de l'univers qui accelere, anneau
+         creme qui se remplit (ecran-jeu.js). #cdn, #brknum et #brkfill restent
+         ecrits par sonara.js mais ne sont plus affiches. -->
+    <div class="cds on jg-cd" id="cds"><p class="jg-cd-th" id="cdth"></p><h2 class="jg-cd-t">Prépare tes oreilles…</h2><div class="jg-cd-vy" aria-hidden="true"><svg class="jg-cd-ring" viewBox="0 0 100 100"><circle class="jg-cd-ring-bg" cx="50" cy="50" r="49"/><circle class="jg-cd-ring-fill" cx="50" cy="50" r="49" pathLength="100"/></svg><div class="jg-cd-disc"></div></div><div class="jg-off" aria-hidden="true"><div class="cdn" id="cdn">3</div></div></div>
+    <div class="brksc jg-cd" id="brksc"><p class="jg-cd-th" id="brklbl">Manche 1/10</p><h2 class="jg-cd-t">En écoute dans un instant</h2><div class="jg-cd-vy" aria-hidden="true"><svg class="jg-cd-ring" viewBox="0 0 100 100"><circle class="jg-cd-ring-bg" cx="50" cy="50" r="49"/><circle class="jg-cd-ring-fill" cx="50" cy="50" r="49" pathLength="100"/></svg><div class="jg-cd-disc"></div></div><div class="jg-off" aria-hidden="true"><div id="brknum">5</div><div class="jg-brk-track"><div class="jg-brk-fill" id="brkfill"></div></div></div></div>
 
     <!-- Manche : pochette a gauche (ordinateur), minuteur, question, reponse et scores a droite -->
     <div class="qsc jg-grid" id="qsc">
@@ -820,35 +798,40 @@
 </section>
 
 <!-- ═══ ENTRE PROCHES ═══ -->
-<section class="page" id="s-entre">
-  <div class="fig-nav">
-    <button class="btn-back" onclick="showPage('s-res')">← Retour</button>
-    <img src="/img/logo_sonara.png" class="fig-logo" alt="Sonara">
-    <div class="fig-online"><span class="fig-odot"></span><span class="online-count">246 joueurs en ligne</span></div>
+<!-- ═══ DEFI A PARTAGER (prep.css, ecran-prep.js) ═══
+     showEntreProches() ecrit le lien dans #entre-link ; #entre-copy et
+     #entre-share appellent copyEntreLink() et shareEntreLink(). -->
+<section class="page pp" id="s-entre" aria-labelledby="pp-entre-t">
+  <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
+  <div class="pp-top">
+    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <button class="jg-quit" type="button" onclick="showPage('s-res')">Retour</button>
   </div>
-  <div class="fig-entre-body">
-    <div class="fig-entre-title">ENTRE PROCHES</div>
-    <p class="fig-entre-desc">Envoie ce lien à tes proches et retrouve-les dans ton univers !</p>
-    <div class="fig-link-box">
-      <a class="fig-link-url" id="entre-link" href="#" target="_blank" rel="noopener">https://sonara-blindtest.fr/fr/custom-xxxx</a>
-      <button class="fig-copy-btn" id="entre-copy" onclick="copyEntreLink()">COPIER</button>
+  <div class="pp-grid">
+    <div class="pp-main">
+      <h1 id="pp-entre-t">Défi à partager</h1>
+      <p class="pp-lede">Envoie ce lien à tes proches : chacun joue quand il veut, sur ton univers.</p>
+      <div class="pc-card">
+        <p class="pp-k">Ton lien</p>
+        <div class="pp-link"><a id="entre-link" href="#" target="_blank" rel="noopener">Génération du lien…</a><button class="sn-btn" id="entre-copy" type="button" onclick="copyEntreLink()">Copier</button></div>
+        <div class="pp-actions"><button class="sn-btn" id="entre-share" type="button" onclick="shareEntreLink()">Partager</button></div>
+        <div class="pp-block" style="margin-top:18px">
+          <p class="pp-k">Ou joue tout de suite en solo</p>
+          <div class="pp-pills">
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-kompa)" onclick="selectSoloTheme('kompa')">Kompa</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-zouk)" onclick="selectSoloTheme('zouk')">Zouk</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-mix)" onclick="selectSoloTheme('mix')">Mix</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-reggae)" onclick="selectSoloTheme('reggae')">Reggae</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-dancehall)" onclick="selectSoloTheme('dancehall')">Dancehall</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-soca)" onclick="selectSoloTheme('soca')">Soca</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-shatta)" onclick="selectSoloTheme('shatta')">Shatta</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-trap)" onclick="selectSoloTheme('trap')">Trap</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-rap)" onclick="selectSoloTheme('rap')">Rap</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="fig-mini-grid">
-      <div class="fig-mini-tc" onclick="selectSoloTheme('kompa')"><img src="/img/cover_kompa.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Kompa</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('zouk')"><img src="/img/cover_zouk.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Zouk</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('mix')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Mix</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('reggae')"><img src="/img/cover_reggae.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Reggae</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('dancehall')"><img src="/img/cover_dancehall.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Dancehall</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('trap')"><img src="/img/cover_dancehall.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Trap</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('rap')"><img src="/img/cover_rap.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Rap</span></div>
-      <div class="fig-mini-tc" onclick="selectSoloTheme('soca')"><img src="/img/cover_soca.jpg" class="fig-mini-img" alt=""><span class="fig-mini-lbl">Soca</span></div>
-    </div>
-    <button class="fig-entre-share" id="entre-share" onclick="shareEntreLink()">Partager</button>
-  </div>
-  <div class="ld-soar-txt" aria-hidden="true">SO<br>AR</div>
-  <div class="ld-footer">
-    <div class="ld-suivez-line">Suivez-nous :</div>
-    <div class="ld-handle-line"><img src="/img/rs.png" class="ld-rs" alt=""><span class="ld-handle">sonara_blindtest</span></div>
+    <div class="pp-deco" id="pp-entre-deco" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -856,70 +839,102 @@
 
 
 <!-- ═══ MULTIJOUEUR — CHOIX ═══ -->
-<section class="page" id="s-multi">
-  <nav>
-    <button class="btn-back" onclick="showPage('landing')">← Retour</button>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div style="width:80px"></div>
-  </nav>
-  <div class="hero" style="padding-bottom:8px">
-    <h1 style="font-size:clamp(24px,6vw,36px)">Multijoueur</h1>
-    <p class="hero-sub">Joue avec tes amis, où qu'ils soient.</p>
+<!-- ═══ JOUER EN DIRECT : creer ou rejoindre (prep.css, ecran-prep.js) ═══ -->
+<section class="page pp" id="s-multi" aria-labelledby="pp-multi-t">
+  <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
+  <div class="pp-top">
+    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <button class="jg-quit" type="button" onclick="showPage('landing')">Retour</button>
   </div>
-  <div class="multi-choice-grid">
-    <button class="multi-choice-card" onclick="showPage('s-create')">
-      <span style="font-family:MuseoModerno,sans-serif;font-size:16px;font-weight:800;color:var(--txt)">Créer</span>
-      <span style="font-size:12px;color:var(--mut)">Lance une nouvelle salle</span>
-    </button>
-    <button class="multi-choice-card" onclick="showPage('s-join')">
-      <span style="font-family:MuseoModerno,sans-serif;font-size:16px;font-weight:800;color:var(--txt)">Rejoindre</span>
-      <span style="font-size:12px;color:var(--mut)">Entre le code d'une salle</span>
-    </button>
+  <div class="pp-grid">
+    <div class="pp-main">
+      <h1 id="pp-multi-t">Jouer en direct</h1>
+      <p class="pp-lede">Une salle, un code, et tout le monde joue en même temps.</p>
+      <div class="pc-card">
+        <div class="pp-actions" style="margin-top:0">
+          <button class="sn-btn" type="button" onclick="showPage('s-create')">Créer une salle</button>
+          <button class="sn-btn sn-btn--ghost" type="button" onclick="showPage('s-join')">Rejoindre une salle</button>
+        </div>
+      </div>
+    </div>
+    <div class="pp-deco" id="pp-multi-deco" aria-hidden="true"></div>
   </div>
 </section>
 
 <!-- ═══ CRÉER UNE SALLE ═══ -->
-<section class="page" id="s-create">
-  <nav>
-    <button class="btn-back" onclick="showPage('s-multi')">← Retour</button>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div style="width:80px"></div>
-  </nav>
-  <div style="width:100%;max-width:440px;padding:24px 16px 40px">
-    <h2 style="font-family:MuseoModerno,sans-serif;font-size:22px;font-weight:800;margin-bottom:24px">Nouvelle salle</h2>
-    <label class="flbl">Ton pseudo</label>
-    <input class="finp" id="multi-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:20px">
-    <div class="slbl" style="margin-bottom:12px">Choisis ton univers</div>
-    <div class="tgrid" id="create-theme-grid">
-      <a class="tc t-mix"       onclick="selectMultiTheme('mix',this)">      <div class="glow"></div><span class="tn">Mix Caribéen</span><span class="ts">Tous styles</span></a>
-      <a class="tc t-zouk"      onclick="selectMultiTheme('zouk',this)">     <div class="glow"></div><span class="tn">Zouk</span><span class="ts">Gwadloup · Matinik</span></a>
-      <a class="tc t-kompa"     onclick="selectMultiTheme('kompa',this)">    <div class="glow"></div><span class="tn">Kompa</span><span class="ts">Haïti</span></a>
-      <a class="tc t-reggae"    onclick="selectMultiTheme('reggae',this)">   <div class="glow"></div><span class="tn">Reggae</span><span class="ts">Jamaïque</span></a>
-      <a class="tc t-dancehall" onclick="selectMultiTheme('dancehall',this)"><div class="glow"></div><span class="tn">Dancehall</span><span class="ts">Jamaïque</span></a>
-      <a class="tc t-soca"      onclick="selectMultiTheme('soca',this)">     <div class="glow"></div><span class="tn">Soca</span><span class="ts">Trinidad &amp; Tobago</span></a>
-      <a class="tc t-shatta"    onclick="selectMultiTheme('shatta',this)">   <div class="glow"></div><span class="tn">Shatta</span><span class="ts">Antilles · Afrique</span></a>
-      <a class="tc t-trap"      onclick="selectMultiTheme('trap',this)">     <div class="glow"></div><span class="tn">Trap Antillais</span><span class="ts">Urban kréyol</span></a>
-      <a class="tc t-rap"       onclick="selectMultiTheme('rap',this)">      <div class="glow"></div><span class="tn">Rap Caribéen</span><span class="ts">Flow antillais</span></a>
+<!-- ═══ CREER UNE SALLE (prep.css, ecran-prep.js) ═══
+     createRoom() lit #multi-pseudo ; selectMultiTheme() bascule .selected sur
+     #create-theme-grid .tc et active #btn-create-room. -->
+<section class="page pp" id="s-create" aria-labelledby="pp-create-t">
+  <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
+  <div class="pp-top">
+    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <button class="jg-quit" type="button" onclick="showPage('s-multi')">Retour</button>
+  </div>
+  <div class="pp-grid">
+    <div class="pp-main">
+      <h1 id="pp-create-t">Créer une salle</h1>
+      <div class="pc-card">
+        <p class="pp-me" id="pp-create-me" hidden>Tu joues en tant que <b id="pp-create-me-name"></b> · <button type="button" id="pp-create-change-name">Changer</button></p>
+        <div class="pp-block" id="pp-create-name" hidden>
+          <label class="pp-k" for="multi-pseudo">Ton son-nom</label>
+          <div class="pp-field"><input id="multi-pseudo" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton son-nom"></div>
+        </div>
+        <p class="pp-me" id="pp-create-uni" hidden><span class="pp-dot" id="pp-create-dot"></span>Univers : <b id="pp-create-uni-name"></b> · <button type="button" id="pp-create-change-uni">Changer</button></p>
+        <div class="pp-block" id="pp-create-pills" hidden>
+          <p class="pp-k" id="pp-create-univ">Choisis un univers pour ta salle.</p>
+          <div class="pp-pills" id="create-theme-grid" role="group" aria-labelledby="pp-create-univ">
+          <button class="tc t-mix" type="button" style="--pp-u:var(--univers-mix)" onclick="selectMultiTheme('mix',this)"><span class="tn">Mix</span></button>
+          <button class="tc t-zouk" type="button" style="--pp-u:var(--univers-zouk)" onclick="selectMultiTheme('zouk',this)"><span class="tn">Zouk</span></button>
+          <button class="tc t-kompa" type="button" style="--pp-u:var(--univers-kompa)" onclick="selectMultiTheme('kompa',this)"><span class="tn">Kompa</span></button>
+          <button class="tc t-reggae" type="button" style="--pp-u:var(--univers-reggae)" onclick="selectMultiTheme('reggae',this)"><span class="tn">Reggae</span></button>
+          <button class="tc t-dancehall" type="button" style="--pp-u:var(--univers-dancehall)" onclick="selectMultiTheme('dancehall',this)"><span class="tn">Dancehall</span></button>
+          <button class="tc t-soca" type="button" style="--pp-u:var(--univers-soca)" onclick="selectMultiTheme('soca',this)"><span class="tn">Soca</span></button>
+          <button class="tc t-shatta" type="button" style="--pp-u:var(--univers-shatta)" onclick="selectMultiTheme('shatta',this)"><span class="tn">Shatta</span></button>
+          <button class="tc t-trap" type="button" style="--pp-u:var(--univers-trap)" onclick="selectMultiTheme('trap',this)"><span class="tn">Trap</span></button>
+          <button class="tc t-rap" type="button" style="--pp-u:var(--univers-rap)" onclick="selectMultiTheme('rap',this)"><span class="tn">Rap</span></button>
+          </div>
+        </div>
+        <div class="pp-actions">
+          <button class="sn-btn" id="btn-create-room" type="button" style="opacity:.5;pointer-events:none" onclick="createRoom()">Créer la salle</button>
+        </div>
+        <p class="pp-msg" id="pp-create-msg" aria-live="polite"></p>
+      </div>
     </div>
-    <button class="bgo" id="btn-create-room" style="margin-top:20px;opacity:.5;pointer-events:none" onclick="createRoom()">Créer la salle →</button>
+    <div class="pp-deco" id="pp-create-deco" aria-hidden="true"></div>
   </div>
 </section>
 
 <!-- ═══ REJOINDRE UNE SALLE ═══ -->
-<section class="page" id="s-join">
-  <nav>
-    <button class="btn-back" onclick="showPage('s-multi')">← Retour</button>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div style="width:80px"></div>
-  </nav>
-  <div style="width:100%;max-width:440px;padding:24px 16px 40px">
-    <h2 style="font-family:MuseoModerno,sans-serif;font-size:22px;font-weight:800;margin-bottom:24px">Rejoindre une salle</h2>
-    <label class="flbl">Ton pseudo</label>
-    <input class="finp" id="join-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:20px">
-    <label class="flbl">Code de la salle</label>
-    <input style="background:var(--s2);border:1px solid var(--bd2);border-radius:10px;padding:14px;font-size:28px;font-weight:800;font-family:MuseoModerno,sans-serif;color:var(--txt);text-align:center;letter-spacing:6px;width:100%;text-transform:uppercase;margin-top:8px" id="join-code" type="text" placeholder="KALI" maxlength="4">
-    <button class="bgo" style="margin-top:20px" onclick="joinRoom()">Rejoindre →</button>
-    <div id="join-error" style="display:none;margin-top:12px;color:var(--red);font-size:13px;font-weight:600;text-align:center"></div>
+<!-- ═══ REJOINDRE UNE SALLE (prep.css, ecran-prep.js) ═══
+     joinRoom() lit #join-pseudo et #join-code, change le texte de
+     "#s-join .bgo" et affiche #join-error. -->
+<section class="page pp" id="s-join" aria-labelledby="pp-join-t">
+  <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
+  <div class="pp-top">
+    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <button class="jg-quit" type="button" onclick="showPage('s-multi')">Retour</button>
+  </div>
+  <div class="pp-grid">
+    <div class="pp-main">
+      <h1 id="pp-join-t">Rejoindre une salle</h1>
+      <div class="pc-card">
+        <p class="pp-me" id="pp-join-me" hidden>Tu joues en tant que <b id="pp-join-me-name"></b> · <button type="button" id="pp-join-change">Changer</button></p>
+        <div class="pp-block" id="pp-join-name" hidden>
+          <label class="pp-k" for="join-pseudo">Ton son-nom</label>
+          <div class="pp-field"><input id="join-pseudo" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton son-nom"></div>
+        </div>
+        <div class="pp-block">
+          <label class="pp-k" for="join-code">Code de la salle</label>
+          <div class="pp-code"><input id="join-code" type="text" maxlength="4" inputmode="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="K7MZ" aria-describedby="join-error"></div>
+          <div class="pp-err" id="join-error" style="display:none" role="alert"></div>
+        </div>
+        <div class="pp-actions">
+          <button class="sn-btn bgo" type="button" onclick="joinRoom()" disabled>Rejoindre</button>
+        </div>
+      </div>
+    </div>
+    <div class="pp-deco" id="pp-join-deco" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -956,28 +971,6 @@
   </div>
 </section>
 
-<!-- ═══ SOLO — PSEUDO ═══ -->
-<section class="page" id="s-pseudo">
-  <nav>
-    <button class="btn-back" id="pseudo-back" onclick="showPage('s-solo')">← Retour</button>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div style="width:80px"></div>
-  </nav>
-  <div style="width:100%;max-width:440px;padding:24px 16px 40px">
-    <div id="pseudo-theme-info" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--bd2);border-radius:16px;padding:16px;margin-bottom:24px">
-      <span id="pseudo-theme-ic" style="font-size:32px"></span>
-      <div>
-        <div id="pseudo-theme-name" style="font-family:MuseoModerno,sans-serif;font-weight:800;font-size:16px">Mix Caribéen</div>
-        <div style="font-size:12px;color:var(--mut)">10 questions</div>
-      </div>
-    </div>
-    <label class="flbl">Ton pseudo</label>
-    <input class="finp" id="solo-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:24px" autocomplete="off">
-    <button class="bgo" onclick="launchSolo()">Jouer →</button>
-  </div>
-</section>
-
-
 <script src="/sonara.js"></script>
 <script src="/landing.js"></script>
 <script src="/univers.js"></script>
@@ -986,6 +979,8 @@
 <script src="/ecran-sonnom.js"></script>
 <script src="/ecran-resultats.js"></script>
 <script src="/ecran-jeu.js"></script>
+<script src="/ecran-prep.js"></script>
+<script src="/cadre.js"></script>
 <script src="/footer.js"></script>
 </body>
 </html>
