@@ -50,7 +50,8 @@
 /* Compte a rebours et pause entre deux manches */
 .jg-cd{flex:1;min-height:60vh;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px}
 .jg-cd-th{margin:0;font-size:15px;color:rgba(255,255,255,.8)}
-.jg-cd-n{font-family:var(--f-display);font-weight:900;font-size:clamp(96px,16vw,180px);line-height:.9;letter-spacing:-.04em;color:var(--cream)}
+/* padding-bottom : place pour le jambage du p de "Top !" (fixe, rien ne bouge entre 1 et Top) */
+.jg-cd-n{font-family:var(--f-display);font-weight:900;font-size:clamp(96px,16vw,180px);line-height:.9;letter-spacing:-.04em;color:var(--cream);padding-bottom:.24em}
 .jg-cd-l{margin:0;font-size:15px;color:var(--jg-muted)}
 .jg-brk-track{width:min(320px,70vw);height:2px;border-radius:2px;background:rgba(255,255,255,.22);overflow:hidden}
 .jg-brk-fill{display:block;height:100%;width:0;background:var(--cream)}
