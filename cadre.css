@@ -23,8 +23,14 @@ html:has(#s-parcours.on) body,html:has(.page.pp.on) body,html:has(#s-res.on) bod
 
 /* ── Zones sures : en-tetes sous l'encoche, bas de page au-dessus de la barre ── */
 .nb-header{height:calc(var(--hd-h) + var(--sa-t));padding-top:var(--sa-t)}
-.nb-meta{top:calc(2.1vw + var(--sa-t))}
-.nb-footer{padding-bottom:calc(28px + var(--sa-b))}
+@media (min-width:761px){
+  .nb-meta{top:calc(2.1vw + var(--sa-t))}
+  .nb-footer{padding-bottom:calc(28px + var(--sa-b))}
+}
+@media (max-width:760px){   /* landing.css : en-tete dans le flux, pied de 24px */
+  #landing{padding-top:var(--sa-t)}
+  .nb-footer{padding-bottom:calc(24px + var(--sa-b))}
+}
 .jg-top,.pp-top{padding-top:calc(18px + var(--sa-t))}
 .pc-top{padding-top:calc(18px + var(--sa-t))}
 .pc-head{margin-top:var(--sa-t)}
