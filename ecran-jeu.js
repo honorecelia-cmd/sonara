@@ -41,6 +41,38 @@
     }
   };
 
+  // ── Compte a rebours et pause : vinyle qui accelere, anneau qui se remplit ──
+  // Memes durees que doCD (3 x 900 ms + 600 ms) et doBreak (5 s) dans sonara.js :
+  // ici on ne fait qu'afficher, le passage a la manche reste a sonara.js.
+  var CD_MS=3300, BRK_MS=5000, TOP_SPEED=600;   // pleine vitesse : un tour en 600 ms
+  function runCd(box,ms){
+    var disc=box.querySelector('.jg-cd-disc'), ring=box.querySelector('.jg-cd-ring-fill');
+    var u=univ(currentKey())||{nom:'Sonara',couleur:'var(--accent)',image:null};
+    if(window.uvVinyl)disc.innerHTML=uvVinyl(u,false,true);
+    ring.getAnimations().forEach(function(a){a.cancel();});
+    box.getAnimations({subtree:true}).forEach(function(a){if(a.effect&&a.effect.target!==ring)a.cancel();});
+    ring.animate([{strokeDashoffset:100},{strokeDashoffset:0}],{duration:ms,easing:'linear',fill:'forwards'});
+    if(reduce.matches)return;   // mouvement reduit : vinyle fixe, seul l'anneau se remplit
+    box.animate([{opacity:0},{opacity:1}],{duration:300,easing:'ease-out'});
+    disc.animate([{transform:'scale(.82)',opacity:0},{transform:'none',opacity:1}],{duration:500,easing:'cubic-bezier(.2,.8,.2,1)'});
+    // Acceleration reguliere (courbe quadratique) jusqu'a la pleine vitesse a la fin
+    var spin=disc.querySelector('.vy-spin');if(!spin)return;
+    var turns=ms/TOP_SPEED/2, end=turns*360;
+    spin.animate([{transform:'rotate(0deg)'},{transform:'rotate('+end+'deg)'}],{duration:ms,easing:'cubic-bezier(.11,0,.5,0)',fill:'forwards'});
+    spin.animate([{transform:'rotate('+end+'deg)'},{transform:'rotate('+(end+360)+'deg)'}],{duration:TOP_SPEED,delay:ms,iterations:Infinity});
+    // Fin : fondu vers la manche (le fond se retire en fondu quand l'ecran change)
+    box.animate([{opacity:1},{opacity:0}],{duration:300,delay:ms-300,easing:'ease-in',fill:'forwards'});
+  }
+  // hideG() retire "on" puis doCD() le remet aussitot : on regarde l'ancienne valeur
+  [[$('cds'),CD_MS],[$('brksc'),BRK_MS]].forEach(function(x){
+    var el=x[0];
+    new MutationObserver(function(recs){
+      if(!el.classList.contains('on'))return;
+      var off=recs.some(function(r){return !/(^|\s)on(\s|$)/.test(r.oldValue||'');});
+      if(off)runCd(el,x[1]);
+    }).observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true});
+  });
+
   // ── Debut de manche : pochette de l'univers (floutee), puces, points ──
   var qsc=$('qsc'), rvsc=$('rvsc'), roundStart=0;
   var coverBox=$('jg-cover'), coverImg=$('jg-cover-img');
