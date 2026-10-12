@@ -1160,19 +1160,26 @@ function shareEntreLink(){
 }
 
 // ── Lien d'invitation entrant : /?salle=CODE -> son-nom, puis directement la salle ──
+// Lu des le chargement du script (avant images et polices) ; la landing reste
+// masquee (classe sn-invite posee dans <head>) jusqu'a l'ecran d'invitation.
 (function(){
-  var m=location.search.match(/[?&]salle=([A-Za-z0-9]{4})(?:&|$)/);
+  var m=location.search.match(/[?&]salle=([A-Za-z0-9]{4})(?![A-Za-z0-9])/);
   if(!m)return;
   var code=m[1].toUpperCase();
   try{history.replaceState(null,'',location.pathname+location.hash);}catch(e){}
-  function go(){
-    fetch('/room/info?code='+code).then(function(r){return r.ok?r.json():null;}).then(function(d){
-      var el=document.getElementById('join-code');if(el)el.value=code;
-      if(d&&!d.started&&THEMES[d.theme]&&window.SonaraFlow&&SonaraFlow.toInvite){SonaraFlow.toInvite(code,d.theme);return;}
-      showJoinError(d?'started':'missing');
-    }).catch(function(){showJoinError('missing');});
+  var info=fetch('/room/info?code='+code).then(function(r){return r.ok?r.json():null;});
+  function show(fn){
+    fn();
+    document.documentElement.classList.remove('sn-invite');
   }
-  if(document.readyState==='complete')go();else window.addEventListener('load',go);
+  function go(){   // les ecrans du parcours (ecran-*.js) sont charges
+    info.then(function(d){
+      var el=document.getElementById('join-code');if(el)el.value=code;
+      if(d&&!d.started&&THEMES[d.theme]&&window.SonaraFlow&&SonaraFlow.toInvite){show(function(){SonaraFlow.toInvite(code,d.theme);});return;}
+      show(function(){showJoinError(d?'started':'missing');});
+    }).catch(function(){show(function(){showJoinError('missing');});});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
 })();
 
 // ── Lien partage entrant : /custom-xxxx ou /fr/custom-xxxx -> pre-selectionne l'univers ──

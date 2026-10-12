@@ -194,7 +194,8 @@
     var link=location.origin+'/?salle='+code;
     function done(){invite.textContent='Lien copié';setTimeout(function(){invite.textContent='Inviter';},1800);}
     function copy(){if(navigator.clipboard)navigator.clipboard.writeText(link).then(done).catch(function(){});}
-    if(navigator.share)navigator.share({title:'Sonara',text:'Rejoins ma partie Sonara',url:link}).catch(function(e){if(e&&e.name!=='AbortError')copy();});
+    // Lien complet dans text ET dans url : WhatsApp sur iPhone ne garde que l'un des deux
+    if(navigator.share)navigator.share({title:'Sonara',text:'Rejoins ma partie Sonara : '+link,url:link}).catch(function(e){if(e&&e.name!=='AbortError')copy();});
     else copy();
   });
 

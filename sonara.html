@@ -14,6 +14,10 @@
 <link rel="stylesheet" href="/jeu.css">
 <link rel="stylesheet" href="/prep.css">
 <link rel="stylesheet" href="/cadre.css">
+<!-- Lien d'invitation (/?salle=CODE) : la landing n'est jamais affichee,
+     l'ecran d'invitation la remplace des que sonara.js a lu la salle -->
+<script>if(/[?&]salle=[A-Za-z0-9]{4}(?![A-Za-z0-9])/.test(location.search))document.documentElement.classList.add('sn-invite');</script>
+<style>html.sn-invite{background:#860100}html.sn-invite #landing{display:none!important}</style>
 </head>
 <body>
 
