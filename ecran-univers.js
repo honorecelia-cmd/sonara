@@ -40,6 +40,7 @@
   var step1=document.querySelector('.pc-head--1 .pc-step'), STEP1=step1?step1.textContent:'';
   function endGroup(){flow.group=null;if(step1)step1.textContent=STEP1;$('pc-home').lastChild.textContent='Accueil';}
 
+  $('pc-code').addEventListener('click',function(){showPage('s-join');});
   function pick(u){
     if(flow.group){var g=flow.group;endGroup();g.pick(u.slug);return;}
     flow.theme=u.slug;
@@ -50,6 +51,8 @@
   // Etape 1 du parcours, sur l'univers du parcours en cours ou le premier
   function showUnivers(){
     car.setIndex(flow.theme?idxOf(flow.theme):0);
+    // En direct : "J'ai un code" sans passer par le choix d'univers
+    $('pc-code').hidden=flow.mode!=='multi'||!!flow.group;
     scr.setAttribute('data-step','1');
     if(!onScreen('s-parcours'))showPage('s-parcours');
     $('pc-t1').focus({preventScroll:true});
@@ -84,6 +87,7 @@
       flow.invite=null;endGroup();
       flow.preset=opts&&MODES[opts.mode]?opts.mode:null;
       flow.mode=flow.preset||'solo';
+      flow.proches=!!(opts&&opts.proches);   // "Jouer avec mes proches" : mode deja dit par le bouton
       // Lien "Entre proches" recu : l'univers est deja choisi
       if(window.G&&G._sharedTheme&&THEMES[G._sharedTheme]&&SonaraFlow.showSonnom){
         flow.theme=G._sharedTheme;flow.shared=true;

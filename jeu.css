@@ -241,10 +241,19 @@
 }
 .jg-code-btns{display:flex;flex-wrap:wrap;gap:10px}
 .jg-code-btns .sn-btn{color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
-.jg-code-btns .sn-btn:hover{background:#fff;color:var(--ink)}
+/* Survol seulement a la souris : sur telephone, le bouton touche ne reste pas blanc */
+@media (hover:hover){.jg-code-btns .sn-btn:hover{background:#fff;color:var(--ink)}}
 .jg-lobby-act{width:100%;margin-top:8px}
 .jg-hint{margin:10px 0 0;font-size:13px;color:var(--jg-muted)}
 #btn-start-multi:not(:disabled) + .jg-hint{display:none}
+/* Hote seul dans la salle : "Inviter" est le bouton principal */
+.jg-lobby.jg-alone .jg-code-btns{width:100%}
+.jg-lobby.jg-alone #jg-invite{order:-1;flex:1 1 100%;background:var(--accent);color:#fff;box-shadow:none}
+@media (hover:hover){.jg-lobby.jg-alone #jg-invite:hover{background:var(--sn-accent-press)}}
+.jg-lobby.jg-alone #btn-start-multi{display:none}
+/* Son bloque par le navigateur : bouton dans la manche */
+.jg-unmute[hidden]{display:none}
+.jg-unmute{flex:none}
 .jg-players{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
 .jg-player{
   display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:20px;

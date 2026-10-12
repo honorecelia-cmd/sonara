@@ -35,6 +35,8 @@
   font-size:clamp(30px,3.4vw,48px);line-height:.95;letter-spacing:-.03em;
 }
 .pc h1:focus{outline:none}
+.pc-code{margin-top:14px;padding:0 16px;pointer-events:auto}
+.pc-code[hidden]{display:none}
 /* Pas de noir neutre dans le jeu : fleches en brun */
 .uv--jeu .uv-arrow{background:var(--ink)}
 .uv--jeu .uv-arrow:hover{background:var(--accent)}

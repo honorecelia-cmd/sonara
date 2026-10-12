@@ -67,7 +67,10 @@
 
     <div class="nb-hero-lede">
       <p>Écoute un extrait, trouve le titre et l'artiste, et défie tes proches où qu'ils soient.</p>
-      <button class="nb-pill nb-pill--cta" type="button" data-nb-play>Jouer</button>
+      <div class="nb-hero-ctas">
+        <button class="nb-pill nb-pill--cta" type="button" data-nb-play>Jouer</button>
+        <button class="nb-pill nb-pill--cta" type="button" data-nb-proches>Jouer avec mes proches</button>
+      </div>
       <!-- Message "Rejoins [univers]" d'un lien "Entre proches" : masque par
            defaut, affiche par sonara.js (bloc "Lien partage entrant"). -->
       <div class="ld-badge-row" id="ld-badge-row" style="display:none">
@@ -493,6 +496,7 @@
     <div class="pc-head pc-head--1">
       <p class="pc-step">Étape 1 sur 3</p>
       <h1 id="pc-t1" tabindex="-1">Choisis ton univers</h1>
+      <button class="pc-back pc-code" type="button" id="pc-code" hidden>J'ai un code de salle</button>
     </div>
     <!-- Etape 2 : degrade et grain du hero de la landing (.nb-hero-bg,
          .nb-grain) ; sur ordinateur, vinyle de l'univers choisi derriere la carte -->
@@ -719,6 +723,7 @@
             <span class="jg-ald" id="ald">Chargement de l'extrait</span>
             <span class="astatus" id="astatus"></span>
           </div>
+          <button class="sn-btn sn-btn--sm jg-unmute" id="jg-unmute" type="button" hidden>Activer le son</button>
           <div class="eq jg-bars" id="eq" aria-hidden="true"><i class="eqb"></i><i class="eqb"></i><i class="eqb"></i></div>
           <span class="jg-mult" id="jg-mult" aria-live="polite"></span>
           <div class="jg-ring" aria-hidden="true"><svg viewBox="0 0 92 92"><circle class="jg-ring-track" cx="46" cy="46" r="40"/><circle class="jg-ring-val" id="tprog" cx="46" cy="46" r="40"/></svg><b id="tnum">30</b></div>
@@ -921,7 +926,7 @@
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
-    <button class="jg-quit" type="button" onclick="showPage('s-multi')">Retour</button>
+    <button class="jg-quit" type="button" onclick="showPage(G.prevPage==='s-parcours'?'s-parcours':'landing')">Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">
@@ -953,7 +958,7 @@
   <header class="jg-top">
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
     <p class="pc-step jg-step">Salle de jeu</p>
-    <button class="jg-quit" type="button" onclick="leaveRoom();showPage('s-multi')">Quitter</button>
+    <button class="jg-quit" type="button" onclick="leaveRoom();showPage('landing')">Quitter</button>
   </header>
   <div class="jg-lobby-grid">
     <div class="jg-lobby-main">
@@ -969,8 +974,7 @@
         <p class="jg-hint">Il faut au moins 2 joueurs dans la salle pour lancer la partie.</p>
       </div>
       <div class="jg-lobby-act" id="lobby-guest-msg" style="display:none">
-        <button class="sn-btn sn-btn--block" id="btn-ready" type="button" onclick="guestReady()">Je suis prêt</button>
-        <p class="jg-hint jg-wait" id="lobby-waiting" style="display:none">En attente de l'hôte…</p>
+        <p class="jg-hint jg-wait" id="lobby-waiting">En attente de l'hôte…</p>
       </div>
     </div>
     <div class="jg-lobby-side">

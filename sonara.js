@@ -250,6 +250,7 @@ function showPage(id){
   // Afficher la page cible
   var el=$(id);
   if(el){el.style.display='flex';el.classList.add('on');}
+  if(G.page!==id)G.prevPage=G.page;
   G.page=id;
   window.scrollTo(0,0);
   if(id==='s-game'||id==='s-load'||id==='s-res') history.pushState(null,'','#'+id);
@@ -617,6 +618,7 @@ function doQ(){
   updateHdr();
 }
 function playPR(url,cb){
+  hideUnmute();
   var el=$('aud');clearInterval(window._apIv);$('apfill').style.width='0%';var ap0=$('ani-prog');if(ap0)ap0.style.width='0%';$('astatus').textContent='';
   if(!url){setEq(false);if(cb)setTimeout(cb,0);return;}
   var isLocal = url.indexOf('/audio/') === 0;
@@ -624,31 +626,49 @@ function playPR(url,cb){
   el.currentTime=0;
   el.load();
   var played=false;
+  // Lecture ; si le navigateur la refuse (Safari iPhone sans toucher
+  // prealable), bouton "Activer le son" plutot qu'une manche muette
+  function start(done){
+    var p=el.play();
+    if(p===undefined){setEq(true);progA(0);if(done)done();return;}
+    p.then(function(){setEq(true);progA(0);if(done)done();})
+     .catch(function(e){
+       // Play échoué mais on lance quand même le jeu
+       setEq(false);
+       if(e&&e.name==='NotAllowedError')showUnmute(el);
+       if(done)done();
+     });
+  }
   var safe=setTimeout(function(){
-    if(!played){played=true;if(cb)cb();}
+    if(!played){played=true;if(cb)cb();start(null);}
   },5000);
   el.oncanplaythrough=function(){
     if(played)return;played=true;clearTimeout(safe);
-    var p=el.play();
-    if(p!==undefined){
-      p.then(function(){
-        setEq(true);
-        var t0=Date.now();
-        window._apIv=setInterval(function(){var pct=Math.min(100,(Date.now()-t0)/30000*100);$('apfill').style.width=pct+'%';var ap=$('ani-prog');if(ap)ap.style.width=pct+'%';if(pct>=100)clearInterval(window._apIv)},350);
-        if(cb)cb();
-      }).catch(function(){
-        // Play échoué mais on lance quand même le jeu
-        setEq(false);
-        if(cb)cb();
-      });
-    } else {
-      setEq(true);
-      if(cb)cb();
-    }
+    start(cb);
   };
   el.onerror=function(){played=true;clearTimeout(safe);setEq(false);if(cb)cb();};
 }
-function stopA(){clearInterval(window._apIv);var el=$('aud');el.pause();el.src='';$('apfill').style.width='0%';var ap=$('ani-prog');if(ap)ap.style.width='0%';$('astatus').textContent='';setEq(false)}
+// Barre d'ecoute ; "from" : secondes deja ecoulees (son active en retard)
+function progA(from){
+  clearInterval(window._apIv);
+  var t0=Date.now()-from*1000;
+  window._apIv=setInterval(function(){var pct=Math.min(100,(Date.now()-t0)/30000*100);$('apfill').style.width=pct+'%';var ap=$('ani-prog');if(ap)ap.style.width=pct+'%';if(pct>=100)clearInterval(window._apIv)},350);
+}
+function showUnmute(el){
+  var b=$('jg-unmute');if(!b||!$('qsc').classList.contains('on'))return;
+  b.hidden=false;
+  b.onclick=function(){
+    // Le toucher debloque le son ; on reprend la ou en est la manche
+    var t=Math.max(0,(G.td||30)-(G.tl||0));
+    try{if(t>0&&t<(el.duration||30))el.currentTime=t;}catch(e){}
+    try{gac().resume();}catch(e){}
+    var p=el.play();
+    function ok(){b.hidden=true;setEq(true);progA(t);}
+    if(p&&p.then)p.then(ok).catch(function(){});else ok();
+  };
+}
+function hideUnmute(){var b=$('jg-unmute');if(b){b.hidden=true;b.onclick=null;}}
+function stopA(){hideUnmute();clearInterval(window._apIv);var el=$('aud');el.pause();el.src='';$('apfill').style.width='0%';var ap=$('ani-prog');if(ap)ap.style.width='0%';$('astatus').textContent='';setEq(false)}
 function setEq(on){document.querySelectorAll('.eqb').forEach(function(b){b.classList.toggle('off',!on)})}
 function renderQCM(opts,locked){
   $('qcmw').innerHTML=opts.map(function(o,i){
@@ -1224,6 +1244,13 @@ function copyLobbyCode(){
 }
 
 // ── MULTIJOUEUR ───────────────────────────────────────
+// Safari iPhone ne joue un son que si l'element audio a deja joue pendant un
+// toucher. On le fait sur le dernier toucher avant la partie : "Creer la
+// salle" et "Lancer la partie" (hote), "Rejoindre" (invite).
+function unlockAudio() {
+  try{var ua=document.getElementById('aud');ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';ua.volume=0;var p=ua.play();if(p)p.then(function(){ua.pause();}).catch(function(){});}catch(e){}
+  try{var c=gac();if(c.resume)c.resume();}catch(e){}
+}
 var WS = null;
 var G_MULTI = { code: null, playerId: null, isHost: false, theme: null };
 
@@ -1246,8 +1273,7 @@ function createRoom() {
   G_MULTI.playerId = genPlayerId();
   G_MULTI.isHost = true;
   G.ps = pseudo;
-  try{var ua=document.getElementById('aud');ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';ua.volume=0;var p=ua.play();if(p)p.then(function(){ua.pause();}).catch(function(){});}catch(e){}
-  try{gac();}catch(e){}
+  unlockAudio();
   fetch('/room/create', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1260,6 +1286,7 @@ function createRoom() {
     showPage('s-lobby');
     document.getElementById('lobby-host-actions').style.display = 'block';
     document.getElementById('lobby-guest-msg').style.display = 'none';
+    lobbyButtons(1);
     connectWS(data.code);
   })
   .catch(function() { alert('Erreur lors de la création de la salle'); });
@@ -1274,8 +1301,7 @@ function joinRoom() {
   G_MULTI.isHost = false;
   G_MULTI.code = code;
   G.ps = pseudo;
-  try{var ua=document.getElementById('aud');ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';ua.volume=0;var p=ua.play();if(p)p.then(function(){ua.pause();}).catch(function(){});}catch(e){}
-  try{gac();}catch(e){}
+  unlockAudio();
   var btn = document.querySelector('#s-join .bgo');
   if(btn) { btn.disabled=true; btn.textContent='Vérification…'; }
   var errMsg = document.getElementById('join-error');
@@ -1327,8 +1353,6 @@ function connectWS(code) {
     if (msg.type === 'player_joined' || msg.type === 'player_left') {
       G_MULTI.players = msg.players;
       renderLobbyPlayers(msg.players);
-      var bstart=document.getElementById('btn-start-multi');
-      if(bstart){if(msg.players.length>=2){bstart.disabled=false;bstart.textContent='Lancer la partie';}else{bstart.disabled=true;bstart.textContent='En attente de joueurs...';} }
     }
     if (msg.type === 'game_start') {
       try { var ua=document.getElementById('aud'); ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='; ua.volume=0; var up=ua.play(); if(up) up.then(function(){ua.pause();}).catch(function(){}); } catch(ez){}
@@ -1384,6 +1408,7 @@ function setHost(isHost) {
   G_MULTI.isHost = isHost;
   document.getElementById('lobby-host-actions').style.display = isHost ? 'block' : 'none';
   document.getElementById('lobby-guest-msg').style.display = isHost ? 'none' : 'block';
+  lobbyButtons((G_MULTI.players || []).length);
   if (window.SonaraGroupe) SonaraGroupe.update();
 }
 function groupReplay() {
@@ -1409,11 +1434,6 @@ function backToLobby(msg) {
   G_MULTI.isHost = msg.host === G_MULTI.playerId;
   document.getElementById('lobby-host-actions').style.display = G_MULTI.isHost ? 'block' : 'none';
   document.getElementById('lobby-guest-msg').style.display = G_MULTI.isHost ? 'none' : 'block';
-  // Invites : le son est deja debloque, on attend simplement l'hote
-  if (!G_MULTI.isHost) {
-    document.getElementById('btn-ready').style.display = 'none';
-    document.getElementById('lobby-waiting').style.display = 'block';
-  }
   showPage('s-lobby');
   renderLobbyPlayers(msg.players);
 }
@@ -1428,19 +1448,20 @@ function renderLobbyPlayers(players) {
       '</li>';
   }).join('');
   document.getElementById('lobby-players').innerHTML = html;
+  lobbyButtons(players.length);
+}
+// Hote seul : "Inviter" en bouton principal ; des 2 joueurs : "Lancer la partie"
+function lobbyButtons(n) {
   var btn = document.getElementById('btn-start-multi');
-  if (btn && G_MULTI.isHost) {
-    if (players.length >= 2) {
-      btn.disabled = false;
-      btn.textContent = 'Lancer la partie';
-    } else {
-      btn.disabled = true;
-      btn.textContent = 'En attente de joueurs...';
-    }
+  if (btn) {
+    btn.disabled = n < 2;
+    btn.textContent = n >= 2 ? 'Lancer la partie' : 'En attente de joueurs…';
   }
+  document.getElementById('s-lobby').classList.toggle('jg-alone', !!G_MULTI.isHost && n < 2);
 }
 
 function startMultiGame() {
+  unlockAudio();
   if (WS && WS.readyState === 1) {
     var pool = buildPool(G_MULTI.theme);
     WS.send(JSON.stringify({ type: 'start', totalTracks: pool.length, trackCount: Math.min(10, pool.length) }));
@@ -1521,17 +1542,3 @@ function selectSoloTheme(key) {
   }
 }
 /* ─────────────────────────────────── */
-
-function guestReady() {
-  // Créer et jouer un silence pour débloquer l'autoplay
-  var ctx = new (window.AudioContext || window.webkitAudioContext)();
-  var buf = ctx.createBuffer(1, 1, 22050);
-  var src = ctx.createBufferSource();
-  src.buffer = buf;
-  src.connect(ctx.destination);
-  src.start(0);
-  document.getElementById('btn-ready').style.display = 'none';
-  document.getElementById('lobby-waiting').style.display = 'block';
-  G_MULTI._audioUnlocked = true;
-}
-

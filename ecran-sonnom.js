@@ -128,7 +128,7 @@
     setMode(flow.mode,false);
     if(inv)play.textContent='Rejoindre la salle';
     if(step2)step2.textContent=inv?'Invitation':STEP2;
-    mNote.hidden=!flow.preset;
+    mNote.hidden=!flow.preset||!!flow.proches;
     if(flow.preset)mNote.textContent='Mode '+MODES[flow.preset]+' choisi depuis le menu. Tu peux encore le changer.';
     // Valeur preremplie : dernier son-nom de l'appareil ; sinon le champ est
     // vide et affiche un exemple (placeholder)

@@ -213,6 +213,7 @@ html{scroll-padding-top:var(--hd-h)}
   color:#fff;
 }
 .nb-hero-lede .nb-pill--cta{background:var(--cream);color:var(--ink)}
+.nb-hero-ctas{display:flex;flex-wrap:wrap;gap:10px}
 .nb-hero-lede .nb-pill--cta:hover{background:#fff;color:var(--ink)}
 .nb-hero-lede .ld-badge-row{justify-content:flex-start;padding:0;margin:18px 0 0}
 /* Message "Rejoins [univers]" (lien Entre proches) : pastille aux codes de la landing */

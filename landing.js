@@ -22,6 +22,7 @@
   landing.addEventListener('click',function(e){
     var t=e.target, b;
     if(t.closest('[data-nb-play]'))play(null);
+    else if(t.closest('[data-nb-proches]'))play({mode:'multi',proches:true});
     else if((b=t.closest('[data-nb-mode]')))play({mode:b.getAttribute('data-nb-mode')});
   });
   document.addEventListener('keydown',function(e){
