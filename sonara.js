@@ -1,16 +1,3 @@
-function copyShareUrl(){var inp=document.getElementById("fig-share-url");if(inp){inp.select();try{document.execCommand("copy");}catch(e){}var btn=document.querySelector(".fig-copy-btn");if(btn){btn.textContent="COPIE !";setTimeout(function(){btn.textContent="COPIER";},2000);}}}
-
-function startFromLanding(){
-  var p=document.getElementById("landing-pseudo");
-  var val=p?p.value.trim():"";
-  if(val===""){if(p){p.style.borderColor="red";p.focus();}return;}
-  G.ps=val;G.av="";
-  // Arrive via un lien "Entre proches" -> on lance direct l'univers partage
-  if(G._sharedTheme&&THEMES[G._sharedTheme]&&typeof selectSoloTheme==='function'){
-    selectSoloTheme(G._sharedTheme);return;
-  }
-  showPage("s-solo");
-}
 // Données thèmes — utilisées par les modals générés en JS
 var THEMES = {
   'mix':      {n:'Mix Caribéen',   ic:'', dq:'kassav zouk OR dancehall OR soca OR merengue', tracks:null},
@@ -265,7 +252,6 @@ function showPage(id){
   if(el){el.style.display='flex';el.classList.add('on');}
   G.page=id;
   window.scrollTo(0,0);
-  if(id==='s-solo'&&window._updateSoloActive) setTimeout(window._updateSoloActive,60);
   if(id==='s-game'||id==='s-load'||id==='s-res') history.pushState(null,'','#'+id);
 }
 function notif(txt){
@@ -1404,20 +1390,6 @@ function selectSoloTheme(key) {
     if (btn) { launchFromModal(btn); return; }
   }
 }
-function launchSolo() {
-  var pseudo = document.getElementById('solo-pseudo').value.trim();
-  if (!pseudo) { document.getElementById('solo-pseudo').style.borderColor = 'var(--red)'; return; }
-  G.ps = pseudo;
-  var key = G_SOLO_THEME;
-  var modal = document.getElementById('modal-' + key);
-  if (modal) {
-    var inp = modal.querySelector('.pseudo-inp');
-    if (inp) inp.value = pseudo;
-    var btn = modal.querySelector('[data-action="launch"]');
-    if (btn) { launchFromModal(btn); return; }
-  }
-}
-
 /* ─────────────────────────────────── */
 
 function guestReady() {
@@ -1433,26 +1405,3 @@ function guestReady() {
   G_MULTI._audioUnlocked = true;
 }
 
-// ── #s-solo : carte "active" (badge Commencer) suivant le scroll du carrousel ──
-(function(){
-  function updateSoloActive(){
-    var grid=document.querySelector('#s-solo .fig-tgrid');
-    if(!grid)return;
-    var cards=grid.querySelectorAll('.fig-tc');
-    if(!cards.length)return;
-    var gl=grid.getBoundingClientRect().left;
-    var best=cards[0],bestD=Infinity;
-    cards.forEach(function(c){
-      var d=Math.abs(c.getBoundingClientRect().left-gl);
-      if(d<bestD){bestD=d;best=c;}
-    });
-    cards.forEach(function(c){c.classList.toggle('active',c===best);});
-  }
-  window._updateSoloActive=updateSoloActive;
-  window.addEventListener('load',function(){
-    var grid=document.querySelector('#s-solo .fig-tgrid');
-    if(grid)grid.addEventListener('scroll',updateSoloActive,{passive:true});
-    updateSoloActive();
-  });
-  window.addEventListener('resize',updateSoloActive);
-})();

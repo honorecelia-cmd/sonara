@@ -55,13 +55,6 @@
 }
 .page{background-image:url('/img/cae50f94a08cb45feeaa7e35e24365b6.jpg');background-size:cover;background-position:center top;background-attachment:fixed;}
 #landing{flex-direction:column;align-items:stretch;padding:0;min-height:100dvh;justify-content:flex-start;}
-#s-solo{flex-direction:column;align-items:stretch;padding:0;position:relative;overflow-x:clip;}
-.fig-tgrid{display:flex;flex-direction:row;align-items:flex-start;gap:12px;overflow-x:auto;overflow-y:visible;padding-bottom:22px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
-.fig-tgrid::-webkit-scrollbar{display:none;}
-.fig-tc{position:relative;flex-shrink:0;width:133px;height:157px;scroll-snap-align:start;cursor:pointer;text-align:center;transition:width .18s ease,height .18s ease;}
-.fig-tc::after{content:"";position:absolute;left:1px;right:1px;bottom:1px;height:42%;border-radius:0 0 15px 15px;background:linear-gradient(180deg,rgba(20,6,0,0) 0%,rgba(20,6,0,0.55) 82%);pointer-events:none;z-index:1;}
-.fig-tc:not(.active)::after{opacity:.4;}
-.fig-tc.active{width:161px;height:165px;}
 .glb-top{padding:4px 20px 0;}
 .glb-top .fig-section-lbl{margin:10px 0 6px;}
 .glb-row{display:flex;align-items:center;gap:10px;background:rgba(253,221,184,0.5);border-radius:4px;padding:7px 12px;margin-bottom:4px;font-family:'Inter',sans-serif;font-size:12px;color:#2d1002;}
@@ -71,7 +64,6 @@
 
 /* ── #s-entre : ecran "Entre proches" (maquette Figma 52:201) ── */
 #s-entre{flex-direction:column;align-items:stretch;padding:0;position:relative;overflow-x:clip;}
-.fig-copy-btn{flex-shrink:0;background:#fdddb8;border:none;padding:0 16px;font-family:'Inter',sans-serif;font-weight:400;font-size:12px;color:#2e1001;cursor:pointer;letter-spacing:.3px;}
 
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{background:var(--sn-ink);color:#fff;font-family:var(--sn-font-body);min-height:100vh}

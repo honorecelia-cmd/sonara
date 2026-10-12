@@ -539,37 +539,6 @@
 </section>
 
 <!-- ═══ SOLO — CHOIX UNIVERS ═══ -->
-<section class="page" id="s-solo">
-  <div class="fig-nav">
-    <button class="btn-back" onclick="showPage('landing')">← Retour</button>
-    <img src="/img/logo_sonara.png" class="fig-logo" alt="Sonara">
-    <div class="fig-online"><span class="fig-odot"></span><span class="online-count" data-short="1">246 en ligne</span></div>
-  </div>
-  <div class="fig-solo-body">
-    <p class="ld-eyebrow">1er blindtest caribéen</p>
-    <img src="/img/logo_sonara.png" class="ld-logo" alt="Sonara">
-    <p class="fig-solo-eyebrow">Chaque univers, une fréquence différente.<br>À toi de choisir !</p>
-    <div class="fig-tgrid">
-      <div class="fig-tc active" onclick="selectSoloTheme('kompa')"><img src="/img/cover_kompa.jpg" class="fig-tc-img" alt="Kompa"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">KOMPA</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('dancehall')"><img src="/img/cover_dancehall.jpg" class="fig-tc-img" alt="Dancehall"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">DANCEHALL</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('zouk')"><img src="/img/cover_zouk.jpg" class="fig-tc-img" alt="Zouk"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">ZOUK</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('reggae')"><img src="/img/cover_reggae.jpg" class="fig-tc-img" alt="Reggae"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">REGGAE</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('soca')"><img src="/img/cover_soca.jpg" class="fig-tc-img" alt="Soca"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">SOCA</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('rap')"><img src="/img/cover_rap.jpg" class="fig-tc-img" alt="Rap"><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">RAP</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('mix')"><div class="fig-tc-noimg"></div><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">MIX</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('shatta')"><div class="fig-tc-noimg"></div><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">SHATTA</span></div>
-      <div class="fig-tc" onclick="selectSoloTheme('trap')"><div class="fig-tc-noimg"></div><span class="fig-tc-badge">Commencer</span><span class="fig-tc-lbl">TRAP</span></div>
-    </div>
-    <p class="fig-swipe-hint">Swipe pour explorer les univers →</p>
-  </div>
-  <img src="/img/explor.svg" class="solo-expl" alt="" aria-hidden="true">
-  <div class="ld-footer">
-    <div class="ld-suivez-line">Suivez-nous :</div>
-    <div class="ld-handle-line"><img src="/img/rs.png" class="ld-rs" alt=""><span class="ld-handle">sonara_blindtest</span></div>
-  </div>
-</section>
-
-<!-- ═══ SOLO — CHOIX UNIVERS ═══ -->
 
 
 <!-- ═══ MODALS PAR THÈME ═══ -->
@@ -999,28 +968,6 @@
     </div>
   </div>
 </section>
-
-<!-- ═══ SOLO — PSEUDO ═══ -->
-<section class="page" id="s-pseudo">
-  <nav>
-    <button class="btn-back" id="pseudo-back" onclick="showPage('s-solo')">← Retour</button>
-    <a class="logo" href="#landing">SON<em>A</em>RA</a>
-    <div style="width:80px"></div>
-  </nav>
-  <div style="width:100%;max-width:440px;padding:24px 16px 40px">
-    <div id="pseudo-theme-info" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--bd2);border-radius:16px;padding:16px;margin-bottom:24px">
-      <span id="pseudo-theme-ic" style="font-size:32px"></span>
-      <div>
-        <div id="pseudo-theme-name" style="font-family:MuseoModerno,sans-serif;font-weight:800;font-size:16px">Mix Caribéen</div>
-        <div style="font-size:12px;color:var(--mut)">10 questions</div>
-      </div>
-    </div>
-    <label class="flbl">Ton pseudo</label>
-    <input class="finp" id="solo-pseudo" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" style="margin-bottom:24px" autocomplete="off">
-    <button class="bgo" onclick="launchSolo()">Jouer →</button>
-  </div>
-</section>
-
 
 <script src="/sonara.js"></script>
 <script src="/landing.js"></script>
