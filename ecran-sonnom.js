@@ -4,7 +4,7 @@
 // vinyle de l'univers choisi en decor (data-step="2").
 // La partie n'est pas touchee : le bouton principal passe la main aux
 // fonctions existantes de sonara.js (selectSoloTheme, createRoom,
-// showEntreProches) avec les memes donnees qu'avant (G.ps, univers).
+// showDefi) avec les memes donnees qu'avant (G.ps, univers).
 // Charge apres ecran-univers.js.
 // ═══════════════════════════════════════════════════════════════
 (function(){
@@ -16,9 +16,9 @@
   var MODE_HELP={
     solo:'',
     multi:'Tous en même temps, avec un code de salle.',
-    entre:'Un lien à envoyer, chacun joue quand il veut.'
+    defi:'Un lien à envoyer, chacun joue quand il veut.'
   };
-  var MODE_CTA={solo:'Jouer', multi:'Créer la salle', entre:'Générer le lien'};
+  var MODE_CTA={solo:'Jouer', multi:'Créer la salle', defi:'Générer le lien'};
   // Exemples de son-nom (placeholder) : neutres, lies a l'univers, jamais un
   // nom d'artiste ou de groupe reel
   var EXEMPLES={
@@ -80,6 +80,7 @@
   // Mode : groupe de boutons radio (clic, fleches du clavier). La description
   // et le lien "code de salle" ont une hauteur reservee : rien ne saute.
   function setMode(m,fromUser){
+    if(m==='entre')m='defi';   // ancien nom interne du Defi
     flow.mode=MODES[m]?m:'solo';
     modeBtns.forEach(function(b){
       var on=b.getAttribute('data-sn-mode')===flow.mode;
@@ -198,11 +199,11 @@
       var card=document.querySelector('#create-theme-grid .t-'+key);
       if(card)selectMultiTheme(key,card);
       createRoom();
-    }else if(flow.mode==='entre'){
+    }else if(flow.mode==='defi'){
       // Le lien partage porte l'univers de G.theme (voir themeSlug)
-      if(G.theme!==THEMES[key].n)G._entreCode=null;
+      if(G.theme!==THEMES[key].n)G._defiCode=null;
       G.theme=THEMES[key].n;
-      showEntreProches();
+      showDefi();
     }else{
       selectSoloTheme(key);
     }

@@ -61,7 +61,7 @@
         <button class="nb-menu-btn" type="button" aria-expanded="false" aria-controls="nb-menu-mode">Mode<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
         <ul class="nb-menu-list" id="nb-menu-mode" hidden>
           <li><button type="button" data-nb-mode="solo">Solo</button></li>
-          <li><button type="button" data-nb-mode="multi">En direct</button></li>
+          <li><button type="button" data-nb-mode="multi">Entre proches</button></li>
         </ul>
       </div>
       <a class="nb-meta-col nb-menu-link" href="#comment-jouer">Comment jouer</a>
@@ -76,7 +76,7 @@
         <button class="nb-pill nb-pill--line" type="button" data-nb-proches>Jouer entre proches</button>
       </div>
       <button class="nb-code-link" type="button" data-nb-code>J'ai un code de salle</button>
-      <!-- Message "Rejoins [univers]" d'un lien "Entre proches" : masque par
+      <!-- Message "Rejoins [univers]" d'un lien de Defi : masque par
            defaut, affiche par sonara.js (bloc "Lien partage entrant"). -->
       <div class="ld-badge-row" id="ld-badge-row" style="display:none">
         <div class="ld-badge"><span class="ld-dot"></span><span id="ltxt"></span></div>
@@ -294,7 +294,7 @@
 
       <div class="nb-sat nb-sat-live" data-speed="1.15" aria-hidden="true">
         <span class="nb-avatars"><span class="nb-avatar nb-avatar--a"></span><span class="nb-avatar nb-avatar--b"></span></span>
-        <span class="nb-live">En direct</span>
+        <span class="nb-live">Entre proches</span>
       </div>
       <div class="nb-sat nb-sat-create nb-s02-create" data-speed=".88" aria-hidden="true">
         <span class="nb-ring-plus"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></span>Créer une salle
@@ -302,8 +302,8 @@
 
       <div class="nb-s02-label">
         <span class="nb-secicon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-        <p class="nb-label">Salle de jeu /</p>
-        <p class="nb-body">Crée ta salle, partage le lien et lance la partie quand tout le monde est prêt. Les scores s'affichent en direct pour chaque joueur.</p>
+        <p class="nb-label">Entre proches /</p>
+        <p class="nb-body">Tout le monde joue en même temps, avec un code de salle. Crée ta salle, partage le lien et lance la partie quand tout le monde est là. Les scores s'affichent en direct pour chaque joueur.</p>
       </div>
       <p class="nb-crumbs">Solo <i>/</i> Multijoueur <i>/</i> Classement</p>
     </div>
@@ -467,7 +467,7 @@
           <p class="nb-ft-h">Explorer</p>
           <a href="#univers">Univers</a>
           <a href="#comment-jouer">Comment jouer</a>
-          <button type="button" class="nb-ft-linkbtn" onclick="showEntreProches()">Défi à partager</button>
+          <button type="button" class="nb-ft-linkbtn" onclick="showDefi()">Défi à partager</button>
         </nav>
         <div class="nb-ft-col nb-ft-follow">
           <p class="nb-ft-h">Suivez-nous</p>
@@ -535,8 +535,8 @@
           </div>
           <div class="pc-mode-row" role="radiogroup" aria-labelledby="sn-modes-lbl">
             <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="true" data-sn-mode="solo">Solo</button>
-            <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="false" data-sn-mode="multi" tabindex="-1">En direct</button>
-            <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="false" data-sn-mode="entre" tabindex="-1">Défi</button>
+            <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="false" data-sn-mode="multi" tabindex="-1">Entre proches</button>
+            <button class="sn-btn sn-btn--choice" type="button" role="radio" aria-checked="false" data-sn-mode="defi" tabindex="-1">Défi</button>
           </div>
           <p class="pc-note" id="sn-mnote" hidden></p>
           <p class="pc-mode-help" id="sn-mode-help" aria-live="polite"></p>
@@ -816,11 +816,11 @@
   </div>
 </section>
 
-<!-- ═══ ENTRE PROCHES ═══ -->
+<!-- ═══ DEFI A PARTAGER ═══ -->
 <!-- ═══ DEFI A PARTAGER (prep.css, ecran-prep.js) ═══
-     showEntreProches() ecrit le lien dans #entre-link ; #entre-copy et
-     #entre-share appellent copyEntreLink() et shareEntreLink(). -->
-<section class="page pp" id="s-entre" aria-labelledby="pp-entre-t">
+     showDefi() ecrit le lien dans #defi-link ; #defi-copy et
+     #defi-share appellent copyDefiLink() et shareDefiLink(). -->
+<section class="page pp" id="s-defi" aria-labelledby="pp-defi-t">
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
@@ -828,12 +828,12 @@
   </div>
   <div class="pp-grid">
     <div class="pp-main">
-      <h1 id="pp-entre-t">Défi à partager</h1>
+      <h1 id="pp-defi-t">Défi à partager</h1>
       <p class="pp-lede">Envoie ce lien à tes proches : chacun joue quand il veut, sur ton univers.</p>
       <div class="pc-card">
         <p class="pp-k">Ton lien</p>
-        <div class="pp-link"><a id="entre-link" href="#" target="_blank" rel="noopener">Génération du lien…</a><button class="sn-btn" id="entre-copy" type="button" onclick="copyEntreLink()">Copier</button></div>
-        <div class="pp-actions"><button class="sn-btn" id="entre-share" type="button" onclick="shareEntreLink()">Partager</button></div>
+        <div class="pp-link"><a id="defi-link" href="#" target="_blank" rel="noopener">Génération du lien…</a><button class="sn-btn" id="defi-copy" type="button" onclick="copyDefiLink()">Copier</button></div>
+        <div class="pp-actions"><button class="sn-btn" id="defi-share" type="button" onclick="shareDefiLink()">Partager</button></div>
         <div class="pp-block" style="margin-top:18px">
           <p class="pp-k">Ou joue tout de suite en solo</p>
           <div class="pp-pills">
@@ -850,35 +850,12 @@
         </div>
       </div>
     </div>
-    <div class="pp-deco" id="pp-entre-deco" aria-hidden="true"></div>
+    <div class="pp-deco" id="pp-defi-deco" aria-hidden="true"></div>
   </div>
 </section>
 
 
 
-
-<!-- ═══ MULTIJOUEUR — CHOIX ═══ -->
-<!-- ═══ JOUER EN DIRECT : creer ou rejoindre (prep.css, ecran-prep.js) ═══ -->
-<section class="page pp" id="s-multi" aria-labelledby="pp-multi-t">
-  <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
-  <div class="pp-top">
-    <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
-    <button class="jg-quit" type="button" onclick="showPage('landing')">Retour</button>
-  </div>
-  <div class="pp-grid">
-    <div class="pp-main">
-      <h1 id="pp-multi-t">Jouer en direct</h1>
-      <p class="pp-lede">Une salle, un code, et tout le monde joue en même temps.</p>
-      <div class="pc-card">
-        <div class="pp-actions" style="margin-top:0">
-          <button class="sn-btn" type="button" onclick="showPage('s-create')">Créer une salle</button>
-          <button class="sn-btn sn-btn--ghost" type="button" onclick="showPage('s-join')">Rejoindre une salle</button>
-        </div>
-      </div>
-    </div>
-    <div class="pp-deco" id="pp-multi-deco" aria-hidden="true"></div>
-  </div>
-</section>
 
 <!-- ═══ CRÉER UNE SALLE ═══ -->
 <!-- ═══ CREER UNE SALLE (prep.css, ecran-prep.js) ═══
@@ -888,7 +865,7 @@
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
-    <button class="jg-quit" type="button" onclick="showPage('s-multi')">Retour</button>
+    <button class="jg-quit" type="button" onclick="showPage('landing')">Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">

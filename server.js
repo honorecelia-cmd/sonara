@@ -182,7 +182,7 @@ const server = http.createServer(function(req, res) {
     return;
   }
 
-  // ── Lien "Entre proches" : creer / resoudre ──
+  // ── Lien de Defi : creer / resoudre ──
   if (p.pathname === '/custom' && req.method === 'POST') {
     readBody(req, function (err, data) {
       if (err) { sendJson(res, 400, {}); return; }

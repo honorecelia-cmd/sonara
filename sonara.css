@@ -35,7 +35,7 @@
 .fig-section-lbl{font-family:'Inter',sans-serif;font-size:12px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px;width:100%;}
 
 /* FIGMA PAGES */
-#s-res{padding:0;align-items:stretch}#s-multi{padding:0;align-items:stretch}
+#s-res{padding:0;align-items:stretch}
 /* ══ FIGMA BG ══════════════════════ */
 
 /* ══ TOKENS ══════════════════════════════════════════
@@ -61,8 +61,8 @@
 .glb-nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .glb-sc{font-weight:800;}
 
-/* ── #s-entre : ecran "Entre proches" (maquette Figma 52:201) ── */
-#s-entre{flex-direction:column;align-items:stretch;padding:0;position:relative;overflow-x:clip;}
+/* ── #s-defi : ecran "Defi a partager" (maquette Figma 52:201) ── */
+#s-defi{flex-direction:column;align-items:stretch;padding:0;position:relative;overflow-x:clip;}
 
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{background:var(--sn-ink);color:#fff;font-family:var(--sn-font-body);min-height:100vh}

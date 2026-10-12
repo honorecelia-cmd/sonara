@@ -1114,48 +1114,49 @@ function doShare(){
   else alert(txt);
 }
 
-// ── ENTRE PROCHES : ecran lien personnalise (code cree cote serveur) ──
+// ── DEFI : lien a partager, chacun joue quand il veut (code cree cote serveur) ──
+// Format du lien inchange depuis le debut : /fr/custom-CODE (ou /custom-CODE)
 function themeSlug(){
   var k=Object.keys(THEMES).find(function(x){return THEMES[x].n===G.theme;});
   return k||'mix';
 }
-function entreLinkFromCode(code){
+function defiLinkFromCode(code){
   return location.origin+'/fr/custom-'+code;
 }
-function ensureEntreCode(cb){
-  if(G._entreCode){cb(G._entreCode);return;}
+function ensureDefiCode(cb){
+  if(G._defiCode){cb(G._defiCode);return;}
   fetch('/custom',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({theme:themeSlug(),themeName:G.theme})})
   .then(function(r){return r.json();})
-  .then(function(d){G._entreCode=d.code;cb(d.code);})
-  .catch(function(){G._entreCode='local'+Math.random().toString(36).slice(2,6);cb(G._entreCode);});
+  .then(function(d){G._defiCode=d.code;cb(d.code);})
+  .catch(function(){G._defiCode='local'+Math.random().toString(36).slice(2,6);cb(G._defiCode);});
 }
-function showEntreProches(){
+function showDefi(){
   sfxC();
-  showPage('s-entre');
-  var a=document.getElementById('entre-link');
+  showPage('s-defi');
+  var a=document.getElementById('defi-link');
   if(a){a.textContent='Génération du lien…';a.removeAttribute('href');}
-  var b=document.getElementById('entre-copy');if(b)b.textContent='Copier';
-  ensureEntreCode(function(code){
-    var url=entreLinkFromCode(code);
+  var b=document.getElementById('defi-copy');if(b)b.textContent='Copier';
+  ensureDefiCode(function(code){
+    var url=defiLinkFromCode(code);
     if(a){a.textContent=url;a.href=url;}
   });
 }
-function copyEntreLink(){
-  var b=document.getElementById('entre-copy');
+function copyDefiLink(){
+  var b=document.getElementById('defi-copy');
   function ok(){if(b){b.textContent='Copié !';setTimeout(function(){b.textContent='Copier';},2000);}}
-  ensureEntreCode(function(code){
-    var url=entreLinkFromCode(code);
+  ensureDefiCode(function(code){
+    var url=defiLinkFromCode(code);
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(ok).catch(function(){prompt('Copie le lien :',url);});}
     else{var t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok();}catch(e){prompt('Copie le lien :',url);}t.remove();}
   });
 }
-function shareEntreLink(){
-  ensureEntreCode(function(code){
-    var url=entreLinkFromCode(code);
+function shareDefiLink(){
+  ensureDefiCode(function(code){
+    var url=defiLinkFromCode(code);
     var txt='Rejoins-moi sur Sonara, le blindtest caribéen !\n'+url;
     if(navigator.share)navigator.share({text:txt,url:url}).catch(function(){});
-    else copyEntreLink();
+    else copyDefiLink();
   });
 }
 

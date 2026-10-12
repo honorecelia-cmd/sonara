@@ -11,12 +11,12 @@
   if(!scr||typeof uvCarrousel==='undefined')return;
   var $=function(id){return document.getElementById(id);};
   var N=UNIVERS.length;
-  var MODES={solo:'Solo',multi:'En direct',entre:'Défi'};
+  var MODES={solo:'Solo',multi:'Entre proches',defi:'Défi'};
 
   // Etat du parcours en cours
-  // theme : slug de l'univers ; mode : solo, multi ou entre ;
+  // theme : slug de l'univers ; mode : solo, multi ou defi ;
   // preset : mode deja choisi ailleurs (menu Mode de la landing) ;
-  // shared : univers impose par un lien de defi recu ("Entre proches")
+  // shared : univers impose par un lien de Defi recu
   var flow={theme:null, mode:'solo', preset:null, shared:false};
 
   function idxOf(slug){for(var k=0;k<N;k++)if(UNIVERS[k].slug===slug)return k;return 0;}
@@ -51,7 +51,7 @@
   // Etape 1 du parcours, sur l'univers du parcours en cours ou le premier
   function showUnivers(){
     car.setIndex(flow.theme?idxOf(flow.theme):0);
-    // En direct : "J'ai un code" sans passer par le choix d'univers
+    // Entre proches : "J'ai un code" sans passer par le choix d'univers
     $('pc-code').hidden=flow.mode!=='multi'||!!flow.group;
     // Entre proches : le nom du mode remplace le compteur d'etapes (le
     // parcours par code n'a pas le meme nombre d'ecrans)
@@ -89,10 +89,11 @@
     // Mode ; opts.theme : univers affiche dans la section 03 (preselection).
     toUnivers:function(opts){
       flow.invite=null;endGroup();
+      if(opts&&opts.mode==='entre')opts.mode='defi';   // ancien nom interne du Defi
       flow.preset=opts&&MODES[opts.mode]?opts.mode:null;
       flow.mode=flow.preset||'solo';
       flow.proches=!!(opts&&opts.proches);   // "Jouer avec mes proches" : mode deja dit par le bouton
-      // Lien "Entre proches" recu : l'univers est deja choisi
+      // Lien de Defi recu : l'univers est deja choisi
       if(window.G&&G._sharedTheme&&THEMES[G._sharedTheme]&&SonaraFlow.showSonnom){
         flow.theme=G._sharedTheme;flow.shared=true;
         SonaraFlow.showSonnom();

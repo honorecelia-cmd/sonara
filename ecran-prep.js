@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
 // SONARA, affichage des ecrans de preparation et de chargement (prep.css)
-// Jouer en direct, creer une salle, rejoindre une salle, defi a partager,
+// Creer une salle, rejoindre une salle, defi a partager,
 // chargement. Ce fichier ne fait que de l'affichage : il ne cree ni ne
 // rejoint aucune salle et ne valide aucun code (createRoom, joinRoom et
 // leurs verifications restent dans sonara.js, inchanges). Il prerempli
@@ -41,9 +41,6 @@
     if(input&&!input.value.trim())input.value=(window.G&&G.ps)||storedName();
   }
 
-  // ── Jouer en direct (#s-multi) ──
-  onShow($('s-multi'),function(){vinyl($('pp-multi-deco'),null);});
-
   // ── Creer une salle (#s-create) ──
   // Le son-nom et l'univers viennent du parcours (son-nom, etape Univers).
   // Seul chemin sans son-nom : "J'ai un code de salle" avec un champ vide,
@@ -77,7 +74,7 @@
       if(!$('multi-pseudo').value.trim())$('pp-create-msg').textContent='Choisis un son-nom pour créer la salle.';
     });
     $('multi-pseudo').addEventListener('input',function(){$('pp-create-msg').textContent='';});
-    // "Changer" : retour aux etapes du parcours, en mode En direct
+    // "Changer" : retour aux etapes du parcours, en mode Entre proches
     function toFlow(){
       var f=flowState(), k=createKey();
       if(k)f.theme=k;
@@ -123,9 +120,9 @@
       code.dispatchEvent(new Event('input'));
     });
     code.addEventListener('keydown',function(e){if(e.key==='Enter'&&!jbtn.disabled)jbtn.click();});
-    // Salle introuvable ou partie commencee : creer sa propre salle (parcours En direct)
+    // Salle introuvable ou partie commencee : creer sa propre salle (parcours Entre proches)
     var mk=$('join-create');
-    if(mk){mk.addEventListener('click',function(){if(window.SonaraFlow)SonaraFlow.toUnivers({mode:'multi'});});
+    if(mk){mk.addEventListener('click',function(){if(window.SonaraFlow)SonaraFlow.toUnivers({mode:'multi',proches:true});});
       code.addEventListener('input',function(){mk.hidden=true;});}
     $('pp-join-change').addEventListener('click',function(){$('pp-join-me').hidden=true;$('pp-join-name').hidden=false;$('join-pseudo').focus();});
     // Erreur affichee par joinRoom : petite secousse du champ, sans rouge
@@ -140,7 +137,7 @@
     });
   }
 
-  // ── Defi a partager (#s-entre) ──
-  onShow($('s-entre'),function(){vinyl($('pp-entre-deco'),univ(keyOfTheme()));});
+  // ── Defi a partager (#s-defi) ──
+  onShow($('s-defi'),function(){vinyl($('pp-defi-deco'),univ(keyOfTheme()));});
 
 })();
