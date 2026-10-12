@@ -41,25 +41,71 @@
     }
   };
 
-  // ── Compte a rebours et pause : vinyle qui accelere, anneau qui se remplit ──
+  // ── Chargement, compte a rebours et pause : un seul decor ──
+  // Chargement (#s-load) : vinyle de l'univers qui tourne lentement, anneau vide.
+  // Compte a rebours : le MEME mouvement continue (angle et vitesse repris),
+  // le vinyle accelere jusqu'a la pleine vitesse et l'anneau se remplit.
   // Memes durees que doCD (3 x 900 ms + 600 ms) et doBreak (5 s) dans sonara.js :
   // ici on ne fait qu'afficher, le passage a la manche reste a sonara.js.
-  var CD_MS=3300, BRK_MS=5000, TOP_SPEED=600;   // pleine vitesse : un tour en 600 ms
-  function runCd(box,ms){
-    var disc=box.querySelector('.jg-cd-disc'), ring=box.querySelector('.jg-cd-ring-fill');
-    var u=univ(currentKey())||{nom:'Sonara',couleur:'var(--accent)',image:null};
+  var CD_MS=3300, BRK_MS=5000;
+  var SLOW=360/9000, TOP=360/600;   // degres par ms : un tour en 9 s, puis en 600 ms
+  var load=$('s-load');
+  function themeKey(){   // univers de la partie (Mix reste Mix), pas celui de l'extrait
+    if(typeof THEMES==='undefined')return null;
+    return Object.keys(THEMES).find(function(k){return THEMES[k].n===G.theme;})||null;
+  }
+  function paintVinyl(box){
+    var disc=box.querySelector('.jg-cd-disc');
+    var u=univ(themeKey())||{nom:'Sonara',couleur:'var(--accent)',image:null};
     if(window.uvVinyl)disc.innerHTML=uvVinyl(u,false,true);
+    return disc.querySelector('.vy-spin');
+  }
+  // Rotation image par image : angle(t) = a0 + v0.t + (v1 - v0).t^2 / 2T, puis v1
+  var spinner={el:null,raf:0,angle:0,speed:0};
+  function spin(el,a0,v0,v1,T){
+    cancelAnimationFrame(spinner.raf);
+    spinner.el=el;spinner.angle=a0;spinner.speed=v0;
+    if(!el||reduce.matches){if(el)el.style.transform='';return;}
+    var t0=performance.now();
+    (function f(now){
+      var t=now-t0, a;
+      if(T&&t<T){a=a0+v0*t+(v1-v0)*t*t/(2*T);spinner.speed=v0+(v1-v0)*t/T;}
+      else{var tt=T||0;a=a0+v0*tt+(v1-v0)*tt/2+v1*(t-tt);spinner.speed=v1;}
+      spinner.angle=a%360;el.style.transform='rotate('+spinner.angle+'deg)';
+      spinner.raf=requestAnimationFrame(f);
+    })(t0);
+  }
+  function ringFill(box,ms){
+    var ring=box.querySelector('.jg-cd-ring-fill');
     ring.getAnimations().forEach(function(a){a.cancel();});
-    box.getAnimations({subtree:true}).forEach(function(a){if(a.effect&&a.effect.target!==ring)a.cancel();});
-    ring.animate([{strokeDashoffset:100},{strokeDashoffset:0}],{duration:ms,easing:'linear',fill:'forwards'});
-    if(reduce.matches)return;   // mouvement reduit : vinyle fixe, seul l'anneau se remplit
-    box.animate([{opacity:0},{opacity:1}],{duration:300,easing:'ease-out'});
-    disc.animate([{transform:'scale(.82)',opacity:0},{transform:'none',opacity:1}],{duration:500,easing:'cubic-bezier(.2,.8,.2,1)'});
-    // Acceleration reguliere (courbe quadratique) jusqu'a la pleine vitesse a la fin
-    var spin=disc.querySelector('.vy-spin');if(!spin)return;
-    var turns=ms/TOP_SPEED/2, end=turns*360;
-    spin.animate([{transform:'rotate(0deg)'},{transform:'rotate('+end+'deg)'}],{duration:ms,easing:'cubic-bezier(.11,0,.5,0)',fill:'forwards'});
-    spin.animate([{transform:'rotate('+end+'deg)'},{transform:'rotate('+(end+360)+'deg)'}],{duration:TOP_SPEED,delay:ms,iterations:Infinity});
+    if(ms)ring.animate([{strokeDashoffset:100},{strokeDashoffset:0}],{duration:ms,easing:'linear',fill:'forwards'});
+  }
+  // Chargement : decor pose immediatement (aucune image vide), rotation lente
+  var fromLoad=false;
+  new MutationObserver(function(){
+    if(load.classList.contains('on')){
+      $('ld-step').textContent='Univers '+(G.theme||'')+' · Manche 1/'+(G.nq||10);
+      var box=load.querySelector('.jg-cd');
+      box.getAnimations({subtree:true}).forEach(function(a){a.cancel();});
+      ringFill(box,0);
+      spin(paintVinyl(box),0,SLOW,SLOW,0);
+      fromLoad=true;
+    }
+  }).observe(load,{attributes:true,attributeFilter:['class']});
+  function runCd(box,ms){
+    var continued=fromLoad&&box.id==='cds';fromLoad=false;
+    var a0=continued?spinner.angle:0, v0=continued?spinner.speed:0;
+    box.getAnimations({subtree:true}).forEach(function(a){a.cancel();});
+    var el=paintVinyl(box);
+    if(el&&!reduce.matches)el.style.transform='rotate('+a0+'deg)';   // meme angle des la 1re image
+    ringFill(box,ms);
+    if(reduce.matches){spin(null);return;}   // mouvement reduit : vinyle fixe, seul l'anneau se remplit
+    // Depuis le chargement : aucun fondu, le vinyle continue et accelere
+    if(!continued){
+      box.animate([{opacity:0},{opacity:1}],{duration:300,easing:'ease-out'});
+      box.querySelector('.jg-cd-disc').animate([{transform:'scale(.82)',opacity:0},{transform:'none',opacity:1}],{duration:500,easing:'cubic-bezier(.2,.8,.2,1)'});
+    }
+    spin(el,a0,v0,TOP,ms);
     // Fin : fondu vers la manche (le fond se retire en fondu quand l'ecran change)
     box.animate([{opacity:1},{opacity:0}],{duration:300,delay:ms-300,easing:'ease-in',fill:'forwards'});
   }
@@ -72,6 +118,10 @@
       if(off)runCd(el,x[1]);
     }).observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true});
   });
+  // Plus de compte a rebours ni de pause a l'ecran : on arrete la rotation
+  new MutationObserver(function(){
+    if(!document.querySelector('#cds.on,#brksc.on,#s-load.on'))spin(null);
+  }).observe(document.body,{attributes:true,subtree:true,attributeFilter:['class']});
 
   // ── Debut de manche : pochette de l'univers (floutee), puces, points ──
   var qsc=$('qsc'), rvsc=$('rvsc'), roundStart=0;

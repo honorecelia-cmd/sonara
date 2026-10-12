@@ -53,6 +53,8 @@
 .jg-cd-bg{position:fixed;inset:0;z-index:0;opacity:0;pointer-events:none;transition:opacity .5s ease}
 .jg-cd-bg .nb-hero-bg{animation:none}
 .jg:has(#cds.on) .jg-cd-bg,.jg:has(#brksc.on) .jg-cd-bg{opacity:1;transition-duration:.3s}
+#s-load .jg-cd-bg{opacity:1;transition:none}
+#s-load .jg-cd{display:flex}
 .jg-cd{flex:1;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px 0 16px}
 .jg-cd-th{margin:0 0 8px;font-size:15px;font-weight:500;color:rgba(255,255,255,.88)}
 .jg .jg-cd-t{margin:0 0 clamp(20px,4.5vh,44px);font-size:clamp(28px,3.6vw,44px);line-height:1;color:#fff}

@@ -13,8 +13,8 @@
 .page{min-height:100vh;min-height:100dvh}
 
 /* ── Couleur de html et body = fond de l'ecran affiche ── */
-html:has(#s-game.on),html:has(#s-lobby.on),html:has(#s-load.on){background:#120706}
-html:has(#s-parcours.on),html:has(.page.pp.on),html:has(#s-res.on),html:has(#s-game.on #cds.on),html:has(#s-game.on #brksc.on){
+html:has(#s-game.on),html:has(#s-lobby.on){background:#120706}
+html:has(#s-load.on),html:has(#s-parcours.on),html:has(.page.pp.on),html:has(#s-res.on),html:has(#s-game.on #cds.on),html:has(#s-game.on #brksc.on){
   background:linear-gradient(180deg,var(--sn-hero-wine),var(--sn-hero-core));
 }
 html:has(#s-game.on),html:has(#s-lobby.on),html:has(#s-load.on),html:has(#s-parcours.on),html:has(.page.pp.on),html:has(#s-res.on){min-height:100%}
@@ -38,7 +38,6 @@ html:has(#s-parcours.on) body,html:has(.page.pp.on) body,html:has(#s-res.on) bod
 .jg-body{padding-bottom:calc(32px + var(--sa-b))}
 .jg-lobby-grid{padding-bottom:calc(40px + var(--sa-b))}
 .pp-grid{padding-bottom:calc(40px + var(--sa-b))}
-.page.pp-load{padding-top:var(--sa-t);padding-bottom:var(--sa-b)}
 .rs-main{padding-top:calc(28px + var(--sa-t))}
 .uv--jeu .uv-ui{margin-bottom:var(--sa-b)}
 @media (min-width:1100px){.jg-body{padding-bottom:calc(48px + var(--sa-b))}}
@@ -53,12 +52,13 @@ html:has(#s-parcours.on) body,html:has(.page.pp.on) body,html:has(#s-res.on) bod
 
   /* ── Manche et revelation : hauteur de l'ecran, la colonne de droite defile seule ── */
   #s-game.page.jg{height:100vh;height:100dvh;height:var(--jg-vvh,100dvh);min-height:0;overflow:hidden}
-  #s-game .jg-body{min-height:0}
+  #s-load.page.jg{height:100vh;height:100dvh;min-height:0;overflow:hidden}
+  #s-game .jg-body,#s-load .jg-body{min-height:0}
   #s-game .qsc.on,#s-game .rvsc.on{display:flex;flex-direction:column;align-items:stretch;flex:1;min-height:0;gap:14px}
   #s-game .jg-media{flex-shrink:0}
   #s-game .jg-cover{width:min(100%,28vh,300px);width:min(100%,28dvh,300px)}
   #s-game .jg-panel{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;gap:12px;padding-bottom:2px}
-  #s-game .jg-cd{min-height:0}
+  #s-game .jg-cd,#s-load .jg-cd{min-height:0}
   .jg-cd-vy{width:min(40vh,72vw,420px);width:min(40dvh,72vw,420px)}
 
   /* ── Salle d'attente : longue liste de joueurs dans son bloc ── */
