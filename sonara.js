@@ -1324,6 +1324,8 @@ function joinRoom() {
     if (data.started) { G_MULTI.code = null; showJoinError('started'); return; }
     G_MULTI.theme = data.theme;
     G_MULTI.host = data.host;
+    G_MULTI.players = data.players || [];
+    setLobbyWait();
     document.getElementById('lobby-code').textContent = code;
     showPage('s-lobby');
     document.getElementById('lobby-host-actions').style.display = 'none';
@@ -1401,7 +1403,9 @@ function connectWS(code) {
     }
   };
   WS.onopen = function() {
-    renderLobbyPlayers([{ id: G_MULTI.playerId, name: G.ps, score: 0 }]);
+    // Joueurs deja dans la salle (invite) + soi, en attendant la liste du serveur
+    var known = (G_MULTI.players || []).filter(function(p){ return p.id !== G_MULTI.playerId; });
+    renderLobbyPlayers(known.concat([{ id: G_MULTI.playerId, name: G.ps, score: 0 }]));
   };
 }
 
@@ -1460,8 +1464,12 @@ function renderLobbyPlayers(players) {
   }).join('');
   document.getElementById('lobby-players').innerHTML = html;
   lobbyButtons(players.length);
-  // Invite : "[son-nom de l'hote] va lancer la partie"
-  var host = players.filter(function(p){ return p.id === G_MULTI.host; })[0];
+  setLobbyWait(players);
+}
+// Invite : "[son-nom de l'hote] va lancer la partie", des l'entree dans la salle
+function setLobbyWait(players) {
+  var all = (players || []).concat(G_MULTI.players || []);
+  var host = all.filter(function(p){ return p.id === G_MULTI.host; })[0];
   document.getElementById('lobby-wait-t').textContent = (host ? host.name : 'L\'hôte') + ' va lancer la partie';
 }
 // Hote seul : "Inviter" en bouton principal ; des 2 joueurs : "Lancer la partie"
