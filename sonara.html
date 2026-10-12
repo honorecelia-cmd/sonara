@@ -786,7 +786,9 @@
     <div class="rs-btns" id="rs-btns">
       <button class="sn-btn" type="button" id="btn-replay">Rejouer</button>
       <button class="sn-btn sn-btn--ghost" type="button" id="btn-home">Changer d'univers</button>
+      <p class="rs-wait" id="rs-wait" aria-live="polite" hidden></p>
       <button class="rs-share" type="button" id="btn-share">Partager</button>
+      <button class="rs-share" type="button" id="btn-leave" hidden>Quitter la salle</button>
     </div>
     </div>
     <!-- Colonne de droite (ordinateur) : meilleurs scores de l'univers -->
@@ -928,6 +930,7 @@
           <label class="pp-k" for="join-code">Code de la salle</label>
           <div class="pp-code"><input id="join-code" type="text" maxlength="4" inputmode="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="K7MZ" aria-describedby="join-error"></div>
           <div class="pp-err" id="join-error" style="display:none" role="alert"></div>
+          <button class="sn-btn sn-btn--ghost pp-join-create" id="join-create" type="button" hidden>Créer ma propre salle</button>
         </div>
         <div class="pp-actions">
           <button class="sn-btn bgo" type="button" onclick="joinRoom()" disabled>Rejoindre</button>
@@ -944,7 +947,7 @@
   <header class="jg-top">
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
     <p class="pc-step jg-step">Salle de jeu</p>
-    <button class="jg-quit" type="button" onclick="showPage('s-multi')">Quitter</button>
+    <button class="jg-quit" type="button" onclick="leaveRoom();showPage('s-multi')">Quitter</button>
   </header>
   <div class="jg-lobby-grid">
     <div class="jg-lobby-main">

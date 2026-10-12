@@ -32,9 +32,16 @@
     onSide:function(u,dir){car.go(dir);},
     active:function(){return onScreen('s-parcours')&&scr.getAttribute('data-step')==='1';}
   });
-  $('pc-home').addEventListener('click',function(){showPage('landing');});
+  $('pc-home').addEventListener('click',function(){
+    // Choix pour le groupe abandonne : retour aux resultats
+    if(flow.group){var g=flow.group;endGroup();g.cancel();return;}
+    showPage('landing');
+  });
+  var step1=document.querySelector('.pc-head--1 .pc-step'), STEP1=step1?step1.textContent:'';
+  function endGroup(){flow.group=null;if(step1)step1.textContent=STEP1;$('pc-home').lastChild.textContent='Accueil';}
 
   function pick(u){
+    if(flow.group){var g=flow.group;endGroup();g.pick(u.slug);return;}
     flow.theme=u.slug;
     flow.shared=false;
     if(SonaraFlow.showSonnom)SonaraFlow.showSonnom();
@@ -57,9 +64,24 @@
     // Aplat et nom geant de l'univers choisi (etape 2)
     setIndexFor:function(slug){car.setIndex(idxOf(slug));},
     showSonnom:null,                 // fourni par ecran-sonnom.js
+    // Fin de partie en groupe : l'hote choisit l'univers de la partie suivante
+    chooseForGroup:function(slug,onPick,onCancel){
+      flow.invite=null;flow.theme=THEMES[slug]?slug:flow.theme;
+      flow.group={pick:onPick,cancel:onCancel};
+      if(step1)step1.textContent='Prochaine partie du groupe';
+      $('pc-home').lastChild.textContent='Retour';
+      showUnivers();
+    },
+    // Lien d'invitation : univers de la salle, son-nom, puis la salle
+    toInvite:function(code,slug){
+      endGroup();
+      flow.invite=code;flow.theme=slug;flow.mode='multi';flow.preset=null;flow.shared=false;
+      if(SonaraFlow.showSonnom)SonaraFlow.showSonnom();
+    },
     // Tous les "Jouer" de la landing. opts.mode : mode choisi dans le menu
     // Mode ; opts.theme : univers affiche dans la section 03 (preselection).
     toUnivers:function(opts){
+      flow.invite=null;endGroup();
       flow.preset=opts&&MODES[opts.mode]?opts.mode:null;
       flow.mode=flow.preset||'solo';
       // Lien "Entre proches" recu : l'univers est deja choisi
@@ -74,6 +96,7 @@
     },
     // Clic sur un vinyle de la landing : univers preselectionne
     toSonnom:function(slug){
+      flow.invite=null;endGroup();
       flow.preset=null;flow.mode='solo';flow.shared=false;
       flow.theme=slug;
       if(SonaraFlow.showSonnom)SonaraFlow.showSonnom();

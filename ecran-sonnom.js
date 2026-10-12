@@ -118,8 +118,14 @@
     // Univers impose par un lien de defi recu
     uNote.hidden=!flow.shared;
     if(flow.shared)uNote.textContent='Univers du défi reçu : '+u.nom+'. Tu peux en changer.';
+    // Lien d'invitation : univers et mode fixes par la salle, on ne demande que le son-nom
+    var inv=!!flow.invite;
+    scr.classList.toggle('pc-invite',inv);
+    chip.disabled=inv;
+    if(inv){uNote.hidden=false;uNote.textContent='Tu es invité dans la salle '+flow.invite+'. Univers choisi par l\'hôte : '+u.nom+'.';}
     // Mode deja choisi ailleurs (menu Mode de la landing) : signale et preselectionne
     setMode(flow.mode,false);
+    if(inv)play.textContent='Rejoindre la salle';
     mNote.hidden=!flow.preset;
     if(flow.preset)mNote.textContent='Mode '+MODES[flow.preset]+' choisi depuis le menu. Tu peux encore le changer.';
     // Valeur preremplie : dernier son-nom de l'appareil ; sinon le champ est
@@ -163,6 +169,13 @@
   function launch(name){
     var key=THEMES[flow.theme]?flow.theme:'mix';
     G.ps=name;
+    if(flow.invite){
+      // Lien d'invitation : entree directe dans la salle (verifications de joinRoom)
+      var code=flow.invite;flow.invite=null;
+      $('join-pseudo').value=name;$('join-code').value=code;
+      joinRoom();
+      return;
+    }
     if(flow.mode==='multi'){
       // Salle creee directement avec cet univers et ce son-nom
       ['multi-pseudo','join-pseudo'].forEach(function(id){var el=$(id);if(el){el.value=name;el.style.borderColor='';}});

@@ -122,6 +122,8 @@
 .pp-code.is-error{animation:sn-shake .4s var(--sn-ease)}
 .pp-err{margin:10px 4px 0;font-size:14px;line-height:1.4;color:var(--sn-muted-ink)}
 .pp-err[style*="none"]{display:none}
+.pp .pc-card .pp-join-create{margin-top:12px}
+.pp-join-create[hidden]{display:none}
 
 /* ── Defi a partager ── */
 .pp-link{

@@ -123,6 +123,10 @@
       code.dispatchEvent(new Event('input'));
     });
     code.addEventListener('keydown',function(e){if(e.key==='Enter'&&!jbtn.disabled)jbtn.click();});
+    // Salle introuvable ou partie commencee : creer sa propre salle (parcours En direct)
+    var mk=$('join-create');
+    if(mk){mk.addEventListener('click',function(){if(window.SonaraFlow)SonaraFlow.toUnivers({mode:'multi'});});
+      code.addEventListener('input',function(){mk.hidden=true;});}
     $('pp-join-change').addEventListener('click',function(){$('pp-join-me').hidden=true;$('pp-join-name').hidden=false;$('join-pseudo').focus();});
     // Erreur affichee par joinRoom : petite secousse du champ, sans rouge
     new MutationObserver(function(){

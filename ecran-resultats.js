@@ -67,6 +67,22 @@
       }
       btns.style.setProperty('--d',end+'ms');
       $('rs-after').style.setProperty('--d',end+'ms');
+      waiting=false;group();
     }
+  };
+
+  // ── En groupe : l'hote relance ou change d'univers, les invites attendent ──
+  var waiting=false;
+  var WAIT='En attente de l\'hôte : il peut relancer une partie ou changer d\'univers.';
+  function group(){
+    var multi=typeof inRoom==='function'&&inRoom(), guest=multi&&!G_MULTI.isHost;
+    $('btn-replay').hidden=guest;$('btn-home').hidden=guest;
+    $('btn-leave').hidden=!multi;
+    var w=$('rs-wait');w.hidden=!guest;
+    w.textContent=waiting?'L\'hôte choisit le prochain univers…':WAIT;
+  }
+  window.SonaraGroupe={
+    update:group,
+    choosing:function(on){waiting=on;group();}
   };
 })();

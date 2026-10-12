@@ -138,12 +138,14 @@
     });
   }).observe($('lobby-players'),{childList:true});
   var invite=$('jg-invite');
+  // Lien qui fait entrer directement dans la salle (/?salle=CODE)
   invite.addEventListener('click',function(){
     var code=$('lobby-code').textContent.trim();
-    var txt='Rejoins ma salle Sonara avec le code '+code+' : '+location.origin+'/';
-    function done(){invite.textContent='Invitation copiée';setTimeout(function(){invite.textContent='Inviter';},1800);}
-    if(navigator.share)navigator.share({text:txt}).catch(function(){});
-    else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(done).catch(function(){});
+    var link=location.origin+'/?salle='+code;
+    function done(){invite.textContent='Lien copié';setTimeout(function(){invite.textContent='Inviter';},1800);}
+    function copy(){if(navigator.clipboard)navigator.clipboard.writeText(link).then(done).catch(function(){});}
+    if(navigator.share)navigator.share({title:'Sonara',text:'Rejoins ma partie Sonara',url:link}).catch(function(e){if(e&&e.name!=='AbortError')copy();});
+    else copy();
   });
 
   // ── Mobile : clavier ouvert, le champ et le minuteur restent visibles ──
