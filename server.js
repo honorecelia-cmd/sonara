@@ -98,6 +98,24 @@ function checkAllDone(code) {
   var room = rooms[code];
   if (room && room.phase === 'question' && room.players.length && room.players.every(function(x){ return x.answered; })) revealQuestion(code);
 }
+// Salle supprimee 2 h apres la derniere partie lancee ou la creation
+const ROOM_TTL = 7200000;
+function keepRoom(code) {
+  var room = rooms[code]; if (!room) return;
+  clearTimeout(room.expire);
+  room.expire = setTimeout(function(){ var r = rooms[code]; if (r) clearRoomTimer(r); delete rooms[code]; }, ROOM_TTL);
+}
+function playerList(room) { return room.players.map(function(pl){ return { id: pl.id, name: pl.name, score: pl.score }; }); }
+// Un joueur part : s'il etait l'hote, le premier joueur restant le remplace
+function removePlayer(code, playerId) {
+  var room = rooms[code]; if (!room) return;
+  var before = room.players.length;
+  room.players = room.players.filter(function(pl){ return pl.id !== playerId; });
+  if (room.players.length === before) return;
+  if (room.host === playerId && room.players.length) room.host = room.players[0].id;
+  checkAllDone(code);
+  broadcastAll(code, { type: 'player_left', id: playerId, host: room.host, players: playerList(room) });
+}
 function clearRoomTimer(room) { if (room.questionTimer) { clearTimeout(room.questionTimer); room.questionTimer = null; } }
 // Ouvre la manche room.question ; filet de securite si un joueur ne repond jamais
 function startQuestion(code, delayBefore) {
@@ -135,10 +153,10 @@ const server = http.createServer(function(req, res) {
       try {
         const data = JSON.parse(body);
         const code = genCode();
-        rooms[code] = { code, theme: data.theme, host: data.playerId, players: [], started: false, question: 0 };
+        rooms[code] = { code, theme: data.theme, host: data.playerId, players: [], started: false, phase: 'lobby', question: 0 };
         res.writeHead(200, {'Content-Type':'application/json'});
         res.end(JSON.stringify({ code }));
-        setTimeout(function(){ delete rooms[code]; }, 7200000);
+        keepRoom(code);
       } catch(e) { res.writeHead(400); res.end('{}'); }
     });
     return;
@@ -149,7 +167,7 @@ const server = http.createServer(function(req, res) {
     if (!room) { res.writeHead(404); res.end('{}'); return; }
     res.writeHead(200, {'Content-Type':'application/json'});
     res.end(JSON.stringify({
-      code: room.code, theme: room.theme, started: room.started,
+      code: room.code, theme: room.theme, started: room.started, phase: room.phase || 'lobby',
       players: room.players.map(function(pl){ return { id: pl.id, name: pl.name, score: pl.score||0 }; })
     }));
     return;
@@ -308,9 +326,14 @@ server.on('upgrade', function(req, socket) {
   const playerId = p.query.id;
   const playerName = decodeURIComponent(p.query.name || 'Joueur');
   if (!rooms[code]) { socket.destroy(); return; }
+  if (rooms[code].started) {
+    wsSend(socket, { type: 'join_refused', reason: 'started' });
+    setTimeout(function(){ try { socket.end(); } catch(e) {} }, 50);
+    return;
+  }
   const player = { id: playerId, name: playerName, socket, score: 0 };
   rooms[code].players.push(player);
-  broadcastAll(code, { type: 'player_joined', players: rooms[code].players.map(function(pl){ return { id: pl.id, name: pl.name, score: pl.score }; }) });
+  broadcastAll(code, { type: 'player_joined', host: rooms[code].host, players: playerList(rooms[code]) });
   let pending = Buffer.alloc(0);
   socket.on('data', function(buf) {
     pending = Buffer.concat([pending, buf]);
@@ -322,16 +345,13 @@ server.on('upgrade', function(req, socket) {
   });
   function handleFrame(frame) {
     try {
-      if (frame.opcode === 8) {
-        rooms[code].players = rooms[code].players.filter(function(pl){ return pl.id !== playerId; });
-        checkAllDone(code);
-        broadcastAll(code, { type: 'player_left', id: playerId, players: rooms[code].players.map(function(pl){ return { id: pl.id, name: pl.name, score: pl.score }; }) });
-        return;
-      }
+      if (frame.opcode === 8) { removePlayer(code, playerId); return; }
       if (frame.opcode !== 1) return;
       const msg = JSON.parse(frame.payload);
-      if (msg.type === 'start' && rooms[code].host === playerId) {
+      if (msg.type === 'start' && rooms[code].host === playerId && !rooms[code].started) {
         rooms[code].started = true;
+        rooms[code].players.forEach(function(x){ x.score = 0; x.answered = false; });
+        keepRoom(code);
         var trackCount = msg.trackCount || 10;
         var totalTracks = msg.totalTracks || trackCount;
         var indices = [];
@@ -360,12 +380,26 @@ server.on('upgrade', function(req, socket) {
           }
         }
       }
+      // ── Meme groupe, nouvelle partie (fin de partie, hote seulement) ──
+      var room = rooms[code], isHost = room && room.host === playerId, over = room && (!room.started || room.phase === 'done');
+      // L'hote choisit le prochain univers : les invites l'attendent
+      if ((msg.type === 'choosing' || msg.type === 'choosing_end') && isHost && over) {
+        broadcastAll(code, { type: msg.type === 'choosing' ? 'host_choosing' : 'host_choosing_end' });
+      }
+      // Retour de tout le groupe dans la salle (meme code, memes joueurs), scores a zero
+      if (msg.type === 'new_game' && isHost && over) {
+        if (typeof msg.theme === 'string' && /^[a-z]{2,16}$/.test(msg.theme)) room.theme = msg.theme;
+        clearRoomTimer(room);
+        room.started = false; room.phase = 'lobby'; room.question = 0;
+        room.players.forEach(function(x){ x.score = 0; x.answered = false; });
+        keepRoom(code);
+        broadcastAll(code, { type: 'back_to_lobby', theme: room.theme, host: room.host, players: playerList(room) });
+      }
       // 'reveal_done' (ancien client) : ignore, le serveur enchaine seul les manches
     } catch(e) {}
   }
-  socket.on('error', function(){
-    if (rooms[code]) { rooms[code].players = rooms[code].players.filter(function(pl){ return pl.id !== playerId; }); checkAllDone(code); }
-  });
+  socket.on('error', function(){ removePlayer(code, playerId); });
+
 });
 
 // ── Conservation des scores : 12 mois apres la partie ──
