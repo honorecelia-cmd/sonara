@@ -223,7 +223,7 @@ var THEMES = {
     {t:'GM',a:'Booba ft Pichon ft Gato da bato',preview:'/audio/Booba_ft_Pichon-GM.mp3',cover:''},
     {t:'Princes',a:'26 Keuss',preview:'/audio/26_Keuss-Princes.mp3',cover:''},
     {t:'Bad up who',a:'Busy Signal',preview:'/audio/Busy_Signal-Bad_up_who.mp3',cover:''},
-    {t:'Crime lord',a:'Notnice & Jafrasse',preview:'/audio/Criminal-Le_Will_Deuspi.mp3',cover:''},
+    {t:'Crime lord',a:'Notnice & Jafrasse',preview:'/audio/Notnice_Jafrasse-Crime_lord.mp3',cover:''},
     {t:'Sa to ka wè',a:'Jahyanai King',preview:'/audio/Jahyanai_King-Sa_to_ka_we.mp3',cover:''},
     {t:'Tu le sais',a:'Gazo ft Kalash',preview:'/audio/Gazo_ft_Kalash-Tu_le_sais.mp3',cover:''},
     {t:'Né pour réussir',a:'Ken Vybz',preview:'/audio/Ken_Vybz-Ne_pour_reussir.mp3',cover:''},
