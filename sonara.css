@@ -95,7 +95,7 @@ h1{font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:clamp(52px,9v
 @media(min-width:540px){.modal-bg{align-items:center;padding:20px}}
 
 /* ── LOADING ── */
-#s-load{justify-content:center;align-items:center;padding:20px}
+/* #s-load reprend la mise en page des ecrans de jeu (.page.jg, jeu.css) */
 
 
 

@@ -64,7 +64,7 @@
           <li><button type="button" data-nb-mode="multi">Entre proches</button></li>
         </ul>
       </div>
-      <a class="nb-meta-col nb-menu-link" href="#comment-jouer">Comment jouer</a>
+      <a class="nb-meta-col nb-menu-link" href="#comment-jouer">Comment jouer ?</a>
     </nav>
 
     <h1 class="nb-hero-title"><span>Le blind test</span><span>qui fait vibrer</span><span>la Caraïbe</span></h1>
@@ -305,7 +305,7 @@
         <p class="nb-label">Entre proches /</p>
         <p class="nb-body">Tout le monde joue en même temps, avec un code de salle. Crée ta salle, partage le lien et lance la partie quand tout le monde est là. Les scores s'affichent en direct pour chaque joueur.</p>
       </div>
-      <p class="nb-crumbs">Solo <i>/</i> Multijoueur <i>/</i> Classement</p>
+      <p class="nb-crumbs">Solo <i>/</i> Entre proches <i>/</i> Classement</p>
     </div>
 
   </section>
@@ -330,7 +330,7 @@
   <!-- ── 04 / COMMENT JOUER ── (Nebula : 3D Audio + Stem Splitter) -->
   <section class="nb-sec nb-sec--light nb-s04" id="comment-jouer" aria-labelledby="nb-s04-t">
     <div class="nb-s04-head">
-      <div class="nb-secnum"><span>04 /</span><h2 id="nb-s04-t">Comment jouer</h2></div>
+      <div class="nb-secnum"><span>04 /</span><h2 id="nb-s04-t">Comment jouer ?</h2></div>
     </div>
 
     <!-- Mega-titre, le telephone passe devant la 2e ligne -->
@@ -495,8 +495,8 @@
 <section class="page pc" id="s-parcours" data-step="1" aria-labelledby="pc-t1">
   <div class="uv uv--jeu" id="pc-uv" aria-roledescription="carrousel" aria-label="Univers">
     <div class="pc-top">
-      <button class="pc-back" type="button" id="pc-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Accueil</button>
       <img class="pc-logo" src="/img/logo_sonara.svg" alt="Sonara">
+      <button class="pc-back" type="button" id="pc-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Accueil</button>
     </div>
     <div class="pc-head pc-head--1">
       <p class="pc-step">Étape 1 sur 3</p>
@@ -803,7 +803,7 @@
     <div class="rs-btns" id="rs-btns">
       <button class="sn-btn" type="button" id="btn-replay">Rejouer</button>
       <button class="sn-btn sn-btn--ghost" type="button" id="btn-home">Changer d'univers</button>
-      <p class="rs-wait" id="rs-wait" aria-live="polite" hidden></p>
+      <div class="rs-wait jg-wait" id="rs-wait" aria-live="polite" hidden><span class="jg-wait-vy" id="rs-wait-vy" aria-hidden="true"></span><p id="rs-wait-t"></p></div>
       <button class="rs-share" type="button" id="btn-share">Partager</button>
       <button class="rs-share" type="button" id="btn-leave" hidden>Quitter la salle</button>
     </div>
@@ -908,8 +908,8 @@
 <section class="page pp" id="s-join" aria-labelledby="pp-join-t">
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
-    <button class="pc-back" type="button" onclick="showPage(G.prevPage==='s-parcours'?'s-parcours':'landing')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
+    <button class="pc-back" type="button" onclick="showPage(G.prevPage==='s-parcours'?'s-parcours':'landing')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">
