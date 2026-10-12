@@ -213,9 +213,19 @@ html{scroll-padding-top:var(--hd-h)}
   color:#fff;
 }
 .nb-hero-lede .nb-pill--cta{background:var(--cream);color:var(--ink)}
+.nb-hero-ctas{display:flex;flex-wrap:wrap;gap:10px}
+/* Action secondaire : contour creme sur le fond du hero */
+.nb-pill--line{background:transparent;color:var(--cream);border:1.5px solid var(--cream);padding:14.5px 28.5px}
+.nb-pill--line:hover{background:var(--cream);color:var(--ink)}
+.nb-code-link{
+  display:inline-block;margin-top:16px;padding:0;border:none;background:none;cursor:pointer;
+  font-family:var(--f-text);font-size:14px;font-weight:500;color:var(--cream);
+  text-decoration:underline;text-underline-offset:3px;
+}
+.nb-code-link:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:4px}
 .nb-hero-lede .nb-pill--cta:hover{background:#fff;color:var(--ink)}
 .nb-hero-lede .ld-badge-row{justify-content:flex-start;padding:0;margin:18px 0 0}
-/* Message "Rejoins [univers]" (lien Entre proches) : pastille aux codes de la landing */
+/* Message "Rejoins [univers]" (lien de Defi) : pastille aux codes de la landing */
 .nb-hero-lede .ld-badge{
   display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 12px;border-radius:999px;
   background:var(--ink);color:var(--cream);

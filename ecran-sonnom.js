@@ -4,7 +4,7 @@
 // vinyle de l'univers choisi en decor (data-step="2").
 // La partie n'est pas touchee : le bouton principal passe la main aux
 // fonctions existantes de sonara.js (selectSoloTheme, createRoom,
-// showEntreProches) avec les memes donnees qu'avant (G.ps, univers).
+// showDefi) avec les memes donnees qu'avant (G.ps, univers).
 // Charge apres ecran-univers.js.
 // ═══════════════════════════════════════════════════════════════
 (function(){
@@ -16,9 +16,9 @@
   var MODE_HELP={
     solo:'',
     multi:'Tous en même temps, avec un code de salle.',
-    entre:'Un lien à envoyer, chacun joue quand il veut.'
+    defi:'Un lien à envoyer, chacun joue quand il veut.'
   };
-  var MODE_CTA={solo:'Jouer', multi:'Créer la salle', entre:'Générer le lien'};
+  var MODE_CTA={solo:'Jouer', multi:'Créer la salle', defi:'Générer le lien'};
   // Exemples de son-nom (placeholder) : neutres, lies a l'univers, jamais un
   // nom d'artiste ou de groupe reel
   var EXEMPLES={
@@ -37,6 +37,7 @@
   var chipVy=$('sn-uchip-vy'), chipName=$('sn-uchip-name'), chip=$('sn-uchip');
   var uNote=$('sn-unote'), mNote=$('sn-mnote'), modeHelp=$('sn-mode-help'), join=$('sn-join');
   var deco=$('sn-deco');
+  var step2=scr.querySelector('.pc-s2 .pc-step'), STEP2=step2?step2.textContent:'';
   var modeBtns=[].slice.call(scr.querySelectorAll('[data-sn-mode]'));
   var STORE='sonara-son-nom', MAX=16;
   var PREFIXES=['Mister','Miss','Reine du','Roi du','DJ'];
@@ -79,6 +80,7 @@
   // Mode : groupe de boutons radio (clic, fleches du clavier). La description
   // et le lien "code de salle" ont une hauteur reservee : rien ne saute.
   function setMode(m,fromUser){
+    if(m==='entre')m='defi';   // ancien nom interne du Defi
     flow.mode=MODES[m]?m:'solo';
     modeBtns.forEach(function(b){
       var on=b.getAttribute('data-sn-mode')===flow.mode;
@@ -107,6 +109,18 @@
   // Seul retour vers le carrousel : la pastille "Changer"
   chip.addEventListener('click',function(){F.showUnivers();});
 
+  // Invitation : joueurs deja dans la salle (initiale + son-nom)
+  var guests=$('sn-guests'), guestList=$('sn-guests-list');
+  function renderGuests(players){
+    guestList.textContent='';
+    (players||[]).forEach(function(p){
+      var li=document.createElement('li'), av=document.createElement('span'), b=document.createElement('b');
+      av.className='sn-avatar';av.setAttribute('aria-hidden','true');av.textContent=window.ini?ini(p.name):String(p.name||'?').charAt(0);
+      b.textContent=p.name;li.appendChild(av);li.appendChild(b);guestList.appendChild(li);
+    });
+    guests.hidden=!(players&&players.length);
+  }
+
   F.showSonnom=function(){
     var u=UNIVERS[idxOf(flow.theme)];
     chipVy.innerHTML=uvVinyl(u,false,true);
@@ -118,9 +132,18 @@
     // Univers impose par un lien de defi recu
     uNote.hidden=!flow.shared;
     if(flow.shared)uNote.textContent='Univers du défi reçu : '+u.nom+'. Tu peux en changer.';
+    // Lien d'invitation : univers et mode fixes par la salle, on ne demande que le son-nom
+    var inv=!!flow.invite, info=inv&&flow.inviteInfo||{};
+    scr.classList.toggle('pc-invite',inv);
+    // "Jouer entre proches" : le mode est implicite, pas de selecteur
+    scr.classList.toggle('pc-proches',!inv&&!!flow.proches);
+    chip.disabled=inv;
+    renderGuests(inv?info.players:null);
     // Mode deja choisi ailleurs (menu Mode de la landing) : signale et preselectionne
     setMode(flow.mode,false);
-    mNote.hidden=!flow.preset;
+    if(inv)play.textContent='Rejoindre la salle';
+    if(step2)step2.textContent=inv?(info.hostName?info.hostName+' t\'invite à jouer':'Invitation'):flow.proches?'Entre proches':STEP2;
+    mNote.hidden=!flow.preset||!!flow.proches;
     if(flow.preset)mNote.textContent='Mode '+MODES[flow.preset]+' choisi depuis le menu. Tu peux encore le changer.';
     // Valeur preremplie : dernier son-nom de l'appareil ; sinon le champ est
     // vide et affiche un exemple (placeholder)
@@ -163,17 +186,24 @@
   function launch(name){
     var key=THEMES[flow.theme]?flow.theme:'mix';
     G.ps=name;
+    if(flow.invite){
+      // Lien d'invitation : entree directe dans la salle (verifications de joinRoom)
+      var code=flow.invite;flow.invite=null;
+      $('join-pseudo').value=name;$('join-code').value=code;
+      joinRoom();
+      return;
+    }
     if(flow.mode==='multi'){
       // Salle creee directement avec cet univers et ce son-nom
       ['multi-pseudo','join-pseudo'].forEach(function(id){var el=$(id);if(el){el.value=name;el.style.borderColor='';}});
       var card=document.querySelector('#create-theme-grid .t-'+key);
       if(card)selectMultiTheme(key,card);
       createRoom();
-    }else if(flow.mode==='entre'){
+    }else if(flow.mode==='defi'){
       // Le lien partage porte l'univers de G.theme (voir themeSlug)
-      if(G.theme!==THEMES[key].n)G._entreCode=null;
+      if(G.theme!==THEMES[key].n)G._defiCode=null;
       G.theme=THEMES[key].n;
-      showEntreProches();
+      showDefi();
     }else{
       selectSoloTheme(key);
     }

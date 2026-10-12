@@ -67,6 +67,27 @@
       }
       btns.style.setProperty('--d',end+'ms');
       $('rs-after').style.setProperty('--d',end+'ms');
+      waiting=false;group();
     }
+  };
+
+  // ── En groupe : l'hote relance ou change d'univers, les invites attendent ──
+  var waiting=false;
+  function hostName(){
+    var h=(G_MULTI.players||[]).filter(function(p){return p.id===G_MULTI.host;})[0];
+    return h?h.name:'L\'hôte';
+  }
+  // Vinyle brun fonce : l'orange de la salle se perdrait sur le degrade des resultats
+  if(window.uvVinyl)$('rs-wait-vy').innerHTML=uvVinyl({nom:'Sonara',couleur:'var(--ink)',image:null},true,true);
+  function group(){
+    var multi=typeof inRoom==='function'&&inRoom(), guest=multi&&!G_MULTI.isHost;
+    $('btn-replay').hidden=guest;$('btn-home').hidden=guest;
+    $('btn-leave').hidden=!multi;
+    var w=$('rs-wait');w.hidden=!guest;
+    $('rs-wait-t').textContent=hostName()+(waiting?' choisit le prochain univers…':' va relancer une partie ou changer d\'univers');
+  }
+  window.SonaraGroupe={
+    update:group,
+    choosing:function(on){waiting=on;group();}
   };
 })();

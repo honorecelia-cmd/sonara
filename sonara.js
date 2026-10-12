@@ -223,7 +223,7 @@ var THEMES = {
     {t:'GM',a:'Booba ft Pichon ft Gato da bato',preview:'/audio/Booba_ft_Pichon-GM.mp3',cover:''},
     {t:'Princes',a:'26 Keuss',preview:'/audio/26_Keuss-Princes.mp3',cover:''},
     {t:'Bad up who',a:'Busy Signal',preview:'/audio/Busy_Signal-Bad_up_who.mp3',cover:''},
-    {t:'Crime lord',a:'Notnice & Jafrasse',preview:'/audio/Criminal-Le_Will_Deuspi.mp3',cover:''},
+    {t:'Crime lord',a:'Notnice & Jafrasse',preview:'/audio/Notnice_Jafrasse-Crime_lord.mp3',cover:''},
     {t:'Sa to ka wè',a:'Jahyanai King',preview:'/audio/Jahyanai_King-Sa_to_ka_we.mp3',cover:''},
     {t:'Tu le sais',a:'Gazo ft Kalash',preview:'/audio/Gazo_ft_Kalash-Tu_le_sais.mp3',cover:''},
     {t:'Né pour réussir',a:'Ken Vybz',preview:'/audio/Ken_Vybz-Ne_pour_reussir.mp3',cover:''},
@@ -250,6 +250,7 @@ function showPage(id){
   // Afficher la page cible
   var el=$(id);
   if(el){el.style.display='flex';el.classList.add('on');}
+  if(G.page!==id)G.prevPage=G.page;
   G.page=id;
   window.scrollTo(0,0);
   if(id==='s-game'||id==='s-load'||id==='s-res') history.pushState(null,'','#'+id);
@@ -318,8 +319,9 @@ document.addEventListener('click', function(e) {
   // Valider texte libre
   if(e.target.id==='vbtn') { freeSubmit(); return; }
   // Résultats
-  if(e.target.id==='btn-replay')    { doReplay(); return; }
-  if(e.target.id==='btn-home')      { doHome(); if(window.SonaraFlow)SonaraFlow.toUnivers({theme:themeSlug()}); return; }   // ecran Univers (son-nom garde)
+  if(e.target.id==='btn-replay')    { if(inRoom()){groupReplay();return;} doReplay(); return; }
+  if(e.target.id==='btn-home')      { if(inRoom()){groupChangeUnivers();return;} doHome(); if(window.SonaraFlow)SonaraFlow.toUnivers({theme:themeSlug()}); return; }   // ecran Univers (son-nom garde)
+  if(e.target.id==='btn-leave')     { leaveRoom(); doHome(); return; }
   if(e.target.id==='btn-share')     { doShare(); return; }
   if(e.target.id==='btn-quit')      { doQuit(); return; }
   if(e.target.id==='btn-load-back') { doHome(); return; }
@@ -616,6 +618,7 @@ function doQ(){
   updateHdr();
 }
 function playPR(url,cb){
+  hideUnmute();
   var el=$('aud');clearInterval(window._apIv);$('apfill').style.width='0%';var ap0=$('ani-prog');if(ap0)ap0.style.width='0%';$('astatus').textContent='';
   if(!url){setEq(false);if(cb)setTimeout(cb,0);return;}
   var isLocal = url.indexOf('/audio/') === 0;
@@ -623,31 +626,49 @@ function playPR(url,cb){
   el.currentTime=0;
   el.load();
   var played=false;
+  // Lecture ; si le navigateur la refuse (Safari iPhone sans toucher
+  // prealable), bouton "Activer le son" plutot qu'une manche muette
+  function start(done){
+    var p=el.play();
+    if(p===undefined){setEq(true);progA(0);if(done)done();return;}
+    p.then(function(){setEq(true);progA(0);if(done)done();})
+     .catch(function(e){
+       // Play échoué mais on lance quand même le jeu
+       setEq(false);
+       if(e&&e.name==='NotAllowedError')showUnmute(el);
+       if(done)done();
+     });
+  }
   var safe=setTimeout(function(){
-    if(!played){played=true;if(cb)cb();}
+    if(!played){played=true;if(cb)cb();start(null);}
   },5000);
   el.oncanplaythrough=function(){
     if(played)return;played=true;clearTimeout(safe);
-    var p=el.play();
-    if(p!==undefined){
-      p.then(function(){
-        setEq(true);
-        var t0=Date.now();
-        window._apIv=setInterval(function(){var pct=Math.min(100,(Date.now()-t0)/30000*100);$('apfill').style.width=pct+'%';var ap=$('ani-prog');if(ap)ap.style.width=pct+'%';if(pct>=100)clearInterval(window._apIv)},350);
-        if(cb)cb();
-      }).catch(function(){
-        // Play échoué mais on lance quand même le jeu
-        setEq(false);
-        if(cb)cb();
-      });
-    } else {
-      setEq(true);
-      if(cb)cb();
-    }
+    start(cb);
   };
   el.onerror=function(){played=true;clearTimeout(safe);setEq(false);if(cb)cb();};
 }
-function stopA(){clearInterval(window._apIv);var el=$('aud');el.pause();el.src='';$('apfill').style.width='0%';var ap=$('ani-prog');if(ap)ap.style.width='0%';$('astatus').textContent='';setEq(false)}
+// Barre d'ecoute ; "from" : secondes deja ecoulees (son active en retard)
+function progA(from){
+  clearInterval(window._apIv);
+  var t0=Date.now()-from*1000;
+  window._apIv=setInterval(function(){var pct=Math.min(100,(Date.now()-t0)/30000*100);$('apfill').style.width=pct+'%';var ap=$('ani-prog');if(ap)ap.style.width=pct+'%';if(pct>=100)clearInterval(window._apIv)},350);
+}
+function showUnmute(el){
+  var b=$('jg-unmute');if(!b||!$('qsc').classList.contains('on'))return;
+  b.hidden=false;
+  b.onclick=function(){
+    // Le toucher debloque le son ; on reprend la ou en est la manche
+    var t=Math.max(0,(G.td||30)-(G.tl||0));
+    try{if(t>0&&t<(el.duration||30))el.currentTime=t;}catch(e){}
+    try{gac().resume();}catch(e){}
+    var p=el.play();
+    function ok(){b.hidden=true;setEq(true);progA(t);}
+    if(p&&p.then)p.then(ok).catch(function(){});else ok();
+  };
+}
+function hideUnmute(){var b=$('jg-unmute');if(b){b.hidden=true;b.onclick=null;}}
+function stopA(){hideUnmute();clearInterval(window._apIv);var el=$('aud');el.pause();el.src='';$('apfill').style.width='0%';var ap=$('ani-prog');if(ap)ap.style.width='0%';$('astatus').textContent='';setEq(false)}
 function setEq(on){document.querySelectorAll('.eqb').forEach(function(b){b.classList.toggle('off',!on)})}
 function renderQCM(opts,locked){
   $('qcmw').innerHTML=opts.map(function(o,i){
@@ -1068,6 +1089,7 @@ function doQuit(){
   }
   clearInterval(G.ti);
   stopA();
+  if(inRoom())leaveRoom();
   doHome();
 }
 function doHome(){
@@ -1092,50 +1114,74 @@ function doShare(){
   else alert(txt);
 }
 
-// ── ENTRE PROCHES : ecran lien personnalise (code cree cote serveur) ──
+// ── DEFI : lien a partager, chacun joue quand il veut (code cree cote serveur) ──
+// Format du lien inchange depuis le debut : /fr/custom-CODE (ou /custom-CODE)
 function themeSlug(){
   var k=Object.keys(THEMES).find(function(x){return THEMES[x].n===G.theme;});
   return k||'mix';
 }
-function entreLinkFromCode(code){
+function defiLinkFromCode(code){
   return location.origin+'/fr/custom-'+code;
 }
-function ensureEntreCode(cb){
-  if(G._entreCode){cb(G._entreCode);return;}
+function ensureDefiCode(cb){
+  if(G._defiCode){cb(G._defiCode);return;}
   fetch('/custom',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({theme:themeSlug(),themeName:G.theme})})
   .then(function(r){return r.json();})
-  .then(function(d){G._entreCode=d.code;cb(d.code);})
-  .catch(function(){G._entreCode='local'+Math.random().toString(36).slice(2,6);cb(G._entreCode);});
+  .then(function(d){G._defiCode=d.code;cb(d.code);})
+  .catch(function(){G._defiCode='local'+Math.random().toString(36).slice(2,6);cb(G._defiCode);});
 }
-function showEntreProches(){
+function showDefi(){
   sfxC();
-  showPage('s-entre');
-  var a=document.getElementById('entre-link');
+  showPage('s-defi');
+  var a=document.getElementById('defi-link');
   if(a){a.textContent='Génération du lien…';a.removeAttribute('href');}
-  var b=document.getElementById('entre-copy');if(b)b.textContent='Copier';
-  ensureEntreCode(function(code){
-    var url=entreLinkFromCode(code);
+  var b=document.getElementById('defi-copy');if(b)b.textContent='Copier';
+  ensureDefiCode(function(code){
+    var url=defiLinkFromCode(code);
     if(a){a.textContent=url;a.href=url;}
   });
 }
-function copyEntreLink(){
-  var b=document.getElementById('entre-copy');
+function copyDefiLink(){
+  var b=document.getElementById('defi-copy');
   function ok(){if(b){b.textContent='Copié !';setTimeout(function(){b.textContent='Copier';},2000);}}
-  ensureEntreCode(function(code){
-    var url=entreLinkFromCode(code);
+  ensureDefiCode(function(code){
+    var url=defiLinkFromCode(code);
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(ok).catch(function(){prompt('Copie le lien :',url);});}
     else{var t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok();}catch(e){prompt('Copie le lien :',url);}t.remove();}
   });
 }
-function shareEntreLink(){
-  ensureEntreCode(function(code){
-    var url=entreLinkFromCode(code);
+function shareDefiLink(){
+  ensureDefiCode(function(code){
+    var url=defiLinkFromCode(code);
     var txt='Rejoins-moi sur Sonara, le blindtest caribéen !\n'+url;
     if(navigator.share)navigator.share({text:txt,url:url}).catch(function(){});
-    else copyEntreLink();
+    else copyDefiLink();
   });
 }
+
+// ── Lien d'invitation entrant : /?salle=CODE -> son-nom, puis directement la salle ──
+// Lu des le chargement du script (avant images et polices) ; la landing reste
+// masquee (classe sn-invite posee dans <head>) jusqu'a l'ecran d'invitation.
+(function(){
+  var m=location.search.match(/[?&]salle=([A-Za-z0-9]{4})(?![A-Za-z0-9])/);
+  if(!m)return;
+  var code=m[1].toUpperCase();
+  try{history.replaceState(null,'',location.pathname+location.hash);}catch(e){}
+  var info=fetch('/room/info?code='+code).then(function(r){return r.ok?r.json():null;});
+  function show(fn){
+    fn();
+    document.documentElement.classList.remove('sn-invite');
+  }
+  function go(){   // les ecrans du parcours (ecran-*.js) sont charges
+    info.then(function(d){
+      var el=document.getElementById('join-code');if(el)el.value=code;
+      if(d&&!d.started&&THEMES[d.theme]&&window.SonaraFlow&&SonaraFlow.toInvite){show(function(){SonaraFlow.toInvite(code,d.theme,{hostName:d.hostName,players:d.players});});return;}
+      show(function(){showJoinError(d?'started':'missing');});
+    }).catch(function(){show(function(){showJoinError('missing');});});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
+})();
 
 // ── Lien partage entrant : /custom-xxxx ou /fr/custom-xxxx -> pre-selectionne l'univers ──
 (function(){
@@ -1206,6 +1252,13 @@ function copyLobbyCode(){
 }
 
 // ── MULTIJOUEUR ───────────────────────────────────────
+// Safari iPhone ne joue un son que si l'element audio a deja joue pendant un
+// toucher. On le fait sur le dernier toucher avant la partie : "Creer la
+// salle" et "Lancer la partie" (hote), "Rejoindre" (invite).
+function unlockAudio() {
+  try{var ua=document.getElementById('aud');ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';ua.volume=0;var p=ua.play();if(p)p.then(function(){ua.pause();}).catch(function(){});}catch(e){}
+  try{var c=gac();if(c.resume)c.resume();}catch(e){}
+}
 var WS = null;
 var G_MULTI = { code: null, playerId: null, isHost: false, theme: null };
 
@@ -1228,8 +1281,7 @@ function createRoom() {
   G_MULTI.playerId = genPlayerId();
   G_MULTI.isHost = true;
   G.ps = pseudo;
-  try{var ua=document.getElementById('aud');ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';ua.volume=0;var p=ua.play();if(p)p.then(function(){ua.pause();}).catch(function(){});}catch(e){}
-  try{gac();}catch(e){}
+  unlockAudio();
   fetch('/room/create', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1238,10 +1290,12 @@ function createRoom() {
   .then(function(r) { return r.json(); })
   .then(function(data) {
     G_MULTI.code = data.code;
+    G_MULTI.host = G_MULTI.playerId;
     document.getElementById('lobby-code').textContent = data.code;
     showPage('s-lobby');
     document.getElementById('lobby-host-actions').style.display = 'block';
     document.getElementById('lobby-guest-msg').style.display = 'none';
+    lobbyButtons(1);
     connectWS(data.code);
   })
   .catch(function() { alert('Erreur lors de la création de la salle'); });
@@ -1256,8 +1310,7 @@ function joinRoom() {
   G_MULTI.isHost = false;
   G_MULTI.code = code;
   G.ps = pseudo;
-  try{var ua=document.getElementById('aud');ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';ua.volume=0;var p=ua.play();if(p)p.then(function(){ua.pause();}).catch(function(){});}catch(e){}
-  try{gac();}catch(e){}
+  unlockAudio();
   var btn = document.querySelector('#s-join .bgo');
   if(btn) { btn.disabled=true; btn.textContent='Vérification…'; }
   var errMsg = document.getElementById('join-error');
@@ -1268,21 +1321,29 @@ function joinRoom() {
     return r.json();
   })
   .then(function(data) {
+    if (data.started) { G_MULTI.code = null; showJoinError('started'); return; }
     G_MULTI.theme = data.theme;
+    G_MULTI.host = data.host;
     document.getElementById('lobby-code').textContent = code;
     showPage('s-lobby');
     document.getElementById('lobby-host-actions').style.display = 'none';
     document.getElementById('lobby-guest-msg').style.display = 'block';
     connectWS(code);
   })
-  .catch(function() {
-    var codeInp = document.getElementById('join-code');
-    var errMsg = document.getElementById('join-error');
-    codeInp.style.borderColor = 'var(--red)';
-    if(errMsg) { errMsg.textContent = 'Aucune salle ne porte ce code. Vérifie-le auprès de la personne qui t\'invite.'; errMsg.style.display='block'; }
-    var btn = document.querySelector('#s-join .bgo');
-    if(btn) { btn.disabled=false; btn.textContent='Rejoindre'; }
-  });
+  .catch(function() { G_MULTI.code = null; showJoinError('missing'); });
+}
+// Message d'erreur de l'ecran Rejoindre ; propose de creer sa propre salle
+var JOIN_ERRORS = {
+  missing: 'Aucune salle ne porte ce code. Vérifie-le auprès de la personne qui t\'invite.',
+  started: 'La partie a déjà commencé dans cette salle. Demande le lien à l\'hôte pour la partie suivante, ou crée ta propre salle.'
+};
+function showJoinError(kind) {
+  var errMsg = document.getElementById('join-error');
+  if(errMsg) { errMsg.textContent = JOIN_ERRORS[kind] || JOIN_ERRORS.missing; errMsg.style.display='block'; }
+  var mk = document.getElementById('join-create'); if (mk) mk.hidden = false;
+  var btn = document.querySelector('#s-join .bgo');
+  if(btn) { btn.disabled=false; btn.textContent='Rejoindre'; }
+  if (G.page !== 's-join') showPage('s-join');
 }
 
 function connectWS(code) {
@@ -1292,11 +1353,16 @@ function connectWS(code) {
   WS = new WebSocket(wsUrl);
   WS.onmessage = function(e) {
     var msg = JSON.parse(e.data);
+    if (msg.type === 'join_refused') { leaveRoom(); showJoinError('started'); return; }
+    if (msg.type === 'host_choosing' || msg.type === 'host_choosing_end') {
+      if (window.SonaraGroupe) SonaraGroupe.choosing(msg.type === 'host_choosing');
+      return;
+    }
+    if (msg.type === 'back_to_lobby') { backToLobby(msg); return; }
+    if (msg.host) { G_MULTI.host = msg.host; setHost(msg.host === G_MULTI.playerId); }
     if (msg.type === 'player_joined' || msg.type === 'player_left') {
       G_MULTI.players = msg.players;
       renderLobbyPlayers(msg.players);
-      var bstart=document.getElementById('btn-start-multi');
-      if(bstart){if(msg.players.length>=2){bstart.disabled=false;bstart.textContent='Lancer la partie';}else{bstart.disabled=true;bstart.textContent='En attente de joueurs...';} }
     }
     if (msg.type === 'game_start') {
       try { var ua=document.getElementById('aud'); ua.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='; ua.volume=0; var up=ua.play(); if(up) up.then(function(){ua.pause();}).catch(function(){}); } catch(ez){}
@@ -1339,29 +1405,77 @@ function connectWS(code) {
   };
 }
 
+// ── Groupe : meme salle, meme code, memes joueurs d'une partie a l'autre ──
+function inRoom() { return !!(G_MULTI.code && WS && WS.readyState === 1); }
+function leaveRoom() {
+  var ws = WS; WS = null;
+  if (ws) { ws.onmessage = null; try { ws.close(); } catch(e) {} }
+  G_MULTI.code = null; G_MULTI.isHost = false; G_MULTI.host = null; G_MULTI.players = [];
+}
+// L'hote est parti : le serveur designe un autre joueur
+function setHost(isHost) {
+  if (isHost === G_MULTI.isHost) return;
+  G_MULTI.isHost = isHost;
+  document.getElementById('lobby-host-actions').style.display = isHost ? 'block' : 'none';
+  document.getElementById('lobby-guest-msg').style.display = isHost ? 'none' : 'block';
+  lobbyButtons((G_MULTI.players || []).length);
+  if (window.SonaraGroupe) SonaraGroupe.update();
+}
+function groupReplay() {
+  if (inRoom() && G_MULTI.isHost) WS.send(JSON.stringify({ type: 'new_game', theme: G_MULTI.theme }));
+}
+function groupChangeUnivers() {
+  if (!inRoom() || !G_MULTI.isHost || !window.SonaraFlow) return;
+  WS.send(JSON.stringify({ type: 'choosing' }));
+  SonaraFlow.chooseForGroup(G_MULTI.theme, function(slug) {
+    if (inRoom()) WS.send(JSON.stringify({ type: 'new_game', theme: slug }));
+  }, function() {
+    if (inRoom()) WS.send(JSON.stringify({ type: 'choosing_end' }));
+    showPage('s-res');
+  });
+}
+// Le serveur remet tout le groupe dans la salle : nouvel univers, scores a zero
+function backToLobby(msg) {
+  clearInterval(G.ti); stopA(); clearTimeout(G._topRefresh);
+  if (THEMES[msg.theme]) G_MULTI.theme = msg.theme;
+  G_MULTI.players = msg.players;
+  G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false; G.history = []; G._multiIdx = 0;
+  G._revealed = false; G._pendingReveal = false; G._questionActive = false;
+  G_MULTI.host = msg.host;
+  G_MULTI.isHost = msg.host === G_MULTI.playerId;
+  document.getElementById('lobby-host-actions').style.display = G_MULTI.isHost ? 'block' : 'none';
+  document.getElementById('lobby-guest-msg').style.display = G_MULTI.isHost ? 'none' : 'block';
+  showPage('s-lobby');
+  renderLobbyPlayers(msg.players);
+}
+
 function renderLobbyPlayers(players) {
   var html = players.map(function(p) {
     var me = p.id === G_MULTI.playerId;
     return '<li class="jg-player' + (me ? ' is-me' : '') + '" data-id="' + esc(p.id) + '">' +
       '<span class="sn-avatar' + (me ? '' : ' sn-avatar--d') + '" aria-hidden="true">' + ini(p.name) + '</span>' +
       '<b>' + esc(p.name) + (me ? ' (toi)' : '') + '</b>' +
-      (me && G_MULTI.isHost ? '<em>Hôte</em>' : '') +
+      (p.id === G_MULTI.host ? '<em>Hôte</em>' : '') +
       '</li>';
   }).join('');
   document.getElementById('lobby-players').innerHTML = html;
+  lobbyButtons(players.length);
+  // Invite : "[son-nom de l'hote] va lancer la partie"
+  var host = players.filter(function(p){ return p.id === G_MULTI.host; })[0];
+  document.getElementById('lobby-wait-t').textContent = (host ? host.name : 'L\'hôte') + ' va lancer la partie';
+}
+// Hote seul : "Inviter" en bouton principal ; des 2 joueurs : "Lancer la partie"
+function lobbyButtons(n) {
   var btn = document.getElementById('btn-start-multi');
-  if (btn && G_MULTI.isHost) {
-    if (players.length >= 2) {
-      btn.disabled = false;
-      btn.textContent = 'Lancer la partie';
-    } else {
-      btn.disabled = true;
-      btn.textContent = 'En attente de joueurs...';
-    }
+  if (btn) {
+    btn.disabled = n < 2;
+    btn.textContent = n >= 2 ? 'Lancer la partie' : 'En attente de joueurs…';
   }
+  document.getElementById('s-lobby').classList.toggle('jg-alone', !!G_MULTI.isHost && n < 2);
 }
 
 function startMultiGame() {
+  unlockAudio();
   if (WS && WS.readyState === 1) {
     var pool = buildPool(G_MULTI.theme);
     WS.send(JSON.stringify({ type: 'start', totalTracks: pool.length, trackCount: Math.min(10, pool.length) }));
@@ -1442,17 +1556,3 @@ function selectSoloTheme(key) {
   }
 }
 /* ─────────────────────────────────── */
-
-function guestReady() {
-  // Créer et jouer un silence pour débloquer l'autoplay
-  var ctx = new (window.AudioContext || window.webkitAudioContext)();
-  var buf = ctx.createBuffer(1, 1, 22050);
-  var src = ctx.createBufferSource();
-  src.buffer = buf;
-  src.connect(ctx.destination);
-  src.start(0);
-  document.getElementById('btn-ready').style.display = 'none';
-  document.getElementById('lobby-waiting').style.display = 'block';
-  G_MULTI._audioUnlocked = true;
-}
-

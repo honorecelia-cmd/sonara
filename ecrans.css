@@ -35,6 +35,8 @@
   font-size:clamp(30px,3.4vw,48px);line-height:.95;letter-spacing:-.03em;
 }
 .pc h1:focus{outline:none}
+.pc-code{margin-top:14px;padding:0 16px;pointer-events:auto}
+.pc-code[hidden]{display:none}
 /* Pas de noir neutre dans le jeu : fleches en brun */
 .uv--jeu .uv-arrow{background:var(--ink)}
 .uv--jeu .uv-arrow:hover{background:var(--accent)}
@@ -171,6 +173,18 @@
 .pc-card .pc-play:disabled{opacity:1;background:color-mix(in srgb, var(--ink) 12%, var(--pc-bg));color:rgba(45,16,2,.78)}
 .pc-play-help{margin:6px 0 0;min-height:18px;font-size:12.5px;line-height:18px;text-align:center;color:var(--pc-muted)}
 .pc-play:not(:disabled) + .pc-play-help{visibility:hidden}
+
+/* Lien d'invitation : univers et mode fixes par la salle */
+.pc-invite .pc-modes,.pc-proches .pc-modes{display:none}
+/* Invitation : joueurs deja dans la salle, en pastilles compactes */
+.pc-guests{margin:0 0 14px}
+.pc-guests-k{margin:0 0 8px;font-size:13px;font-weight:600;color:var(--pc-muted)}
+.pc-guests ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.pc-guests li{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:4px 12px 4px 4px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--pc-line)}
+.pc-guests .sn-avatar{width:28px;height:28px;font-size:12px}
+.pc-guests b{font-size:14px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-invite .pc-uchip{cursor:default}
+.pc-invite .pc-uchip-edit{display:none}
 
 /* ── Mobile ── */
 @media (max-width:767px){
@@ -326,6 +340,13 @@
   text-decoration:underline;text-underline-offset:4px;
 }
 .rs-share:hover{text-decoration-thickness:2px}
+.rs-share[hidden],.rs-btns .sn-btn[hidden]{display:none}
+/* En groupe : message des invites a la place des boutons de l'hote */
+/* Texte simple et petit vinyle qui tourne, comme l'attente dans la salle (jeu.css, .jg-wait) */
+.rs-wait{grid-column:1 / -1;justify-content:center;margin:0;padding:6px 0}
+.rs-wait p{font-size:16px;line-height:1.35;text-align:left;color:#fff}
+.rs-wait .jg-wait-vy{width:48px;height:48px}
+.rs-wait[hidden]{display:none}
 .rs-share:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:4px}
 
 /* Meilleurs scores de l'univers (submitScore) */

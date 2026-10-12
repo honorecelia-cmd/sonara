@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════
    SONARA, ecrans de preparation et de chargement
-   Preparation (.pp) : jouer en direct (#s-multi), creer une salle
-   (#s-create), rejoindre une salle (#s-join), defi a partager (#s-entre).
+   Preparation (.pp) : creer une salle (#s-create), rejoindre une salle
+   (#s-join), defi a partager (#s-defi).
    Meme famille que l'ecran Son-nom : degrade du hero de la landing et
    grain, carte creme clair (.pc-card d'ecrans.css), pilule orange dans la
    carte, titre en MuseoModerno, vinyle de l'univers a droite des 1100 px.
@@ -120,6 +120,8 @@
 .pp-code.is-error{animation:sn-shake .4s var(--sn-ease)}
 .pp-err{margin:10px 4px 0;font-size:14px;line-height:1.4;color:var(--sn-muted-ink)}
 .pp-err[style*="none"]{display:none}
+.pp .pc-card .pp-join-create{margin-top:12px}
+.pp-join-create[hidden]{display:none}
 
 /* ── Defi a partager ── */
 .pp-link{
