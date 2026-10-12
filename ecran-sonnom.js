@@ -37,6 +37,7 @@
   var chipVy=$('sn-uchip-vy'), chipName=$('sn-uchip-name'), chip=$('sn-uchip');
   var uNote=$('sn-unote'), mNote=$('sn-mnote'), modeHelp=$('sn-mode-help'), join=$('sn-join');
   var deco=$('sn-deco');
+  var step2=scr.querySelector('.pc-s2 .pc-step'), STEP2=step2?step2.textContent:'';
   var modeBtns=[].slice.call(scr.querySelectorAll('[data-sn-mode]'));
   var STORE='sonara-son-nom', MAX=16;
   var PREFIXES=['Mister','Miss','Reine du','Roi du','DJ'];
@@ -126,6 +127,7 @@
     // Mode deja choisi ailleurs (menu Mode de la landing) : signale et preselectionne
     setMode(flow.mode,false);
     if(inv)play.textContent='Rejoindre la salle';
+    if(step2)step2.textContent=inv?'Invitation':STEP2;
     mNote.hidden=!flow.preset;
     if(flow.preset)mNote.textContent='Mode '+MODES[flow.preset]+' choisi depuis le menu. Tu peux encore le changer.';
     // Valeur preremplie : dernier son-nom de l'appareil ; sinon le champ est

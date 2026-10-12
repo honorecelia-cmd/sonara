@@ -1249,7 +1249,7 @@ function joinRoom() {
 // Message d'erreur de l'ecran Rejoindre ; propose de creer sa propre salle
 var JOIN_ERRORS = {
   missing: 'Aucune salle ne porte ce code. Vérifie-le auprès de la personne qui t\'invite.',
-  started: 'La partie a déjà commencé dans cette salle. Attends la fin de la manche en cours ou crée ta propre salle.'
+  started: 'La partie a déjà commencé dans cette salle. Demande le lien à l\'hôte pour la partie suivante, ou crée ta propre salle.'
 };
 function showJoinError(kind) {
   var errMsg = document.getElementById('join-error');
