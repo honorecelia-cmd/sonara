@@ -73,8 +73,9 @@
       <p>Écoute un extrait, trouve le titre et l'artiste, et défie tes proches où qu'ils soient.</p>
       <div class="nb-hero-ctas">
         <button class="nb-pill nb-pill--cta" type="button" data-nb-play>Jouer</button>
-        <button class="nb-pill nb-pill--cta" type="button" data-nb-proches>Jouer avec mes proches</button>
+        <button class="nb-pill nb-pill--line" type="button" data-nb-proches>Jouer entre proches</button>
       </div>
+      <button class="nb-code-link" type="button" data-nb-code>J'ai un code de salle</button>
       <!-- Message "Rejoins [univers]" d'un lien "Entre proches" : masque par
            defaut, affiche par sonara.js (bloc "Lien partage entrant"). -->
       <div class="ld-badge-row" id="ld-badge-row" style="display:none">
@@ -521,6 +522,7 @@
           <span class="pc-uchip-edit">Changer</span>
         </button>
         <p class="pc-note" id="sn-unote" hidden></p>
+        <div class="pc-guests" id="sn-guests" hidden><p class="pc-guests-k">Déjà dans la salle</p><ul id="sn-guests-list"></ul></div>
         <div class="pc-name-row">
           <div class="sn-input"><input id="sn-name" type="text" maxlength="16" autocomplete="off" autocapitalize="words" spellcheck="false" aria-label="Ton son-nom, de 2 à 16 caractères" aria-describedby="sn-hint sn-count"></div>
           <button class="sn-btn sn-btn--ghost" type="button" id="sn-random">Au hasard</button>
@@ -929,8 +931,8 @@
 <section class="page pp" id="s-join" aria-labelledby="pp-join-t">
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
+    <button class="pc-back" type="button" onclick="showPage(G.prevPage==='s-parcours'?'s-parcours':'landing')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
-    <button class="jg-quit" type="button" onclick="showPage(G.prevPage==='s-parcours'?'s-parcours':'landing')">Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">
@@ -966,7 +968,7 @@
   </header>
   <div class="jg-lobby-grid">
     <div class="jg-lobby-main">
-      <div class="jg-lobby-tags"><span class="jg-badge-live">En direct</span><span class="jg-univ" id="jg-lobby-univ"></span></div>
+      <div class="jg-lobby-tags"><span class="jg-badge-live">Entre proches</span><span class="jg-univ" id="jg-lobby-univ"></span></div>
       <p class="jg-k">Code de la salle</p>
       <div class="jg-code" id="lobby-code">····</div>
       <div class="jg-code-btns">
@@ -978,12 +980,13 @@
         <p class="jg-hint">Il faut au moins 2 joueurs dans la salle pour lancer la partie.</p>
       </div>
       <div class="jg-lobby-act" id="lobby-guest-msg" style="display:none">
-        <p class="jg-hint jg-wait" id="lobby-waiting">En attente de l'hôte…</p>
+        <div class="jg-wait" id="lobby-waiting"><span class="jg-wait-vy" id="lobby-wait-vy" aria-hidden="true"></span><p id="lobby-wait-t">L'hôte va lancer la partie</p></div>
       </div>
     </div>
     <div class="jg-lobby-side">
       <p class="jg-k">Joueurs</p>
       <ul class="jg-players" id="lobby-players"></ul>
+      <p class="jg-empty">Tes proches apparaîtront ici dès qu'ils ouvrent ton lien.</p>
     </div>
   </div>
 </section>

@@ -108,6 +108,18 @@
   // Seul retour vers le carrousel : la pastille "Changer"
   chip.addEventListener('click',function(){F.showUnivers();});
 
+  // Invitation : joueurs deja dans la salle (initiale + son-nom)
+  var guests=$('sn-guests'), guestList=$('sn-guests-list');
+  function renderGuests(players){
+    guestList.textContent='';
+    (players||[]).forEach(function(p){
+      var li=document.createElement('li'), av=document.createElement('span'), b=document.createElement('b');
+      av.className='sn-avatar';av.setAttribute('aria-hidden','true');av.textContent=window.ini?ini(p.name):String(p.name||'?').charAt(0);
+      b.textContent=p.name;li.appendChild(av);li.appendChild(b);guestList.appendChild(li);
+    });
+    guests.hidden=!(players&&players.length);
+  }
+
   F.showSonnom=function(){
     var u=UNIVERS[idxOf(flow.theme)];
     chipVy.innerHTML=uvVinyl(u,false,true);
@@ -120,14 +132,16 @@
     uNote.hidden=!flow.shared;
     if(flow.shared)uNote.textContent='Univers du défi reçu : '+u.nom+'. Tu peux en changer.';
     // Lien d'invitation : univers et mode fixes par la salle, on ne demande que le son-nom
-    var inv=!!flow.invite;
+    var inv=!!flow.invite, info=inv&&flow.inviteInfo||{};
     scr.classList.toggle('pc-invite',inv);
+    // "Jouer entre proches" : le mode est implicite, pas de selecteur
+    scr.classList.toggle('pc-proches',!inv&&!!flow.proches);
     chip.disabled=inv;
-    if(inv){uNote.hidden=false;uNote.textContent='Tu es invité dans la salle '+flow.invite+'. Univers choisi par l\'hôte : '+u.nom+'.';}
+    renderGuests(inv?info.players:null);
     // Mode deja choisi ailleurs (menu Mode de la landing) : signale et preselectionne
     setMode(flow.mode,false);
     if(inv)play.textContent='Rejoindre la salle';
-    if(step2)step2.textContent=inv?'Invitation':STEP2;
+    if(step2)step2.textContent=inv?(info.hostName?info.hostName+' t\'invite à jouer':'Invitation'):flow.proches?'Entre proches':STEP2;
     mNote.hidden=!flow.preset||!!flow.proches;
     if(flow.preset)mNote.textContent='Mode '+MODES[flow.preset]+' choisi depuis le menu. Tu peux encore le changer.';
     // Valeur preremplie : dernier son-nom de l'appareil ; sinon le champ est

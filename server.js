@@ -168,6 +168,8 @@ const server = http.createServer(function(req, res) {
     res.writeHead(200, {'Content-Type':'application/json'});
     res.end(JSON.stringify({
       code: room.code, theme: room.theme, started: room.started, phase: room.phase || 'lobby',
+      host: room.host,
+      hostName: (room.players.find(function(pl){ return pl.id === room.host; }) || {}).name || '',
       players: room.players.map(function(pl){ return { id: pl.id, name: pl.name, score: pl.score||0 }; })
     }));
     return;

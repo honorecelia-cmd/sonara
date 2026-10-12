@@ -53,6 +53,9 @@
     car.setIndex(flow.theme?idxOf(flow.theme):0);
     // En direct : "J'ai un code" sans passer par le choix d'univers
     $('pc-code').hidden=flow.mode!=='multi'||!!flow.group;
+    // Entre proches : le nom du mode remplace le compteur d'etapes (le
+    // parcours par code n'a pas le meme nombre d'ecrans)
+    if(!flow.group&&step1)step1.textContent=flow.proches?'Entre proches':STEP1;
     scr.setAttribute('data-step','1');
     if(!onScreen('s-parcours'))showPage('s-parcours');
     $('pc-t1').focus({preventScroll:true});
@@ -69,16 +72,17 @@
     showSonnom:null,                 // fourni par ecran-sonnom.js
     // Fin de partie en groupe : l'hote choisit l'univers de la partie suivante
     chooseForGroup:function(slug,onPick,onCancel){
-      flow.invite=null;flow.theme=THEMES[slug]?slug:flow.theme;
+      flow.invite=null;flow.proches=false;flow.theme=THEMES[slug]?slug:flow.theme;
       flow.group={pick:onPick,cancel:onCancel};
       if(step1)step1.textContent='Prochaine partie du groupe';
       $('pc-home').lastChild.textContent='Retour';
       showUnivers();
     },
     // Lien d'invitation : univers de la salle, son-nom, puis la salle
-    toInvite:function(code,slug){
+    toInvite:function(code,slug,info){
       endGroup();
-      flow.invite=code;flow.theme=slug;flow.mode='multi';flow.preset=null;flow.shared=false;
+      flow.invite=code;flow.theme=slug;flow.mode='multi';flow.preset=null;flow.shared=false;flow.proches=false;
+      flow.inviteInfo=info||null;   // son-nom de l'hote et joueurs deja dans la salle
       if(SonaraFlow.showSonnom)SonaraFlow.showSonnom();
     },
     // Tous les "Jouer" de la landing. opts.mode : mode choisi dans le menu
@@ -101,7 +105,7 @@
     // Clic sur un vinyle de la landing : univers preselectionne
     toSonnom:function(slug){
       flow.invite=null;endGroup();
-      flow.preset=null;flow.mode='solo';flow.shared=false;
+      flow.preset=null;flow.mode='solo';flow.shared=false;flow.proches=false;
       flow.theme=slug;
       if(SonaraFlow.showSonnom)SonaraFlow.showSonnom();
       else showUnivers();

@@ -23,6 +23,7 @@
     var t=e.target, b;
     if(t.closest('[data-nb-play]'))play(null);
     else if(t.closest('[data-nb-proches]'))play({mode:'multi',proches:true});
+    else if(t.closest('[data-nb-code]')){closeMenus();showPage('s-join');}
     else if((b=t.closest('[data-nb-mode]')))play({mode:b.getAttribute('data-nb-mode')});
   });
   document.addEventListener('keydown',function(e){

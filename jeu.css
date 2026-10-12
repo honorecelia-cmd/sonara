@@ -251,6 +251,16 @@
 .jg-lobby.jg-alone #jg-invite{order:-1;flex:1 1 100%;background:var(--accent);color:#fff;box-shadow:none}
 @media (hover:hover){.jg-lobby.jg-alone #jg-invite:hover{background:var(--sn-accent-press)}}
 .jg-lobby.jg-alone #btn-start-multi{display:none}
+/* Hote seul : ou apparaitront les invites */
+.jg-empty{display:none;margin:4px 2px 0;font-size:16px;line-height:1.45;color:var(--cream)}
+.jg-lobby.jg-alone .jg-empty{display:block}
+/* Invite : vinyle Sonara qui tourne lentement (fixe en mouvement reduit, landing.css) */
+.jg-wait{display:flex;align-items:center;gap:16px}
+.jg-wait-vy{flex:none;width:64px;height:64px}
+.jg-wait-vy .vy{width:100%;height:100%}
+.jg-wait-vy .vy--spin .vy-spin{animation-duration:12s}
+.jg-wait-vy .jg-vy-logo{width:58%}
+.jg-wait p{margin:0;font-size:17px;font-weight:600;color:var(--cream)}
 /* Son bloque par le navigateur : bouton dans la manche */
 .jg-unmute[hidden]{display:none}
 .jg-unmute{flex:none}

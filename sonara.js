@@ -1175,7 +1175,7 @@ function shareEntreLink(){
   function go(){   // les ecrans du parcours (ecran-*.js) sont charges
     info.then(function(d){
       var el=document.getElementById('join-code');if(el)el.value=code;
-      if(d&&!d.started&&THEMES[d.theme]&&window.SonaraFlow&&SonaraFlow.toInvite){show(function(){SonaraFlow.toInvite(code,d.theme);});return;}
+      if(d&&!d.started&&THEMES[d.theme]&&window.SonaraFlow&&SonaraFlow.toInvite){show(function(){SonaraFlow.toInvite(code,d.theme,{hostName:d.hostName,players:d.players});});return;}
       show(function(){showJoinError(d?'started':'missing');});
     }).catch(function(){show(function(){showJoinError('missing');});});
   }
@@ -1289,6 +1289,7 @@ function createRoom() {
   .then(function(r) { return r.json(); })
   .then(function(data) {
     G_MULTI.code = data.code;
+    G_MULTI.host = G_MULTI.playerId;
     document.getElementById('lobby-code').textContent = data.code;
     showPage('s-lobby');
     document.getElementById('lobby-host-actions').style.display = 'block';
@@ -1321,6 +1322,7 @@ function joinRoom() {
   .then(function(data) {
     if (data.started) { G_MULTI.code = null; showJoinError('started'); return; }
     G_MULTI.theme = data.theme;
+    G_MULTI.host = data.host;
     document.getElementById('lobby-code').textContent = code;
     showPage('s-lobby');
     document.getElementById('lobby-host-actions').style.display = 'none';
@@ -1356,7 +1358,7 @@ function connectWS(code) {
       return;
     }
     if (msg.type === 'back_to_lobby') { backToLobby(msg); return; }
-    if (msg.host) setHost(msg.host === G_MULTI.playerId);
+    if (msg.host) { G_MULTI.host = msg.host; setHost(msg.host === G_MULTI.playerId); }
     if (msg.type === 'player_joined' || msg.type === 'player_left') {
       G_MULTI.players = msg.players;
       renderLobbyPlayers(msg.players);
@@ -1407,7 +1409,7 @@ function inRoom() { return !!(G_MULTI.code && WS && WS.readyState === 1); }
 function leaveRoom() {
   var ws = WS; WS = null;
   if (ws) { ws.onmessage = null; try { ws.close(); } catch(e) {} }
-  G_MULTI.code = null; G_MULTI.isHost = false; G_MULTI.players = [];
+  G_MULTI.code = null; G_MULTI.isHost = false; G_MULTI.host = null; G_MULTI.players = [];
 }
 // L'hote est parti : le serveur designe un autre joueur
 function setHost(isHost) {
@@ -1438,6 +1440,7 @@ function backToLobby(msg) {
   G_MULTI.players = msg.players;
   G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false; G.history = []; G._multiIdx = 0;
   G._revealed = false; G._pendingReveal = false; G._questionActive = false;
+  G_MULTI.host = msg.host;
   G_MULTI.isHost = msg.host === G_MULTI.playerId;
   document.getElementById('lobby-host-actions').style.display = G_MULTI.isHost ? 'block' : 'none';
   document.getElementById('lobby-guest-msg').style.display = G_MULTI.isHost ? 'none' : 'block';
@@ -1451,11 +1454,14 @@ function renderLobbyPlayers(players) {
     return '<li class="jg-player' + (me ? ' is-me' : '') + '" data-id="' + esc(p.id) + '">' +
       '<span class="sn-avatar' + (me ? '' : ' sn-avatar--d') + '" aria-hidden="true">' + ini(p.name) + '</span>' +
       '<b>' + esc(p.name) + (me ? ' (toi)' : '') + '</b>' +
-      (me && G_MULTI.isHost ? '<em>Hôte</em>' : '') +
+      (p.id === G_MULTI.host ? '<em>Hôte</em>' : '') +
       '</li>';
   }).join('');
   document.getElementById('lobby-players').innerHTML = html;
   lobbyButtons(players.length);
+  // Invite : "[son-nom de l'hote] va lancer la partie"
+  var host = players.filter(function(p){ return p.id === G_MULTI.host; })[0];
+  document.getElementById('lobby-wait-t').textContent = (host ? host.name : 'L\'hôte') + ' va lancer la partie';
 }
 // Hote seul : "Inviter" en bouton principal ; des 2 joueurs : "Lancer la partie"
 function lobbyButtons(n) {

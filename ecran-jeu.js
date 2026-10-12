@@ -187,6 +187,7 @@
       if(!seen[id]){seen[id]=1;li.classList.add('is-new');}
     });
   }).observe($('lobby-players'),{childList:true});
+  if(window.uvVinyl)$('lobby-wait-vy').innerHTML=uvVinyl({nom:'Sonara',couleur:'var(--accent)',image:null},true,true);
   var invite=$('jg-invite');
   // Lien qui fait entrer directement dans la salle (/?salle=CODE)
   invite.addEventListener('click',function(){
