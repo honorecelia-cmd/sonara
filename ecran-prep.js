@@ -139,9 +139,4 @@
   // ── Defi a partager (#s-entre) ──
   onShow($('s-entre'),function(){vinyl($('pp-entre-deco'),univ(keyOfTheme()));});
 
-  // ── Chargement (#s-load) : halo de la couleur de l'univers ──
-  onShow($('s-load'),function(){
-    var u=univ(keyOfTheme());
-    $('s-load').style.setProperty('--pp-u',u?u.couleur:'var(--accent)');
-  });
 })();

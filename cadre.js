@@ -14,7 +14,7 @@
       var cd=document.querySelector('#cds.on,#brksc.on');
       return cd?DEGRADE:SOMBRE;
     }
-    if(on.id==='s-lobby'||on.id==='s-load')return SOMBRE;
+    if(on.id==='s-lobby')return SOMBRE;
     return DEGRADE;   // parcours, preparation, resultats : degrade du hero
   }
   function maj(){var c=couleur();if(meta.content!==c)meta.content=c;}

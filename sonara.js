@@ -371,9 +371,7 @@ function launchFromModal(btn) {
     G.pool = allTracks;
     // Sélectionner 10 titres puis enrichir seulement ces 10
     buildQs();
-    enrichWithDeezerProgress(G.qs, function(){
-      setTimeout(initGame, 400);
-    });
+    enrichWithDeezerProgress(G.qs, startWhenReady);
     return;
   }
   if(fixedTracks && fixedTracks.length>=10){
@@ -385,9 +383,7 @@ function launchFromModal(btn) {
     // 2. Sélectionner 10 titres aléatoires
     buildQs();
     // 3. Enrichir UNIQUEMENT les 10 titres sélectionnés (pas les 30)
-    enrichWithDeezerProgress(G.qs, function(){
-      setTimeout(initGame, 400);
-    });
+    enrichWithDeezerProgress(G.qs, startWhenReady);
     return;
   }
   var timeout = setTimeout(function(){
@@ -401,6 +397,60 @@ function launchFromModal(btn) {
   }).catch(function(){
     if(!done){done=true;clearTimeout(timeout);G.pool=getBackup();buildQs();setTimeout(initGame,600)}
   });
+}
+
+// ── PRECHARGEMENT DES EXTRAITS ──────────────────────
+// Le serveur interdit le cache (no-store) : les extraits sont gardes en
+// memoire (blob) et playPR lit cette copie quand elle est prete. Deux
+// telechargements a la fois, dans l'ordre des manches.
+var SonaraPreload=(function(){
+  var cache={}, queue=[], active=0, MAX=2;
+  function pump(){
+    while(active<MAX&&queue.length){
+      var url=queue.shift(), e=cache[url];if(!e||e.state!=='queued')continue;
+      active++;e.state='loading';
+      (function(url,e){
+        fetch(url).then(function(r){if(!r.ok)throw new Error(r.status);return r.blob();})
+        .then(function(b){e.state='ready';e.src=URL.createObjectURL(b);})
+        .catch(function(){e.state='error';})
+        .then(function(){active--;var w=e.wait;e.wait=[];w.forEach(function(f){f(e.state==='ready');});pump();});
+      })(url,e);
+    }
+  }
+  return {
+    // Ajoute des extraits a la file (les premiers d'abord) ; libere les autres
+    want:function(urls){
+      urls=urls.filter(function(u){return u&&u.indexOf('/audio/')===0;});
+      Object.keys(cache).forEach(function(u){
+        if(urls.indexOf(u)<0&&cache[u].state!=='loading'){if(cache[u].src)URL.revokeObjectURL(cache[u].src);delete cache[u];}
+      });
+      queue=[];
+      urls.forEach(function(u){if(!cache[u])cache[u]={state:'queued',wait:[]};if(cache[u].state==='queued')queue.push(u);});
+      pump();
+    },
+    // Rappel quand l'extrait est pret (true) ou en echec (false)
+    ready:function(url,cb){
+      var e=cache[url];
+      if(!e){if(url&&url.indexOf('/audio/')===0){this.want([url]);e=cache[url];}else{cb(true);return;}}
+      if(e.state==='ready')cb(true);else if(e.state==='error')cb(false);else e.wait.push(cb);
+    },
+    get:function(url){var e=cache[url];return e&&e.state==='ready'?e.src:null;}
+  };
+})();
+// Solo : la partie ne demarre que lorsque le 1er extrait est pret (les
+// suivants se chargent pendant la partie). Au-dela de 8 s, message sobre ;
+// en cas d'echec, on demarre quand meme (playPR retentera le reseau).
+function startWhenReady(){
+  var urls=G.qs.map(function(q){return q.preview;});
+  SonaraPreload.want(urls);
+  var started=false;
+  var slow=setTimeout(function(){if(G.page==='s-load')$('lds').textContent='Connexion lente, on y est presque…';},8000);
+  function go(){
+    if(started)return;started=true;clearTimeout(slow);clearTimeout(cap);
+    if(G.page==='s-load')initGame();   // "Annuler" entre-temps : on ne lance rien
+  }
+  var cap=setTimeout(go,25000);
+  SonaraPreload.ready(urls[0],go);
 }
 
 // ── DEEZER ──────────────────────────────────────────
@@ -569,7 +619,7 @@ function playPR(url,cb){
   var el=$('aud');clearInterval(window._apIv);$('apfill').style.width='0%';var ap0=$('ani-prog');if(ap0)ap0.style.width='0%';$('astatus').textContent='';
   if(!url){setEq(false);if(cb)setTimeout(cb,0);return;}
   var isLocal = url.indexOf('/audio/') === 0;
-  el.src=url;el.volume=.82;
+  el.src=SonaraPreload.get(url)||url;el.volume=.82;
   el.currentTime=0;
   el.load();
   var played=false;
@@ -1010,7 +1060,7 @@ function refreshTop(){
   .then(function(d){if(G.page==='s-res'&&d&&d.top)renderTop(d.top,true);})
   .catch(function(){});
 }
-function doReplay(){sfxC();buildQs();G.sc=0;G.cb=0;G.mx=1;G.cq=0;G.ans=false;G.history=[];G.foundA=false;G.foundT=false;G.pl.forEach(function(p){p.s=0;p.c=0;p.ans=false});showPage('s-game');setAM(G.amode);updateHdr();renderPstrip();doCD()}
+function doReplay(){sfxC();buildQs();SonaraPreload.want(G.qs.map(function(q){return q.preview;}));G.sc=0;G.cb=0;G.mx=1;G.cq=0;G.ans=false;G.history=[];G.foundA=false;G.foundT=false;G.pl.forEach(function(p){p.s=0;p.c=0;p.ans=false});showPage('s-game');setAM(G.amode);updateHdr();renderPstrip();doCD()}
 function doQuit(){
   // Confirmer si en pleine partie
   if(!G.ans && G.cq > 0){
@@ -1370,6 +1420,7 @@ function launchMultiGame(trackOrder) {
     G.pl = [{ id: G_MULTI.playerId, n: G.ps, av: '', s: 0, c: 0, me: true, ans: false }];
   }
   G.sc = 0; G.cb = 0; G.mx = 1; G.cq = 0; G.ans = false; G._multiIdx = 0;
+  SonaraPreload.want(G.qs.map(function(q){ return q.preview; }));
   showPage('s-game'); setAM('free'); updateHdr(); renderPstrip(); doCD();
 }
 
