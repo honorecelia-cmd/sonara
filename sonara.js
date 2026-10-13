@@ -42,7 +42,7 @@ var THEMES = {
     {t:'Wasn\'t meant to be',a:'Nu-Look',preview:'/audio/Nu_Look-Wasnt_meant_to_be.mp3',cover:''},
     {t:'À qui la faute',a:'Nu-Look',preview:'/audio/Nu_Look-A_qui_la_faute.mp3',cover:''},
     {t:'Mete\'m alez',a:'Daan Junior',preview:'/audio/Daan_Junior-Metem_alez.mp3',cover:''},
-    {t:'Pwomet mwen',a:'Carimi',preview:'/audio/Bedjine-Pwomet_mwen.mp3',cover:''},
+    {t:'Pwomet mwen',a:'Bedjine',preview:'/audio/Bedjine-Pwomet_mwen.mp3',cover:''},
     {t:'Fem voyé',a:'Joé Dwèt Filé',preview:'/audio/Joe_Dwet_File-Fem_voye.mp3',cover:''},
     {t:'Sensible à la gachette',a:'Carimi',preview:'/audio/Carimi-Sensible_a_la_gachette.mp3',cover:''},
     {t:'Fè la pli',a:'Mikaben',preview:'/audio/Mikaben-Fe_la_pli.mp3',cover:''},
