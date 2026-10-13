@@ -473,17 +473,9 @@ function startWhenReady(){
 }
 
 // ── DEEZER ──────────────────────────────────────────
-function dSearch(q,lim){
-  // Recherche Deezer uniquement via le proxy de notre serveur (/deezer) :
-  // aucun proxy public tiers.
-  return fetch('/deezer?q='+encodeURIComponent(q),{signal:AbortSignal.timeout(8000)})
-    .then(function(r){return r.json()})
-    .then(function(j){
-      var data=(j.data||[]).filter(function(t){return t.preview&&t.preview.length>5});
-      return data.slice(0,lim||5);
-    })
-    .catch(function(){return[];});
-}
+// Recherche Deezer fermee (route /deezer retiree du serveur) : tous les extraits
+// sont heberges sur le site ; sans resultat, le jeu prend les extraits de secours.
+function dSearch(q,lim){return Promise.resolve([]);}
 function fetchTracks(query){
   var parts=query.split(' OR ').map(function(s){return s.trim()});
   var all=[],seen={};

@@ -1,5 +1,4 @@
 const http = require('http');
-const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -117,17 +116,6 @@ function genCode() {
   let code = '';
   for (let i = 0; i < 4; i++) code += chars[crypto.randomInt(chars.length)];
   return rooms[code] ? genCode() : code;
-}
-
-function fetchDeezer(q, cb) {
-  const req = https.request({hostname:'api.deezer.com',path:'/search?q='+encodeURIComponent(q)+'&limit=5',method:'GET',headers:{'User-Agent':'Mozilla/5.0'}}, function(res) {
-    let data = '';
-    res.on('data', function(c){ data += c; });
-    res.on('end', function(){ try{ cb(null, JSON.parse(data)); }catch(e){ cb(e); } });
-  });
-  req.on('error', cb);
-  req.setTimeout(8000, function(){ req.destroy(); });
-  req.end();
 }
 
 const MAX_FRAME = 16384;
@@ -305,6 +293,9 @@ const server = http.createServer(function(req, res) {
     const code = p.pathname.slice(8).replace(/[^a-z0-9]/gi, '').slice(0, 12);
     const rec = store.data.customLinks[code];
     if (!rec) { sendJson(res, 404, {}); return; }
+    // Derniere utilisation (jour) : le lien est supprime 12 mois apres
+    const today = new Date().toISOString().slice(0, 10);
+    if (rec.used !== today) { rec.used = today; store.save(); }
     sendJson(res, 200, { theme: rec.theme, themeName: rec.themeName || '' });
     return;
   }
@@ -353,14 +344,6 @@ const server = http.createServer(function(req, res) {
     const th = p.query.theme ? slug(p.query.theme) : null;
     const list = th ? themeList(th) : store.data.leaderboard.slice().sort(function (a, b) { return b.score - a.score; });
     sendJson(res, 200, { top: publicTop(list), gamesPlayed: store.data.stats.gamesPlayed || 0 });
-    return;
-  }
-  if (p.pathname === '/deezer') {
-    res.setHeader('Content-Type', 'application/json');
-    fetchDeezer(p.query.q || '', function(err, data) {
-      if (err) { res.writeHead(500); res.end('{}'); return; }
-      res.writeHead(200); res.end(JSON.stringify(data));
-    });
     return;
   }
 
@@ -609,9 +592,24 @@ function applyRetraits() {
   console.log('[classement] retrait administratif : ' + (before - store.data.leaderboard.length) + ' score(s) supprime(s)');
 }
 
-purgeScores();
+// ── Liens Defi : supprimes 12 mois apres leur derniere utilisation ──
+// (creation, ou derniere ouverture du lien) ; meme purge quotidienne.
+function purgeLinks() {
+  var limit = new Date(); limit.setMonth(limit.getMonth() - 12);
+  var cutoff = limit.getTime(), links = store.data.customLinks || {}, removed = 0;
+  Object.keys(links).forEach(function (k) {
+    var e = links[k] || {}, last = Math.max(Number(e.at) || 0, e.used ? Date.parse(e.used) || 0 : 0);
+    if (!last) { e.at = Date.now(); return; }   // ancien format sans date : 12 mois a partir d'aujourd'hui
+    if (last < cutoff) { delete links[k]; removed++; }
+  });
+  if (removed) store.save();
+  return removed;
+}
+function dailyPurge() { purgeScores(); purgeLinks(); }
+
+dailyPurge();
 applyRetraits();
-setInterval(purgeScores, 24 * 60 * 60 * 1000).unref();
+setInterval(dailyPurge, 24 * 60 * 60 * 1000).unref();
 setInterval(applyRetraits, 5000).unref();
 
 module.exports = { purgeScores: purgeScores };
