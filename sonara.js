@@ -1084,6 +1084,7 @@ function submitScore(){
   if(!send){
     fetch('/leaderboard?theme='+encodeURIComponent(themeSlug())).then(function(r){return r.json();})
     .then(function(d){if(d&&d.top)renderTop(d.top,false);}).catch(function(){});
+    G._topRefresh=setTimeout(refreshTop,2500);   // scores des autres joueurs, envoyes au meme moment
     return;
   }
   var key=R?R.newKey():null;
@@ -1101,7 +1102,8 @@ function submitScore(){
 // Liste "Meilleurs scores" (reponse de /score ou de /leaderboard) ; fade :
 // fondu des lignes si la liste a change
 function renderTop(top,fade){
-  var gt=$('glb-top');if(!gt||!top||!top.length)return;
+  var gt=$('glb-top');if(!gt||!top)return;
+  if(!top.length){gt.innerHTML='';G._topHtml='';return;}   // classement vide (ex. apres suppression)
   var rows=top.map(function(e,i){
     var me=e.name===G.ps&&e.score===G.sc;
     return '<div class="glb-row'+(me?' me':'')+'"><span class="glb-rk">'+(i+1)+'</span>'+
