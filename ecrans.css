@@ -378,3 +378,34 @@
   #s-res .glb-top.is-refresh .glb-row,.rs-band .nb-giant,.rs-step,.rs-step--1 .sn-avatar,.rs-step--1 .rs-score,.rs-solo,.rs-rest,.rs-btns,.rs-after{animation:none}
   .rs-step--1 .sn-avatar{box-shadow:0 0 0 2px var(--accent)}
 }
+
+/* ── Donnees personnelles (rgpd.js) ──
+   Sous chaque champ son-nom : mention discrete et case « Apparaitre dans le
+   classement » (case native, teinte orange). Resultats : note si le score n'a
+   pas ete envoye, et « Supprimer mes scores » en lien discret avec confirmation. */
+.sn-rgpd{display:flex;flex-direction:column;gap:6px;margin:8px 4px 0}
+.pp .sn-rgpd{margin:8px 2px 0}
+.sn-rgpd-note{margin:0;font-family:var(--f-text);font-size:12.5px;line-height:1.4;color:var(--sn-muted-ink)}
+.sn-rgpd-opt{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:28px;cursor:pointer;
+  font-family:var(--f-text);font-size:13px;font-weight:500;color:var(--ink)}
+.sn-rgpd-cb{width:18px;height:18px;margin:0;flex:none;accent-color:var(--accent);cursor:pointer}
+.sn-rgpd-cb:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.rs-rgpd-note{margin:10px 0 0;font-size:13px;line-height:1.4;color:rgba(255,255,255,.75)}
+.rs-rgpd-note[hidden]{display:none}
+.sn-erase{font-family:var(--f-text)}
+.rs-erase{margin-top:12px}
+.sn-erase-btn{padding:4px 0;border:none;background:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;
+  color:inherit;text-decoration:underline;text-underline-offset:4px}
+.sn-erase-btn:hover{text-decoration-thickness:2px}
+.sn-erase-btn[hidden],.sn-erase-ask[hidden]{display:none}
+.sn-erase-ask p{margin:0 0 10px;font-size:13.5px;line-height:1.4}
+.sn-erase-row{display:flex;flex-wrap:wrap;gap:8px}
+.sn-erase-row button{height:38px;padding:0 18px;border:none;border-radius:999px;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:600}
+.sn-erase-msg{margin:6px 0 0;min-height:1.2em;font-size:13px;line-height:1.4}
+.rs-erase{color:rgba(255,255,255,.85)}
+.rs-erase .sn-erase-yes{background:var(--cream);color:var(--ink)}
+.rs-erase .sn-erase-yes:hover{background:var(--sn-white)}
+.rs-erase .sn-erase-no{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
+.rs-erase .sn-erase-no:hover{background:rgba(255,255,255,.12)}
+.sn-erase button:focus-visible{outline:2px solid currentColor;outline-offset:2px}

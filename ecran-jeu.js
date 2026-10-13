@@ -183,7 +183,7 @@
   });
   new MutationObserver(function(){
     [].forEach.call($('lobby-players').children,function(li){
-      var id=li.getAttribute('data-id');
+      var id=li.getAttribute('data-name')||li.getAttribute('data-id');   // son-nom : stable avant et apres l'entree
       if(!seen[id]){seen[id]=1;li.classList.add('is-new');}
     });
   }).observe($('lobby-players'),{childList:true});
