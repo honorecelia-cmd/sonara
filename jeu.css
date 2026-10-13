@@ -290,6 +290,15 @@
 .jg.jg-typing .jg-q,.jg.jg-typing .jg-bar,.jg.jg-typing .jg-times,.jg.jg-typing .jg-chat{display:none}
 .jg.jg-typing .jg-live,.jg.jg-typing .wmsg{display:none !important}
 html.jg-lock,html.jg-lock body{overflow:hidden;overscroll-behavior:none}
+/* Clavier ouvert : le gain de points ne monte plus (la ligne du minuteur le
+   couperait) ; il apparait en entier dans la ligne des puces, a droite, puis s'efface */
+.jg.jg-typing .spop{bottom:3px;line-height:24px;animation-name:jg-pfade}
+@keyframes jg-pfade{
+  0%{opacity:0;transform:translateX(-50%) scale(.85)}
+  15%{opacity:1;transform:translateX(-50%) scale(1)}
+  75%{opacity:1;transform:translateX(-50%) scale(1)}
+  100%{opacity:0;transform:translateX(-50%) scale(1)}
+}
 
 /* ── Ordinateur : deux colonnes, marges de la landing ── */
 @media (min-width:1100px){
