@@ -471,7 +471,7 @@
           <p class="nb-ft-h">Explorer</p>
           <a href="#univers">Univers</a>
           <a href="#comment-jouer">Comment jouer</a>
-          <button type="button" class="nb-ft-linkbtn" onclick="showDefi()">Défi à partager</button>
+          <button type="button" class="nb-ft-linkbtn" data-on="showDefi">Défi à partager</button>
         </nav>
         <div class="nb-ft-col nb-ft-follow">
           <p class="nb-ft-h">Suivez-nous</p>
@@ -531,7 +531,7 @@
           <div class="sn-input"><input id="sn-name" type="text" maxlength="16" autocomplete="off" autocapitalize="words" spellcheck="false" aria-label="Ton son-nom, de 2 à 16 caractères" aria-describedby="sn-hint sn-count"></div>
           <button class="sn-btn sn-btn--ghost" type="button" id="sn-random">Au hasard</button>
         </div>
-        <p class="pc-meta"><span id="sn-hint" aria-live="polite"></span><span class="pc-count" id="sn-count">0/16</span></p>
+        <p class="pc-meta" id="sn-meta"><span id="sn-hint" aria-live="polite"></span><span class="pc-count" id="sn-count">0/16</span></p>
         <div class="pc-modes">
           <div class="pc-modes-head">
             <span id="sn-modes-lbl">Mode de jeu</span>
@@ -815,7 +815,9 @@
     </div>
     </div>
     <!-- Colonne de droite (ordinateur) : meilleurs scores de l'univers -->
-    <aside class="rs-side"><div class="glb-top" id="glb-top"></div></aside>
+    <aside class="rs-side"><div class="glb-top" id="glb-top"></div>
+      <p class="rs-rgpd-note" id="rs-rgpd-note" hidden>Ton score n'a pas été envoyé au classement.</p>
+      <div class="sn-erase rs-erase" id="rs-erase"></div></aside>
     <!-- Filigrane : grand logo du hero (.nb-giant), cale en bas sous tout le
          contenu (jamais derriere un texte ou un bouton), rogne par le bas -->
     <div class="rs-band" aria-hidden="true"><img class="nb-giant" src="/img/logo_sonara.svg" alt=""></div>
@@ -830,7 +832,7 @@
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
-    <button class="jg-quit" type="button" onclick="showPage('s-res')">Retour</button>
+    <button class="jg-quit" type="button" data-on="page" data-arg="s-res">Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">
@@ -838,20 +840,20 @@
       <p class="pp-lede">Envoie ce lien à tes proches : chacun joue quand il veut, sur ton univers.</p>
       <div class="pc-card">
         <p class="pp-k">Ton lien</p>
-        <div class="pp-link"><a id="defi-link" href="#" target="_blank" rel="noopener">Génération du lien…</a><button class="sn-btn" id="defi-copy" type="button" onclick="copyDefiLink()">Copier</button></div>
-        <div class="pp-actions"><button class="sn-btn" id="defi-share" type="button" onclick="shareDefiLink()">Partager</button></div>
+        <div class="pp-link"><a id="defi-link" href="#" target="_blank" rel="noopener">Génération du lien…</a><button class="sn-btn" id="defi-copy" type="button" data-on="copyDefiLink">Copier</button></div>
+        <div class="pp-actions"><button class="sn-btn" id="defi-share" type="button" data-on="shareDefiLink">Partager</button></div>
         <div class="pp-block" style="margin-top:18px">
           <p class="pp-k">Ou joue tout de suite en solo</p>
           <div class="pp-pills">
-            <button class="pp-pill" type="button" style="--pp-u:var(--univers-kompa)" onclick="selectSoloTheme('kompa')">Kompa</button>
-            <button class="pp-pill" type="button" style="--pp-u:var(--univers-zouk)" onclick="selectSoloTheme('zouk')">Zouk</button>
-            <button class="pp-pill" type="button" style="--pp-u:var(--univers-mix)" onclick="selectSoloTheme('mix')">Mix</button>
-            <button class="pp-pill" type="button" style="--pp-u:var(--univers-reggae)" onclick="selectSoloTheme('reggae')">Reggae</button>
-            <button class="pp-pill" type="button" style="--pp-u:var(--univers-dancehall)" onclick="selectSoloTheme('dancehall')">Dancehall</button>
-            <button class="pp-pill" type="button" style="--pp-u:var(--univers-soca)" onclick="selectSoloTheme('soca')">Soca</button>
-            <button class="pp-pill" type="button" style="--pp-u:var(--univers-shatta)" onclick="selectSoloTheme('shatta')">Shatta</button>
-            <button class="pp-pill" type="button" style="--pp-u:var(--univers-trap)" onclick="selectSoloTheme('trap')">Trap</button>
-            <button class="pp-pill" type="button" style="--pp-u:var(--univers-rap)" onclick="selectSoloTheme('rap')">Rap</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-kompa)" data-on="soloTheme" data-arg="kompa">Kompa</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-zouk)" data-on="soloTheme" data-arg="zouk">Zouk</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-mix)" data-on="soloTheme" data-arg="mix">Mix</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-reggae)" data-on="soloTheme" data-arg="reggae">Reggae</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-dancehall)" data-on="soloTheme" data-arg="dancehall">Dancehall</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-soca)" data-on="soloTheme" data-arg="soca">Soca</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-shatta)" data-on="soloTheme" data-arg="shatta">Shatta</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-trap)" data-on="soloTheme" data-arg="trap">Trap</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-rap)" data-on="soloTheme" data-arg="rap">Rap</button>
           </div>
         </div>
       </div>
@@ -871,7 +873,7 @@
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
-    <button class="jg-quit" type="button" onclick="showPage('landing')">Retour</button>
+    <button class="jg-quit" type="button" data-on="page" data-arg="landing">Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">
@@ -880,25 +882,25 @@
         <p class="pp-me" id="pp-create-me" hidden>Tu joues en tant que <b id="pp-create-me-name"></b> · <button type="button" id="pp-create-change-name">Changer</button></p>
         <div class="pp-block" id="pp-create-name" hidden>
           <label class="pp-k" for="multi-pseudo">Ton son-nom</label>
-          <div class="pp-field"><input id="multi-pseudo" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton son-nom"></div>
+          <div class="pp-field" id="multi-pseudo-field"><input id="multi-pseudo" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton son-nom"></div>
         </div>
         <p class="pp-me" id="pp-create-uni" hidden><span class="pp-dot" id="pp-create-dot"></span>Univers : <b id="pp-create-uni-name"></b> · <button type="button" id="pp-create-change-uni">Changer</button></p>
         <div class="pp-block" id="pp-create-pills" hidden>
           <p class="pp-k" id="pp-create-univ">Choisis un univers pour ta salle.</p>
           <div class="pp-pills" id="create-theme-grid" role="group" aria-labelledby="pp-create-univ">
-          <button class="tc t-mix" type="button" style="--pp-u:var(--univers-mix)" onclick="selectMultiTheme('mix',this)"><span class="tn">Mix</span></button>
-          <button class="tc t-zouk" type="button" style="--pp-u:var(--univers-zouk)" onclick="selectMultiTheme('zouk',this)"><span class="tn">Zouk</span></button>
-          <button class="tc t-kompa" type="button" style="--pp-u:var(--univers-kompa)" onclick="selectMultiTheme('kompa',this)"><span class="tn">Kompa</span></button>
-          <button class="tc t-reggae" type="button" style="--pp-u:var(--univers-reggae)" onclick="selectMultiTheme('reggae',this)"><span class="tn">Reggae</span></button>
-          <button class="tc t-dancehall" type="button" style="--pp-u:var(--univers-dancehall)" onclick="selectMultiTheme('dancehall',this)"><span class="tn">Dancehall</span></button>
-          <button class="tc t-soca" type="button" style="--pp-u:var(--univers-soca)" onclick="selectMultiTheme('soca',this)"><span class="tn">Soca</span></button>
-          <button class="tc t-shatta" type="button" style="--pp-u:var(--univers-shatta)" onclick="selectMultiTheme('shatta',this)"><span class="tn">Shatta</span></button>
-          <button class="tc t-trap" type="button" style="--pp-u:var(--univers-trap)" onclick="selectMultiTheme('trap',this)"><span class="tn">Trap</span></button>
-          <button class="tc t-rap" type="button" style="--pp-u:var(--univers-rap)" onclick="selectMultiTheme('rap',this)"><span class="tn">Rap</span></button>
+          <button class="tc t-mix" type="button" style="--pp-u:var(--univers-mix)" data-on="multiTheme" data-arg="mix"><span class="tn">Mix</span></button>
+          <button class="tc t-zouk" type="button" style="--pp-u:var(--univers-zouk)" data-on="multiTheme" data-arg="zouk"><span class="tn">Zouk</span></button>
+          <button class="tc t-kompa" type="button" style="--pp-u:var(--univers-kompa)" data-on="multiTheme" data-arg="kompa"><span class="tn">Kompa</span></button>
+          <button class="tc t-reggae" type="button" style="--pp-u:var(--univers-reggae)" data-on="multiTheme" data-arg="reggae"><span class="tn">Reggae</span></button>
+          <button class="tc t-dancehall" type="button" style="--pp-u:var(--univers-dancehall)" data-on="multiTheme" data-arg="dancehall"><span class="tn">Dancehall</span></button>
+          <button class="tc t-soca" type="button" style="--pp-u:var(--univers-soca)" data-on="multiTheme" data-arg="soca"><span class="tn">Soca</span></button>
+          <button class="tc t-shatta" type="button" style="--pp-u:var(--univers-shatta)" data-on="multiTheme" data-arg="shatta"><span class="tn">Shatta</span></button>
+          <button class="tc t-trap" type="button" style="--pp-u:var(--univers-trap)" data-on="multiTheme" data-arg="trap"><span class="tn">Trap</span></button>
+          <button class="tc t-rap" type="button" style="--pp-u:var(--univers-rap)" data-on="multiTheme" data-arg="rap"><span class="tn">Rap</span></button>
           </div>
         </div>
         <div class="pp-actions">
-          <button class="sn-btn" id="btn-create-room" type="button" style="opacity:.5;pointer-events:none" onclick="createRoom()">Créer la salle</button>
+          <button class="sn-btn" id="btn-create-room" type="button" style="opacity:.5;pointer-events:none" data-on="createRoom">Créer la salle</button>
         </div>
         <p class="pp-msg" id="pp-create-msg" aria-live="polite"></p>
       </div>
@@ -915,7 +917,7 @@
   <div class="pp-bg" aria-hidden="true"><div class="nb-hero-bg"></div><div class="nb-grain"></div></div>
   <div class="pp-top">
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
-    <button class="pc-back" type="button" onclick="showPage(G.prevPage==='s-parcours'?'s-parcours':'landing')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
+    <button class="pc-back" type="button" data-on="joinBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour</button>
   </div>
   <div class="pp-grid">
     <div class="pp-main">
@@ -924,7 +926,7 @@
         <p class="pp-me" id="pp-join-me" hidden>Tu joues en tant que <b id="pp-join-me-name"></b> · <button type="button" id="pp-join-change">Changer</button></p>
         <div class="pp-block" id="pp-join-name" hidden>
           <label class="pp-k" for="join-pseudo">Ton son-nom</label>
-          <div class="pp-field"><input id="join-pseudo" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton son-nom"></div>
+          <div class="pp-field" id="join-pseudo-field"><input id="join-pseudo" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton son-nom"></div>
         </div>
         <div class="pp-block">
           <label class="pp-k" for="join-code">Code de la salle</label>
@@ -933,7 +935,7 @@
           <button class="sn-btn sn-btn--ghost pp-join-create" id="join-create" type="button" hidden>Créer ma propre salle</button>
         </div>
         <div class="pp-actions">
-          <button class="sn-btn bgo" type="button" onclick="joinRoom()" disabled>Rejoindre</button>
+          <button class="sn-btn bgo" type="button" data-on="joinRoom" disabled>Rejoindre</button>
         </div>
       </div>
     </div>
@@ -947,7 +949,7 @@
   <header class="jg-top">
     <img class="jg-logo" src="/img/logo_sonara.svg" alt="Sonara">
     <p class="pc-step jg-step">Salle de jeu</p>
-    <button class="jg-quit" type="button" onclick="leaveRoom();showPage('landing')">Quitter</button>
+    <button class="jg-quit" type="button" data-on="leaveHome">Quitter</button>
   </header>
   <div class="jg-lobby-grid">
     <div class="jg-lobby-main">
@@ -955,11 +957,11 @@
       <p class="jg-k">Code de la salle</p>
       <div class="jg-code" id="lobby-code">····</div>
       <div class="jg-code-btns">
-        <button class="sn-btn sn-btn--ghost" id="btn-copy-code" type="button" onclick="copyLobbyCode()">Copier le code</button>
+        <button class="sn-btn sn-btn--ghost" id="btn-copy-code" type="button" data-on="copyLobbyCode">Copier le code</button>
         <button class="sn-btn sn-btn--ghost" id="jg-invite" type="button">Inviter</button>
       </div>
       <div class="jg-lobby-act" id="lobby-host-actions" style="display:none">
-        <button class="sn-btn sn-btn--block" id="btn-start-multi" type="button" onclick="startMultiGame()" disabled>En attente de joueurs...</button>
+        <button class="sn-btn sn-btn--block" id="btn-start-multi" type="button" data-on="startMultiGame" disabled>En attente de joueurs...</button>
         <p class="jg-hint">Il faut au moins 2 joueurs dans la salle pour lancer la partie.</p>
       </div>
       <div class="jg-lobby-act" id="lobby-guest-msg" style="display:none">
@@ -975,6 +977,7 @@
 </section>
 
 <script src="/sonara.js"></script>
+<script src="/rgpd.js"></script>
 <script src="/landing.js"></script>
 <script src="/univers.js"></script>
 <script src="/sonara-kit.js"></script>

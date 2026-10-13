@@ -260,7 +260,10 @@ function notif(txt){
   setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .4s'},2600);
   setTimeout(function(){el.remove()},3100);
 }
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+// Texte sur dans du HTML et dans un attribut entre guillemets
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+// Selecteur d'attribut sur, quel que soit le son-nom
+function byName(sel,n){var v=String(n).replace(/["\\]/g,'\\$&');return document.querySelector(sel+'[data-n="'+v+'"]');}
 
 // ── SFX ─────────────────────────────────────────────
 var _ac;
@@ -833,7 +836,7 @@ function tryGuess(v,byUser){
     $('ani').disabled=true;$('vbtn').disabled=true;
     var sb=$('skipbtn');if(sb)sb.style.display='none';
     var me=G.pl.filter(function(p){return p.me})[0];if(me)me.ans=true;
-    var chip=document.querySelector('.pchip[data-n="'+G.ps+'"]');if(chip)chip.classList.add('ans');
+    var chip=byName('.pchip',G.ps);if(chip)chip.classList.add('ans');
     updateHdr();renderPstrip();
     if(WS&&WS.readyState===1&&G_MULTI.code){
       WS.send(JSON.stringify({type:'answer',points:0,done:true,index:G.cq}));
@@ -911,7 +914,7 @@ function doSub(v,byUser,src){
   var sb=$('skipbtn');if(sb)sb.style.display='none';
   if(!G.foundA&&!G.foundT){G.cb=0;G.mx=1;}
   var me2=G.pl.filter(function(p){return p.me})[0];if(me2)me2.ans=true;
-  var chip=document.querySelector('.pchip[data-n="'+G.ps+'"]');if(chip)chip.classList.add('ans');
+  var chip=byName('.pchip',G.ps);if(chip)chip.classList.add('ans');
   updateHdr();renderPstrip();
   if(WS&&WS.readyState===1&&G_MULTI.code){
     WS.send(JSON.stringify({type:'answer',points:0,done:true,index:G.cq}));
@@ -939,7 +942,7 @@ function simBots(dur){
       setTimeout(function(){
         if(G.page!=='s-game')return;
         b.s+=Math.max(50,Math.round((1-dl/(dur*1000))*1000*(1+Math.random()*.4)));b.c=(b.c||0)+1;b.ans=true;
-        var chip=document.querySelector('.pchip[data-n="'+b.n+'"]');if(chip)chip.classList.add('ans');
+        var chip=byName('.pchip',b.n);if(chip)chip.classList.add('ans');
         renderPstrip();
       },dl);
     }
@@ -958,7 +961,7 @@ function updateHdr(){var ft=document.getElementById("fig-theme-title");if(ft&&G.
 }
 function renderPstrip(){
   $('pstrip').innerHTML=G.pl.map(function(p){
-    return '<div class="pchip'+(p.me?' me':'')+(p.ans?' ans':'')+'" data-n="'+esc(p.n)+'">'+'<span>'+ini(p.n)+'</span><span>'+(p.n.length>8?p.n.slice(0,7)+'…':p.n)+'</span><span class="cp">'+(p.me?G.sc:p.s)+'</span></div>';
+    return '<div class="pchip'+(p.me?' me':'')+(p.ans?' ans':'')+'" data-n="'+esc(p.n)+'">'+'<span>'+esc(ini(p.n))+'</span><span>'+esc(p.n.length>8?p.n.slice(0,7)+'…':p.n)+'</span><span class="cp">'+(p.me?G.sc:p.s)+'</span></div>';
   }).join('');
   var lr=$('live-rank');
   if(!lr)return;
@@ -1070,15 +1073,27 @@ function doResults(){
   submitScore();
 }
 // ── Classement persistant : enregistre le score et affiche le top ──
+// Case « Apparaitre dans le classement » decochee (rgpd.js) : aucun envoi, le
+// classement est seulement lu. Cochee : un code d'effacement accompagne le
+// score ; il est oublie si le score n'entre pas dans le top 10.
 function submitScore(){
   var gt=$('glb-top');if(gt)gt.innerHTML='';
   G._topHtml='';clearTimeout(G._topRefresh);
+  var R=window.SonaraRgpd,send=!R||R.optIn(),note=$('rs-rgpd-note');
+  if(note)note.hidden=send;
+  if(!send){
+    fetch('/leaderboard?theme='+encodeURIComponent(themeSlug())).then(function(r){return r.json();})
+    .then(function(d){if(d&&d.top)renderTop(d.top,false);}).catch(function(){});
+    return;
+  }
+  var key=R?R.newKey():null;
   fetch('/score',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({name:G.ps,score:G.sc,theme:themeSlug()})})
+    body:JSON.stringify({name:G.ps,score:G.sc,theme:themeSlug(),key:key})})
   .then(function(r){return r.json();})
   .then(function(d){
+    if(key&&!(d&&d.saved))R.dropKey(key);
     if(d&&d.top)renderTop(d.top,false);
-  }).catch(function(){});
+  }).catch(function(){if(key)R.dropKey(key);});
   // Les autres joueurs envoient leur score au meme moment : la liste recue
   // ci-dessus peut ne pas les contenir encore. On la recharge 2,5 s plus tard.
   G._topRefresh=setTimeout(refreshTop,2500);
@@ -1098,11 +1113,11 @@ function renderTop(top,fade){
   if(fade){gt.classList.remove('is-refresh');void gt.offsetWidth;gt.classList.add('is-refresh');}
 }
 // Rechargement de la liste (lecture seule), seulement si l'ecran de resultats est encore affiche
-function refreshTop(){
+function refreshTop(fade){
   if(G.page!=='s-res')return;
   fetch('/leaderboard?theme='+encodeURIComponent(themeSlug()))
   .then(function(r){return r.json();})
-  .then(function(d){if(G.page==='s-res'&&d&&d.top)renderTop(d.top,true);})
+  .then(function(d){if(G.page==='s-res'&&d&&d.top)renderTop(d.top,fade!==false);})
   .catch(function(){});
 }
 function doReplay(){sfxC();buildQs();SonaraPreload.want(G.qs.map(function(q){return q.preview;}));G.sc=0;G.cb=0;G.mx=1;G.cq=0;G.ans=false;G.history=[];G.foundA=false;G.foundT=false;G.pl.forEach(function(p){p.s=0;p.c=0;p.ans=false});showPage('s-game');setAM(G.amode);updateHdr();renderPstrip();doCD()}
@@ -1192,7 +1207,7 @@ function shareDefiLink(){
   if(!m)return;
   var code=m[1].toUpperCase();
   try{history.replaceState(null,'',location.pathname+location.hash);}catch(e){}
-  var info=fetch('/room/info?code='+code).then(function(r){return r.ok?r.json():null;});
+  var info=fetch('/room/info',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})}).then(function(r){return r.ok?r.json():null;});
   function show(fn){
     fn();
     document.documentElement.classList.remove('sn-invite');
@@ -1222,11 +1237,32 @@ function shareDefiLink(){
   }).catch(function(){});
 })();
 
+// ── Boutons du HTML (data-on) : aucun gestionnaire en ligne, la CSP interdit
+// les scripts dans les attributs ──
+(function(){
+  var ON={
+    multiTheme:function(a,el){selectMultiTheme(a,el);},
+    soloTheme:function(a){selectSoloTheme(a);},
+    page:function(a){showPage(a);},
+    leaveHome:function(){leaveRoom();showPage('landing');},
+    joinBack:function(){showPage(G.prevPage==='s-parcours'?'s-parcours':'landing');},
+    copyDefiLink:function(){copyDefiLink();},shareDefiLink:function(){shareDefiLink();},showDefi:function(){showDefi();},
+    copyLobbyCode:function(){copyLobbyCode();},createRoom:function(){createRoom();},joinRoom:function(){joinRoom();},
+    startMultiGame:function(){startMultiGame();}
+  };
+  document.addEventListener('click',function(e){
+    var el=e.target&&e.target.closest&&e.target.closest('[data-on]');
+    if(!el||el.disabled)return;
+    var f=ON[el.getAttribute('data-on')];
+    if(f)f(el.getAttribute('data-arg'),el);
+  });
+})();
+
 // ── Compteur "en ligne" reel ──
 (function(){
-  var id=Math.random().toString(36).slice(2)+Date.now().toString(36);
+  var id=Math.random().toString(36).slice(2,10)+Date.now().toString(36);
   function tick(){
-    fetch('/ping?id='+id).then(function(r){return r.json();}).then(function(d){
+    fetch('/ping',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){return r.json();}).then(function(d){
       var n=Math.max(1,d.online||1);
       document.querySelectorAll('.online-count').forEach(function(e){
         e.textContent=n+(e.dataset.short?' en ligne':' joueur'+(n>1?'s':'')+' en ligne');
@@ -1287,7 +1323,17 @@ var WS = null;
 var G_MULTI = { code: null, playerId: null, isHost: false, theme: null };
 
 function genPlayerId() {
-  return 'p' + Math.random().toString(36).substr(2, 9);
+  var b = new Uint8Array(12); crypto.getRandomValues(b);
+  return 'p' + Array.prototype.map.call(b, function(x){ return ('0' + x.toString(16)).slice(-2); }).join('');
+}
+// Son-nom verifie par le serveur avant d'entrer en salle ; refuse : message sous le champ
+function nameThen(name, field, msgEl, go) {
+  if (!window.SonaraRgpd) { go(name); return; }
+  SonaraRgpd.checkName(name).then(function(r) {
+    if (r.ok) { go(r.name); return; }
+    if (field) field.style.borderColor = 'var(--red)';
+    if (msgEl) { msgEl.textContent = r.message; msgEl.style.display = 'block'; }
+  });
 }
 
 function selectMultiTheme(key, el) {
@@ -1302,10 +1348,13 @@ function createRoom() {
   var pseudo = document.getElementById('multi-pseudo').value.trim();
   if (!pseudo) { document.getElementById('multi-pseudo').style.borderColor='var(--red)'; return; }
   if (!G_MULTI.theme) { return; }
+  unlockAudio();
+  nameThen(pseudo, document.getElementById('multi-pseudo'), document.getElementById('pp-create-msg'), createRoomAs);
+}
+function createRoomAs(pseudo) {
   G_MULTI.playerId = genPlayerId();
   G_MULTI.isHost = true;
   G.ps = pseudo;
-  unlockAudio();
   fetch('/room/create', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1330,16 +1379,21 @@ function joinRoom() {
   var code = document.getElementById('join-code').value.trim().toUpperCase();
   if (!pseudo) { document.getElementById('join-pseudo').style.borderColor='var(--red)'; return; }
   if (code.length !== 4) { document.getElementById('join-code').style.borderColor='var(--red)'; return; }
+  unlockAudio();
+  var errMsg0 = document.getElementById('join-error');
+  if (errMsg0) errMsg0.style.display = 'none';
+  nameThen(pseudo, document.getElementById('join-pseudo'), errMsg0, function(name){ joinRoomAs(name, code); });
+}
+function joinRoomAs(pseudo, code) {
   G_MULTI.playerId = genPlayerId();
   G_MULTI.isHost = false;
   G_MULTI.code = code;
   G.ps = pseudo;
-  unlockAudio();
   var btn = document.querySelector('#s-join .bgo');
   if(btn) { btn.disabled=true; btn.textContent='Vérification…'; }
   var errMsg = document.getElementById('join-error');
   if(errMsg) errMsg.style.display='none';
-  fetch('/room/info?code=' + code)
+  fetch('/room/info',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})})
   .then(function(r) {
     if (!r.ok) throw new Error('introuvable');
     return r.json();
@@ -1347,8 +1401,11 @@ function joinRoom() {
   .then(function(data) {
     if (data.started) { G_MULTI.code = null; showJoinError('started'); return; }
     G_MULTI.theme = data.theme;
-    G_MULTI.host = data.host;
-    G_MULTI.players = data.players || [];
+    // /room/info ne donne que les son-noms : identifiants provisoires, remplaces
+    // par la liste du serveur des l'entree dans la salle
+    G_MULTI.host = null;
+    G_MULTI.hostName = data.hostName || '';
+    G_MULTI.players = (data.players || []).map(function(p, i){ return { id: 'info' + i, name: p.name, score: 0 }; });
     setLobbyWait();
     document.getElementById('lobby-code').textContent = code;
     showPage('s-lobby');
@@ -1363,9 +1420,9 @@ var JOIN_ERRORS = {
   missing: 'Aucune salle ne porte ce code. Vérifie-le auprès de la personne qui t\'invite.',
   started: 'La partie a déjà commencé dans cette salle. Demande le lien à l\'hôte pour la partie suivante, ou crée ta propre salle.'
 };
-function showJoinError(kind) {
+function showJoinError(kind, text) {
   var errMsg = document.getElementById('join-error');
-  if(errMsg) { errMsg.textContent = JOIN_ERRORS[kind] || JOIN_ERRORS.missing; errMsg.style.display='block'; }
+  if(errMsg) { errMsg.textContent = text || JOIN_ERRORS[kind] || JOIN_ERRORS.missing; errMsg.style.display='block'; }
   var mk = document.getElementById('join-create'); if (mk) mk.hidden = false;
   var btn = document.querySelector('#s-join .bgo');
   if(btn) { btn.disabled=false; btn.textContent='Rejoindre'; }
@@ -1374,12 +1431,14 @@ function showJoinError(kind) {
 
 function connectWS(code) {
   var proto = location.protocol === 'https:' ? 'wss' : 'ws';
-  var wsUrl = proto + '://' + location.host + '/ws?code=' + code +
-    '&id=' + G_MULTI.playerId + '&name=' + encodeURIComponent(G.ps);
-  WS = new WebSocket(wsUrl);
+  WS = new WebSocket(proto + '://' + location.host + '/ws');
   WS.onmessage = function(e) {
     var msg = JSON.parse(e.data);
-    if (msg.type === 'join_refused') { leaveRoom(); showJoinError('started'); return; }
+    if (msg.type === 'join_refused') {
+      leaveRoom();
+      if (msg.reason === 'name') { showJoinError('name', window.SonaraRgpd && SonaraRgpd.message(msg.detail)); return; }
+      showJoinError(msg.reason === 'started' ? 'started' : 'missing'); return;
+    }
     if (msg.type === 'host_choosing' || msg.type === 'host_choosing_end') {
       if (window.SonaraGroupe) SonaraGroupe.choosing(msg.type === 'host_choosing');
       return;
@@ -1427,6 +1486,7 @@ function connectWS(code) {
     }
   };
   WS.onopen = function() {
+    WS.send(JSON.stringify({ type: 'join', code: code, id: G_MULTI.playerId, name: G.ps }));
     // Joueurs deja dans la salle (invite) + soi, en attendant la liste du serveur
     var known = (G_MULTI.players || []).filter(function(p){ return p.id !== G_MULTI.playerId; });
     renderLobbyPlayers(known.concat([{ id: G_MULTI.playerId, name: G.ps, score: 0 }]));
@@ -1438,7 +1498,7 @@ function inRoom() { return !!(G_MULTI.code && WS && WS.readyState === 1); }
 function leaveRoom() {
   var ws = WS; WS = null;
   if (ws) { ws.onmessage = null; try { ws.close(); } catch(e) {} }
-  G_MULTI.code = null; G_MULTI.isHost = false; G_MULTI.host = null; G_MULTI.players = [];
+  G_MULTI.code = null; G_MULTI.isHost = false; G_MULTI.host = null; G_MULTI.hostName = ''; G_MULTI.players = [];
 }
 // L'hote est parti : le serveur designe un autre joueur
 function setHost(isHost) {
@@ -1480,8 +1540,8 @@ function backToLobby(msg) {
 function renderLobbyPlayers(players) {
   var html = players.map(function(p) {
     var me = p.id === G_MULTI.playerId;
-    return '<li class="jg-player' + (me ? ' is-me' : '') + '" data-id="' + esc(p.id) + '">' +
-      '<span class="sn-avatar' + (me ? '' : ' sn-avatar--d') + '" aria-hidden="true">' + ini(p.name) + '</span>' +
+    return '<li class="jg-player' + (me ? ' is-me' : '') + '" data-id="' + esc(p.id) + '" data-name="' + esc(p.name) + '">' +
+      '<span class="sn-avatar' + (me ? '' : ' sn-avatar--d') + '" aria-hidden="true">' + esc(ini(p.name)) + '</span>' +
       '<b>' + esc(p.name) + (me ? ' (toi)' : '') + '</b>' +
       (p.id === G_MULTI.host ? '<em>Hôte</em>' : '') +
       '</li>';
@@ -1494,7 +1554,8 @@ function renderLobbyPlayers(players) {
 function setLobbyWait(players) {
   var all = (players || []).concat(G_MULTI.players || []);
   var host = all.filter(function(p){ return p.id === G_MULTI.host; })[0];
-  document.getElementById('lobby-wait-t').textContent = (host ? host.name : 'L\'hôte') + ' va lancer la partie';
+  var hn = host ? host.name : G_MULTI.hostName;
+  document.getElementById('lobby-wait-t').textContent = (hn || 'L\'hôte') + ' va lancer la partie';
 }
 // Hote seul : "Inviter" en bouton principal ; des 2 joueurs : "Lancer la partie"
 function lobbyButtons(n) {

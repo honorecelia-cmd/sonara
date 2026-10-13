@@ -116,4 +116,9 @@
   // Page de politique de confidentialite : bouton seul
   var page=document.getElementById('rgpd-erase');
   if(page)eraser(page);
+  // Ecran de resultats : bouton sous le classement, qui se recharge apres suppression
+  var res=document.getElementById('rs-erase');
+  if(res)eraser(res,function(){if(typeof window.refreshTop==='function')window.refreshTop(true);});
+  // Champs son-nom : parcours (solo, salle, invitation), Creer une salle, Rejoindre
+  ['sn-meta','multi-pseudo-field','join-pseudo-field'].forEach(function(id){mount(document.getElementById(id));});
 })();

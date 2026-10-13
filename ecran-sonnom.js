@@ -41,7 +41,7 @@
   var modeBtns=[].slice.call(scr.querySelectorAll('[data-sn-mode]'));
   var STORE='sonara-son-nom', MAX=16;
   var PREFIXES=['Mister','Miss','Reine du','Roi du','DJ'];
-  var showError=false;
+  var showError=false, serverMsg='', checkT=0;
 
   // Espaces en trop supprimes, caracteres de controle retires
   function clean(v){return String(v||'').replace(/[\u0000-\u001F\u007F]/g,'').replace(/\s+/g,' ').trim();}
@@ -57,10 +57,23 @@
     play.disabled=!ok;
     count.textContent=n+'/'+MAX;
     inp.setAttribute('aria-invalid',String(showError));
-    hint.classList.toggle('is-error',showError);
-    hint.textContent=showError?'2 caractères minimum.':'';
+    hint.classList.toggle('is-error',showError||!!serverMsg);
+    hint.textContent=serverMsg||(showError?'2 caractères minimum.':'');
   }
-  inp.addEventListener('input',check);
+  // Verification par le serveur pendant la saisie (forme, termes refuses) :
+  // le resultat est garde, l'envoi du formulaire n'attend donc presque jamais
+  function precheck(){
+    clearTimeout(checkT);
+    var v=clean(inp.value);
+    if(!valid(v)||!window.SonaraRgpd)return;
+    checkT=setTimeout(function(){
+      SonaraRgpd.checkName(v).then(function(r){
+        if(clean(inp.value)!==v)return;
+        serverMsg=r.ok?'':r.message;check();
+      });
+    },350);
+  }
+  inp.addEventListener('input',function(){serverMsg='';check();precheck();});
   inp.addEventListener('blur',function(){
     var v=clean(inp.value);
     if(v!==inp.value)inp.value=v;
@@ -150,8 +163,8 @@
     if(!clean(inp.value))inp.value=load();
     var ex=EXEMPLES[u.slug]||EXEMPLES.mix;
     inp.placeholder='Ex. '+ex[Math.floor(Math.random()*ex.length)];
-    showError=false;
-    check();
+    showError=false;serverMsg='';
+    check();precheck();
     // L'aplat et le nom geant restent : on ne change que l'etape
     F.setIndexFor(flow.theme);
     scr.setAttribute('data-step','2');
@@ -169,8 +182,24 @@
       inp.focus();
       return;
     }
-    save(v);
-    launch(v);
+    // Dernier toucher avant la partie : le son est debloque maintenant (iPhone),
+    // avant la verification du son-nom par le serveur
+    if(typeof unlockAudio==='function')unlockAudio();
+    var R=window.SonaraRgpd;
+    function go(r){
+      if(!r.ok){
+        serverMsg=r.message;check();
+        if(window.SonaraKit)SonaraKit.shake(inp.parentNode);
+        inp.focus();
+        return;
+      }
+      inp.value=r.name;save(r.name);launch(r.name);
+    }
+    if(!R){save(v);launch(v);return;}
+    var known=R.cached(v);
+    if(known){go(known);return;}
+    play.disabled=true;
+    R.checkName(v).then(function(r){check();go(r);});
   });
 
   // "J'ai un code de salle" : ecran Rejoindre existant, son-nom deja rempli
