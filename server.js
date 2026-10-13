@@ -160,7 +160,18 @@ function broadcastAll(code, data) {
 const COUNTDOWN_MS = 3300;   // decompte 3-2-1 avant la 1re manche (doCD)
 const BREAK_MS     = 5000;   // pause entre deux manches (doBreak)
 const QUESTION_MS  = 30000;  // temps de reponse (G.td = 30 s)
-const AUDIO_GRACE  = 2000;   // marge de chargement de l'extrait
+const AUDIO_GRACE  = 5000;   // marge de chargement de l'extrait (= AUDIO_MAX)
+// ── Points : c'est le serveur qui decide ──
+// Le temps de chaque joueur part du moment ou SON extrait commence : son telephone
+// l'annonce (audio_start) et le serveur note l'heure de reception. La reponse est
+// datee a sa reception : la latence du reseau s'annule entre les deux messages.
+// Annonce plausible : entre l'ouverture de la manche et AUDIO_MAX apres (sinon
+// ramenee dans cet intervalle ; sans annonce, le temps part de l'ouverture).
+// Artiste ou titre : 15 points x3 avant 5 s, x2 avant 10 s, x1 ensuite (les deux
+// d'un coup : 2 x 15). Chaque element ne compte qu'une fois. Deux reponses a moins
+// de TIE_MS d'ecart (temps de chacun) recoivent le meme multiplicateur.
+const AUDIO_MAX = 5000, TIE_MS = 100, BASE = 15;
+function multFor(ms) { return ms < 5000 ? 3 : ms < 10000 ? 2 : 1; }
 const REVEAL_MS    = 5000;   // revelation (4 s pour la derniere manche)
 // Un joueur part : si tous les joueurs restants ont fini, on revele
 function checkAllDone(code) {
@@ -200,15 +211,46 @@ function startQuestion(code, delayBefore) {
   clearRoomTimer(room);
   room.phase = 'question';
   room.players.forEach(function(x){ x.answered = false; });
+  room.roundOpen = Date.now() + delayBefore;   // fin de la pause : les telephones lancent l'extrait
+  room.rs = {};                                 // par joueur : debut de l'extrait, elements trouves
   room.questionTimer = setTimeout(function(){ revealQuestion(code); }, delayBefore + QUESTION_MS + AUDIO_GRACE);
 }
 // Revele la manche en cours (une seule fois), puis enchaine la suivante
+// Debut de l'extrait d'un joueur pour la manche en cours (ramene dans l'intervalle plausible)
+function roundStart(room, id, now) {
+  var r = room.rs[id] = room.rs[id] || {};
+  if (r.start == null) r.start = Math.min(Math.max(now, room.roundOpen), room.roundOpen + AUDIO_MAX);
+  return r;
+}
+// Element trouve (artist ou title) : temps mesure par le serveur, egalite a moins de TIE_MS
+function award(room, pl, key, ms) {
+  var r = room.rs[pl.id], mult = multFor(ms);
+  room.players.forEach(function(o){
+    var e = o.id !== pl.id && room.rs[o.id] && room.rs[o.id][key];
+    if (!e || Math.abs(e.ms - ms) >= TIE_MS) return;
+    if (e.mult > mult) mult = e.mult;
+    else if (e.mult < mult) { o.score += BASE * (mult - e.mult); e.pts += BASE * (mult - e.mult); e.mult = mult; }
+  });
+  r[key] = { ms: ms, mult: mult, pts: BASE * mult };
+  pl.score = (pl.score || 0) + BASE * mult;
+  return BASE * mult;
+}
+// Recapitulatif de la manche : temps de reponse (dernier element trouve) et points
+function roundRecap(room) {
+  return room.players.map(function(pl){
+    var r = (room.rs || {})[pl.id] || {}, els = [r.artist, r.title].filter(Boolean);
+    return { id: pl.id, name: pl.name, ms: els.length ? Math.max.apply(null, els.map(function(e){ return e.ms; })) : null,
+      pts: els.reduce(function(s, e){ return s + e.pts; }, 0),
+      found: r.artist && r.title ? 'both' : r.artist ? 'artist' : r.title ? 'title' : 'none' };
+  });
+}
+function scoreList(room) { return room.players.map(function(x){ return { id: x.id, name: x.name, score: x.score, done: !!x.answered }; }); }
 function revealQuestion(code) {
   var room = rooms[code]; if (!room || room.phase !== 'question') return;
   clearRoomTimer(room);
   room.phase = 'reveal';
   var idx = room.question, isLast = idx >= room.trackCount - 1;
-  broadcastAll(code, { type: 'reveal_now', index: idx });
+  broadcastAll(code, { type: 'reveal_now', index: idx, recap: roundRecap(room) });
   room.questionTimer = setTimeout(function(){
     var r = rooms[code]; if (!r) return;
     r.question = idx + 1;
@@ -514,14 +556,28 @@ server.on('upgrade', function(req, socket) {
         broadcastAll(code, { type: 'game_start', theme: rooms[code].theme, trackOrder: trackOrder });
         startQuestion(code, COUNTDOWN_MS);
       }
+      var rq = rooms[code], now = Date.now();
+      var live = rq && rq.started && rq.phase === 'question' && msg.index === rq.question;
+      // Debut de l'extrait sur ce telephone
+      if (msg.type === 'audio_start' && live) roundStart(rq, playerId, now);
+      // Artiste, titre ou les deux trouves : le serveur date la reponse et compte les points
+      if (msg.type === 'found' && live && /^(artist|title|both)$/.test(msg.what)) {
+        var fp = rq.players.find(function(x){ return x.id === playerId; });
+        var fr = roundStart(rq, playerId, now), ms = now - fr.start, gain = 0;
+        if (fp && ms <= QUESTION_MS + 500) {
+          (msg.what === 'both' ? ['artist', 'title'] : [msg.what]).forEach(function(k){ if (!fr[k]) gain += award(rq, fp, k, ms); });
+          if (gain) wsSend(fp.socket, { type: 'points', index: rq.question, what: msg.what, points: gain, ms: ms, total: fp.score });
+          broadcastAll(code, { type: 'score_update', players: scoreList(rq) });
+        }
+      }
       if (msg.type === 'answer') {
         var pl = rooms[code].players.find(function(x){ return x.id === playerId; });
         // reponse d'une autre manche (message en retard) : ignoree
         var staleAnswer = typeof msg.index === 'number' && msg.index !== rooms[code].question;
         if (pl && !staleAnswer) {
-          pl.score = (pl.score||0) + Math.max(0, Math.min(1000, parseInt(msg.points, 10) || 0));
+          // Les points annonces par le telephone ne comptent plus (voir 'found')
           if (msg.done) pl.answered = true;
-          broadcastAll(code, { type: 'score_update', players: rooms[code].players.map(function(x){ return { id: x.id, name: x.name, score: x.score, done: !!x.answered }; }) });
+          broadcastAll(code, { type: 'score_update', players: scoreList(rooms[code]) });
           if (msg.done && rooms[code].phase === 'question') {
             var allDone = rooms[code].players.every(function(x){ return x.answered; });
             if (allDone) revealQuestion(code);   // sinon : fin du temps (filet du serveur)
