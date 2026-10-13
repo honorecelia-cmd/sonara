@@ -1074,7 +1074,12 @@ function endRound(){G._round=(G._round||0)+1;G._questionActive=false;clearInterv
 function doResults(){
   endRound();showPage('s-res');
   G.pl.forEach(function(p){if(p.me)p.s=G.sc;});
+  // Entre proches : classement du serveur (scores, rangs partages, phrase commune)
+  var fin=inRoom()&&G._final?G._final:null;G._final=null;
+  if(fin)fin.ranking.forEach(function(e){var p=G.pl.filter(function(x){return x.id===e.id;})[0];if(p){p.s=e.score;p.rank=e.rank;if(p.me)G.sc=e.score;}});
   var sorted=G.pl.slice().sort(function(a,b){return b.s-a.s});G.res=sorted;
+  // Rangs : egalite = meme rang (1, 1, 3)
+  sorted.forEach(function(p,i){if(!fin||p.rank==null)p.rank=i&&p.s===sorted[i-1].s?sorted[i-1].rank:i+1;});
   var me=sorted.filter(function(p){return p.me})[0]||sorted[0];var mr=sorted.indexOf(me)+1;
   var rks=['premier·e','deuxième','troisième','quatrième'];
   var mc2=(G.pl.filter(function(p){return p.me})[0]||{}).c||0;
@@ -1085,11 +1090,13 @@ function doResults(){
   else if(pct>=0.4)rmsgTxt='Bien joué '+me.n+', '+(rks[mr-1]||mr+'ème');
   else if(pct>0)rmsgTxt=me.n+', continue comme ça !';
   else rmsgTxt=me.n+', la prochaine fois sera la bonne !';
+  if(fin)rmsgTxt=fin.phrase;   // meme phrase pour tous : personne ne se voit gagnant a tort
   $('rmsg').textContent=rmsgTxt;
   // Affichage (filigrane, podium, classement) : ecran-resultats.js
   if(window.SonaraResultats)SonaraResultats.render(sorted);
   var mc=(G.pl.filter(function(p){return p.me})[0]||{}).c||0,pos=sorted.findIndex(function(p){return p.me}),bg=[];
-  if(pos===0)bg.push('Sé mwen ki win !');
+  var leaders=sorted.filter(function(p){return p.rank===1;}).length;
+  if(sorted.length>1&&me.rank===1)bg.push(leaders===1?'Sé mwen ki win !':'À égalité en tête');
   if(mc===G.qs.length)bg.push('Kokiy : 100 % !');
   if(mc===0)bg.push('Touriste');
   if(G.cb>=5)bg.push('An Feu ×'+G.cb);
@@ -1522,6 +1529,7 @@ function connectWS(code) {
       G._multiIdx = msg.index;
       var wm2=$('wmsg');if(wm2){wm2.style.display='none';wm2.className='wmsg';}
       G.cq = msg.index;
+      if (msg.final) G._final = msg.final;   // classement et phrase du serveur (fin de partie)
       G.pl.forEach(function(p){ p.ans = false; });
       G.ans = false; G.foundA = false; G.foundT = false; G._revealed = false; G._pendingReveal = false; G._questionActive = false;
       if (G.cq >= G.qs.length) { doResults(); }

@@ -244,6 +244,18 @@ function roundRecap(room) {
       found: r.artist && r.title ? 'both' : r.artist ? 'artist' : r.title ? 'title' : 'none' };
   });
 }
+// Classement final decide par le serveur, identique sur tous les ecrans :
+// rang partage en cas d'egalite (1, 1, 3), phrase du ou des gagnants.
+function finalStandings(room) {
+  var list = room.players.map(function(pl){ return { id: pl.id, name: pl.name, score: pl.score || 0 }; })
+    .sort(function(a, b){ return b.score - a.score; });
+  list.forEach(function(e, i){ e.rank = i && e.score === list[i - 1].score ? list[i - 1].rank : i + 1; });
+  var top = list.filter(function(e){ return e.rank === 1; });
+  var phrase = top.length === 1 ? top[0].name + ' a tout déchiré !'
+    : top.length === 2 ? top[0].name + ' et ' + top[1].name + ' à égalité !'
+    : 'Égalité parfaite !';
+  return { ranking: list, phrase: phrase, leaders: top.length };
+}
 function scoreList(room) { return room.players.map(function(x){ return { id: x.id, name: x.name, score: x.score, done: !!x.answered }; }); }
 function revealQuestion(code) {
   var room = rooms[code]; if (!room || room.phase !== 'question') return;
@@ -254,7 +266,8 @@ function revealQuestion(code) {
   room.questionTimer = setTimeout(function(){
     var r = rooms[code]; if (!r) return;
     r.question = idx + 1;
-    broadcastAll(code, { type: 'next_question', index: r.question });
+    var fin = r.question >= r.trackCount;
+    broadcastAll(code, fin ? { type: 'next_question', index: r.question, final: finalStandings(r) } : { type: 'next_question', index: r.question });
     if (r.question >= r.trackCount) { r.phase = 'done'; r.questionTimer = null; }
     else startQuestion(code, BREAK_MS);
   }, isLast ? REVEAL_MS - 1000 : REVEAL_MS);
