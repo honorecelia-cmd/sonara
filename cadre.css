@@ -51,7 +51,7 @@ html:has(#s-parcours.on) body,html:has(.page.pp.on) body,html:has(#s-res.on) bod
   .pp-grid{padding-bottom:calc(24px + var(--sa-b))}
 
   /* ── Manche et revelation : hauteur de l'ecran, la colonne de droite defile seule ── */
-  #s-game.page.jg{height:100vh;height:100dvh;height:var(--jg-vvh,100dvh);min-height:0;overflow:hidden}
+  #s-game.page.jg{height:100vh;height:100dvh;min-height:0;overflow:hidden}
   #s-load.page.jg{height:100vh;height:100dvh;min-height:0;overflow:hidden}
   #s-game .jg-body,#s-load .jg-body{min-height:0}
   #s-game .qsc.on,#s-game .rvsc.on{display:flex;flex-direction:column;align-items:stretch;flex:1;min-height:0;gap:14px}
