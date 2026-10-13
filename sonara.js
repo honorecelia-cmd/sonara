@@ -243,6 +243,8 @@ var THEMES = {
 // ── UTILS ─────────────────────────────────────────────
 function $(id){return document.getElementById(id)}
 function showPage(id){
+  // On quitte l'ecran de jeu : la manche en cours s'arrete (minuteur, ecouteurs audio)
+  if(G.page==='s-game'&&id!=='s-game')endRound();
   // Masquer toutes les pages
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');p.style.display='none'});
   // Masquer toutes les modals
@@ -597,6 +599,7 @@ function doBreak(nextIdx,cb){
   var iv=setInterval(function(){t--;$('brknum').textContent=Math.max(0,t);if(t>0)sfxCd();if(t<=0){clearInterval(iv);$('brksc').classList.remove('on');cb()}},1000);
 }
 function doQ(){
+  if(!G.qs||!G.qs[G.cq])return;   // jamais de manche au-dela de la derniere
   hideG();$('qsc').classList.add('on');
   G.ans=false;G._revealed=false;G._questionActive=false;G._pendingReveal=false;
   var dur=G.td; // 30s fixe pour chaque question
@@ -612,7 +615,10 @@ function doQ(){
   if(G.amode==='qcm'){G.opts=buildQCM(q,G.qs.filter(function(_,i){return i!==G.cq}));renderQCM(G.opts,true)}
   $('ald').classList.add('on');setEq(false);
   G.tl=dur;uTm(dur,dur);clearInterval(G.ti);
+  var round=G._round=(G._round||0)+1;
   playPR(q.preview,function(){
+    // Rappel d'une autre manche, partie finie ou ecran quitte : rien
+    if(round!==G._round||G.page!=='s-game'||!G.qs[G.cq])return;
     $('ald').classList.remove('on');$('vbtn').disabled=false;
     G._questionActive=true;
     if(G._pendingReveal){G._pendingReveal=false;G._revealed=true;doReveal();return;}
@@ -651,6 +657,7 @@ function playPR(url,cb){
   var safe=setTimeout(function(){
     if(!played){played=true;if(cb)cb();start(null);}
   },5000);
+  G._audioSafe=safe;
   el.oncanplaythrough=function(){
     if(played)return;played=true;clearTimeout(safe);
     start(cb);
@@ -677,7 +684,10 @@ function showUnmute(el){
   };
 }
 function hideUnmute(){var b=$('jg-unmute');if(b){b.hidden=true;b.onclick=null;}}
-function stopA(){hideUnmute();clearInterval(window._apIv);var el=$('aud');el.pause();el.src='';$('apfill').style.width='0%';var ap=$('ani-prog');if(ap)ap.style.width='0%';$('astatus').textContent='';setEq(false)}
+// Ecouteurs de la manche retires AVANT de vider la source : vider src declenche
+// une erreur audio qui relancait la manche (minuteur, revelation d'une manche absente)
+function detachA(){var el=$('aud');el.oncanplaythrough=null;el.onerror=null;clearTimeout(G._audioSafe);}
+function stopA(){hideUnmute();clearInterval(window._apIv);detachA();var el=$('aud');el.pause();el.src='';$('apfill').style.width='0%';var ap=$('ani-prog');if(ap)ap.style.width='0%';$('astatus').textContent='';setEq(false)}
 function setEq(on){document.querySelectorAll('.eqb').forEach(function(b){b.classList.toggle('off',!on)})}
 function renderQCM(opts,locked){
   $('qcmw').innerHTML=opts.map(function(o,i){
@@ -738,7 +748,7 @@ function titleOk(s,q){
 }
 function tryGuess(v,byUser){
   if(!v.trim())return;
-  var q=G.qs[G.cq];
+  var q=G.qs[G.cq];if(!q)return;
   var tolA=Math.max(2,Math.min(4,Math.floor(q.a.length/4)));
   // Normaliser la saisie pour comparaison
   var vNorm=normalize(v);
@@ -901,7 +911,7 @@ function addChatMsg(txt,type){
 }
 function doSub(v,byUser,src){
   // Appelé uniquement au timeout
-  if(G.ans)return;G.ans=true;clearInterval(G.ti);stopA();
+  if(G.ans||!G.qs[G.cq])return;G.ans=true;clearInterval(G.ti);stopA();
   var ani=$('ani');ani.disabled=true;$('vbtn').disabled=true;
   var sb=$('skipbtn');if(sb)sb.style.display='none';
   if(!G.foundA&&!G.foundT){G.cb=0;G.mx=1;}
@@ -976,8 +986,8 @@ function doReveal(){
   G._questionActive=false;
   clearInterval(G.ti);
   G.ans=true;
+  var q=G.qs[G.cq];if(!q)return;   // aucune manche au-dela de la derniere
   hideG();$('rvsc').classList.add('on');
-  var q=G.qs[G.cq];
   $('rvtit').textContent=q.t;$('rvar').textContent=q.a;$('rvmt').textContent=q.y||'';$('remoji').textContent='';
   var reva=$('reva');reva.querySelectorAll('img,.vy').forEach(function(i){i.remove()});
   // Pochette propre du morceau si elle existe ; sinon le vinyle de son univers
@@ -1038,8 +1048,10 @@ function universeCover(key){
   for(var i=0;i<list.length;i++)if(list[i].slug===key)return list[i].image||null;
   return null;
 }
+// Fin de partie ou ecran de jeu quitte : plus de manche active, de minuteur ni d'ecouteur audio
+function endRound(){G._round=(G._round||0)+1;G._questionActive=false;clearInterval(G.ti);stopA();}
 function doResults(){
-  clearInterval(G.ti);stopA();showPage('s-res');
+  endRound();showPage('s-res');
   G.pl.forEach(function(p){if(p.me)p.s=G.sc;});
   var sorted=G.pl.slice().sort(function(a,b){return b.s-a.s});G.res=sorted;
   var me=sorted.filter(function(p){return p.me})[0]||sorted[0];var mr=sorted.indexOf(me)+1;
@@ -1127,7 +1139,7 @@ function doQuit(){
 }
 function doHome(){
   sfxC();
-  clearInterval(G.ti);stopA();
+  endRound();
   // Reset état jeu
   G.ans=false;G.foundA=false;G.foundT=false;
   // Afficher landing, masquer tout le reste
