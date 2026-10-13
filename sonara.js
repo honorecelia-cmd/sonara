@@ -102,7 +102,7 @@ var THEMES = {
     {t:'Kraff Gad',a:'Ikation',preview:'/audio/Ikation-Kraff_Gad.mp3',cover:''},
     {t:'Pretty please',a:'Aidonia',preview:'/audio/Aidonia-Pretty_please.mp3',cover:''},
     {t:'Born again virgin',a:'Vybz Kartel',preview:'/audio/Vybz_Kartel-Born_again_virgin.mp3',cover:''},
-    {t:'Happy pum pump',a:'Vybz Kartel',preview:'/audio/Vybz_Kartel-Happy_pum_pum.mp3',cover:''},
+    {t:'Happy pum pum',ta:['Happy pum pump'],a:'Vybz Kartel',preview:'/audio/Vybz_Kartel-Happy_pum_pum.mp3',cover:''},
     {t:'Lecococo',a:'Magic ft Magic',preview:'/audio/Magic_ft_Magic-Lecococo.mp3',cover:''},
     {t:'Loto moto poto',a:'Lhom Sam',preview:'/audio/Lhom_Sam-Loto_moto_poto.mp3',cover:''},
     {t:'Fanm ki ni kit',a:'Danthology',preview:'/audio/Danthology-Fanm_ki_ni_kit.mp3',cover:''},
@@ -110,7 +110,7 @@ var THEMES = {
     {t:'Pa kité koy sédui',a:'Lhom Sam',preview:'/audio/Lhom_Sam-Pa_kite_koy_sedui.mp3',cover:''},
     {t:'Y a pas de problème',a:'Ti Blica',preview:'/audio/Ti_Blica-Y_a_pas_de_probleme.mp3',cover:''},
     {t:'Poil à gratter',a:'Danthology',preview:'/audio/Danthology-Poil_a_gratter.mp3',cover:''},
-    {t:'Premié cou pa cou',a:'Sorrow',preview:'/audio/Sorrow-Premier_cou_pa_cou.mp3',cover:''},
+    {t:'Premier cou pa cou',ta:['Premié cou pa cou'],a:'Sorrow',preview:'/audio/Sorrow-Premier_cou_pa_cou.mp3',cover:''},
     {t:'Douvan babylone',a:'Pompis',preview:'/audio/Pompis-Douvan_babylone.mp3',cover:''},
     {t:'Cho les vacabonds',a:'Tiblica',preview:'/audio/Tiblica-Cho_les_vacabonds.mp3',cover:''},
     {t:'Real wifey',a:'Bamby ft Jahyanai King',preview:'/audio/Bamby_ft_Jahyanai_King-Real_wifey.mp3',cover:''},
@@ -182,7 +182,7 @@ var THEMES = {
     {t:'Gregoire',a:'Natoxie',preview:'/audio/Natoxie-Gregoire.mp3',cover:''},
     {t:'Vieux clébard',a:'Natoxie',preview:'/audio/Natoxie-Vieux_clebard.mp3',cover:''},
     {t:'Comme à la maison',a:'QLM',preview:'/audio/QLM-Comme_a_la_maison.mp3',cover:''},
-    {t:'Hornie',a:'Kalash',preview:'/audio/Kalash-Horny.mp3',cover:''}
+    {t:'Horny',ta:['Hornie'],a:'Kalash',preview:'/audio/Kalash-Horny.mp3',cover:''}
   ]},
   'trap':     {n:'Trap Antillais', ic:'', dq:'kalash criminel trap antillais', tracks:[
     {t:'Trap Back',a:'Railfé',preview:'/audio/Railfe-Trap_Back.mp3',cover:''},
@@ -195,7 +195,7 @@ var THEMES = {
     {t:'Mal vu',a:'Kerosn',preview:'/audio/Kerosn-Mal_vu.mp3',cover:''},
     {t:'Filé',a:'Sour\'x',preview:'/audio/Sourx-File.mp3',cover:''},
     {t:'Blanche neige',a:'Mercenaire',preview:'/audio/Mercenaire-Blanche_neige.mp3',cover:''},
-    {t:'Yenki business',a:'Blade',preview:'/audio/Blade-Yinki_business.mp3',cover:''},
+    {t:'Yinki business',ta:['Yenki business'],a:'Blade',preview:'/audio/Blade-Yinki_business.mp3',cover:''},
     {t:'Mozart',a:'Shaka Zulu',preview:'/audio/Shaka_Zulu-Mozart.mp3',cover:''},
     {t:'Plis ki zanmi',a:'Kerosn ft Larose',preview:'/audio/Kerosn_ft_Larose-Plis_ki_zanmi.mp3',cover:''},
     {t:'La frapp',a:'Mercenaire',preview:'/audio/Mercenaire-La_Frapp.mp3',cover:''},
@@ -362,7 +362,7 @@ function launchFromModal(btn) {
     Object.keys(THEMES).forEach(function(k){
       if(k !== 'mix' && THEMES[k].tracks){
         THEMES[k].tracks.forEach(function(t){
-          allTracks.push({t:t.t, a:t.a, e:t.e, preview:t.preview||'', cover:t.cover||'', u:k});
+          allTracks.push({t:t.t, ta:t.ta, a:t.a, e:t.e, preview:t.preview||'', cover:t.cover||'', u:k});
         });
       }
     });
@@ -380,7 +380,7 @@ function launchFromModal(btn) {
     // 1. Copier le pool complet
     G.pool = fixedTracks.map(function(t){
       // Garder le preview local s'il existe
-      return {t:t.t, a:t.a, e:t.e, preview:t.preview||'', cover:t.cover||'', u:key};
+      return {t:t.t, ta:t.ta, a:t.a, e:t.e, preview:t.preview||'', cover:t.cover||'', u:key};
     });
     // 2. Sélectionner 10 titres aléatoires
     buildQs();
@@ -720,11 +720,17 @@ function isClose(v,ref){
   var d=lev(v,ref);
   return d>0&&d<=tol+2;
 }
+// Titre trouve : titre affiche ou ancienne orthographe (q.ta), meme tolerance
+// aux fautes que pour le titre (calculee sur la longueur de chaque reference)
+function titleOk(s,q){
+  return [q.t].concat(q.ta||[]).some(function(ref){
+    return lev(s,ref)<=Math.max(2,Math.min(4,Math.floor(ref.length/4)));
+  });
+}
 function tryGuess(v,byUser){
   if(!v.trim())return;
   var q=G.qs[G.cq];
   var tolA=Math.max(2,Math.min(4,Math.floor(q.a.length/4)));
-  var tolT=Math.max(2,Math.min(4,Math.floor(q.t.length/4)));
   // Normaliser la saisie pour comparaison
   var vNorm=normalize(v);
 
@@ -739,7 +745,7 @@ function tryGuess(v,byUser){
   }
 
   // ── Match titre (Levenshtein) ──
-  var matchT=!G.foundT&&lev(v,q.t)<=tolT;
+  var matchT=!G.foundT&&titleOk(v,q);
 
   // ── Détection combinée : "artiste titre" ou "titre artiste" (avec fautes) ──
   if(!G.foundA&&!G.foundT&&!matchA&&!matchT&&v.trim().indexOf(' ')>=0){
@@ -750,9 +756,9 @@ function tryGuess(v,byUser){
       var part1 = words.slice(0,sp).join(' ');
       var part2 = words.slice(sp).join(' ');
       var p1matchA = lev(part1,q.a)<=Math.max(2,Math.min(4,Math.floor(q.a.length/4)));
-      var p1matchT = lev(part1,q.t)<=Math.max(2,Math.min(4,Math.floor(q.t.length/4)));
+      var p1matchT = titleOk(part1,q);
       var p2matchA = lev(part2,q.a)<=Math.max(2,Math.min(4,Math.floor(q.a.length/4)));
-      var p2matchT = lev(part2,q.t)<=Math.max(2,Math.min(4,Math.floor(q.t.length/4)));
+      var p2matchT = titleOk(part2,q);
       // Aussi vérifier avec les artistes feat
       if(!p1matchA&&q.a.match(/ft|feat/i)){
         var arts=q.a.split(/ft\.?|feat\.?/i).map(function(s){return s.trim()});
@@ -1498,7 +1504,7 @@ function buildPool(key) {
     Object.keys(THEMES).forEach(function(k) {
       if (k !== 'mix' && THEMES[k].tracks) {
         THEMES[k].tracks.forEach(function(tr) {
-          allTracks.push({ t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'', u: k });
+          allTracks.push({ t: tr.t, ta: tr.ta, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'', u: k });
         });
       }
     });
@@ -1511,7 +1517,7 @@ function buildPool(key) {
     return allTracks;
   }
   return t.tracks.map(function(tr) {
-    return { t: tr.t, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'', u: key };
+    return { t: tr.t, ta: tr.ta, a: tr.a, e: tr.e, preview: tr.preview||'', cover: tr.cover||'', u: key };
   });
 }
 function launchMultiGame(trackOrder) {
