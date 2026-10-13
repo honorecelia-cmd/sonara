@@ -251,6 +251,10 @@
   .rs-top{grid-area:top}
   .rs-col{grid-area:col}
   .rs-side{grid-area:side;max-width:none;align-self:center}
+  /* Rien a droite (pas de classement ni de note) : une seule colonne centree */
+  .rs-main:not(:has(#glb-top .glb-row)):not(:has(#rs-rgpd-note:not([hidden]))){grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "col" "band"}
+  .rs-main:not(:has(#glb-top .glb-row)):not(:has(#rs-rgpd-note:not([hidden]))) .rs-side{display:none}
+  .rs-main:not(:has(#glb-top .glb-row)):not(:has(#rs-rgpd-note:not([hidden]))) .rs-col{max-width:720px;justify-self:center}
 }
 .rs-top{display:flex;justify-content:center}
 .rs-top img{display:block;height:28px}
@@ -289,6 +293,8 @@
 .rs-step--1{order:2;min-height:270px;background:var(--cream);color:var(--ink);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
 .rs-step--2{order:1;min-height:226px}
 .rs-step--3{order:3;min-height:196px}
+/* Place sur le podium (le 1er au centre) ; la hauteur suit le rang : egalite = meme marche */
+.rs-slot--1{order:2}.rs-slot--2{order:1}.rs-slot--3{order:3}
 .rs-rank{font-family:var(--f-display);font-weight:900;font-size:44px;line-height:.9}
 .rs-step .sn-avatar{width:48px;height:48px;font-size:20px}
 .rs-step--1 .sn-avatar{width:58px;height:58px;font-size:24px;animation:rs-ring .35s var(--sn-ease) var(--d-end,0ms) both}
@@ -343,8 +349,9 @@
 .rs-share[hidden],.rs-btns .sn-btn[hidden]{display:none}
 /* En groupe : message des invites a la place des boutons de l'hote */
 /* Texte simple et petit vinyle qui tourne, comme l'attente dans la salle (jeu.css, .jg-wait) */
-.rs-wait{grid-column:1 / -1;justify-content:center;margin:0;padding:6px 0}
-.rs-wait p{font-size:16px;line-height:1.35;text-align:left;color:#fff}
+.rs-wait{grid-column:1 / -1;justify-self:center;justify-content:center;margin:0;padding:8px 20px 8px 10px;border-radius:999px;background:rgba(45,16,2,.62)}
+/* Creme sur brun translucide : contraste AA quel que soit le degrade derriere */
+.rs-wait p{font-size:16px;line-height:1.35;text-align:left;color:var(--cream)}
 .rs-wait .jg-wait-vy{width:48px;height:48px}
 .rs-wait[hidden]{display:none}
 .rs-share:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:4px}
@@ -403,7 +410,11 @@
 .sn-erase-row{display:flex;flex-wrap:wrap;gap:8px}
 .sn-erase-row button{height:38px;padding:0 18px;border:none;border-radius:999px;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:600}
 .sn-erase-msg{margin:6px 0 0;min-height:1.2em;font-size:13px;line-height:1.4}
-.rs-erase{color:rgba(255,255,255,.85)}
+.rs-erase{color:#fff}
+/* Sous « Quitter la salle », centre comme les autres liens */
+.rs-btns .rs-erase{grid-column:1 / -1;justify-self:center;margin-top:0;text-align:center}
+.rs-btns .sn-erase-btn{padding:4px 6px;font-size:14px;text-underline-offset:4px}
+.rs-btns .sn-erase-row{justify-content:center}
 .rs-erase .sn-erase-yes{background:var(--cream);color:var(--ink)}
 .rs-erase .sn-erase-yes:hover{background:var(--sn-white)}
 .rs-erase .sn-erase-no{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}

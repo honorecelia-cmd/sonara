@@ -616,6 +616,14 @@ function doQ(){
   $('ald').classList.add('on');setEq(false);
   G.tl=dur;uTm(dur,dur);clearInterval(G.ti);
   var round=G._round=(G._round||0)+1;
+  // Entre proches : le serveur fait partir le temps de ce joueur au debut REEL
+  // de son extrait (evenement « playing »), pas a l'affichage de la manche
+  if(WS&&WS.readyState===1&&G_MULTI.code){
+    var aud=$('aud'),idx=G.cq;
+    G._onPlaying=function(){aud.removeEventListener('playing',G._onPlaying);G._onPlaying=null;
+      if(round===G._round&&WS&&WS.readyState===1)WS.send(JSON.stringify({type:'audio_start',index:idx}));};
+    aud.addEventListener('playing',G._onPlaying);
+  }
   playPR(q.preview,function(){
     // Rappel d'une autre manche, partie finie ou ecran quitte : rien
     if(round!==G._round||G.page!=='s-game'||!G.qs[G.cq])return;
@@ -686,7 +694,8 @@ function showUnmute(el){
 function hideUnmute(){var b=$('jg-unmute');if(b){b.hidden=true;b.onclick=null;}}
 // Ecouteurs de la manche retires AVANT de vider la source : vider src declenche
 // une erreur audio qui relancait la manche (minuteur, revelation d'une manche absente)
-function detachA(){var el=$('aud');el.oncanplaythrough=null;el.onerror=null;clearTimeout(G._audioSafe);}
+function detachA(){var el=$('aud');el.oncanplaythrough=null;el.onerror=null;clearTimeout(G._audioSafe);
+  if(G._onPlaying){el.removeEventListener('playing',G._onPlaying);G._onPlaying=null;}}
 function stopA(){hideUnmute();clearInterval(window._apIv);detachA();var el=$('aud');el.pause();el.src='';$('apfill').style.width='0%';var ap=$('ani-prog');if(ap)ap.style.width='0%';$('astatus').textContent='';setEq(false)}
 function setEq(on){document.querySelectorAll('.eqb').forEach(function(b){b.classList.toggle('off',!on)})}
 function renderQCM(opts,locked){
@@ -866,6 +875,13 @@ function calcPts(base){
 function updateFoundScore(what){
   // what = 'artist', 'title', ou 'both'
   var pts=0;
+  // Entre proches : on annonce ce qui est trouve ; le serveur mesure le temps,
+  // calcule les points et renvoie « points » (voir connectWS)
+  if(WS&&WS.readyState===1&&G_MULTI.code){
+    if(what==='both'){G.cb++;if(G.cb>=3)sfxCombo();var mb=G.pl.filter(function(p){return p.me})[0];if(mb)mb.c=(mb.c||0)+1;}
+    WS.send(JSON.stringify({type:'found',index:G.cq,what:what}));
+    return;
+  }
   if(what==='artist'||what==='title'){
     pts=calcPts(15);
     G.sc+=pts;
@@ -880,9 +896,6 @@ function updateFoundScore(what){
     popScore('+'+pts+' pts');
   }
   updateHdr();renderPstrip();
-  if(WS&&WS.readyState===1&&G_MULTI.code&&pts>0){
-    WS.send(JSON.stringify({type:'answer',points:pts,done:false,index:G.cq}));
-  }
 }
 function addFoundTag(txt,type){
   var ft=$('found-tags');if(!ft)return;
@@ -1003,15 +1016,23 @@ function doReveal(){
   if(q.cover){var img=document.createElement('img');img.src=q.cover;img.alt='';img.onerror=function(){img.remove();showVinyl()};reva.appendChild(img)}
   else showVinyl();
   var v=$('rvv');
-  if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='Les deux trouvés en '+(G.td-G.tl)+' s. Sé ou !'}
+  // Entre proches : temps mesure par le serveur (le meme que dans le recapitulatif)
+  var myR=(G._recap||[]).filter(function(r){return r.id===G_MULTI.playerId;})[0];
+  var tFound=myR&&myR.ms!=null?(myR.ms/1000).toFixed(1).replace('.',','):(G.td-G.tl);
+  if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='Les deux trouvés en '+tFound+' s. Sé ou !'}
   else if(G.foundA){v.className='revv vok';v.textContent='Artiste trouvé, titre manqué'}
   else if(G.foundT){v.className='revv vok';v.textContent='Titre trouvé, artiste manqué'}
   else if($('ani').value.trim()||document.querySelector('.qb.wrong')){v.className='revv vno';v.textContent='Pas trouvé cette fois'}
   else{v.className='revv vmh';v.textContent='Pas trouvé cette fois'}
   var sorted=G.pl.slice().sort(function(a,b){return b.s-a.s});
+  // Entre proches : sous chaque son-nom, son temps de reponse et ses points de la manche
+  var recap={};(G._recap||[]).forEach(function(r){recap[r.id]=r;});
+  function sec(ms){return (ms/1000).toFixed(1).replace('.',',')+' s';}
   $('rnkm').innerHTML='<p class="jg-k">Classement</p>'+sorted.slice(0,5).map(function(p,i){
-    return '<div class="rnkr'+(p.me?' me':'')+'" data-n="'+esc(p.n)+'"><span class="rpos">'+(i+1)+'</span><span class="rav">'+ini(p.n)+'</span><span class="rnm">'+esc(p.n)+(p.me?' (toi)':'')+'</span><span class="rsc">'+(p.me?G.sc:p.s)+'</span></div>';
+    var r=recap[p.id],line=r?(r.ms!=null?sec(r.ms)+' · +'+r.pts+' pts':'Pas trouvé'):'';
+    return '<div class="rnkr'+(p.me?' me':'')+'" data-n="'+esc(p.n)+'"><span class="rpos">'+(i+1)+'</span><span class="rav">'+esc(ini(p.n))+'</span><span class="rnm">'+esc(p.n)+(p.me?' (toi)':'')+(line?'<small class="rtm">'+line+'</small>':'')+'</span><span class="rsc">'+(p.me?G.sc:p.s)+'</span></div>';
   }).join('');
+  G._recap=null;
   // Historique : enregistrer ce track
   if(!G.history)G.history=[];
   var found=G.foundA&&G.foundT?'both':G.foundA?'artist':G.foundT?'title':'none';
@@ -1053,7 +1074,12 @@ function endRound(){G._round=(G._round||0)+1;G._questionActive=false;clearInterv
 function doResults(){
   endRound();showPage('s-res');
   G.pl.forEach(function(p){if(p.me)p.s=G.sc;});
+  // Entre proches : classement du serveur (scores, rangs partages, phrase commune)
+  var fin=inRoom()&&G._final?G._final:null;G._final=null;
+  if(fin)fin.ranking.forEach(function(e){var p=G.pl.filter(function(x){return x.id===e.id;})[0];if(p){p.s=e.score;p.rank=e.rank;if(p.me)G.sc=e.score;}});
   var sorted=G.pl.slice().sort(function(a,b){return b.s-a.s});G.res=sorted;
+  // Rangs : egalite = meme rang (1, 1, 3)
+  sorted.forEach(function(p,i){if(!fin||p.rank==null)p.rank=i&&p.s===sorted[i-1].s?sorted[i-1].rank:i+1;});
   var me=sorted.filter(function(p){return p.me})[0]||sorted[0];var mr=sorted.indexOf(me)+1;
   var rks=['premier·e','deuxième','troisième','quatrième'];
   var mc2=(G.pl.filter(function(p){return p.me})[0]||{}).c||0;
@@ -1064,11 +1090,13 @@ function doResults(){
   else if(pct>=0.4)rmsgTxt='Bien joué '+me.n+', '+(rks[mr-1]||mr+'ème');
   else if(pct>0)rmsgTxt=me.n+', continue comme ça !';
   else rmsgTxt=me.n+', la prochaine fois sera la bonne !';
+  if(fin)rmsgTxt=fin.phrase;   // meme phrase pour tous : personne ne se voit gagnant a tort
   $('rmsg').textContent=rmsgTxt;
   // Affichage (filigrane, podium, classement) : ecran-resultats.js
   if(window.SonaraResultats)SonaraResultats.render(sorted);
   var mc=(G.pl.filter(function(p){return p.me})[0]||{}).c||0,pos=sorted.findIndex(function(p){return p.me}),bg=[];
-  if(pos===0)bg.push('Sé mwen ki win !');
+  var leaders=sorted.filter(function(p){return p.rank===1;}).length;
+  if(sorted.length>1&&me.rank===1)bg.push(leaders===1?'Sé mwen ki win !':'À égalité en tête');
   if(mc===G.qs.length)bg.push('Kokiy : 100 % !');
   if(mc===0)bg.push('Touriste');
   if(G.cb>=5)bg.push('An Feu ×'+G.cb);
@@ -1450,7 +1478,12 @@ function connectWS(code) {
       return;
     }
     if (msg.type === 'back_to_lobby') { backToLobby(msg); return; }
-    if (msg.host) { G_MULTI.host = msg.host; setHost(msg.host === G_MULTI.playerId); }
+    if (msg.host) {
+      var hostChanged = !!G_MULTI.host && msg.host !== G_MULTI.host;
+      G_MULTI.host = msg.host; setHost(msg.host === G_MULTI.playerId);
+      // L'hote est parti (pendant son choix eventuellement) : fin de l'attente, nouvel hote affiche
+      if (hostChanged && window.SonaraGroupe) SonaraGroupe.choosing(false);
+    }
     if (msg.type === 'player_joined' || msg.type === 'player_left') {
       G_MULTI.players = msg.players;
       renderLobbyPlayers(msg.players);
@@ -1460,9 +1493,19 @@ function connectWS(code) {
       try { gac(); } catch(ez){}
       launchMultiGame(msg.trackOrder);
     }
+    // Points decides par le serveur pour ce joueur
+    if (msg.type === 'points') {
+      if (msg.index !== G.cq) return;
+      G.sc = msg.total;
+      var mp = G.pl.filter(function(p){ return p.me; })[0]; if (mp) mp.s = G.sc;
+      popScore('+' + msg.points + ' pts');
+      updateHdr(); renderPstrip();
+      return;
+    }
     if (msg.type === 'score_update') {
       msg.players.forEach(function(p) {
         var isMe = p.id === G_MULTI.playerId;
+        if (isMe && typeof p.score === 'number') G.sc = p.score;   // score du serveur, seule reference
         var existing = null;
         for (var pi=0; pi<G.pl.length; pi++) {
           if (G.pl[pi].id === p.id || G.pl[pi].n === p.name) { existing = G.pl[pi]; break; }
@@ -1478,6 +1521,7 @@ function connectWS(code) {
     }
     if (msg.type === 'reveal_now') {
       if (typeof msg.index === 'number' && msg.index !== G.cq) return;   // autre manche : ignore
+      G._recap = msg.recap || null;   // temps et points de chacun, affiches a la revelation
       if(!G._revealed){if(G._questionActive){G._revealed=true;doReveal();}else{G._pendingReveal=true;}}
     }
     if (msg.type === 'next_question') {
@@ -1485,6 +1529,7 @@ function connectWS(code) {
       G._multiIdx = msg.index;
       var wm2=$('wmsg');if(wm2){wm2.style.display='none';wm2.className='wmsg';}
       G.cq = msg.index;
+      if (msg.final) G._final = msg.final;   // classement et phrase du serveur (fin de partie)
       G.pl.forEach(function(p){ p.ans = false; });
       G.ans = false; G.foundA = false; G.foundT = false; G._revealed = false; G._pendingReveal = false; G._questionActive = false;
       if (G.cq >= G.qs.length) { doResults(); }

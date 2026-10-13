@@ -200,6 +200,8 @@
 }
 .lrrow.me .lrav,.rnkr.me .rav{background:var(--accent);color:#fff}
 .lrnm,.rnm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Revelation entre proches : temps de reponse et points de la manche sous le son-nom */
+.rnm .rtm{display:block;margin-top:1px;font-size:12px;font-weight:500;opacity:.75;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis}
 .lrans{width:8px;height:8px;border-radius:50%;background:transparent}
 .lrrow.ans .lrans{background:var(--accent)}
 .lrsc,.rsc{font-weight:700;font-variant-numeric:tabular-nums}
