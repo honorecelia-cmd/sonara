@@ -108,3 +108,26 @@ Mentions légales : éditeur, SIRET, adresse, téléphone et adresse de l'héber
 4. **Sauvegardes du volume** (si activées) : leur durée de conservation prolonge celle des scores.
 5. **DPA Railway** accepté (railway.com/legal/dpa) et liste des sous-traitants ultérieurs de Railway.
 6. Membres du projet Railway et double authentification sur le compte.
+
+## 9. Corrections faites (branche `fix/rgpd`)
+
+| Écart | Correction |
+|---|---|
+| B1 Injection HTML | Son-nom échappé partout (bandeau des joueurs compris) ; `esc()` échappe guillemets et apostrophes ; sélecteurs `data-n` sûrs. Son-noms à balises refusés par le serveur. CSP sans script en ligne : les 29 `onclick` du HTML sont remplacés par des `data-on`. |
+| B2 Arrêt du serveur | Plus de `decodeURIComponent` sur l'URL : le son-nom arrive dans le premier message WebSocket et il est validé. Trames bornées à 16 Ko, tampon borné, erreurs de socket rattrapées, nombre de manches et points bornés. |
+| B3 `/room/info` | En POST (code dans le corps), son-noms seulement, sans identifiants ; limité à 30 requêtes par minute ; identifiant déjà présent dans la salle refusé (plus d'usurpation de l'hôte) ; identifiants tirés avec `crypto`. |
+| B4 Effacement, choix | Case « Apparaître dans le classement » (cochée par défaut, mémorisée sur l'appareil) sous chaque champ son-nom ; décochée, aucun envoi. Code d'effacement aléatoire par score, gardé sur l'appareil, empreinte SHA-256 côté serveur ; bouton « Supprimer mes scores » (résultats et politique) avec confirmation ; route `/score/delete` limitée à 5 requêtes par minute. |
+| B5 Politique | Partie factuelle réécrite (version provisoire), repères [À COMPLÉTER]. |
+| I1 Classement | 10 meilleurs scores par univers ; un score hors du top 10 n'est jamais écrit ; un score qui en sort est supprimé aussitôt ; 12 mois au plus (purge au démarrage et chaque jour) ; champs : son-nom, score, univers, date, empreinte. Purge des données existantes non conformes (champs en trop, son-noms refusés, surplus du top 10). Les scores nuls ne sont pas enregistrés. |
+| I2 URL | Son-nom, code de salle et identifiant de visite ne passent plus dans les URL (WebSocket, `/room/info`, `/ping` en POST). Seul le lien d'invitation `/?salle=CODE` garde le code, retiré de la barre d'adresse à l'ouverture. |
+| I3 Limitation | Par minute et par adresse : `/score` 20, suppression 5, création de salle 10, jonction (`/room/info` et WebSocket) 30, vérification du son-nom 40, Défi 10, compteur 20. L'adresse n'est gardée qu'en mémoire, sous forme d'empreinte avec un sel tiré au démarrage, 1 minute. |
+| I4 En-têtes | HSTS, CSP (tout depuis le site ; scripts en ligne autorisés par empreinte), X-Content-Type-Options, Referrer-Policy `strict-origin-when-cross-origin`, Permissions-Policy, X-Frame-Options ; CORS ouvert retiré. |
+| I5 Son-nom | Contrôle serveur : 2 à 16 caractères, lettres, chiffres, espace et `' - . _` ; filtre de termes injurieux, haineux et sexuels (français, créole, anglais), tolérant aux accents, chiffres-lettres, séparateurs et lettres répétées. Message neutre au joueur. Commande `node scripts/retirer-son-nom.js` (liste ou retrait), sans route publique. |
+| I6 Salles | Salle supprimée quand le dernier joueur part, 2 min après sa création si personne n'entre, 2 h après la dernière activité ; fermeture du socket traitée (plus de joueur fantôme). |
+| I7 WebSocket | Origine vérifiée, trames bornées. |
+| Journaux | Aucun son-nom, adresse IP ni code de salle dans les journaux applicatifs (vérifié : seuls « SONARA on port » et le nombre de scores retirés par l'administration). |
+
+Non traité, à décider :
+- A1 : les liens Défi (sans donnée personnelle) restent conservés sans limite.
+- A2 : `/deezer` reste ouvert (le jeu ne s'en sert plus en pratique : les 216 extraits sont sur le site).
+- A4 : mentions légales, téléphone de l'hébergeur et adresse `contact@sonara.com` à revoir (page non modifiée).
