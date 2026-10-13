@@ -260,6 +260,18 @@ const server = http.createServer(function(req, res) {
     return;
   }
 
+  // Icones (favicon, ecran d'accueil, manifeste) : fichiers du dossier icons/
+  var icons={'/favicon.ico':'image/x-icon','/favicon.svg':'image/svg+xml','/apple-touch-icon.png':'image/png',
+    '/icon-192.png':'image/png','/icon-512.png':'image/png','/site.webmanifest':'application/manifest+json'};
+  if (icons[p.pathname]) {
+    fs.readFile(path.join(__dirname, 'icons', p.pathname), function(err, data) {
+      if (err) { res.writeHead(404); res.end('Not found'); return; }
+      res.writeHead(200, {'Content-Type': icons[p.pathname]});
+      res.end(data);
+    });
+    return;
+  }
+
   // Pages legales (+ demo du kit de design, non liee sur le site)
   var legal={'/mentions-legales':'mentions-legales.html','/politique-de-confidentialite':'politique-confidentialite.html','/kit.html':'kit.html'};
   if (legal[p.pathname] || p.pathname === '/legal.css') {
