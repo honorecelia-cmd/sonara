@@ -65,7 +65,7 @@ Landing, partie solo et création de salle : **80 requêtes, toutes vers `sonara
 ## 6. Pages légales : écarts avec le fonctionnement réel
 
 Politique de confidentialité :
-- Contact `contact@sonara.com` : adresse à confirmer (le domaine sonara.com n'est pas celui du site).
+- Adresse de contact sur un domaine qui n'est pas celui de l'éditeur : à remplacer.
 - « Les liens de partage « Entre proches » ne contiennent que l'univers choisi » : faux. Le lien Entre proches contient le code de salle ; c'est le lien Défi qui ne renvoie qu'à un univers.
 - « Identifiant de visite… Il n'est jamais enregistré » : il passe dans l'URL, donc probablement dans les journaux HTTP de Railway.
 - Données en multijoueur : la politique ne dit pas que le son-nom et l'identifiant de joueur sont lisibles par toute personne qui connaît le code.
@@ -74,7 +74,7 @@ Politique de confidentialité :
 - « Journaux de l'hébergeur : 30 jours au maximum » : à vérifier selon l'offre Railway.
 - Le texte parle de liens Défi sans mentionner leur conservation (aujourd'hui illimitée).
 
-Mentions légales : éditeur, SIRET, adresse, téléphone et adresse de l'hébergeur sont présents. Il manque **le téléphone de l'hébergeur** (exigé par la LCEN, article 6). Le contact `contact@sonara.com` est à confirmer.
+Mentions légales : éditeur, SIRET, adresse, téléphone et adresse de l'hébergeur sont présents. Il manque **le téléphone de l'hébergeur** (exigé par la LCEN, article 6). L'adresse de contact est la même que dans la politique, à remplacer.
 
 ## 7. Écarts classés
 
@@ -117,7 +117,7 @@ Mentions légales : éditeur, SIRET, adresse, téléphone et adresse de l'héber
 | B2 Arrêt du serveur | Plus de `decodeURIComponent` sur l'URL : le son-nom arrive dans le premier message WebSocket et il est validé. Trames bornées à 16 Ko, tampon borné, erreurs de socket rattrapées, nombre de manches et points bornés. |
 | B3 `/room/info` | En POST (code dans le corps), son-noms seulement, sans identifiants ; limité à 30 requêtes par minute ; identifiant déjà présent dans la salle refusé (plus d'usurpation de l'hôte) ; identifiants tirés avec `crypto`. |
 | B4 Effacement, choix | Case « Apparaître dans le classement » (cochée par défaut, mémorisée sur l'appareil) sous chaque champ son-nom ; décochée, aucun envoi. Code d'effacement aléatoire par score, gardé sur l'appareil, empreinte SHA-256 côté serveur ; bouton « Supprimer mes scores » (résultats et politique) avec confirmation ; route `/score/delete` limitée à 5 requêtes par minute. |
-| B5 Politique | Partie factuelle réécrite (version provisoire), repères [À COMPLÉTER]. |
+| B5 Politique | Partie factuelle réécrite selon le fonctionnement réel (voir section 10 pour la version finale). |
 | I1 Classement | 10 meilleurs scores par univers ; un score hors du top 10 n'est jamais écrit ; un score qui en sort est supprimé aussitôt ; 12 mois au plus (purge au démarrage et chaque jour) ; champs : son-nom, score, univers, date, empreinte. Purge des données existantes non conformes (champs en trop, son-noms refusés, surplus du top 10). Les scores nuls ne sont pas enregistrés. |
 | I2 URL | Son-nom, code de salle et identifiant de visite ne passent plus dans les URL (WebSocket, `/room/info`, `/ping` en POST). Seul le lien d'invitation `/?salle=CODE` garde le code, retiré de la barre d'adresse à l'ouverture. |
 | I3 Limitation | Par minute et par adresse : `/score` 20, suppression 5, création de salle 10, jonction (`/room/info` et WebSocket) 30, vérification du son-nom 40, Défi 10, compteur 20. L'adresse n'est gardée qu'en mémoire, sous forme d'empreinte avec un sel tiré au démarrage, 1 minute. |
@@ -130,4 +130,11 @@ Mentions légales : éditeur, SIRET, adresse, téléphone et adresse de l'héber
 Non traité, à décider :
 - A1 : les liens Défi (sans donnée personnelle) restent conservés sans limite.
 - A2 : `/deezer` reste ouvert (le jeu ne s'en sert plus en pratique : les 216 extraits sont sur le site).
-- A4 : mentions légales, téléphone de l'hébergeur et adresse `contact@sonara.com` à revoir (page non modifiée).
+- A4 : mentions légales, téléphone de l'hébergeur et adresse de contact (traité ensuite, voir section 10).
+
+## 10. Suite (décisions de la DPO)
+
+- Correctif urgent (injection par le son-nom, arrêt du serveur) mis en ligne séparément et vérifié en production.
+- Base légale du classement : intérêt légitime, avec opposition par la case « Apparaître dans le classement ».
+- Route `/deezer` fermée. Liens Défi supprimés 12 mois après leur dernière utilisation (purge quotidienne).
+- Pages légales finales : SIRET et adresse de l'éditeur, contact unique contact@ccp-digital.fr (politique et mentions légales), hébergement dans l'Union européenne (région Europe de Railway) avec les garanties du DPA de Railway, journaux techniques de Railway (90 jours au plus, consultables 7 à 30 jours selon l'offre), aucune sauvegarde du classement (sauvegardes du volume désactivées). Téléphone de l'hébergeur : non communiqué, demande en cours auprès du support Railway.
