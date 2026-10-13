@@ -47,20 +47,20 @@
         end=t1+RISE;
         pod.innerHTML=top.map(function(p,i){
           var rank=i+1, d=t1-(rank-1)*GAP;
-          return '<li class="rs-step rs-step--'+rank+'" style="--d:'+d+'ms;--d-end:'+end+'ms">'+
+          return '<li class="rs-step rs-step--'+rank+'" data-pid="'+esc(p.id||'')+'" style="--d:'+d+'ms;--d-end:'+end+'ms">'+
             '<b class="rs-rank">'+rank+'</b>'+
             '<span class="sn-avatar'+(rank===1?'':' sn-avatar--d')+'" aria-hidden="true">'+esc(initial(p.n))+'</span>'+
-            '<span class="rs-name">'+esc(p.n)+'</span>'+(p.me?'<span class="rs-me">(toi)</span>':'')+
+            '<span class="rs-name">'+esc(p.n)+'</span>'+(p.me?'<span class="rs-me">(toi)</span>':'')+'<span class="rs-me rs-host" hidden>Hôte</span>'+
             '<span class="rs-score">'+score(p)+' <small>pts</small></span>'+
           '</li>';
         }).join('');
         // 4e et suivants : en fondu apres l'arrivee du 1er
         rest.style.setProperty('--d',end+'ms');
         rest.innerHTML=sorted.slice(3).map(function(p,i){
-          return '<li class="sn-player-row'+(p.me?' is-me':'')+'">'+
+          return '<li class="sn-player-row'+(p.me?' is-me':'')+'" data-pid="'+esc(p.id||'')+'">'+
             '<span class="sn-player-row__rank">'+(i+4)+'</span>'+
             '<span class="sn-avatar sn-avatar--d" aria-hidden="true">'+esc(initial(p.n))+'</span>'+
-            '<span class="sn-player-row__name">'+esc(p.n)+(p.me?' (toi)':'')+'</span>'+
+            '<span class="sn-player-row__name">'+esc(p.n)+(p.me?' (toi)':'')+'<span class="rs-host" hidden> · Hôte</span></span>'+
             '<span class="sn-player-row__pts">'+score(p)+' pts</span>'+
           '</li>';
         }).join('');
@@ -84,7 +84,11 @@
     $('btn-replay').hidden=guest;$('btn-home').hidden=guest;
     $('btn-leave').hidden=!multi;
     var w=$('rs-wait');w.hidden=!guest;
-    $('rs-wait-t').textContent=hostName()+(waiting?' choisit le prochain univers…':' va relancer une partie ou changer d\'univers');
+    $('rs-wait-t').textContent=waiting?'L\'hôte choisit le prochain univers…':hostName()+' va relancer une partie ou changer d\'univers';
+    // Mention « Hote » a cote du son-nom de l'hote (suit les changements d'hote)
+    [].forEach.call(document.querySelectorAll('#s-res [data-pid]'),function(li){
+      var tag=li.querySelector('.rs-host');if(tag)tag.hidden=!(multi&&li.getAttribute('data-pid')===G_MULTI.host);
+    });
   }
   window.SonaraGroupe={
     update:group,

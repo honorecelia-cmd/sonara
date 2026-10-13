@@ -1471,7 +1471,12 @@ function connectWS(code) {
       return;
     }
     if (msg.type === 'back_to_lobby') { backToLobby(msg); return; }
-    if (msg.host) { G_MULTI.host = msg.host; setHost(msg.host === G_MULTI.playerId); }
+    if (msg.host) {
+      var hostChanged = !!G_MULTI.host && msg.host !== G_MULTI.host;
+      G_MULTI.host = msg.host; setHost(msg.host === G_MULTI.playerId);
+      // L'hote est parti (pendant son choix eventuellement) : fin de l'attente, nouvel hote affiche
+      if (hostChanged && window.SonaraGroupe) SonaraGroupe.choosing(false);
+    }
     if (msg.type === 'player_joined' || msg.type === 'player_left') {
       G_MULTI.players = msg.players;
       renderLobbyPlayers(msg.players);
