@@ -293,7 +293,9 @@
 #s-game.jg-typing .pstrip{display:none}
 #s-game.jg-typing .qsc.on{display:flex;flex-direction:column;flex:1;min-height:0;gap:10px}
 #s-game.jg-typing .jg-media{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center}
-#s-game.jg-typing .jg-cover{width:auto;height:100%;max-height:calc(var(--jg-vvh,100vh) * .3);aspect-ratio:1;max-width:100%}
+/* Taille tiree de la largeur seule : une hauteur en % reste figee dans WebKit
+   apres la fermeture du clavier (pochette plus carree, contenu qui remonte) */
+#s-game.jg-typing .jg-cover{width:min(100%, calc(var(--jg-vvh,100vh) * .3));aspect-ratio:1}
 #s-game.jg-typing .jg-panel{flex:none;overflow:visible;gap:10px}
 .jg.jg-typing .jg-q,.jg.jg-typing .jg-bar,.jg.jg-typing .jg-times{display:none}
 /* chat, scores en direct et message d'attente ont un display en ligne (sonara.js) */
