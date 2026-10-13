@@ -332,13 +332,19 @@ const server = http.createServer(function(req, res) {
 });
 
 server.on('upgrade', function(req, socket) {
+  socket.on('error', function(){});
   const key = req.headers['sec-websocket-key'];
+  if (!key) { socket.destroy(); return; }
   const accept = crypto.createHash('sha1').update(key + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11').digest('base64');
   socket.write('HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ' + accept + '\r\n\r\n');
   const p = url.parse(req.url, true);
   const code = p.query.code;
   const playerId = p.query.id;
-  const playerName = decodeURIComponent(p.query.name || 'Joueur');
+  // Nom mal encode : plus d'exception (elle arretait le serveur). Balises et
+  // caracteres de controle retires, longueur bornee.
+  let playerName = String(p.query.name || 'Joueur');
+  try { playerName = decodeURIComponent(playerName); } catch (e) {}
+  playerName = playerName.replace(/[\u0000-\u001F\u007F<>]/g, '').trim().slice(0, 24) || 'Joueur';
   if (!rooms[code]) { socket.destroy(); return; }
   if (rooms[code].started) {
     wsSend(socket, { type: 'join_refused', reason: 'started' });
@@ -366,8 +372,8 @@ server.on('upgrade', function(req, socket) {
         rooms[code].started = true;
         rooms[code].players.forEach(function(x){ x.score = 0; x.answered = false; });
         keepRoom(code);
-        var trackCount = msg.trackCount || 10;
-        var totalTracks = msg.totalTracks || trackCount;
+        var trackCount = Math.max(1, Math.min(50, parseInt(msg.trackCount, 10) || 10));
+        var totalTracks = Math.max(trackCount, Math.min(500, parseInt(msg.totalTracks, 10) || trackCount));
         var indices = [];
         for (var ti = 0; ti < totalTracks; ti++) indices.push(ti);
         for (var ti = indices.length - 1; ti > 0; ti--) {
