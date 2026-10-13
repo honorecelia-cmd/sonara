@@ -317,7 +317,6 @@ document.addEventListener('click', function(e) {
   if(e.target.id==='am-qcm')  { setAM('qcm'); return; }
   if(e.target.id==='am-free') { setAM('free'); return; }
   // Valider texte libre
-  if(e.target.id==='vbtn') { freeSubmit(); return; }
   // Résultats
   if(e.target.id==='btn-replay')    { if(inRoom()){groupReplay();return;} doReplay(); return; }
   if(e.target.id==='btn-home')      { if(inRoom()){groupChangeUnivers();return;} doHome(); if(window.SonaraFlow)SonaraFlow.toUnivers({theme:themeSlug()}); return; }   // ecran Univers (son-nom garde)
@@ -327,7 +326,22 @@ document.addEventListener('click', function(e) {
   if(e.target.id==='btn-load-back') { doHome(); return; }
 });
 
-$('ani').addEventListener('keydown', function(e){ if(e.key==='Enter') freeSubmit(); });
+// Fleche et touche Entree (formulaire) : meme envoi ; le champ garde le focus,
+// le clavier reste ouvert entre deux essais
+$('ani-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  freeSubmit();
+  var ani=$('ani');if(!ani.disabled)ani.focus();
+});
+// Toucher la fleche ne retire pas le focus du champ (sinon le clavier se ferme) :
+// au doigt, on annule le toucher (focus garde) et on envoie nous-memes ;
+// a la souris, on garde le focus et le clic envoie normalement
+$('vbtn').addEventListener('touchend', function(e){
+  if(document.activeElement!==$('ani')||$('vbtn').disabled)return;
+  e.preventDefault();
+  $('ani-form').requestSubmit();
+});
+$('vbtn').addEventListener('mousedown', function(e){ if(document.activeElement===$('ani'))e.preventDefault(); });
 
 // ── LAUNCH ──────────────────────────────────────────
 function launchFromModal(btn) {

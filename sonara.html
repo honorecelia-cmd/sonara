@@ -728,6 +728,7 @@
         <figure class="jg-cover sn-cover is-blurred" id="jg-cover"><img id="jg-cover-img" alt=""></figure>
       </div>
       <div class="jg-panel">
+        <div class="jg-dock" id="jg-dock">
         <div class="jg-row">
           <div class="jg-listen">
             <span class="jg-ald" id="ald">Chargement de l'extrait</span>
@@ -746,10 +747,11 @@
           <div id="found-tags" class="jg-found"></div>
           <div class="panch" id="panch" aria-live="polite"></div>
         </div>
-        <div class="jg-input">
+        <form class="jg-input" id="ani-form" action="#" novalidate>
           <span class="ani-prog" id="ani-prog" aria-hidden="true"></span>
-          <input class="ani" id="ani" type="text" placeholder="Titre ou artiste…" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Titre ou artiste">
-          <button class="vbtn" id="vbtn" type="button" aria-label="Envoyer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+          <input class="ani" id="ani" type="text" placeholder="Titre ou artiste…" enterkeyhint="send" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Titre ou artiste">
+          <button class="vbtn" id="vbtn" type="submit" aria-label="Envoyer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+        </form>
         </div>
         <div id="chat-log" class="jg-chat" style="display:none"></div>
         <div class="wmsg" id="wmsg">Les deux trouvés ! Révélation dans quelques secondes…</div>

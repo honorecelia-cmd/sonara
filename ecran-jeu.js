@@ -200,17 +200,36 @@
     else copy();
   });
 
-  // ── Mobile : clavier ouvert, le champ et le minuteur restent visibles ──
-  var vv=window.visualViewport, ani=$('ani');
-  function fit(){
-    if(!vv)return;
-    var h=Math.round(vv.height);
-    game.style.setProperty('--jg-vvh',h+'px');
-    var kbd=h<window.innerHeight*0.8&&document.activeElement===ani;
-    game.classList.toggle('jg-kbd',kbd);
-    if(kbd)window.scrollTo(0,0);   // mise en page compacte : tout tient en haut
+  // ── Mobile : clavier ouvert, zone de reponse collee au-dessus du clavier ──
+  // iOS (et Chrome Android recent) : le clavier ne reduit pas la page, seulement
+  // window.visualViewport ; Safari decale la zone visible (offsetTop). Pendant la
+  // saisie, minuteur + puces + champ passent en position fixe, en bas de la zone
+  // visible ; la page ne defile plus ; pochette et question se reduisent.
+  var vv=window.visualViewport, ani=$('ani'), dock=$('jg-dock'), root=document.documentElement;
+  var typing=false, raf=0;
+  function keyboardOpen(){   // zone visible nettement plus basse que la page : clavier ouvert
+    return !!vv&&vv.height<root.clientHeight-120;
   }
-  if(vv){vv.addEventListener('resize',fit);vv.addEventListener('scroll',fit);}
-  ani.addEventListener('focus',function(){setTimeout(fit,250);});
-  ani.addEventListener('blur',function(){game.classList.remove('jg-kbd');});
+  function place(){
+    raf=0;
+    var on=document.activeElement===ani&&!ani.disabled&&$('qsc').classList.contains('on')&&keyboardOpen();
+    if(on!==typing){
+      typing=on;
+      game.classList.toggle('jg-typing',on);
+      root.classList.toggle('jg-lock',on);
+    }
+    if(!on){dock.style.top='';return;}
+    // Bas du dock = bas de la zone visible (au-dessus du clavier)
+    dock.style.top=Math.round(vv.offsetTop+vv.height-dock.offsetHeight)+'px';
+  }
+  function later(){if(!raf)raf=requestAnimationFrame(place);}
+  if(vv){vv.addEventListener('resize',later);vv.addEventListener('scroll',later);}
+  window.addEventListener('scroll',later);
+  ani.addEventListener('focus',function(){later();setTimeout(place,300);setTimeout(place,700);});
+  ani.addEventListener('blur',function(){setTimeout(place,0);});
+  new MutationObserver(later).observe($('qsc'),{attributes:true,attributeFilter:['class']});
+  // Manche finie pour ce joueur (champ desactive) : le clavier se ferme
+  new MutationObserver(function(){if(ani.disabled&&document.activeElement===ani)ani.blur();later();}).observe(ani,{attributes:true,attributeFilter:['disabled']});
+  // Defilement bloque pendant la saisie (iOS ignore overflow:hidden au doigt)
+  document.addEventListener('touchmove',function(e){if(typing&&!dock.contains(e.target))e.preventDefault();},{passive:false});
 })();
