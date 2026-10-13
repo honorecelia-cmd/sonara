@@ -260,7 +260,10 @@ function notif(txt){
   setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .4s'},2600);
   setTimeout(function(){el.remove()},3100);
 }
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+// Texte sur dans du HTML et dans un attribut entre guillemets
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+// Selecteur d'attribut sur, quel que soit le son-nom
+function byName(sel,n){var v=String(n).replace(/["\\]/g,'\\$&');return document.querySelector(sel+'[data-n="'+v+'"]');}
 
 // ── SFX ─────────────────────────────────────────────
 var _ac;
@@ -833,7 +836,7 @@ function tryGuess(v,byUser){
     $('ani').disabled=true;$('vbtn').disabled=true;
     var sb=$('skipbtn');if(sb)sb.style.display='none';
     var me=G.pl.filter(function(p){return p.me})[0];if(me)me.ans=true;
-    var chip=document.querySelector('.pchip[data-n="'+G.ps+'"]');if(chip)chip.classList.add('ans');
+    var chip=byName('.pchip',G.ps);if(chip)chip.classList.add('ans');
     updateHdr();renderPstrip();
     if(WS&&WS.readyState===1&&G_MULTI.code){
       WS.send(JSON.stringify({type:'answer',points:0,done:true,index:G.cq}));
@@ -911,7 +914,7 @@ function doSub(v,byUser,src){
   var sb=$('skipbtn');if(sb)sb.style.display='none';
   if(!G.foundA&&!G.foundT){G.cb=0;G.mx=1;}
   var me2=G.pl.filter(function(p){return p.me})[0];if(me2)me2.ans=true;
-  var chip=document.querySelector('.pchip[data-n="'+G.ps+'"]');if(chip)chip.classList.add('ans');
+  var chip=byName('.pchip',G.ps);if(chip)chip.classList.add('ans');
   updateHdr();renderPstrip();
   if(WS&&WS.readyState===1&&G_MULTI.code){
     WS.send(JSON.stringify({type:'answer',points:0,done:true,index:G.cq}));
@@ -939,7 +942,7 @@ function simBots(dur){
       setTimeout(function(){
         if(G.page!=='s-game')return;
         b.s+=Math.max(50,Math.round((1-dl/(dur*1000))*1000*(1+Math.random()*.4)));b.c=(b.c||0)+1;b.ans=true;
-        var chip=document.querySelector('.pchip[data-n="'+b.n+'"]');if(chip)chip.classList.add('ans');
+        var chip=byName('.pchip',b.n);if(chip)chip.classList.add('ans');
         renderPstrip();
       },dl);
     }
@@ -958,7 +961,7 @@ function updateHdr(){var ft=document.getElementById("fig-theme-title");if(ft&&G.
 }
 function renderPstrip(){
   $('pstrip').innerHTML=G.pl.map(function(p){
-    return '<div class="pchip'+(p.me?' me':'')+(p.ans?' ans':'')+'" data-n="'+esc(p.n)+'">'+'<span>'+ini(p.n)+'</span><span>'+(p.n.length>8?p.n.slice(0,7)+'…':p.n)+'</span><span class="cp">'+(p.me?G.sc:p.s)+'</span></div>';
+    return '<div class="pchip'+(p.me?' me':'')+(p.ans?' ans':'')+'" data-n="'+esc(p.n)+'">'+'<span>'+esc(ini(p.n))+'</span><span>'+esc(p.n.length>8?p.n.slice(0,7)+'…':p.n)+'</span><span class="cp">'+(p.me?G.sc:p.s)+'</span></div>';
   }).join('');
   var lr=$('live-rank');
   if(!lr)return;
