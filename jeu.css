@@ -46,6 +46,10 @@
 .jg .cds,.jg .brksc,.jg .qsc,.jg .rvsc{display:none}
 .jg .cds.on,.jg .brksc.on{display:flex}
 .jg .qsc.on,.jg .rvsc.on{display:grid}
+/* Revelation : fondu court a l'arrivee */
+.jg .rvsc.on{animation:jg-rv-in .25s ease-out both}
+@keyframes jg-rv-in{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.jg .rvsc.on{animation:none}}
 
 /* Compte a rebours et pause entre deux manches : fond du hero plein ecran,
    vinyle de l'univers (etiquette Sonara) qui prend de la vitesse, anneau

@@ -798,7 +798,6 @@ function tryGuess(v,byUser){
   if(matchA&&matchT){
     // Les deux d'un coup — bonus !
     G.foundA=true;G.foundT=true;
-    addChatMsg('Tu as trouvé les deux !','found');
     sfxOk();
     addFoundTag(q.a,'artist');addFoundTag(q.t,'title');
     updateFoundScore('both');
@@ -841,8 +840,8 @@ function tryGuess(v,byUser){
       var wm=$('wmsg');wm.textContent='En attente des autres joueurs…';wm.className='wmsg waiting';wm.style.display='block';
       // serveur envoie reveal_now
     } else {
-      $('wmsg').style.display='block';
-      setTimeout(doReveal,500);
+      // Solo : revelation immediate (elle affiche deja "Les deux trouves")
+      revealNow();
     }
     return;
   }
@@ -919,8 +918,13 @@ function doSub(v,byUser,src){
     var wm=$('wmsg');wm.textContent='En attente des autres joueurs…';wm.className='wmsg waiting';wm.style.display='block';
     // serveur envoie reveal_now
   } else {
-    setTimeout(doReveal,750);
+    revealNow();
   }
+}
+// Bascule directe vers la revelation ; le clavier se ferme au meme moment (mobile)
+function revealNow(){
+  var a=$('ani');if(document.activeElement===a)a.blur();
+  doReveal();
 }
 function popScore(txt){
   var a=$('panch'),el=document.createElement('div');
