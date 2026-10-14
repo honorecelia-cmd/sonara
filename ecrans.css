@@ -242,19 +242,16 @@
 }
 #s-res .glb-top:empty{display:none}
 @media (min-width:1100px){
+  /* Ordinateur : une seule colonne centree, comme sur iPhone ; meilleurs scores dessous */
   .rs-main{
-    display:grid;grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr);
-    grid-template-areas:"top top" "col side" "band band";grid-template-rows:auto auto 1fr;
-    align-items:start;column-gap:48px;row-gap:24px;
+    display:grid;grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"top" "col" "side" "band";grid-template-rows:auto auto auto 1fr;
+    justify-items:center;align-items:start;row-gap:24px;
   }
   .rs-band{grid-area:band;justify-self:center;align-self:stretch}
   .rs-top{grid-area:top}
-  .rs-col{grid-area:col}
-  .rs-side{grid-area:side;max-width:none;align-self:center}
-  /* Rien a droite (pas de classement ni de note) : une seule colonne centree */
-  .rs-main:not(:has(#glb-top .glb-row)):not(:has(#rs-rgpd-note:not([hidden]))){grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "col" "band"}
-  .rs-main:not(:has(#glb-top .glb-row)):not(:has(#rs-rgpd-note:not([hidden]))) .rs-side{display:none}
-  .rs-main:not(:has(#glb-top .glb-row)):not(:has(#rs-rgpd-note:not([hidden]))) .rs-col{max-width:720px;justify-self:center}
+  .rs-col{grid-area:col;max-width:720px}
+  .rs-side{grid-area:side;max-width:480px}
 }
 .rs-top{display:flex;justify-content:center}
 .rs-top img{display:block;height:28px}
