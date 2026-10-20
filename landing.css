@@ -801,14 +801,10 @@ html{scroll-padding-top:var(--hd-h)}
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   font-size:calc(var(--pw) * .05);font-weight:700;color:#fff;
 }
-/* Pochette qui se devoile (concept "La Pochette") */
+/* Pochette de la manche : remplit son cadre, bord a bord */
 .nb-play-cover{
   position:absolute;top:calc(var(--pw) * .32);left:7%;right:7%;aspect-ratio:1;
   border-radius:calc(var(--pw) * .05);overflow:hidden;background-size:cover;background-position:center;
-}
-.nb-play-veil{
-  position:absolute;inset:0;background:#1F1F1F;
-  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 0,22% 22%,22% 78%,78% 78%,78% 22%,22% 22%);
 }
 .nb-play-q{
   position:absolute;top:calc(var(--pw) * 1.25);left:7%;right:7%;margin:0;

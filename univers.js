@@ -1,9 +1,12 @@
 // ═══════════════════════════════════════════════════════════════
 // SONARA — section "Les univers" : carrousel de vinyles (landing)
 // Toutes les donnees sont dans UNIVERS ci-dessous : textes, couleurs
-// (variables --univers-* de univers.css) et pochettes. Pour changer une
-// pochette, remplacer son chemin `image` ; `image:null` affiche le
-// placeholder (aplat de la couleur + nom en MuseoModerno).
+// (variables --univers-* de univers.css) et pochettes. C'est la seule
+// reference des pochettes du site : carrousel, telephones de la landing,
+// manches du jeu (universeCover, sonara.js). Pour changer une pochette,
+// remplacer son chemin `image` (WebP, avec un JPG de meme nom a cote pour
+// les navigateurs sans WebP) ; `image:null` affiche le placeholder (aplat
+// de la couleur + nom en MuseoModerno).
 // Transitions : A (changer d'univers), B (ouvrir), C (fermer).
 // ═══════════════════════════════════════════════════════════════
 // Reglages du carrousel
@@ -11,34 +14,63 @@ var UV_DELAI_AUTO = 3000;        // ms entre deux univers en defilement automati
 var UV_DUREE_TRANSITION = 500;   // ms pour passer d'un univers a l'autre (pivot du disque)
 
 var UNIVERS = [
-  {nom:'Dancehall', slug:'dancehall', couleur:'var(--univers-dancehall)', image:'/img/cover_dancehall.jpg',
+  {nom:'Dancehall', slug:'dancehall', couleur:'var(--univers-dancehall)', image:'/img/pochettes/dancehall.webp',
    origine:'Jamaïque', epoque:'fin des années 1970', signature:'le deejay sur les riddims',
    texte:"Le dancehall tire son nom des salles de danse de Kingston où tournaient les sound systems. Plus rapide et plus brut que le reggae, il met le deejay au centre : il pose sa voix sur des riddims, des instrumentaux partagés par des dizaines d'artistes. En 1985, « Under Me Sleng Teng » de Wayne Smith fait basculer le genre dans l'ère numérique. Aux Antilles, il est devenu la bande-son des soirées et a donné naissance au shatta."},
-  {nom:'Soca', slug:'soca', couleur:'var(--univers-soca)', image:'/img/cover_soca.jpg',
+  {nom:'Soca', slug:'soca', couleur:'var(--univers-soca)', image:'/img/pochettes/soca.webp',
    origine:'Trinidad-et-Tobago', epoque:'années 1970', signature:'la musique des carnavals',
    texte:"Au début des années 70, Lord Shorty veut redonner un souffle au calypso et y mêle des rythmes indo-caribéens : c'est la « soul of calypso », la soca. Tempo rapide, cuivres, refrains à reprendre en chœur, elle est devenue la musique reine des carnavals de toute la Caraïbe, de Port of Spain à Fort-de-France. Impossible de rester immobile."},
-  {nom:'Zouk', slug:'zouk', couleur:'var(--univers-zouk)', image:'/img/cover_zouk.jpg',
+  {nom:'Zouk', slug:'zouk', couleur:'var(--univers-zouk)', image:'/img/pochettes/zouk.webp',
    origine:'Guadeloupe et Martinique', epoque:'début des années 1980', signature:'« zouk », c\'est la fête en créole',
    texte:"Formé en 1979, le groupe Kassav' fusionne gwoka, biguine, cadence et kompa avec des synthés et une production moderne. En créole, « zouk » veut dire la fête, et « Zouk la sé sèl médikaman nou ni » devient un hymne. Puis vient le zouk love, plus lent et plus sensuel. Le zouk est la signature musicale des Antilles françaises dans le monde entier."},
-  {nom:'Reggae', slug:'reggae', couleur:'var(--univers-reggae)', image:'/img/cover_reggae.jpg',
+  {nom:'Reggae', slug:'reggae', couleur:'var(--univers-reggae)', image:'/img/pochettes/reggae.webp',
    origine:'Jamaïque', epoque:'fin des années 1960', signature:'le contretemps et le message',
    texte:"Issu du ska et du rocksteady, le reggae ralentit le tempo et accentue le contretemps, le fameux « skank ». Porté par le mouvement rastafari, il devient une musique de message, de spiritualité et de résistance. Bob Marley l'emmène sur toute la planète dans les années 70. En 2018, l'UNESCO l'inscrit au patrimoine culturel immatériel de l'humanité."},
-  {nom:'Trap', slug:'trap', couleur:'var(--univers-trap)', image:'/img/cover_dancehall.jpg',   // provisoire : pochette d'un autre univers
+  {nom:'Trap', slug:'trap', couleur:'var(--univers-trap)', image:'/img/pochettes/trap.webp',
    origine:'Atlanta, États-Unis', epoque:'début des années 2000', signature:'808, basses lourdes, charlestons en rafale',
    texte:"Le nom vient des « traps », les lieux de deal dont parlent les premiers textes du genre dans le Sud des États-Unis. Sa signature : la boîte à rythmes TR-808, des basses profondes et des charlestons en rafale. Dans les années 2010, la trap devient le son dominant du rap mondial, et les Antilles se l'approprient en la mêlant au dancehall et au créole."},
-  {nom:'Rap', slug:'rap', couleur:'var(--univers-rap)', image:'/img/cover_rap.jpg',
+  {nom:'Rap', slug:'rap', couleur:'var(--univers-rap)', image:'/img/pochettes/rap.webp',
    origine:'le Bronx, New York', epoque:'années 1970', signature:'le flow sur le beat',
    texte:"Dans les block parties du Bronx, DJ Kool Herc, né en Jamaïque, isole les breaks des disques pendant que des MC prennent le micro. Le rap est né, avec un héritage direct du toasting des sound systems jamaïcains. Le genre conquiert le monde et s'installe aux Antilles dans les années 90, où il se fait en créole comme en français, entre conscience et ego trip."},
-  {nom:'Mix', slug:'mix', couleur:'var(--univers-mix)', image:'/img/cover_zouk.jpg',   // provisoire : pochette d'un autre univers
+  {nom:'Mix', slug:'mix', couleur:'var(--univers-mix)', image:'/img/pochettes/mix.webp',
    origine:'Sonara', epoque:'maintenant', signature:'tous les univers en une partie',
    texte:"L'univers qui casse les frontières. Mix réunit tous les univers Sonara dans une même partie : un zouk peut succéder à un classique du reggae, puis à un shatta. C'est le reflet de nos playlists, de nos soirées et de la Caraïbe elle-même, faite de rencontres et de mélanges. Le mode pour ceux qui connaissent tout, ou qui veulent tout découvrir."},
-  {nom:'Kompa', slug:'kompa', couleur:'var(--univers-kompa)', image:'/img/cover_kompa.jpg',
+  {nom:'Kompa', slug:'kompa', couleur:'var(--univers-kompa)', image:'/img/pochettes/kompa.webp',
    origine:'Haïti', epoque:'1955', signature:'la danse en couple par excellence',
    texte:"En 1955, le saxophoniste haïtien Nemours Jean-Baptiste crée le « konpa dirèk », un rythme de danse régulier et chaloupé inspiré du méringue. Guitares, cuivres, puis claviers : le kompa voyage avec la diaspora haïtienne et s'installe durablement aux Antilles, où il a nourri la cadence et le zouk. Aujourd'hui encore, c'est la danse en couple par excellence."},
-  {nom:'Shatta', slug:'shatta', couleur:'var(--univers-shatta)', image:'/img/cover_soca.jpg',   // provisoire : pochette d'un autre univers
+  {nom:'Shatta', slug:'shatta', couleur:'var(--univers-shatta)', image:'/img/pochettes/shatta.webp',
    origine:'Martinique', epoque:'années 2010', signature:'minimaliste, percussif, fait pour le dancefloor',
    texte:"Né en Martinique, le shatta est un enfant du dancehall : plus minimaliste, plus percussif, pensé pour faire bouger le dancefloor, avec des textes crus et beaucoup d'humour. Longtemps réservé aux soirées locales, il explose dans l'Hexagone au début des années 2020, porté notamment par Maureen et Bamby. C'est la touche martiniquaise de Sonara."}
 ];
+
+// ── Pochettes : tout passe par le tableau UNIVERS ───────────────
+// Chemin de la pochette d'un univers (null si inconnu)
+function uvCover(slug){
+  for(var k=0;k<UNIVERS.length;k++)if(UNIVERS[k].slug===slug)return UNIVERS[k].image||null;
+  return null;
+}
+function uvJpg(src){return String(src).replace(/\.webp$/,'.jpg');}
+// Pochette en fond d'un element : JPG d'abord, remplace par le WebP si le
+// navigateur comprend image-set (sinon la declaration est ignoree)
+function uvSetBg(el,src){
+  if(!src)return;
+  el.style.backgroundImage='url("'+uvJpg(src)+'")';
+  el.style.backgroundImage='image-set(url("'+src+'") type("image/webp"), url("'+uvJpg(src)+'") type("image/jpeg"))';
+}
+// <img> en WebP illisible : repli sur le JPG (avant tout autre ecouteur)
+document.addEventListener('error',function(e){
+  var im=e.target;
+  if(!im||im.tagName!=='IMG'||!/\/img\/pochettes\/[\w-]+\.webp$/.test(im.getAttribute('src')||''))return;
+  e.stopPropagation();
+  im.src=uvJpg(im.getAttribute('src'));
+},true);
+// Elements marques data-uv-cover="slug" (telephones de la landing, kit) :
+// fond, ou source pour une <img>
+[].forEach.call(document.querySelectorAll('[data-uv-cover]'),function(el){
+  var src=uvCover(el.getAttribute('data-uv-cover'));
+  if(!src)return;
+  if(el.tagName==='IMG')el.src=src;else uvSetBg(el,src);
+});
 
 // Vinyle d'un univers (aussi utilise par l'ecran Choix de l'univers, ecrans.js)
 function uvEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}

@@ -128,8 +128,8 @@
     .observe(landing,{attributes:true,attributeFilter:['style']});
 
   // ── 3. Trio lecteur -> apercu de partie ─────────────────────
-  var UNIV=[['Zouk','cover_zouk'],['Kompa','cover_kompa'],['Dancehall','cover_dancehall'],
-            ['Reggae','cover_reggae'],['Soca','cover_soca'],['Rap','cover_rap']];
+  // Pochettes : chemins du tableau UNIVERS (univers.js, uvCover)
+  var UNIV=['zouk','kompa','dancehall','reggae','soca','rap'];
   var cover=document.getElementById('nb-scr-cover');
   var manche=document.getElementById('nb-scr-manche');
   var fill=document.getElementById('nb-scr-fill');
@@ -139,7 +139,7 @@
 
   function render(){
     manche.textContent='Manche '+round+'/10';
-    cover.style.backgroundImage="url('/img/"+UNIV[u][1]+".jpg')";
+    if(window.uvSetBg)uvSetBg(cover,uvCover(UNIV[u]));
   }
   function step(dir){
     round=(round-1+dir+10)%10+1;
