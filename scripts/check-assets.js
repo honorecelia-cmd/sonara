@@ -54,6 +54,21 @@ try {
   if (!missing) ok(refs.size + ' images /img/ referencees, toutes presentes');
 } catch (e) { fail('verif images impossible : ' + e.message); }
 
+// 4. Pochettes des univers (tableau UNIVERS, univers.js) : WebP et repli JPG
+try {
+  const uv = fs.readFileSync(path.join(ROOT, 'univers.js'), 'utf8');
+  const re = /image:'\/img\/([^']+\.webp)'/g;
+  let m, n = 0, missing = 0;
+  while ((m = re.exec(uv))) {
+    n++;
+    [m[1], m[1].replace(/\.webp$/, '.jpg')].forEach((f) => {
+      if (!fs.existsSync(path.join(ROOT, 'img', f))) { fail('pochette manquante : /img/' + f); missing++; }
+    });
+  }
+  if (!n) fail('univers.js : aucune pochette trouvee dans UNIVERS');
+  else if (!missing) ok(n + ' pochettes d\'univers, WebP et JPG presents');
+} catch (e) { fail('verif pochettes impossible : ' + e.message); }
+
 if (errors) {
   console.error('\nDEPLOIEMENT BLOQUE : ' + errors + ' probleme(s) front a corriger.\n');
   process.exit(1);
