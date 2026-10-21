@@ -1208,6 +1208,8 @@ function ensureDefiCode(cb){
 }
 function showDefi(){
   sfxC();
+  // Retour : l'ecran d'ou l'on vient (resultats, parcours, ou la landing a la meme hauteur)
+  if(G.page!=='s-defi')G._defiFrom={page:G.page,y:window.scrollY};
   showPage('s-defi');
   var a=document.getElementById('defi-link');
   if(a){a.textContent='Génération du lien…';a.removeAttribute('href');}
@@ -1216,6 +1218,11 @@ function showDefi(){
     var url=defiLinkFromCode(code);
     if(a){a.textContent=url;a.href=url;}
   });
+}
+function defiBack(){
+  var f=G._defiFrom||{page:'landing',y:0};G._defiFrom=null;
+  showPage(f.page&&$(f.page)?f.page:'landing');
+  if(f.y)window.scrollTo(0,f.y);
 }
 function copyDefiLink(){
   var b=document.getElementById('defi-copy');
@@ -1282,7 +1289,7 @@ function shareDefiLink(){
     page:function(a){showPage(a);},
     leaveHome:function(){leaveRoom();showPage('landing');},
     joinBack:function(){showPage(G.prevPage==='s-parcours'?'s-parcours':'landing');},
-    copyDefiLink:function(){copyDefiLink();},shareDefiLink:function(){shareDefiLink();},showDefi:function(){showDefi();},
+    defiBack:function(){defiBack();},copyDefiLink:function(){copyDefiLink();},shareDefiLink:function(){shareDefiLink();},showDefi:function(){showDefi();},
     copyLobbyCode:function(){copyLobbyCode();},createRoom:function(){createRoom();},joinRoom:function(){joinRoom();},
     startMultiGame:function(){startMultiGame();}
   };
