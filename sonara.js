@@ -581,6 +581,7 @@ function hideG(){
   $('qsc').classList.remove('on');$('rvsc').classList.remove('on');
 }
 function doCD(){
+  G._played=G.theme;   // univers de la derniere partie jouee (Defi a partager du footer)
   hideG();$('cds').classList.add('on');
   $('cdth').textContent='Univers '+G.theme;
   var n=3,el=$('cdn');el.textContent=n;sfxCd();
@@ -1199,7 +1200,9 @@ function defiLinkFromCode(code){
   return location.origin+'/fr/custom-'+code;
 }
 function ensureDefiCode(cb){
+  if(G._defiCode&&G._defiFor!==themeSlug())G._defiCode=null;   // lien d'un autre univers
   if(G._defiCode){cb(G._defiCode);return;}
+  G._defiFor=themeSlug();
   fetch('/custom',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({theme:themeSlug(),themeName:G.theme})})
   .then(function(r){return r.json();})
@@ -1218,6 +1221,11 @@ function showDefi(){
     var url=defiLinkFromCode(code);
     if(a){a.textContent=url;a.href=url;}
   });
+}
+// Footer : Defi sur l'univers de la derniere partie jouee ; sans partie, choix de l'univers
+function footerDefi(){
+  if(G._played){G.theme=G._played;showDefi();return;}
+  if(window.SonaraFlow)SonaraFlow.toUnivers({mode:'defi'});
 }
 function defiBack(){
   var f=G._defiFrom||{page:'landing',y:0};G._defiFrom=null;
@@ -1289,7 +1297,7 @@ function shareDefiLink(){
     page:function(a){showPage(a);},
     leaveHome:function(){leaveRoom();showPage('landing');},
     joinBack:function(){showPage(G.prevPage==='s-parcours'?'s-parcours':'landing');},
-    defiBack:function(){defiBack();},copyDefiLink:function(){copyDefiLink();},shareDefiLink:function(){shareDefiLink();},showDefi:function(){showDefi();},
+    defiBack:function(){defiBack();},copyDefiLink:function(){copyDefiLink();},shareDefiLink:function(){shareDefiLink();},showDefi:function(){showDefi();},footerDefi:function(){footerDefi();},
     copyLobbyCode:function(){copyLobbyCode();},createRoom:function(){createRoom();},joinRoom:function(){joinRoom();},
     startMultiGame:function(){startMultiGame();}
   };
