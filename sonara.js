@@ -581,6 +581,7 @@ function hideG(){
   $('qsc').classList.remove('on');$('rvsc').classList.remove('on');
 }
 function doCD(){
+  G._played=G.theme;   // univers de la derniere partie jouee (Defi a partager du footer)
   hideG();$('cds').classList.add('on');
   $('cdth').textContent='Univers '+G.theme;
   var n=3,el=$('cdn');el.textContent=n;sfxCd();
@@ -614,7 +615,7 @@ function doQ(){
   var q=G.qs[G.cq];
   if(G.amode==='qcm'){G.opts=buildQCM(q,G.qs.filter(function(_,i){return i!==G.cq}));renderQCM(G.opts,true)}
   $('ald').classList.add('on');setEq(false);
-  G.tl=dur;uTm(dur,dur);clearInterval(G.ti);
+  G.tl=dur;uTm(dur,dur);clearInterval(G.ti);G._t0=Date.now();G._tFound=null;
   var round=G._round=(G._round||0)+1;
   // Entre proches : le serveur fait partir le temps de ce joueur au debut REEL
   // de son extrait (evenement « playing »), pas a l'affichage de la manche
@@ -628,7 +629,7 @@ function doQ(){
     // Rappel d'une autre manche, partie finie ou ecran quitte : rien
     if(round!==G._round||G.page!=='s-game'||!G.qs[G.cq])return;
     $('ald').classList.remove('on');$('vbtn').disabled=false;
-    G._questionActive=true;
+    G._questionActive=true;G._t0=Date.now();   // debut reel du temps (affichage de la revelation)
     if(G._pendingReveal){G._pendingReveal=false;G._revealed=true;doReveal();return;}
     if(G.amode==='qcm')renderQCM(G.opts,false);
     else setTimeout(function(){ani.focus()},200);
@@ -843,7 +844,7 @@ function tryGuess(v,byUser){
 
   // Si les deux trouvés → terminer
   if(G.foundA&&G.foundT){
-    G.ans=true;clearInterval(G.ti);stopA();
+    G.ans=true;clearInterval(G.ti);stopA();G._tFound=Date.now()-G._t0;
     $('ani').disabled=true;$('vbtn').disabled=true;
     var sb=$('skipbtn');if(sb)sb.style.display='none';
     var me=G.pl.filter(function(p){return p.me})[0];if(me)me.ans=true;
@@ -1020,7 +1021,7 @@ function doReveal(){
   var v=$('rvv');
   // Entre proches : temps mesure par le serveur (le meme que dans le recapitulatif)
   var myR=(G._recap||[]).filter(function(r){return r.id===G_MULTI.playerId;})[0];
-  var tFound=myR&&myR.ms!=null?(myR.ms/1000).toFixed(1).replace('.',','):(G.td-G.tl);
+  var tFound=foundTime(myR&&myR.ms!=null?myR.ms:G._tFound,myR&&myR.ms!=null);
   if(G.foundA&&G.foundT){v.className='revv vok';v.textContent='Les deux trouvés en '+tFound+' s. Sé ou !'}
   else if(G.foundA){v.className='revv vok';v.textContent='Artiste trouvé, titre manqué'}
   else if(G.foundT){v.className='revv vok';v.textContent='Titre trouvé, artiste manqué'}
@@ -1029,7 +1030,7 @@ function doReveal(){
   var sorted=G.pl.slice().sort(function(a,b){return b.s-a.s});
   // Entre proches : sous chaque son-nom, son temps de reponse et ses points de la manche
   var recap={};(G._recap||[]).forEach(function(r){recap[r.id]=r;});
-  function sec(ms){return (ms/1000).toFixed(1).replace('.',',')+' s';}
+  function sec(ms){return foundTime(ms,true)+' s';}
   $('rnkm').innerHTML='<p class="jg-k">Classement</p>'+sorted.slice(0,5).map(function(p,i){
     var r=recap[p.id],line=r?(r.ms!=null?sec(r.ms)+' · +'+r.pts+' pts':'Pas trouvé'):'';
     return '<div class="rnkr'+(p.me?' me':'')+'" data-n="'+esc(p.n)+'"><span class="rpos">'+(i+1)+'</span><span class="rav">'+esc(ini(p.n))+'</span><span class="rnm">'+esc(p.n)+(p.me?' (toi)':'')+(line?'<small class="rtm">'+line+'</small>':'')+'</span><span class="rsc">'+(p.me?G.sc:p.s)+'</span></div>';
@@ -1064,6 +1065,13 @@ function doReveal(){
     G.ans=false;G.foundA=false;G.foundT=false;G._revealed=false;
     if(G.cq>=G.qs.length)doResults();else doBreak(G.cq,doQ);
   },delay);
+}
+// Temps de la revelation : au dixieme sous une seconde (jamais "0 s"), sinon en
+// secondes entieres, ou au dixieme si tenths (temps mesure par le serveur)
+function foundTime(ms,tenths){
+  ms=Math.max(0,ms||0);
+  if(ms<1000||tenths)return (Math.max(1,Math.round(ms/100))/10).toFixed(1).replace('.',',');
+  return String(Math.floor(ms/1000));
 }
 // Pochette d'un univers (chemins locaux du tableau UNIVERS) ; null si inconnue
 function universeCover(key){
@@ -1199,7 +1207,9 @@ function defiLinkFromCode(code){
   return location.origin+'/fr/custom-'+code;
 }
 function ensureDefiCode(cb){
+  if(G._defiCode&&G._defiFor!==themeSlug())G._defiCode=null;   // lien d'un autre univers
   if(G._defiCode){cb(G._defiCode);return;}
+  G._defiFor=themeSlug();
   fetch('/custom',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({theme:themeSlug(),themeName:G.theme})})
   .then(function(r){return r.json();})
@@ -1208,6 +1218,8 @@ function ensureDefiCode(cb){
 }
 function showDefi(){
   sfxC();
+  // Retour : l'ecran d'ou l'on vient (resultats, parcours, ou la landing a la meme hauteur)
+  if(G.page!=='s-defi')G._defiFrom={page:G.page,y:window.scrollY};
   showPage('s-defi');
   var a=document.getElementById('defi-link');
   if(a){a.textContent='Génération du lien…';a.removeAttribute('href');}
@@ -1216,6 +1228,16 @@ function showDefi(){
     var url=defiLinkFromCode(code);
     if(a){a.textContent=url;a.href=url;}
   });
+}
+// Footer : Defi sur l'univers de la derniere partie jouee ; sans partie, choix de l'univers
+function footerDefi(){
+  if(G._played){G.theme=G._played;showDefi();return;}
+  if(window.SonaraFlow)SonaraFlow.toUnivers({mode:'defi'});
+}
+function defiBack(){
+  var f=G._defiFrom||{page:'landing',y:0};G._defiFrom=null;
+  showPage(f.page&&$(f.page)?f.page:'landing');
+  if(f.y)window.scrollTo(0,f.y);
 }
 function copyDefiLink(){
   var b=document.getElementById('defi-copy');
@@ -1282,7 +1304,7 @@ function shareDefiLink(){
     page:function(a){showPage(a);},
     leaveHome:function(){leaveRoom();showPage('landing');},
     joinBack:function(){showPage(G.prevPage==='s-parcours'?'s-parcours':'landing');},
-    copyDefiLink:function(){copyDefiLink();},shareDefiLink:function(){shareDefiLink();},showDefi:function(){showDefi();},
+    defiBack:function(){defiBack();},copyDefiLink:function(){copyDefiLink();},shareDefiLink:function(){shareDefiLink();},showDefi:function(){showDefi();},footerDefi:function(){footerDefi();},
     copyLobbyCode:function(){copyLobbyCode();},createRoom:function(){createRoom();},joinRoom:function(){joinRoom();},
     startMultiGame:function(){startMultiGame();}
   };
