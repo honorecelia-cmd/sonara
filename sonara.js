@@ -178,7 +178,7 @@ var THEMES = {
     {t:'Badmind',a:'Meryl',preview:'/audio/Meryl-Badmind.mp3',cover:''},
     {t:'Lambi',a:'Jahlys',preview:'/audio/Jahlys-Lambi.mp3',cover:''},
     {t:'Boss lady',a:'Jahlys ft Theodora',preview:'/audio/Jahlys_ft_Theodora-Boss_lady.mp3',cover:''},
-    {t:'Ou pani',a:'Mikado',preview:'/audio/Mikado-Ou_pani.mp3',cover:''},
+    {t:'Ou pani',a:'Mikado ft Lejems',preview:'/audio/Mikado-Ou_pani.mp3',cover:''},
     {t:'Gregoire',a:'Natoxie',preview:'/audio/Natoxie-Gregoire.mp3',cover:''},
     {t:'Vieux clébard',a:'Natoxie',preview:'/audio/Natoxie-Vieux_clebard.mp3',cover:''},
     {t:'Comme à la maison',a:'QLM',preview:'/audio/QLM-Comme_a_la_maison.mp3',cover:''},
