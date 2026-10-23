@@ -1004,18 +1004,18 @@ function doReveal(){
   hideG();$('rvsc').classList.add('on');
   $('rvtit').textContent=q.t;$('rvar').textContent=q.a;$('rvmt').textContent=q.y||'';$('remoji').textContent='';
   var reva=$('reva');reva.querySelectorAll('img,.vy').forEach(function(i){i.remove()});
-  // La pochette se devoile : celle du morceau si elle existe, sinon celle de
-  // son univers (tableau UNIVERS) ; le vinyle de l'univers en dernier recours
+  // La pochette du morceau se devoile si elle existe ; sinon le vinyle de son
+  // univers, etiquette neutre (couleur, logo Sonara, nom) : jamais la pochette
+  // de l'univers, dont l'artiste passerait pour celui du morceau
   $('remoji').style.display='none';
   var key=q.u||themeSlug();
   function showVinyl(){
     var list=window.UNIVERS||[],u=null;
     for(var i=0;i<list.length;i++)if(list[i].slug===key)u=list[i];
     if(!u||!window.uvVinyl)return;
-    // etiquette neutre : couleur de l'univers et logo Sonara
-    reva.insertAdjacentHTML('beforeend',uvVinyl(u,true,true));
+    reva.insertAdjacentHTML('beforeend',uvVinyl(u,true,true,true));
   }
-  var src=q.cover||universeCover(key);
+  var src=q.cover;
   if(src){var img=document.createElement('img');img.src=src;img.alt='';img.onerror=function(){img.remove();showVinyl()};reva.appendChild(img)}
   else showVinyl();
   var v=$('rvv');
