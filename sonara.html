@@ -489,6 +489,67 @@
 
 
 
+  <!-- ══ VUES /a-propos ET /comment-jouer ══
+       Meme page que l'accueil (header et footer communs) ; landing.js
+       (bloc "Vues") affiche la vue qui correspond a l'adresse. Textes repris
+       des anciennes sections 01 (histoire, mission) et 04 (etapes, points). -->
+  <section class="nb-sec nb-page nb-page--ap" id="a-propos" data-vue="a-propos" aria-labelledby="ap-t" hidden>
+    <div class="nb-page-head">
+      <p class="nb-label">Sonara /</p>
+      <h1 class="nb-page-t" id="ap-t">À propos</h1>
+    </div>
+    <div class="nb-ap-grid">
+      <div class="nb-ap-story">
+        <span class="nb-secicon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <h2 class="nb-label">L'histoire /</h2>
+        <p class="nb-ap-txt">Tout est parti d'une soirée entre frère et sœur, autour d'un blind test. On s'est dit qu'il nous fallait un jeu fait pour nous, avec les sons qu'on aime et qui nous font vibrer. Sonara est né ce soir-là.</p>
+      </div>
+      <div class="nb-ap-mission">
+        <h2 class="nb-label">Notre mission</h2>
+        <p class="nb-phrase nb-phrase--list nb-title">
+          <span>Transmettre</span>
+          <span>Rassembler</span>
+          <span>Faire découvrir</span>
+          <span>S'amuser</span>
+        </p>
+      </div>
+    </div>
+    <div class="nb-page-cta"><button class="nb-pill nb-pill--cta" type="button" data-nb-play>Jouer</button></div>
+  </section>
+
+  <section class="nb-sec nb-sec--light nb-page nb-page--cj" id="comment-jouer" data-vue="comment-jouer" aria-labelledby="cj-t" hidden>
+    <div class="nb-page-head">
+      <p class="nb-label">Sonara /</p>
+      <h1 class="nb-page-t" id="cj-t">Comment jouer ?</h1>
+    </div>
+    <!-- 5 etapes -->
+    <h2 class="nb-label nb-cj-h">En 5 étapes /</h2>
+    <ol class="nb-steps nb-cj-steps">
+      <li><span>1</span>Choisis ton univers</li>
+      <li><span>2</span>Choisis ton son-nom</li>
+      <li><span>3</span>Écoute l'extrait</li>
+      <li><span>4</span>Trouve titre et artiste</li>
+      <li><span>5</span>Monte sur le podium</li>
+    </ol>
+    <div class="nb-cj-grid">
+      <div class="nb-cj-rules">
+        <span class="nb-secicon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <h2 class="nb-label">Comment jouer /</h2>
+        <p class="nb-body">Écoute l'extrait et tape l'artiste, le titre, ou les deux. La manche s'arrête dès que tout le monde a trouvé, ou au bout de 30 secondes.</p>
+      </div>
+      <div class="nb-cj-points">
+        <h2 class="nb-label">Les points</h2>
+        <ul class="nb-s04-pts">
+          <li>Artiste ou titre : 15 points chacun.</li>
+          <li>Les deux d'un coup : 30 points.</li>
+          <li>Réponds vite pour multiplier tes points : ×3 dans les 5 premières secondes, ×2 entre 5 et 10 secondes.</li>
+          <li>Jusqu'à 90 points par morceau.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="nb-page-cta"><button class="nb-pill nb-pill--cta" type="button" data-nb-play>Jouer</button></div>
+  </section>
+
   <!-- ── FOOTER ── carte creme sur fond brun (footer.js : heure de Martinique) -->
   <footer class="nb-footer">
     <div class="nb-ft-card">

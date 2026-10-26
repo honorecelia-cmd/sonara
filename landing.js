@@ -16,6 +16,9 @@
   function play(opts){
     closeMenus();
     opts=opts||{};
+    // Depuis /a-propos ou /comment-jouer : le parcours (et le retour a
+    // l'accueil apres la partie) repart de l'adresse de l'accueil
+    if(vue!=='accueil'){try{history.replaceState(null,'','/');}catch(e){}setVue('accueil');}
     if(window.uvLanding&&uvLanding.inView())opts.theme=uvLanding.current().slug;
     if(window.SonaraFlow)SonaraFlow.toUnivers(opts);
   }
@@ -271,6 +274,51 @@
     var io=new IntersectionObserver(function(es){
       es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target);}});
     },{threshold:.35});
-    ['.nb-ft-word','.nb-steps'].forEach(function(s){var el=document.querySelector(s);if(el)io.observe(el);});
+    ['.nb-ft-word','.nb-steps'].forEach(function(s){document.querySelectorAll(s).forEach(function(el){io.observe(el);});});
+  })();
+
+  // ── 7. Vues : accueil, /a-propos, /comment-jouer ─────────────
+  // Une seule page (header et footer communs) : le contenu affiche suit
+  // l'adresse. Les anciennes ancres des sections retirees menent a la vue
+  // qui reprend leur contenu. Toute autre adresse (lien de Defi...) : accueil.
+  var VUES={'/':'accueil','/a-propos':'a-propos','/comment-jouer':'comment-jouer'};
+  var TITRES={'accueil':document.title,'a-propos':'À propos · Sonara','comment-jouer':'Comment jouer · Sonara'};
+  var ANCRES={'#comment-jouer':'/comment-jouer','#nb-s04':'/comment-jouer','#la-revelation':'/comment-jouer','#nb-s02':'/comment-jouer','#nb-s01':'/a-propos'};
+  var vue='accueil';
+  function vueDe(path){return VUES[path.replace(/\/+$/,'')||'/'];}
+  function setVue(v){
+    vue=v;
+    landing.querySelectorAll('[data-vue]').forEach(function(el){el.hidden=el.getAttribute('data-vue')!==v;});
+    // Page en cours dans le menu et le footer ("Univers" n'est pas une page)
+    landing.querySelectorAll('.nb-hd-link,.nb-menu-list a,.nb-ft-col a').forEach(function(a){
+      if(a.pathname!=='/'&&vueDe(a.pathname)===v)a.setAttribute('aria-current','page');
+      else a.removeAttribute('aria-current');
+    });
+    document.title=TITRES[v];
+  }
+  function goTo(path,hash){
+    closeMenus();
+    history.pushState(null,'',path+(hash||''));
+    if(landing.style.display==='none'&&window.showPage)showPage('landing');
+    setVue(vueDe(path));
+    var t=hash&&document.getElementById(hash.slice(1));
+    if(t&&!t.hidden)t.scrollIntoView();else window.scrollTo(0,0);
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href]');
+    if(!a||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||a.target)return;
+    if(a.origin!==location.origin||!vueDe(a.pathname))return;
+    e.preventDefault();
+    goTo(a.pathname.replace(/\/+$/,'')||'/',a.hash);
+  });
+  window.addEventListener('popstate',function(){var v=vueDe(location.pathname);if(v&&v!==vue)setVue(v);});
+  (function(){
+    var v=vueDe(location.pathname)||'accueil';
+    if(v==='accueil'&&location.pathname==='/'&&ANCRES[location.hash]){
+      var path=ANCRES[location.hash];
+      try{history.replaceState(null,'',path);}catch(e){}
+      v=vueDe(path);
+    }
+    setVue(v);
   })();
 })();
