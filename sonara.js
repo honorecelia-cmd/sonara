@@ -765,9 +765,9 @@ function tryGuess(v,byUser){
 
   // ── Match artiste (Levenshtein) ──
   var matchA=!G.foundA&&lev(v,q.a)<=tolA;
-  // Pour les feats : un seul artiste suffit
-  if(!matchA&&!G.foundA&&q.a.match(/ft|feat/i)){
-    var artists=q.a.split(/ft\.?|feat\.?/i).map(function(s){return s.trim()});
+  // Pour les feats et les duos ("&") : un seul artiste suffit
+  if(!matchA&&!G.foundA&&q.a.match(/ft|feat|&/i)){
+    var artists=q.a.split(/ft\.?|feat\.?|&/i).map(function(s){return s.trim()});
     matchA=artists.some(function(art){
       return art.length>1&&lev(v,art)<=Math.max(2,Math.min(4,Math.floor(art.length/4)));
     });
@@ -789,12 +789,12 @@ function tryGuess(v,byUser){
       var p2matchA = lev(part2,q.a)<=Math.max(2,Math.min(4,Math.floor(q.a.length/4)));
       var p2matchT = titleOk(part2,q);
       // Aussi vérifier avec les artistes feat
-      if(!p1matchA&&q.a.match(/ft|feat/i)){
-        var arts=q.a.split(/ft\.?|feat\.?/i).map(function(s){return s.trim()});
+      if(!p1matchA&&q.a.match(/ft|feat|&/i)){
+        var arts=q.a.split(/ft\.?|feat\.?|&/i).map(function(s){return s.trim()});
         p1matchA=arts.some(function(a){return a.length>1&&lev(part1,a)<=Math.max(2,Math.floor(a.length/4));});
       }
-      if(!p2matchA&&q.a.match(/ft|feat/i)){
-        var arts=q.a.split(/ft\.?|feat\.?/i).map(function(s){return s.trim()});
+      if(!p2matchA&&q.a.match(/ft|feat|&/i)){
+        var arts=q.a.split(/ft\.?|feat\.?|&/i).map(function(s){return s.trim()});
         p2matchA=arts.some(function(a){return a.length>1&&lev(part2,a)<=Math.max(2,Math.floor(a.length/4));});
       }
       if((p1matchA&&p2matchT)||(p1matchT&&p2matchA)){
