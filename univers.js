@@ -170,8 +170,19 @@ function uvCarrousel(sec,o){
   function paintGiant(){
     var u=at(idx);
     giant.textContent=u.nom;
-    giant.style.setProperty('--uv-fs',Math.min(24,150/u.nom.length).toFixed(2)+'vw');
+    if(!mobile.matches){giant.style.setProperty('--uv-fs',Math.min(24,150/u.nom.length).toFixed(2)+'vw');return;}
+    // Mobile : le nom tient dans la largeur (marges de 16px). Mesure a 100px
+    // sur un canvas (l'ecran peut etre encore cache), espacement -.02em compris.
+    var ctx=(paintGiant.cv||(paintGiant.cv=document.createElement('canvas'))).getContext('2d');
+    ctx.font="900 100px 'MuseoModerno',sans-serif";
+    var w=Math.max(1,ctx.measureText(u.nom).width-2*u.nom.length);
+    var W=sec.clientWidth||window.innerWidth, cap=Math.min(W*.22,window.innerHeight*.11);
+    giant.style.setProperty('--uv-fs',Math.min(cap,(W-32)*100/w).toFixed(1)+'px');
   }
+  // Mobile : la taille depend de la police chargee et de la largeur
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(paintGiant);
+  if(mobile.addEventListener)mobile.addEventListener('change',paintGiant);
+  window.addEventListener('resize',function(){if(mobile.matches)paintGiant();});
   function paintCenter(){
     var u=at(idx);
     flip.innerHTML=vinyl(u,true);
@@ -222,10 +233,12 @@ function uvCarrousel(sec,o){
       return;
     }
     var out=anim(flip,[{transform:'rotateY(0deg)'},{transform:'rotateY('+(90*dir)+'deg)'}],{duration:UV_DUREE_TRANSITION/2,easing:'cubic-bezier(.65,0,1,1)'});
+    // decalage vertical du nom (--uv-gy : -50% ordinateur, -72% mobile)
+    var gy=getComputedStyle(giant).getPropertyValue('--uv-gy').trim()||'-50%';
     [giant].forEach(function(el){
-      anim(el,[{opacity:1,transform:'translate(0,-50%)'},{opacity:0,transform:'translate('+(-6*dir)+'vw,-50%)'}],{duration:UV_DUREE_TRANSITION/2}).finished.then(function(){
+      anim(el,[{opacity:1,transform:'translate(0,'+gy+')'},{opacity:0,transform:'translate('+(-6*dir)+'vw,'+gy+')'}],{duration:UV_DUREE_TRANSITION/2}).finished.then(function(){
         paintGiant();
-        anim(el,[{opacity:0,transform:'translate('+(6*dir)+'vw,-50%)'},{opacity:1,transform:'translate(0,-50%)'}],{duration:UV_DUREE_TRANSITION/2,fill:'none'});
+        anim(el,[{opacity:0,transform:'translate('+(6*dir)+'vw,'+gy+')'},{opacity:1,transform:'translate(0,'+gy+')'}],{duration:UV_DUREE_TRANSITION/2,fill:'none'});
       });
     });
     [prevVy,nextVy].forEach(function(el){

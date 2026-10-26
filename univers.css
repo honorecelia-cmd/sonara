@@ -34,7 +34,8 @@
 }
 /* Nom geant ton sur ton, decor */
 .uv-giant{
-  position:absolute;left:0;right:0;top:50%;margin:0;transform:translateY(-50%);
+  --uv-gy:-50%;                               /* decalage vertical (aussi pour l'animation) */
+  position:absolute;left:0;right:0;top:50%;margin:0;transform:translateY(var(--uv-gy));
   text-align:center;white-space:nowrap;pointer-events:none;
   font-family:'MuseoModerno',sans-serif;font-weight:900;line-height:.85;letter-spacing:-.02em;
   font-size:var(--uv-fs,22vw);
@@ -174,6 +175,9 @@
 /* ── Mobile ── */
 @media (max-width:767px){
   .uv{--uv-d:70vw;min-height:600px}
+  /* Nom geant au-dessus du vinyle, le bas des lettres glisse derriere
+     (sur les cotes, le vinyle et ses voisins le cacheraient entierement) */
+  .uv-giant{top:calc(50% - var(--uv-d) / 2);--uv-gy:-72%}
   .uv-side{--uv-ds:calc(var(--uv-d) * .55)}
   .uv-side--prev{left:calc(var(--uv-ds) * -.82)}
   .uv-side--next{left:calc(100% - var(--uv-ds) * .18)}
