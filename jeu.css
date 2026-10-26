@@ -83,7 +83,7 @@
 .jg-panel{display:flex;flex-direction:column;gap:14px;min-width:0}
 .jg-grid{isolation:isolate}
 
-/* Pochette : arrondi 16px, floutee pendant l'ecoute (pochette de l'univers) */
+/* Cadre de la pochette : arrondi 16px (pendant la manche, il porte le vinyle de l'univers) */
 .jg-cover{
   position:relative;width:min(100%, 42vh, 460px);aspect-ratio:1;margin:0;
   border-radius:16px;overflow:hidden;background:var(--jg-surface);
@@ -100,6 +100,11 @@
   -webkit-mask:url('/img/logo_sonara.svg') center/contain no-repeat;mask:url('/img/logo_sonara.svg') center/contain no-repeat;
 }
 .jg-cover--reveal .vy--spin .vy-spin{animation-duration:12s}
+/* Pendant la manche : le meme vinyle que la revelation, a la place de la pochette */
+.jg-cover--vy{display:grid;place-items:center;background:transparent;overflow:visible}
+.jg-cover--vy img{display:none}
+.jg-cover--vy .vy{width:92%;--vy-hole:var(--jg-bg)}
+.jg-cover--vy .vy--spin .vy-spin{animation-duration:12s}
 /* Etiquette neutre de la revelation : logo Sonara et nom de l'univers */
 /* (logo au-dessus du trou central, nom en dessous) */
 .vy-label-named{position:relative;display:block;width:100%;height:100%}

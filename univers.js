@@ -2,8 +2,8 @@
 // SONARA — section "Les univers" : carrousel de vinyles (landing)
 // Toutes les donnees sont dans UNIVERS ci-dessous : textes, couleurs
 // (variables --univers-* de univers.css) et pochettes. C'est la seule
-// reference des pochettes du site : carrousel, telephones de la landing,
-// manches du jeu (universeCover, sonara.js). Pour changer une pochette,
+// reference des pochettes du site : carrousel, telephones de la landing
+// (le jeu montre le vinyle neutre de l'univers, uvVinyl). Pour changer une pochette,
 // remplacer son chemin `image` (WebP, avec un JPG de meme nom a cote pour
 // les navigateurs sans WebP) ; `image:null` affiche le placeholder (aplat
 // de la couleur + nom en MuseoModerno).

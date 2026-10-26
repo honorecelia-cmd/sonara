@@ -1073,12 +1073,6 @@ function foundTime(ms,tenths){
   if(ms<1000||tenths)return (Math.max(1,Math.round(ms/100))/10).toFixed(1).replace('.',',');
   return String(Math.floor(ms/1000));
 }
-// Pochette d'un univers (chemins locaux du tableau UNIVERS) ; null si inconnue
-function universeCover(key){
-  var list=window.UNIVERS||[];
-  for(var i=0;i<list.length;i++)if(list[i].slug===key)return list[i].image||null;
-  return null;
-}
 // Fin de partie ou ecran de jeu quitte : plus de manche active, de minuteur ni d'ecouteur audio
 function endRound(){G._round=(G._round||0)+1;G._questionActive=false;clearInterval(G.ti);stopA();}
 function doResults(){
