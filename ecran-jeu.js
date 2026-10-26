@@ -123,7 +123,7 @@
     if(!document.querySelector('#cds.on,#brksc.on,#s-load.on'))spin(null);
   }).observe(document.body,{attributes:true,subtree:true,attributeFilter:['class']});
 
-  // ── Debut de manche : pochette de l'univers (floutee), puces, points ──
+  // ── Debut de manche : vinyle neutre de l'univers, puces, points ──
   var qsc=$('qsc'), rvsc=$('rvsc'), roundStart=0;
   var coverBox=$('jg-cover'), coverImg=$('jg-cover-img');
   function currentKey(){
@@ -134,11 +134,13 @@
     roundStart=G.sc;
     game.classList.toggle('jg-multi',(G.pl||[]).length>1);   // classement : multijoueur seulement
     var key=currentKey(), u=univ(key);
-    var src=(G.qs[G.cq]&&G.qs[G.cq].cover)||(typeof universeCover==='function'?universeCover(key):null);
-    coverBox.style.background=u?u.couleur:'';
+    // Vinyle de l'univers, etiquette neutre (comme a la revelation) : aucune
+    // pochette pendant l'ecoute, pas meme floutee, donc aucun visage
     game.style.setProperty('--jg-u',u?u.couleur:'var(--accent)');   // halo de la pochette
-    if(src){coverImg.hidden=false;if(coverImg.getAttribute('src')!==src)coverImg.src=src;}
-    else coverImg.hidden=true;
+    coverImg.hidden=true;
+    var vy=coverBox.querySelector('.vy');if(vy)vy.remove();
+    coverBox.classList.toggle('jg-cover--vy',!!(u&&window.uvVinyl));
+    if(u&&window.uvVinyl)coverBox.insertAdjacentHTML('beforeend',uvVinyl(u,true,true,true));
     // Puces "Artiste ?" / "Titre ?" (sonara.js les passe a "trouve")
     var ft=$('found-tags');
     if(ft&&!ft.querySelector('[data-k]')){

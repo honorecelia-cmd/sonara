@@ -178,7 +178,7 @@ var THEMES = {
     {t:'Badmind',a:'Meryl',preview:'/audio/Meryl-Badmind.mp3',cover:''},
     {t:'Lambi',a:'Jahlys',preview:'/audio/Jahlys-Lambi.mp3',cover:''},
     {t:'Boss lady',a:'Jahlys ft Theodora',preview:'/audio/Jahlys_ft_Theodora-Boss_lady.mp3',cover:''},
-    {t:'Ou pani',a:'Mikado',preview:'/audio/Mikado-Ou_pani.mp3',cover:''},
+    {t:'Ou pani',a:'Mikado ft Lejems',preview:'/audio/Mikado-Ou_pani.mp3',cover:''},
     {t:'Gregoire',a:'Natoxie',preview:'/audio/Natoxie-Gregoire.mp3',cover:''},
     {t:'Vieux clébard',a:'Natoxie',preview:'/audio/Natoxie-Vieux_clebard.mp3',cover:''},
     {t:'Comme à la maison',a:'QLM',preview:'/audio/QLM-Comme_a_la_maison.mp3',cover:''},
@@ -765,9 +765,9 @@ function tryGuess(v,byUser){
 
   // ── Match artiste (Levenshtein) ──
   var matchA=!G.foundA&&lev(v,q.a)<=tolA;
-  // Pour les feats : un seul artiste suffit
-  if(!matchA&&!G.foundA&&q.a.match(/ft|feat/i)){
-    var artists=q.a.split(/ft\.?|feat\.?/i).map(function(s){return s.trim()});
+  // Pour les feats et les duos ("&") : un seul artiste suffit
+  if(!matchA&&!G.foundA&&q.a.match(/ft|feat|&/i)){
+    var artists=q.a.split(/ft\.?|feat\.?|&/i).map(function(s){return s.trim()});
     matchA=artists.some(function(art){
       return art.length>1&&lev(v,art)<=Math.max(2,Math.min(4,Math.floor(art.length/4)));
     });
@@ -789,12 +789,12 @@ function tryGuess(v,byUser){
       var p2matchA = lev(part2,q.a)<=Math.max(2,Math.min(4,Math.floor(q.a.length/4)));
       var p2matchT = titleOk(part2,q);
       // Aussi vérifier avec les artistes feat
-      if(!p1matchA&&q.a.match(/ft|feat/i)){
-        var arts=q.a.split(/ft\.?|feat\.?/i).map(function(s){return s.trim()});
+      if(!p1matchA&&q.a.match(/ft|feat|&/i)){
+        var arts=q.a.split(/ft\.?|feat\.?|&/i).map(function(s){return s.trim()});
         p1matchA=arts.some(function(a){return a.length>1&&lev(part1,a)<=Math.max(2,Math.floor(a.length/4));});
       }
-      if(!p2matchA&&q.a.match(/ft|feat/i)){
-        var arts=q.a.split(/ft\.?|feat\.?/i).map(function(s){return s.trim()});
+      if(!p2matchA&&q.a.match(/ft|feat|&/i)){
+        var arts=q.a.split(/ft\.?|feat\.?|&/i).map(function(s){return s.trim()});
         p2matchA=arts.some(function(a){return a.length>1&&lev(part2,a)<=Math.max(2,Math.floor(a.length/4));});
       }
       if((p1matchA&&p2matchT)||(p1matchT&&p2matchA)){
@@ -1004,18 +1004,18 @@ function doReveal(){
   hideG();$('rvsc').classList.add('on');
   $('rvtit').textContent=q.t;$('rvar').textContent=q.a;$('rvmt').textContent=q.y||'';$('remoji').textContent='';
   var reva=$('reva');reva.querySelectorAll('img,.vy').forEach(function(i){i.remove()});
-  // La pochette se devoile : celle du morceau si elle existe, sinon celle de
-  // son univers (tableau UNIVERS) ; le vinyle de l'univers en dernier recours
+  // La pochette du morceau se devoile si elle existe ; sinon le vinyle de son
+  // univers, etiquette neutre (couleur, logo Sonara, nom) : jamais la pochette
+  // de l'univers, dont l'artiste passerait pour celui du morceau
   $('remoji').style.display='none';
   var key=q.u||themeSlug();
   function showVinyl(){
     var list=window.UNIVERS||[],u=null;
     for(var i=0;i<list.length;i++)if(list[i].slug===key)u=list[i];
     if(!u||!window.uvVinyl)return;
-    // etiquette neutre : couleur de l'univers et logo Sonara
-    reva.insertAdjacentHTML('beforeend',uvVinyl(u,true,true));
+    reva.insertAdjacentHTML('beforeend',uvVinyl(u,true,true,true));
   }
-  var src=q.cover||universeCover(key);
+  var src=q.cover;
   if(src){var img=document.createElement('img');img.src=src;img.alt='';img.onerror=function(){img.remove();showVinyl()};reva.appendChild(img)}
   else showVinyl();
   var v=$('rvv');
@@ -1072,12 +1072,6 @@ function foundTime(ms,tenths){
   ms=Math.max(0,ms||0);
   if(ms<1000||tenths)return (Math.max(1,Math.round(ms/100))/10).toFixed(1).replace('.',',');
   return String(Math.floor(ms/1000));
-}
-// Pochette d'un univers (chemins locaux du tableau UNIVERS) ; null si inconnue
-function universeCover(key){
-  var list=window.UNIVERS||[];
-  for(var i=0;i<list.length;i++)if(list[i].slug===key)return list[i].image||null;
-  return null;
 }
 // Fin de partie ou ecran de jeu quitte : plus de manche active, de minuteur ni d'ecouteur audio
 function endRound(){G._round=(G._round||0)+1;G._questionActive=false;clearInterval(G.ti);stopA();}

@@ -2,8 +2,8 @@
 // SONARA — section "Les univers" : carrousel de vinyles (landing)
 // Toutes les donnees sont dans UNIVERS ci-dessous : textes, couleurs
 // (variables --univers-* de univers.css) et pochettes. C'est la seule
-// reference des pochettes du site : carrousel, telephones de la landing,
-// manches du jeu (universeCover, sonara.js). Pour changer une pochette,
+// reference des pochettes du site : carrousel, telephones de la landing
+// (le jeu montre le vinyle neutre de l'univers, uvVinyl). Pour changer une pochette,
 // remplacer son chemin `image` (WebP, avec un JPG de meme nom a cote pour
 // les navigateurs sans WebP) ; `image:null` affiche le placeholder (aplat
 // de la couleur + nom en MuseoModerno).
@@ -75,9 +75,11 @@ document.addEventListener('error',function(e){
 // Vinyle d'un univers (aussi utilise par l'ecran Choix de l'univers, ecrans.js)
 function uvEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 // neutral : etiquette neutre (couleur de l'univers + logo Sonara), aucune pochette
-function uvVinyl(u,spin,neutral){
+function uvVinyl(u,spin,neutral,named){
   var disc='color-mix(in srgb, '+u.couleur+' 70%, #000)';
-  var label=neutral?'<span class="jg-vy-logo" role="img" aria-label="Sonara"></span>':u.image
+  // named : etiquette neutre avec le nom de l'univers sous le logo (revelation)
+  var label=neutral&&named?'<span class="vy-label-named"><span class="jg-vy-logo" role="img" aria-label="Sonara"></span><span class="vy-label-nom">'+uvEsc(u.nom)+'</span></span>'
+    :neutral?'<span class="jg-vy-logo" role="img" aria-label="Sonara"></span>':u.image
     ? '<img src="'+u.image+'" alt="" data-ph="'+uvEsc(u.nom)+'">'
     : '<span class="vy-label-txt">'+uvEsc(u.nom)+'</span>';
   return '<span class="vy'+(spin?' vy--spin':'')+'" style="--vy-color:'+disc+';--vy-label:'+u.couleur+'">'+
