@@ -90,6 +90,25 @@ html{scroll-padding-top:var(--hd-h)}
 /* Emplacement du telephone une fois loge (meme proportion que .nb-phone) */
 .nb-hd-slot{display:block;width:22px;height:46px}
 
+/* Menu du header : liens sur ordinateur, liste deroulante sur mobile */
+.nb-hd-nav{width:auto;max-width:none;padding:0;margin:0 auto 0 48px;display:flex;align-items:center;gap:32px}  /* annule nav{} de sonara.css */
+.nb-hd-link{font-family:var(--f-text);font-size:14px;font-weight:500;color:#fff;text-decoration:none;padding:4px 0}
+.nb-hd-link:hover,.nb-hd-link[aria-current="page"]{text-decoration:underline;text-underline-offset:5px}
+.nb-hd-link[aria-current="page"]{text-decoration-color:var(--neb-orange);text-decoration-thickness:2px}
+.nb-hd-link:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:4px}
+.nb-hd-menu{display:none;position:relative}
+.nb-hd-menu .nb-menu-btn{font-size:14px}
+/* Sans le hero (retire de l'accueil), le telephone n'a plus d'emplacement */
+#landing:has(.nb-hero[hidden]) .nb-hd-slot{display:none}
+
+/* ── ACCROCHE ── juste sous le header, au-dessus du carrousel */
+.nb-hook{padding:calc(var(--hd-h) + 4.2vw) var(--neb-margin) 3.2vw;background:var(--neb-black)}
+.nb-hook-t{margin:0;font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:clamp(34px,4.6vw,76px);line-height:1;letter-spacing:-.02em;color:#fff;text-wrap:balance}
+.nb-hook-s{margin:14px 0 0;font-family:var(--f-text);font-size:clamp(16px,1.35vw,20px);line-height:1.4;color:rgba(255,255,255,.72)}
+.nb-hook .ld-badge-row{justify-content:flex-start;padding:0;margin:20px 0 0}
+/* Sections retirees de l'accueil (gardees dans le code) et vues inactives */
+#landing > [hidden]{display:none !important}
+
 /* ── HERO ── */
 .nb-hero{
   /* Telephone : largeur, position (reutilisees par la main) */
@@ -186,13 +205,13 @@ html{scroll-padding-top:var(--hd-h)}
   border:1px solid rgba(255,255,255,.08);border-radius:20px;
 }
 .nb-menu-list[hidden]{display:none}
-.nb-menu-list button{
+.nb-menu-list button,.nb-menu-list a{
   display:block;width:100%;padding:10px 14px;border:none;border-radius:999px;
-  background:none;cursor:pointer;text-align:left;
+  background:none;cursor:pointer;text-align:left;text-decoration:none;
   font-family:var(--f-text);font-size:14px;color:rgba(255,255,255,.82);
   transition:background-color .2s ease,color .2s ease;
 }
-.nb-menu-list button:hover,.nb-menu-list button:focus-visible{background:var(--neb-orange);color:#fff;outline:none}
+.nb-menu-list button:hover,.nb-menu-list button:focus-visible,.nb-menu-list a:hover,.nb-menu-list a:focus-visible{background:var(--neb-orange);color:#fff;outline:none}
 
 /* Titre 3 lignes : blanc chaud qui s'estompe vers le rose-orange translucide */
 .nb-hero-title{
@@ -226,13 +245,13 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-hero-lede .nb-pill--cta:hover{background:#fff;color:var(--ink)}
 .nb-hero-lede .ld-badge-row{justify-content:flex-start;padding:0;margin:18px 0 0}
 /* Message "Rejoins [univers]" (lien de Defi) : pastille aux codes de la landing */
-.nb-hero-lede .ld-badge{
+.nb-hero-lede .ld-badge,.nb-hook .ld-badge{
   display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 12px;border-radius:999px;
   background:var(--ink);color:var(--cream);
   font-family:var(--f-text);font-size:13px;font-weight:600;
 }
-.nb-hero-lede #ltxt{color:var(--cream)}
-.nb-hero-lede .ld-dot{width:8px;height:8px;background:var(--neb-orange)}
+.nb-hero-lede #ltxt,.nb-hook #ltxt{color:var(--cream)}
+.nb-hero-lede .ld-dot,.nb-hook .ld-dot{width:8px;height:8px;background:var(--neb-orange)}
 
 /* Metadonnees flottantes */
 .nb-float{
@@ -366,6 +385,11 @@ html{scroll-padding-top:var(--hd-h)}
 /* ── Mobile : les colonnes se replient ── */
 @media (max-width:760px){
   :root{--hd-h:56px}
+  .nb-hd-link{display:none}
+  .nb-hd-menu{display:block}
+  .nb-hd-nav{margin:0 16px 0 auto}
+  .nb-hd-menu .nb-menu-list{left:auto;right:-8px}
+  .nb-hook{padding:calc(var(--hd-h) + 28px) 16px 24px}
   .nb-header{padding:0 16px}
   .nb-hd-logo img{height:24px}
   .nb-hd-slot{width:19px;height:40px}

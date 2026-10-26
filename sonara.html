@@ -32,18 +32,50 @@
      landing.js. L'ancienne intro pilotee au defilement est retiree. -->
 <section class="page" id="landing">
 
-  <!-- Header fixe : apparait au defilement ; le telephone du hero vient se
-       loger dans .nb-hd-slot (voir landing.js). -->
-  <header class="nb-header" id="nb-header">
-    <a class="nb-hd-logo" href="#landing" aria-label="Sonara"><img src="/img/logo_sonara.svg" alt="Sonara"></a>
+  <!-- Header fixe, toujours visible : logo, menu, Jouer. Le menu mene aux
+       vues de la landing (landing.js, bloc "Vues") : liens sur ordinateur,
+       liste deroulante sur mobile. .nb-hd-slot accueillait le telephone du
+       hero (hero retire de l'accueil, voir plus bas). -->
+  <header class="nb-header is-on" id="nb-header">
+    <a class="nb-hd-logo" href="/" aria-label="Sonara, accueil"><img src="/img/logo_sonara.svg" alt="Sonara"></a>
+    <nav class="nb-hd-nav" aria-label="Menu principal">
+      <a class="nb-hd-link" href="/#univers">Univers</a>
+      <a class="nb-hd-link" href="/comment-jouer">Comment jouer</a>
+      <a class="nb-hd-link" href="/a-propos">À propos</a>
+      <div class="nb-menu nb-hd-menu">
+        <button class="nb-menu-btn" type="button" aria-expanded="false" aria-controls="nb-menu-hd">Menu<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <ul class="nb-menu-list" id="nb-menu-hd" hidden>
+          <li><a href="/#univers">Univers</a></li>
+          <li><a href="/comment-jouer">Comment jouer</a></li>
+          <li><a href="/a-propos">À propos</a></li>
+        </ul>
+      </div>
+    </nav>
     <div class="nb-hd-right">
       <span class="nb-hd-slot" id="nb-hd-slot" aria-hidden="true"></span>
       <button class="nb-pill nb-pill--cta nb-pill--sm" type="button" data-nb-play>Jouer</button>
     </div>
   </header>
 
-  <!-- ── HERO ── -->
-  <div class="nb-hero" id="nb-hero">
+  <!-- ── ACCROCHE ── juste sous le header, au-dessus du carrousel -->
+  <div class="nb-hook" data-vue="accueil">
+    <p class="nb-hook-t">THE Blind test caribéen.</p>
+    <p class="nb-hook-s">Écoute un extrait, trouve l'artiste et le titre.</p>
+    <!-- Message "Rejoins [univers]" d'un lien de Defi : masque par
+         defaut, affiche par sonara.js (bloc "Lien partage entrant"). -->
+    <div class="ld-badge-row" id="ld-badge-row" style="display:none">
+      <div class="ld-badge"><span class="ld-dot"></span><span id="ltxt"></span></div>
+    </div>
+  </div>
+
+  <!-- ══ ANCIENNES SECTIONS, RETIREES DE L'ACCUEIL ══
+       Hero, 01 Qu'est-ce que Sonara, 02 Les possibilites, 04 Comment jouer,
+       05 La revelation : gardees dans le code (attribut hidden) pour pouvoir
+       les reutiliser. Leurs textes sont repris dans les vues /a-propos et
+       /comment-jouer, plus bas. -->
+
+  <!-- ── HERO ── (retire de l'accueil) -->
+  <div class="nb-hero" id="nb-hero" hidden>
     <!-- Calque decoupe : degrade, grain, lettrage geant, main. Le telephone
          reste hors de ce calque pour pouvoir le quitter au defilement. -->
     <div class="nb-hero-clip" aria-hidden="true">
@@ -80,11 +112,6 @@
         <button class="nb-pill nb-pill--line" type="button" data-nb-proches>Jouer entre proches</button>
       </div>
       <button class="nb-code-link" type="button" data-nb-code>J'ai un code de salle</button>
-      <!-- Message "Rejoins [univers]" d'un lien de Defi : masque par
-           defaut, affiche par sonara.js (bloc "Lien partage entrant"). -->
-      <div class="ld-badge-row" id="ld-badge-row" style="display:none">
-        <div class="ld-badge"><span class="ld-dot"></span><span id="ltxt"></span></div>
-      </div>
     </div>
 
 
@@ -127,8 +154,8 @@
 
   </div>
 
-  <!-- ── 01 / QU'EST-CE QUE SONARA ── (Nebula : 01 The Core Idea + The Problem) -->
-  <section class="nb-sec nb-s01" id="nb-s01" aria-labelledby="nb-s01-t">
+  <!-- ── 01 / QU'EST-CE QUE SONARA ── (retiree de l'accueil) -->
+  <section class="nb-sec nb-s01" id="nb-s01" aria-labelledby="nb-s01-t" hidden>
 
     <!-- Rangee A : numero, icone, grande phrase -->
     <div class="nb-s01-intro">
@@ -253,8 +280,8 @@
     </div>
   </section>
 
-  <!-- ── 02 / LES POSSIBILITES ── (Nebula : 04 UI Design + Artists) -->
-  <section class="nb-sec nb-sec--light nb-s02" id="nb-s02" aria-labelledby="nb-s02-t">
+  <!-- ── 02 / LES POSSIBILITES ── (retiree de l'accueil) -->
+  <section class="nb-sec nb-sec--light nb-s02" id="nb-s02" aria-labelledby="nb-s02-t" hidden>
 
     <!-- Rangee A : numero, grande phrase, phrase droite -->
     <div class="nb-s02-intro">
@@ -315,10 +342,10 @@
   </section>
 
   <!-- ── LES UNIVERS : carrousel de vinyles ── (univers.css / univers.js) -->
-  <section class="uv" id="univers" aria-labelledby="uv-sec-t" aria-roledescription="carrousel">
+  <section class="uv" id="univers" data-vue="accueil" aria-labelledby="uv-sec-t" aria-roledescription="carrousel">
     <!-- Aplat, nom geant, vinyles, fleches, compteur et pastilles : generes
          par uvCarrousel() (univers.js), partage avec l'ecran du parcours -->
-    <div class="nb-secnum uv-secnum"><span>03 /</span><h2 id="uv-sec-t">Nos univers</h2></div>
+    <div class="nb-secnum uv-secnum"><h2 id="uv-sec-t">Nos univers</h2></div>
     <div class="uv-panel" id="uv-panel" role="region" aria-labelledby="uv-p-title" hidden>
       <h2 class="uv-p-title" id="uv-p-title" tabindex="-1"></h2>
       <p class="uv-p-meta" id="uv-p-meta"></p>
@@ -331,8 +358,8 @@
     </div>
   </section>
 
-  <!-- ── 04 / COMMENT JOUER ── (Nebula : 3D Audio + Stem Splitter) -->
-  <section class="nb-sec nb-sec--light nb-s04" id="comment-jouer" aria-labelledby="nb-s04-t">
+  <!-- ── 04 / COMMENT JOUER ── (retiree de l'accueil ; id libere pour la vue /comment-jouer) -->
+  <section class="nb-sec nb-sec--light nb-s04" id="nb-s04" aria-labelledby="nb-s04-t" hidden>
     <div class="nb-s04-head">
       <div class="nb-secnum"><span>04 /</span><h2 id="nb-s04-t">Comment jouer ?</h2></div>
     </div>
@@ -410,8 +437,8 @@
 
   </section>
 
-  <!-- ── 05 / LA REVELATION ── (Nebula : AI Search, sans orbe ni faisceaux) -->
-  <section class="nb-sec nb-s05" id="la-revelation" aria-labelledby="nb-s05-t">
+  <!-- ── 05 / LA REVELATION ── (retiree de l'accueil) -->
+  <section class="nb-sec nb-s05" id="la-revelation" aria-labelledby="nb-s05-t" hidden>
     <div class="nb-s05-intro">
       <div class="nb-secnum"><span>05 /</span><h2 id="nb-s05-t">La révélation</h2></div>
       <p class="nb-s05-title nb-title"><span>Le moment</span><span>où tout</span><span>se révèle.</span></p>
@@ -469,9 +496,10 @@
         <p class="nb-ft-tagline">Sonara, le blind test qui fait vibrer la Caraïbe.</p>
         <nav class="nb-ft-col" aria-label="Explorer">
           <p class="nb-ft-h">Explorer</p>
-          <a href="#univers">Univers</a>
-          <a href="#comment-jouer">Comment jouer</a>
-          <button type="button" class="nb-ft-linkbtn" data-on="footerDefi">Défi à partager</button>
+          <a href="/#univers">Univers</a>
+          <a href="/comment-jouer">Comment jouer</a>
+          <a href="/a-propos">À propos</a>
+          <button type="button" class="nb-ft-linkbtn" data-nb-proches>Entre proches</button>
         </nav>
         <div class="nb-ft-col nb-ft-follow">
           <p class="nb-ft-h">Suivez-nous</p>

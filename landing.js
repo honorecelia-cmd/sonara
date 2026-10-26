@@ -48,7 +48,7 @@
         btn.setAttribute('aria-expanded','true');
         var list=document.getElementById(btn.getAttribute('aria-controls'));
         list.hidden=false;
-        list.querySelector('button').focus();
+        list.querySelector('button,a').focus();
       }
     });
   });
@@ -78,6 +78,8 @@
   function update(){
     ticking=false;
     if(!nat||landing.offsetParent===null)return;
+    // Hero retire de l'accueil : le header reste visible, rien ne bouge
+    if(hero.hidden){header.classList.add('is-on');return;}
     var y=window.scrollY;
     if(reduce.matches){
       wrap.style.transform='';hand.style.transform='';
