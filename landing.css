@@ -564,7 +564,7 @@ html{scroll-padding-top:var(--hd-h)}
 
 /* Mega-titre brun translucide sur l'orange */
 .nb-mega{
-  margin:0;font-family:var(--f-display);font-weight:900;
+  margin:0;font-family:var(--f-display);font-weight:800;
   font-size:11vw;line-height:.9;letter-spacing:-.04em;text-align:center;
 }
 .nb-mega span{display:block}

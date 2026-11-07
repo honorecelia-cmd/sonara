@@ -209,7 +209,7 @@ function uvCarrousel(sec,o){
   // encore cache), espacement -.02em compris
   function giantW100(nom){
     var ctx=(paintGiant.cv||(paintGiant.cv=document.createElement('canvas'))).getContext('2d');
-    ctx.font="900 100px 'MuseoModerno',sans-serif";
+    ctx.font="800 100px 'MuseoModerno',sans-serif";   // meme graisse que .uv-giant
     return Math.max(1,ctx.measureText(nom).width-2*nom.length);
   }
   function paintGiant(){

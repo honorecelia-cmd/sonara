@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
 // SONARA — landing (refonte d'apres la maquette Nebula)
-// 1. "Jouer" : vers le choix de l'univers (ecrans.js) ; menu du header
+// 1. "Jouer" : vers le choix de l'univers (ecrans.js) ; menu : entete.js
 // 4 a 6. Animations des anciennes sections et du footer ; 7. Vues
 // Spec : nebula-analyse-pour-sonara.md
 // ═══════════════════════════════════════════════════════════════
@@ -26,33 +26,9 @@
     if(t.closest('[data-nb-play]'))play(null);
     else if(t.closest('[data-nb-proches]'))play({mode:'multi',proches:true});
   });
-  document.addEventListener('keydown',function(e){
-    if(e.key==='Escape')closeMenus(true);
-  });
-
-  // ── Menu deroulant du header (mobile) ──
-  var menuBtns=landing.querySelectorAll('.nb-menu-btn');
-  function closeMenus(refocus){
-    menuBtns.forEach(function(btn){
-      if(btn.getAttribute('aria-expanded')!=='true')return;
-      btn.setAttribute('aria-expanded','false');
-      document.getElementById(btn.getAttribute('aria-controls')).hidden=true;
-      if(refocus)btn.focus();
-    });
-  }
-  menuBtns.forEach(function(btn){
-    btn.addEventListener('click',function(){
-      var open=btn.getAttribute('aria-expanded')==='true';
-      closeMenus();
-      if(!open){
-        btn.setAttribute('aria-expanded','true');
-        var list=document.getElementById(btn.getAttribute('aria-controls'));
-        list.hidden=false;
-        list.querySelector('button,a').focus();
-      }
-    });
-  });
-  document.addEventListener('click',function(e){if(!e.target.closest('.nb-menu'))closeMenus();});
+  // Menu deroulant de l'en-tete (et Echap, clic ailleurs) : entete.js,
+  // commun avec les pages legales
+  function closeMenus(refocus){if(window.nbCloseMenus)nbCloseMenus(refocus);}
 
   // ── 4. Satellites : vitesse propre a chacun (0.8x a 1.2x) ──
   var sats=[].slice.call(landing.querySelectorAll('[data-speed]'));
@@ -144,11 +120,9 @@
     window.addEventListener('scroll',onWords,{passive:true});
     window.addEventListener('resize',onWords);
     lightWords();
-    // b. "SONARA" du footer et etapes de "Comment jouer" : a l'entree a l'ecran
-    // (des qu'une partie de l'element est visible : un seuil en proportion
-    // n'est pas toujours atteint, le bas du mot etant coupe par la carte et
-    // le mot, petit sur mobile, pouvant arriver tout en bas de l'ecran)
-    var ins=document.querySelectorAll('.nb-ft-word,.nb-steps');
+    // b. Etapes de "Comment jouer" : a l'entree a l'ecran (des qu'une partie
+    // est visible). Le "SONARA" du footer : entete.js, commun aux pages.
+    var ins=document.querySelectorAll('.nb-steps');
     if(!('IntersectionObserver' in window)){[].forEach.call(ins,function(el){el.classList.add('is-in');});return;}
     var io=new IntersectionObserver(function(es){
       es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target);}});
@@ -199,5 +173,13 @@
       v=vueDe(path);
     }
     setVue(v);
+    // Depuis une page legale : /#jouer et /#entre-proches lancent le parcours
+    // (entete.js) une fois tous les ecrans charges
+    var DEPART={'#jouer':null,'#entre-proches':{mode:'multi',proches:true}};
+    if(location.pathname==='/'&&location.hash in DEPART){
+      var opts=DEPART[location.hash];
+      try{history.replaceState(null,'','/');}catch(e){}
+      document.addEventListener('DOMContentLoaded',function(){play(opts);});
+    }
   })();
 })();

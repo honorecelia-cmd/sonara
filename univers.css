@@ -38,7 +38,7 @@
   --uv-gy:-50%;                               /* decalage vertical (aussi pour l'animation) */
   position:absolute;left:0;right:0;top:var(--uv-cy);margin:0;transform:translateY(var(--uv-gy));
   text-align:center;white-space:nowrap;pointer-events:none;
-  font-family:'MuseoModerno',sans-serif;font-weight:900;line-height:.85;letter-spacing:-.02em;
+  font-family:'MuseoModerno',sans-serif;font-weight:800;line-height:.85;letter-spacing:-.02em;
   font-size:var(--uv-fs,22vw);
   /* decor lisible : plus clair que les fonds sombres, plus fonce que les
      fonds clairs, contraste 2,2 (couleur calculee par univers.js) */
@@ -75,7 +75,7 @@
 .uv-sleeve img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
 .uv-sleeve-ph{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10%;
-  font-family:'MuseoModerno',sans-serif;font-weight:900;font-size:calc(var(--uv-d) * .14);line-height:.9;text-align:center;
+  font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:calc(var(--uv-d) * .14);line-height:.9;text-align:center;
 }
 /* Survol : decalage de couleur discret (duotone dans la couleur de l'univers) */
 .uv-sleeve::after{
@@ -161,7 +161,7 @@
 }
 .uv-panel[hidden]{display:none}
 .uv-p-title{
-  margin:0 0 18px;font-family:'MuseoModerno',sans-serif;font-weight:900;
+  margin:0 0 18px;font-family:'MuseoModerno',sans-serif;font-weight:800;
   font-size:clamp(44px,6vw,104px);line-height:.92;letter-spacing:-.02em;color:var(--uv-c);
   min-height:.92em;
 }

@@ -154,7 +154,7 @@
   font-size:var(--sn-fs-display);line-height:var(--sn-lh-tight);letter-spacing:var(--sn-track-display);
 }
 .sn-display--xl{font-size:var(--sn-fs-2xl)}
-.sn-display--mega{font-size:var(--sn-fs-mega);font-weight:900;letter-spacing:-.04em;line-height:.9}
+.sn-display--mega{font-size:var(--sn-fs-mega);font-weight:800;letter-spacing:-.04em;line-height:.9}
 .sn-eyebrow{
   display:block;margin:0;font-family:var(--sn-font-body);font-size:var(--sn-fs-sm);font-weight:400;
   color:var(--sn-muted);font-variant-numeric:tabular-nums;

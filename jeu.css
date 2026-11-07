@@ -253,7 +253,7 @@
 .jg-univ:empty{display:none}
 .jg-lobby .jg-k{margin:6px 0 0}
 .jg-code{
-  margin:0 0 14px;font-family:var(--f-text);font-weight:800;font-size:clamp(64px,10vw,120px);line-height:1.05;
+  margin:0 0 14px;font-family:var(--f-text);font-weight:700;font-size:clamp(64px,10vw,120px);line-height:1.05;
   letter-spacing:.12em;color:var(--cream);font-variant-numeric:tabular-nums;
 }
 .jg-code-btns{display:flex;flex-wrap:wrap;gap:10px}
