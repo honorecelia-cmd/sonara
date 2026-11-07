@@ -97,6 +97,10 @@ function uvVinyl(u,spin,neutral,named){
 //   auto     defilement automatique + bouton pause (landing)
 //   panel    panneau "Decouvrir" present dans `sec` (landing)
 //   cta      libelle du bouton sous le vinyle ("Découvrir", "Choisir cet univers")
+//   play     bouton principal "Jouer en [univers]" (creme) a cote du bouton
+//            cta, qui passe en secondaire (contour) ; clic : onCenter (accueil)
+//   fit      accroche, vinyle et boutons tiennent dans la hauteur de la
+//            section : diametre et position du vinyle calcules (accueil)
 //   onCta(u)         clic sur ce bouton (defaut : ouvrir le panneau)
 //   onCenter(u)      clic sur le vinyle central
 //   onSide(u,dir)    clic sur un vinyle voisin (dir -1 ou 1)
@@ -125,7 +129,9 @@ function uvSkeleton(o){
             '<svg class="uv-ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>'+
             '<svg class="uv-ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg></button>':'')+
         '</div>'+
+        (o.play?'<div class="uv-ctas"><button class="nb-pill uv-playnow" type="button"></button>':'')+
         '<button class="nb-pill uv-discover" type="button">'+uvEsc(o.cta||'Découvrir')+'</button>'+
+        (o.play?'</div>':'')+
         '<nav class="uv-tabs" aria-label="Choisir un univers"></nav>'+
       '</div>'
   };
@@ -146,7 +152,7 @@ function uvCarrousel(sec,o){
   var prevVy=q('.uv-side--prev'), nextVy=q('.uv-side--next'), sleeve=q('.uv-sleeve'), ui=q('.uv-ui');
   var num=q('.uv-count b'), discover=q('.uv-discover'), panel=o.panel?panelEl:null;
   var pTitle=q('.uv-p-title'), pMeta=q('.uv-p-meta'), pText=q('.uv-p-text'), pInfos=q('.uv-p-infos');
-  var pPlay=q('.uv-play'), pBack=q('.uv-back');
+  var pPlay=q('.uv-play'), pBack=q('.uv-back'), playNow=q('.uv-playnow');
   var idx=0, busy=false, open=false, timers=[], held=[];
   var countEl=q('.uv-count'), autoBtn=q('.uv-auto'), inView=false;
 
@@ -167,27 +173,75 @@ function uvCarrousel(sec,o){
   function pad(n){return (n<10?'0':'')+n;}
 
   function paintColor(){sec.style.setProperty('--uv-c',at(idx).couleur);}
+  // Largeur du nom a 100px, mesuree sur un canvas (l'ecran peut etre
+  // encore cache), espacement -.02em compris
+  function giantW100(nom){
+    var ctx=(paintGiant.cv||(paintGiant.cv=document.createElement('canvas'))).getContext('2d');
+    ctx.font="900 100px 'MuseoModerno',sans-serif";
+    return Math.max(1,ctx.measureText(nom).width-2*nom.length);
+  }
   function paintGiant(){
     var u=at(idx);
     giant.textContent=u.nom;
-    if(!mobile.matches){giant.style.setProperty('--uv-fs',Math.min(24,150/u.nom.length).toFixed(2)+'vw');return;}
-    // Mobile : le nom tient dans la largeur (marges de 16px). Mesure a 100px
-    // sur un canvas (l'ecran peut etre encore cache), espacement -.02em compris.
-    var ctx=(paintGiant.cv||(paintGiant.cv=document.createElement('canvas'))).getContext('2d');
-    ctx.font="900 100px 'MuseoModerno',sans-serif";
-    var w=Math.max(1,ctx.measureText(u.nom).width-2*u.nom.length);
-    var W=sec.clientWidth||window.innerWidth, cap=Math.min(W*.22,window.innerHeight*.11);
+    var W=sec.clientWidth||window.innerWidth, w=giantW100(u.nom);
+    if(!mobile.matches){
+      if(!o.fit){giant.style.setProperty('--uv-fs',Math.min(24,150/u.nom.length).toFixed(2)+'vw');return;}
+      // Accueil, ordinateur : le nom deborde nettement du vinyle (au moins
+      // 1,75 fois son diametre) quelle que soit la largeur, sans sortir de
+      // l'ecran ; hauteur des lettres bornee par le vinyle.
+      var D=center.offsetWidth||W*.3;
+      var fit=(W-48)*100/w, fs=Math.min(W*.24,D*.95,fit);
+      fs=Math.max(fs,Math.min(fit,D*1.75*100/w));
+      giant.style.setProperty('--uv-fs',fs.toFixed(1)+'px');
+      return;
+    }
+    // Mobile : le nom tient dans la largeur (marges de 16px)
+    var cap=Math.min(W*.22,window.innerHeight*.11);
     giant.style.setProperty('--uv-fs',Math.min(cap,(W-32)*100/w).toFixed(1)+'px');
   }
   // Mobile : la taille depend de la police chargee et de la largeur
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(paintGiant);
-  if(mobile.addEventListener)mobile.addEventListener('change',paintGiant);
+  // (accueil : la mise en page aussi, l'accroche change de hauteur)
+  function relayout(){layout();paintGiant();}
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(relayout);
+  if(mobile.addEventListener)mobile.addEventListener('change',relayout);
   window.addEventListener('resize',function(){if(mobile.matches)paintGiant();});
+
+  // ── Accueil : tout le premier ecran ─────────────────────────
+  // Entre le bas de l'accroche et le haut de la rangee des univers : (mobile)
+  // le nom geant au-dessus du vinyle, le vinyle, puis les boutons. Le vinyle
+  // prend la place disponible, sans depasser sa taille habituelle.
+  var hook=sec.querySelector('.nb-hook');
+  function layout(){
+    if(!o.fit||open)return;
+    var H=sec.clientHeight, W=sec.clientWidth;
+    if(!H||!W)return;
+    var mob=mobile.matches, rect=sec.getBoundingClientRect();
+    var rel=function(el){return el.getBoundingClientRect().top-rect.top;};
+    var top=(hook?rel(hook)+hook.offsetHeight:0)+(mob?12:Math.max(16,H*.025));
+    var bottom=Math.min(rel(tabs),rel(countEl))-(mob?14:Math.max(16,H*.03));
+    var ctas=q('.uv-ctas')||discover, ctaGap=mob?14:24;
+    // mobile : place du nom geant au-dessus du vinyle (72 % de sa hauteur)
+    var above=mob?(parseFloat(giant.style.getPropertyValue('--uv-fs'))||W*.2)*.85*.72:0;
+    var avail=bottom-top-above-ctaGap-ctas.offsetHeight;
+    var max=mob?W*.7:Math.min(W,H)*.45, min=mob?140:200;
+    var D=Math.max(min,Math.min(max,avail));
+    var cy=top+above+D/2+Math.max(0,avail-D)/2;
+    sec.style.setProperty('--uv-d',D.toFixed(1)+'px');
+    sec.style.setProperty('--uv-cy',cy.toFixed(1)+'px');
+  }
+  // Section affichee (vue accueil), redimensionnee, ou accroche qui change
+  // de hauteur (message d'un lien de Defi) : nouvelle mise en page
+  if(o.fit&&window.ResizeObserver){
+    var roTick=0;
+    var ro=new ResizeObserver(function(){cancelAnimationFrame(roTick);roTick=requestAnimationFrame(relayout);});
+    ro.observe(sec);if(hook)ro.observe(hook);
+  }
   function paintCenter(){
     var u=at(idx);
     flip.innerHTML=vinyl(u,true);
     center.setAttribute('aria-label',(o.centerLabel||'Jouer en ')+u.nom);
     discover.setAttribute('aria-label',(o.ctaLabel||'Découvrir l\'univers ')+u.nom);
+    if(playNow)playNow.textContent='Jouer en '+u.nom;
   }
   function paintSides(){prevVy.innerHTML=vinyl(at(idx-1),false);nextVy.innerHTML=vinyl(at(idx+1),false);}
   // Rangee des 9 univers : l'actif est mis en evidence
@@ -208,7 +262,7 @@ function uvCarrousel(sec,o){
     if(on&&tabs.scrollWidth>tabs.clientWidth)tabs.scrollTo({left:on.offsetLeft-(tabs.clientWidth-on.offsetWidth)/2,behavior:reduce.matches?'auto':'smooth'});
   }
   function paintCount(){num.textContent=pad(idx+1);paintTabs();}
-  function paintAll(){paintColor();paintGiant();paintCenter();paintSides();paintCount();}
+  function paintAll(){paintColor();paintCenter();paintSides();paintCount();paintGiant();layout();paintGiant();}
 
   function anim(el,frames,opt){return el.animate(frames,Object.assign({duration:400,easing:EASE,fill:'forwards'},opt||{}));}
   function later(fn,ms){timers.push(setTimeout(fn,ms));}
@@ -261,11 +315,13 @@ function uvCarrousel(sec,o){
   // ── Transition B : ouvrir un univers ────────────────────────
   function geometry(){
     var D=center.offsetWidth, W=sec.clientWidth, H=sec.clientHeight;
+    // centre du vinyle dans la section (accueil : pas forcement au milieu)
+    var cy=center.getBoundingClientRect().top-sec.getBoundingClientRect().top+D/2;
     if(mobile.matches){
       var s=.55;
-      return {s:s,tx:W*.62-W/2,ty:-H/2+D*s/2+84,D:D};
+      return {s:s,tx:W*.62-W/2,ty:-cy+D*s/2+84,D:D,cy:cy};
     }
-    return {s:1,tx:W*.33-W/2,ty:0,D:D};
+    return {s:1,tx:W*.33-W/2,ty:o.fit?H/2-cy:0,D:D,cy:cy};
   }
   function fillPanel(u){
     pTitle.setAttribute('aria-label',u.nom);
@@ -314,7 +370,7 @@ function uvCarrousel(sec,o){
       return;
     }
     // 1. l'aplat se retracte en cercle vers le vinyle
-    held.push(anim(bg,[{clipPath:'circle(150% at 50% 50%)'},{clipPath:'circle('+(g.D/2)+'px at 50% 50%)'}],{duration:500}));
+    held.push(anim(bg,[{clipPath:'circle(150% at 50% '+g.cy+'px)'},{clipPath:'circle('+(g.D/2)+'px at 50% '+g.cy+'px)'}],{duration:500}));
     later(function(){bg.style.opacity=0;},500);
     // 2. le vinyle glisse vers la gauche en continuant de tourner
     held.push(anim(center,[{transform:'none'},{transform:vinylTo}],{duration:550,delay:450}));
@@ -345,7 +401,7 @@ function uvCarrousel(sec,o){
         bg.style.opacity=1;
         var grow=reduce.matches
           ? anim(bg,[{opacity:0,clipPath:'circle(150% at 50% 50%)'},{opacity:1,clipPath:'circle(150% at 50% 50%)'}],{duration:300})
-          : anim(bg,[{clipPath:'circle('+(g.D/2)+'px at 50% 50%)'},{clipPath:'circle(150% at 50% 50%)'}],{duration:600});
+          : anim(bg,[{clipPath:'circle('+(g.D/2)+'px at 50% '+g.cy+'px)'},{clipPath:'circle(150% at 50% '+g.cy+'px)'}],{duration:600});
         grow.finished.then(function(){
           ui.style.visibility='';
           [ui,giant,prevVy,nextVy].forEach(function(el){
@@ -402,6 +458,7 @@ function uvCarrousel(sec,o){
   prevVy.addEventListener('click',function(){if(!open&&!busy&&o.onSide)o.onSide(at(idx-1),-1);});
   nextVy.addEventListener('click',function(){if(!open&&!busy&&o.onSide)o.onSide(at(idx+1),1);});
   discover.addEventListener('click',function(){if(o.onCta){if(!busy)o.onCta(at(idx));}else openUniverse();});
+  if(playNow)playNow.addEventListener('click',function(){if(!open&&!busy&&o.onCenter)o.onCenter(at(idx));});
   if(panel){
     pBack.addEventListener('click',closeUniverse);
     pPlay.addEventListener('click',function(){if(o.onCenter)o.onCenter(at(idx));});
@@ -454,5 +511,5 @@ function uvCarrousel(sec,o){
   // Clic sur un vinyle (ou "Jouer en ..." du panneau) : parcours, ecran
   // Son-nom avec cet univers preselectionne
   function playIn(u){if(window.SonaraFlow)SonaraFlow.toSonnom(u.slug);}
-  window.uvLanding=uvCarrousel(sec,{auto:true,panel:true,cta:'Découvrir',onCenter:playIn,onSide:playIn});
+  window.uvLanding=uvCarrousel(sec,{auto:true,panel:true,fit:true,play:true,cta:'Découvrir',onCenter:playIn,onSide:playIn});
 })();

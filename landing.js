@@ -271,10 +271,15 @@
     window.addEventListener('resize',onWords);
     lightWords();
     // b. "SONARA" du footer et etapes de "Comment jouer" : a l'entree a l'ecran
+    // (des qu'une partie de l'element est visible : un seuil en proportion
+    // n'est pas toujours atteint, le bas du mot etant coupe par la carte et
+    // le mot, petit sur mobile, pouvant arriver tout en bas de l'ecran)
+    var ins=document.querySelectorAll('.nb-ft-word,.nb-steps');
+    if(!('IntersectionObserver' in window)){[].forEach.call(ins,function(el){el.classList.add('is-in');});return;}
     var io=new IntersectionObserver(function(es){
       es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target);}});
-    },{threshold:.35});
-    ['.nb-ft-word','.nb-steps'].forEach(function(s){document.querySelectorAll(s).forEach(function(el){io.observe(el);});});
+    },{threshold:0});
+    [].forEach.call(ins,function(el){io.observe(el);});
   })();
 
   // ── 7. Vues : accueil, /a-propos, /comment-jouer ─────────────

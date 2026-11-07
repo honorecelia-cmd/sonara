@@ -57,17 +57,6 @@
     </div>
   </header>
 
-  <!-- ── ACCROCHE ── juste sous le header, au-dessus du carrousel -->
-  <div class="nb-hook" data-vue="accueil">
-    <p class="nb-hook-t">THE Blind test caribéen.</p>
-    <p class="nb-hook-s">Écoute un extrait, trouve l'artiste et le titre.</p>
-    <!-- Message "Rejoins [univers]" d'un lien de Defi : masque par
-         defaut, affiche par sonara.js (bloc "Lien partage entrant"). -->
-    <div class="ld-badge-row" id="ld-badge-row" style="display:none">
-      <div class="ld-badge"><span class="ld-dot"></span><span id="ltxt"></span></div>
-    </div>
-  </div>
-
   <!-- ══ ANCIENNES SECTIONS, RETIREES DE L'ACCUEIL ══
        Hero, 01 Qu'est-ce que Sonara, 02 Les possibilites, 04 Comment jouer,
        05 La revelation : gardees dans le code (attribut hidden) pour pouvoir
@@ -341,11 +330,22 @@
 
   </section>
 
-  <!-- ── LES UNIVERS : carrousel de vinyles ── (univers.css / univers.js) -->
-  <section class="uv" id="univers" data-vue="accueil" aria-labelledby="uv-sec-t" aria-roledescription="carrousel">
+  <!-- ── LES UNIVERS : carrousel de vinyles ── (univers.css / univers.js)
+       Premier ecran de l'accueil : accroche, vinyle et boutons tiennent
+       dans la hauteur de l'ecran (option fit de uvCarrousel). -->
+  <section class="uv uv--accueil" id="univers" data-vue="accueil" aria-labelledby="uv-sec-t" aria-roledescription="carrousel">
     <!-- Aplat, nom geant, vinyles, fleches, compteur et pastilles : generes
          par uvCarrousel() (univers.js), partage avec l'ecran du parcours -->
-    <div class="nb-secnum uv-secnum"><h2 id="uv-sec-t">Nos univers</h2></div>
+    <!-- Accroche : en haut de la section, sur l'aplat de l'univers -->
+    <div class="nb-hook">
+      <h1 class="nb-hook-t" id="uv-sec-t">THE Blind test caribéen.</h1>
+      <p class="nb-hook-s">Écoute un extrait, trouve l'artiste et le titre.</p>
+      <!-- Message "Rejoins [univers]" d'un lien de Defi : masque par
+           defaut, affiche par sonara.js (bloc "Lien partage entrant"). -->
+      <div class="ld-badge-row" id="ld-badge-row" style="display:none">
+        <div class="ld-badge"><span class="ld-dot"></span><span id="ltxt"></span></div>
+      </div>
+    </div>
     <div class="uv-panel" id="uv-panel" role="region" aria-labelledby="uv-p-title" hidden>
       <h2 class="uv-p-title" id="uv-p-title" tabindex="-1"></h2>
       <p class="uv-p-meta" id="uv-p-meta"></p>

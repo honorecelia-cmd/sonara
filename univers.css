@@ -21,6 +21,7 @@
 .uv{
   --uv-c:var(--univers-dancehall);           /* couleur de l'univers actif (JS) */
   --uv-d:45vmin;                             /* diametre du vinyle central */
+  --uv-cy:50%;                               /* hauteur du centre du vinyle (accueil : calculee, univers.js) */
   /* plein ecran sous le header : le titre et le compteur restent visibles */
   position:relative;height:calc(100vh - var(--hd-h));min-height:560px;overflow:hidden;
   background:var(--neb-black);color:#fff;
@@ -35,7 +36,7 @@
 /* Nom geant ton sur ton, decor */
 .uv-giant{
   --uv-gy:-50%;                               /* decalage vertical (aussi pour l'animation) */
-  position:absolute;left:0;right:0;top:50%;margin:0;transform:translateY(var(--uv-gy));
+  position:absolute;left:0;right:0;top:var(--uv-cy);margin:0;transform:translateY(var(--uv-gy));
   text-align:center;white-space:nowrap;pointer-events:none;
   font-family:'MuseoModerno',sans-serif;font-weight:900;line-height:.85;letter-spacing:-.02em;
   font-size:var(--uv-fs,22vw);
@@ -43,7 +44,7 @@
 }
 
 .uv-stage{position:absolute;inset:0;perspective:1200px}
-.uv-center,.uv-side,.uv-sleeve{position:absolute;left:50%;top:50%}
+.uv-center,.uv-side,.uv-sleeve{position:absolute;left:50%;top:var(--uv-cy)}
 .uv-center{
   width:var(--uv-d);height:var(--uv-d);margin:calc(var(--uv-d) / -2) 0 0 calc(var(--uv-d) / -2);
   padding:0;border:none;border-radius:50%;background:none;cursor:pointer;z-index:2;
@@ -89,7 +90,7 @@
 .uv-ui{position:absolute;inset:0;pointer-events:none;z-index:4}
 .uv-ui > *{pointer-events:auto}
 .uv-arrow{
-  position:absolute;top:50%;margin-top:-28px;width:56px;height:56px;border-radius:50%;
+  position:absolute;top:var(--uv-cy);margin-top:-28px;width:56px;height:56px;border-radius:50%;
   border:none;background:var(--neb-black);color:#fff;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   transition:background-color .25s ease, transform .25s ease;
@@ -99,10 +100,6 @@
 .uv-arrow svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .uv-arrow--prev{left:var(--neb-margin)}
 .uv-arrow--next{right:var(--neb-margin)}
-/* Bandeau et numero de section (memes composants que 01 / 02) */
-.uv-band{z-index:4;color:rgba(255,255,255,.7)}
-.uv-secnum{position:absolute;left:var(--neb-margin);top:11vw;z-index:4}
-.uv .uv-secnum span{color:rgba(255,255,255,.7)}
 .uv-countbar{
   position:absolute;left:var(--neb-margin);bottom:5vh;
   display:flex;align-items:center;gap:18px;
@@ -124,10 +121,28 @@
 .uv-count b{font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:clamp(48px,5.5vw,96px);line-height:1}
 .uv-count span{font-size:16px;color:rgba(255,255,255,.75)}
 .uv-discover{
-  position:absolute;left:50%;top:calc(50% + var(--uv-d) / 2 + 28px);transform:translateX(-50%);
+  position:absolute;left:50%;top:calc(var(--uv-cy) + var(--uv-d) / 2 + 28px);transform:translateX(-50%);
   background:var(--neb-black);color:#fff;
 }
 .uv-discover:hover{background:#fff;color:var(--neb-black);transform:translate(-50%,-2px)}
+
+/* ── Accueil (#univers) : premier ecran ──
+   Accroche, vinyle et boutons tiennent dans la hauteur de l'ecran : la
+   section prend tout l'ecran (le header fixe passe au-dessus) et
+   uvCarrousel (option fit) calcule --uv-d et --uv-cy entre l'accroche et
+   la rangee des univers. */
+.uv--accueil{height:100vh;height:100svh;min-height:500px}
+/* "Jouer en [univers]" (principal, creme) et "Decouvrir" (contour) */
+.uv-ctas{
+  position:absolute;left:50%;top:calc(var(--uv-cy) + var(--uv-d) / 2 + var(--uv-cta-gap,24px));transform:translateX(-50%);
+  display:flex;gap:12px;white-space:nowrap;
+}
+.uv-ctas .nb-pill{white-space:nowrap}
+.uv-playnow{background:var(--cream);color:var(--ink);font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.uv-playnow:hover{background:#fff;color:var(--ink)}
+.uv-playnow:focus-visible,.uv-ctas .uv-discover:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.uv-ctas .uv-discover{position:static;transform:none;background:transparent;color:#fff;box-shadow:inset 0 0 0 1.5px #fff}
+.uv-ctas .uv-discover:hover{background:#fff;color:var(--neb-black);transform:translateY(-2px)}
 
 /* Panneau ouvert */
 .uv-panel{
@@ -177,7 +192,7 @@
   .uv{--uv-d:70vw;min-height:600px}
   /* Nom geant au-dessus du vinyle, le bas des lettres glisse derriere
      (sur les cotes, le vinyle et ses voisins le cacheraient entierement) */
-  .uv-giant{top:calc(50% - var(--uv-d) / 2);--uv-gy:-72%}
+  .uv-giant{top:calc(var(--uv-cy) - var(--uv-d) / 2);--uv-gy:-72%}
   .uv-side{--uv-ds:calc(var(--uv-d) * .55)}
   .uv-side--prev{left:calc(var(--uv-ds) * -.82)}
   .uv-side--next{left:calc(100% - var(--uv-ds) * .18)}
@@ -190,8 +205,10 @@
     overflow-x:auto;scrollbar-width:none;
     -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);
     mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent)}
-  .uv-discover{top:calc(50% + var(--uv-d) / 2 + 10px)}
-  .uv-secnum{left:16px;top:76px}
+  .uv-discover{top:calc(var(--uv-cy) + var(--uv-d) / 2 + 10px)}
+  .uv--accueil{min-height:480px}
+  .uv-ctas{--uv-cta-gap:14px;gap:8px}
+  .uv-ctas .nb-pill{padding:14px 20px;font-size:15px}
     .uv-panel{
     left:16px;right:16px;top:calc(var(--uv-d) * .6 + 110px);bottom:16px;transform:none;
     max-height:none;padding-bottom:16px;
