@@ -34,8 +34,7 @@
 
   <!-- Header fixe, toujours visible : logo, menu, Jouer. Le menu mene aux
        vues de la landing (landing.js, bloc "Vues") : liens sur ordinateur,
-       liste deroulante sur mobile. .nb-hd-slot accueillait le telephone du
-       hero (hero retire de l'accueil, voir plus bas). -->
+       liste deroulante sur mobile. -->
   <header class="nb-header is-on" id="nb-header">
     <a class="nb-hd-logo" href="/" aria-label="Sonara, accueil"><img src="/img/logo_sonara.svg" alt="Sonara"></a>
     <nav class="nb-hd-nav" aria-label="Menu principal">
@@ -52,96 +51,15 @@
       </div>
     </nav>
     <div class="nb-hd-right">
-      <span class="nb-hd-slot" id="nb-hd-slot" aria-hidden="true"></span>
       <button class="nb-pill nb-pill--cta nb-pill--sm" type="button" data-nb-play>Jouer</button>
     </div>
   </header>
 
   <!-- ══ ANCIENNES SECTIONS, RETIREES DE L'ACCUEIL ══
-       Hero, 01 Qu'est-ce que Sonara, 02 Les possibilites, 04 Comment jouer,
+       01 Qu'est-ce que Sonara, 02 Les possibilites, 04 Comment jouer,
        05 La revelation : gardees dans le code (attribut hidden) pour pouvoir
        les reutiliser. Leurs textes sont repris dans les vues /a-propos et
        /comment-jouer, plus bas. -->
-
-  <!-- ── HERO ── (retire de l'accueil) -->
-  <div class="nb-hero" id="nb-hero" hidden>
-    <!-- Calque decoupe : degrade, grain, lettrage geant, main. Le telephone
-         reste hors de ce calque pour pouvoir le quitter au defilement. -->
-    <div class="nb-hero-clip" aria-hidden="true">
-      <div class="nb-hero-bg"></div>
-      <!-- Logo geant en filigrane, a gauche du telephone, derriere la main -->
-      <img class="nb-giant" id="nb-giant" src="/img/logo_sonara.svg" alt="">
-      <!-- Main en silhouette (aplat --ink) : paume et bras derriere le telephone -->
-      <svg class="nb-hand" id="nb-hand" viewBox="0 0 160 280" preserveAspectRatio="none">
-        <path d="M60 280C58 240 56 200 52 172C44 150 30 140 25 112C18 82 21 44 30 22L127 6C140 3 147 12 140 18L133 20C145 20 149 32 139 36L133 38C145 39 148 51 137 55L133 57C143 59 144 70 133 74C129 104 126 150 125 190C124 230 124 260 126 280Z"/>
-      </svg>
-      <div class="nb-grain"></div>
-    </div>
-
-
-    <nav class="nb-meta" aria-label="Menu principal">
-      <a class="nb-meta-logo" href="#landing"><img src="/img/logo_sonara.svg" alt="Sonara"></a>
-      <a class="nb-meta-col nb-menu-link nb-menu-link--univ" href="#univers">Univers</a>
-      <div class="nb-meta-col nb-menu">
-        <button class="nb-menu-btn" type="button" aria-expanded="false" aria-controls="nb-menu-mode">Mode<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
-        <ul class="nb-menu-list" id="nb-menu-mode" hidden>
-          <li><button type="button" data-nb-mode="solo">Solo</button></li>
-          <li><button type="button" data-nb-mode="multi">Entre proches</button></li>
-        </ul>
-      </div>
-      <a class="nb-meta-col nb-menu-link" href="#comment-jouer">Comment jouer ?</a>
-    </nav>
-
-    <h1 class="nb-hero-title"><span>Le blind test</span><span>qui fait vibrer</span><span>la Caraïbe</span></h1>
-
-    <div class="nb-hero-lede">
-      <p>Écoute un extrait, trouve le titre et l'artiste, et défie tes proches où qu'ils soient.</p>
-      <div class="nb-hero-ctas">
-        <button class="nb-pill nb-pill--cta" type="button" data-nb-play>Jouer</button>
-        <button class="nb-pill nb-pill--line" type="button" data-nb-proches>Jouer entre proches</button>
-      </div>
-      <button class="nb-code-link" type="button" data-nb-code>J'ai un code de salle</button>
-    </div>
-
-
-    <!-- Telephone : partie en cours (pochette floutee, manche, temps) -->
-    <div class="nb-phone-wrap" id="nb-phone-wrap">
-      <div class="nb-phone" id="nb-phone">
-        <div class="nb-screen">
-          <div class="nb-scr-cover" id="nb-scr-cover" data-uv-cover="zouk"></div>
-          <div class="nb-scr-tint"></div>
-          <div class="nb-island"></div>
-          <div class="nb-scr-status"><span>9:41</span><span class="nb-scr-bat"></span></div>
-          <div class="nb-scr-top">
-            <span class="nb-scr-round"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span>
-            <span class="nb-scr-round"><svg viewBox="0 0 24 24"><path d="M12 15V4M7 9l5-5 5 5M5 14v5h14v-5"/></svg></span>
-          </div>
-          <div class="nb-scr-side">
-            <span class="nb-scr-round"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 010 6"/></svg></span>
-            <span class="nb-scr-round"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>
-            <span class="nb-scr-round nb-scr-round--accent">x2</span>
-          </div>
-          <div class="nb-scr-info">
-            <p class="nb-scr-manche" id="nb-scr-manche">Manche 3/10</p>
-            <p class="nb-scr-q">Qui chante ?</p>
-            <div class="nb-scr-prog"><span class="nb-scr-fill" id="nb-scr-fill"></span></div>
-            <div class="nb-scr-times"><span id="nb-scr-t">0:12</span><span>0:30</span></div>
-            <div class="nb-scr-ctrls">
-              <span><svg viewBox="0 0 24 24"><path d="M7 6v12M18 6l-8 6 8 6z"/></svg></span>
-              <span><svg viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg></span>
-              <span><svg viewBox="0 0 24 24"><path d="M17 6v12M6 6l8 6-8 6z"/></svg></span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Pouce devant le telephone (le reste de la main est derriere) -->
-      <svg class="nb-thumb" id="nb-thumb" viewBox="0 0 160 200" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M24 118C20 98 22 80 27 66C29 59 36 59 36 67C35 82 35 96 35 110C33 121 27 125 24 118Z"/>
-      </svg>
-    </div>
-
-
-  </div>
 
   <!-- ── 01 / QU'EST-CE QUE SONARA ── (retiree de l'accueil) -->
   <section class="nb-sec nb-s01" id="nb-s01" aria-labelledby="nb-s01-t" hidden>
@@ -533,8 +451,8 @@
     </ol>
     <div class="nb-cj-grid">
       <div class="nb-cj-rules">
+        <!-- Icone sur la ligne de "Les points" (meme hauteur, landing.css) -->
         <span class="nb-secicon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-        <h2 class="nb-label">Comment jouer /</h2>
         <p class="nb-body">Écoute l'extrait et tape l'artiste, le titre, ou les deux. La manche s'arrête dès que tout le monde a trouvé, ou au bout de 30 secondes.</p>
       </div>
       <div class="nb-cj-points">

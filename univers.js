@@ -146,6 +146,9 @@ function uvCarrousel(sec,o){
   else sec.insertAdjacentHTML('beforeend',sk.front);
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
   var mobile=window.matchMedia('(max-width: 767px)');
+  // Nom geant au-dessus du vinyle seulement sur les ecrans etroits ; a partir
+  // de 600px, il passe sur toute la largeur, derriere le vinyle
+  var stack=window.matchMedia('(max-width: 599px)');
   var EASE='cubic-bezier(.65,0,.35,1)';
   var q=function(s){return sec.querySelector(s);};
   var bg=q('.uv-bg'), giant=q('.uv-giant'), center=q('.uv-center'), flip=q('.uv-flip');
@@ -154,6 +157,7 @@ function uvCarrousel(sec,o){
   var pTitle=q('.uv-p-title'), pMeta=q('.uv-p-meta'), pText=q('.uv-p-text'), pInfos=q('.uv-p-infos');
   var pPlay=q('.uv-play'), pBack=q('.uv-back'), playNow=q('.uv-playnow');
   var idx=0, busy=false, open=false, timers=[], held=[];
+  var pending=null;   // univers demande pendant une transition (pastille)
   var countEl=q('.uv-count'), autoBtn=q('.uv-auto'), inView=false;
 
   // Precharge des pochettes
@@ -173,6 +177,34 @@ function uvCarrousel(sec,o){
   function pad(n){return (n<10?'0':'')+n;}
 
   function paintColor(){sec.style.setProperty('--uv-c',at(idx).couleur);}
+
+  // ── Couleur du nom geant : decor lisible sur toutes les couleurs ──
+  // Fond sombre : version plus claire du fond (melange avec du blanc) ;
+  // fond clair : plus foncee (avec du noir). Proportion cherchee pour un
+  // contraste de 2,2 avec le fond (decor : entre 1,8 et 2,6).
+  var UV_GIANT_CONTRASTE=2.2;
+  function rgbOf(css){
+    var el=document.createElement('span');el.style.color=css;el.style.display='none';
+    sec.appendChild(el);var m=getComputedStyle(el).color.match(/[\d.]+/g);el.remove();
+    return m?[+m[0],+m[1],+m[2]]:null;
+  }
+  function lum(c){
+    var f=function(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);};
+    return .2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2]);
+  }
+  function contrast(a,b){var x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
+  var giantColors={};
+  function giantColor(u){
+    if(giantColors[u.slug])return giantColors[u.slug];
+    var c=rgbOf(u.couleur);if(!c)return '';
+    var dark=lum(c)<.179;   // seuil ou le blanc et le noir contrastent autant
+    var to=dark?[255,255,255]:[0,0,0];
+    var mix=function(t){return c.map(function(v,i){return Math.round(v+(to[i]-v)*t);});};
+    var lo=0,hi=1;
+    for(var k=0;k<24;k++){var m=(lo+hi)/2;if(contrast(c,mix(m))<UV_GIANT_CONTRASTE)lo=m;else hi=m;}
+    var g=mix(hi);
+    return (giantColors[u.slug]='rgb('+g.join(',')+')');
+  }
   // Largeur du nom a 100px, mesuree sur un canvas (l'ecran peut etre
   // encore cache), espacement -.02em compris
   function giantW100(nom){
@@ -183,10 +215,11 @@ function uvCarrousel(sec,o){
   function paintGiant(){
     var u=at(idx);
     giant.textContent=u.nom;
+    giant.style.color=giantColor(u);
     var W=sec.clientWidth||window.innerWidth, w=giantW100(u.nom);
-    if(!mobile.matches){
+    if(!stack.matches){
       if(!o.fit){giant.style.setProperty('--uv-fs',Math.min(24,150/u.nom.length).toFixed(2)+'vw');return;}
-      // Accueil, ordinateur : le nom deborde nettement du vinyle (au moins
+      // Accueil, a partir de 600px : le nom deborde nettement du vinyle (au moins
       // 1,75 fois son diametre) quelle que soit la largeur, sans sortir de
       // l'ecran ; hauteur des lettres bornee par le vinyle.
       var D=center.offsetWidth||W*.3;
@@ -195,7 +228,7 @@ function uvCarrousel(sec,o){
       giant.style.setProperty('--uv-fs',fs.toFixed(1)+'px');
       return;
     }
-    // Mobile : le nom tient dans la largeur (marges de 16px)
+    // Sous 600px : au-dessus du vinyle, dans la largeur (marges de 16px)
     var cap=Math.min(W*.22,window.innerHeight*.11);
     giant.style.setProperty('--uv-fs',Math.min(cap,(W-32)*100/w).toFixed(1)+'px');
   }
@@ -203,8 +236,8 @@ function uvCarrousel(sec,o){
   // (accueil : la mise en page aussi, l'accroche change de hauteur)
   function relayout(){layout();paintGiant();}
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(relayout);
-  if(mobile.addEventListener)mobile.addEventListener('change',relayout);
-  window.addEventListener('resize',function(){if(mobile.matches)paintGiant();});
+  [mobile,stack].forEach(function(mq){if(mq.addEventListener)mq.addEventListener('change',relayout);});
+  window.addEventListener('resize',function(){if(stack.matches)paintGiant();});
 
   // ── Accueil : tout le premier ecran ─────────────────────────
   // Entre le bas de l'accroche et le haut de la rangee des univers : (mobile)
@@ -218,12 +251,16 @@ function uvCarrousel(sec,o){
     var mob=mobile.matches, rect=sec.getBoundingClientRect();
     var rel=function(el){return el.getBoundingClientRect().top-rect.top;};
     var top=(hook?rel(hook)+hook.offsetHeight:0)+(mob?12:Math.max(16,H*.025));
-    var bottom=Math.min(rel(tabs),rel(countEl))-(mob?14:Math.max(16,H*.03));
+    // haut de la rangee des univers et du compteur (masque sur ordinateur)
+    var bar=[tabs,countEl.parentNode].filter(function(el){return el.getClientRects().length;}).map(rel);
+    var bottom=(bar.length?Math.min.apply(null,bar):H)-(mob?14:Math.max(16,H*.03));
     var ctas=q('.uv-ctas')||discover, ctaGap=mob?14:24;
-    // mobile : place du nom geant au-dessus du vinyle (72 % de sa hauteur)
-    var above=mob?(parseFloat(giant.style.getPropertyValue('--uv-fs'))||W*.2)*.85*.72:0;
+    // sous 600px : place du nom geant au-dessus du vinyle (72 % de sa hauteur)
+    var above=stack.matches?(parseFloat(giant.style.getPropertyValue('--uv-fs'))||W*.2)*.85*.72:0;
     var avail=bottom-top-above-ctaGap-ctas.offsetHeight;
-    var max=mob?W*.7:Math.min(W,H)*.45, min=mob?140:200;
+    // vinyle : 70 % de la largeur sous 600px (nom au-dessus) ; au-dela, taille
+    // de l'ordinateur pour que le nom geant deborde de chaque cote
+    var max=stack.matches?W*.7:Math.min(W,H)*.45, min=mob?140:200;
     var D=Math.max(min,Math.min(max,avail));
     var cy=top+above+D/2+Math.max(0,avail-D)/2;
     sec.style.setProperty('--uv-d',D.toFixed(1)+'px');
@@ -250,14 +287,32 @@ function uvCarrousel(sec,o){
   tabs.addEventListener('click',function(e){
     var b=e.target.closest('.uv-tab');if(!b)return;
     var k=+b.getAttribute('data-k');
+    // transition en cours : le dernier univers demande est retenu (flushPending)
+    if(busy&&!open){pending=k;holdAuto();return;}
     go(k>idx?1:-1,false,k);
   });
+  // Fin d'une transition : univers demande entre-temps
+  function flushPending(){
+    if(pending==null||open)return;
+    var k=pending;pending=null;
+    if(k!==idx)go(k>idx?1:-1,false,k);
+  }
+  // Rangee plus large que la place : elle defile, fondu sur le bord
+  // droit tant qu'il reste des univers a voir
+  function tabsEdge(){
+    var over=tabs.scrollWidth>tabs.clientWidth+1;
+    tabs.classList.toggle('is-scroll',over);
+    tabs.classList.toggle('is-more',over&&tabs.scrollLeft+tabs.clientWidth<tabs.scrollWidth-2);
+  }
+  tabs.addEventListener('scroll',tabsEdge,{passive:true});
+  window.addEventListener('resize',tabsEdge);
   function paintTabs(){
     [].forEach.call(tabs.children,function(b,k){
       var on=k===idx;b.classList.toggle('is-on',on);
       if(on)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');
     });
-    // rangee defilante (mobile) : l'univers actif reste visible, sans bouger la page
+    // rangee defilante : l'univers actif reste visible, sans bouger la page
+    tabsEdge();
     var on=tabs.children[idx];
     if(on&&tabs.scrollWidth>tabs.clientWidth)tabs.scrollTo({left:on.offsetLeft-(tabs.clientWidth-on.offsetWidth)/2,behavior:reduce.matches?'auto':'smooth'});
   }
@@ -281,7 +336,7 @@ function uvCarrousel(sec,o){
       anim(flip,[{opacity:1},{opacity:0}],{duration:200,easing:'linear'}).finished.then(function(){
         paintCenter();paintSides();paintGiant();paintCount();
         anim(flip,[{opacity:0},{opacity:1}],{duration:200,easing:'linear'}).finished.then(function(){
-          flip.getAnimations().forEach(function(a){a.cancel();});busy=false;
+          flip.getAnimations().forEach(function(a){a.cancel();});busy=false;flushPending();
         });
       });
       return;
@@ -307,7 +362,7 @@ function uvCarrousel(sec,o){
       out.cancel();
       back.finished.then(function(){
         [giant,prevVy,nextVy].forEach(function(el){el.getAnimations().forEach(function(a){a.cancel();});});
-        busy=false;
+        busy=false;flushPending();
       });
     });
   }
@@ -497,7 +552,7 @@ function uvCarrousel(sec,o){
     setIndex:function(k){
       if(open)return;
       [flip,giant,prevVy,nextVy].forEach(function(el){el.getAnimations().forEach(function(a){a.cancel();});});
-      busy=false;idx=(k+N)%N;paintAll();
+      busy=false;pending=null;idx=(k+N)%N;paintAll();
     },
     inView:function(){return inView;},
     go:function(dir){go(dir);}

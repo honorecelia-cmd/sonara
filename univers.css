@@ -40,7 +40,9 @@
   text-align:center;white-space:nowrap;pointer-events:none;
   font-family:'MuseoModerno',sans-serif;font-weight:900;line-height:.85;letter-spacing:-.02em;
   font-size:var(--uv-fs,22vw);
-  color:color-mix(in srgb, var(--uv-c) 58%, #000);   /* decor, mais lisible */
+  /* decor lisible : plus clair que les fonds sombres, plus fonce que les
+     fonds clairs, contraste 2,2 (couleur calculee par univers.js) */
+  color:color-mix(in srgb, var(--uv-c) 58%, #000);
 }
 
 .uv-stage{position:absolute;inset:0;perspective:1200px}
@@ -118,7 +120,8 @@
 .uv-auto[aria-pressed="true"] .uv-ic-play{display:block}
 .uv-auto[aria-pressed="true"] .uv-ic-pause{display:none}
 @media (prefers-reduced-motion:reduce){.uv-auto{display:none}}
-.uv-count b{font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:clamp(48px,5.5vw,96px);line-height:1}
+.uv{--uv-count-h:clamp(48px,5.5vw,96px)}   /* hauteur du compteur (sa police) */
+.uv-count b{font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:var(--uv-count-h);line-height:1}
 .uv-count span{font-size:16px;color:rgba(255,255,255,.75)}
 .uv-discover{
   position:absolute;left:50%;top:calc(var(--uv-cy) + var(--uv-d) / 2 + 28px);transform:translateX(-50%);
@@ -132,6 +135,13 @@
    uvCarrousel (option fit) calcule --uv-d et --uv-cy entre l'accroche et
    la rangee des univers. */
 .uv--accueil{height:100vh;height:100svh;min-height:500px}
+/* Ordinateur : ni compteur ni bouton pause (le defilement automatique garde
+   ses pauses : survol du panneau, clavier, univers ouvert) ; la rangee des
+   univers prend toute la largeur */
+@media (min-width:768px){
+  .uv--accueil .uv-countbar{display:none}
+  .uv--accueil .uv-tabs{left:var(--neb-margin);bottom:5vh}
+}
 /* "Jouer en [univers]" (principal, creme) et "Decouvrir" (contour) */
 .uv-ctas{
   position:absolute;left:50%;top:calc(var(--uv-cy) + var(--uv-d) / 2 + var(--uv-cta-gap,24px));transform:translateX(-50%);
@@ -170,13 +180,23 @@
 
 /* Couleur claire (Mix, Soca...) : le texte reste blanc, lisible sur aplat chaud */
 
-/* Rangee des 9 univers */
+/* Rangee des 9 univers : toujours sur une ligne, centree ; si la place
+   manque, elle defile (fondu sur le bord droit tant qu'il en reste, classes
+   posees par univers.js) */
 .uv-tabs{
-  /* entre le compteur (a gauche) et le bord droit ; 2 lignes si besoin */
-  position:absolute;left:calc(var(--neb-margin) + 270px);right:var(--neb-margin);bottom:5vh;
-  display:flex;flex-wrap:wrap;justify-content:center;gap:6px;width:auto;max-width:none;padding:0;   /* annule nav{} de sonara.css */
+  /* entre le compteur (a gauche) et le bord droit */
+  position:absolute;left:calc(var(--neb-margin) + 270px);right:var(--neb-margin);
+  bottom:calc(5vh + (var(--uv-count-h) - 33px) / 2);   /* centree sur la hauteur du compteur */
+  display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:6px;width:auto;max-width:none;padding:0;   /* annule nav{} de sonara.css */
+  overflow-x:auto;scrollbar-width:none;
 }
 .uv-tabs::-webkit-scrollbar{display:none}
+.uv-tab:first-child{margin-left:auto}   /* centree quand elle tient, sans couper le debut quand elle defile */
+.uv-tab:last-child{margin-right:auto}
+.uv-tabs.is-more{
+  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);
+  mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);
+}
 .uv-tab{
   flex-shrink:0;padding:8px 13px;border-radius:999px;cursor:pointer;
   border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;
@@ -190,9 +210,6 @@
 /* ── Mobile ── */
 @media (max-width:767px){
   .uv{--uv-d:70vw;min-height:600px}
-  /* Nom geant au-dessus du vinyle, le bas des lettres glisse derriere
-     (sur les cotes, le vinyle et ses voisins le cacheraient entierement) */
-  .uv-giant{top:calc(var(--uv-cy) - var(--uv-d) / 2);--uv-gy:-72%}
   .uv-side{--uv-ds:calc(var(--uv-d) * .55)}
   .uv-side--prev{left:calc(var(--uv-ds) * -.82)}
   .uv-side--next{left:calc(100% - var(--uv-ds) * .18)}
@@ -200,11 +217,8 @@
   .uv-arrow--prev{left:auto;right:calc(16px + 56px)}
   .uv-arrow--next{right:16px}
   .uv-countbar{left:16px;gap:12px}
-  /* mobile : une ligne qui defile, fondu sur le bord droit pour le signaler */
-  .uv-tabs{left:0;right:0;bottom:calc(5vh + 62px);flex-wrap:nowrap;justify-content:flex-start;padding:0 16px;
-    overflow-x:auto;scrollbar-width:none;
-    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);
-    mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent)}
+  /* mobile : sur sa propre ligne, au-dessus du compteur et des fleches */
+  .uv-tabs{left:0;right:0;bottom:calc(5vh + 62px);padding:0 16px}
   .uv-discover{top:calc(var(--uv-cy) + var(--uv-d) / 2 + 10px)}
   .uv--accueil{min-height:480px}
   .uv-ctas{--uv-cta-gap:14px;gap:8px}
@@ -215,4 +229,11 @@
   }
   .uv-p-title{font-size:13vw}
   .uv-p-infos{grid-template-columns:1fr}
+}
+
+/* Sous 600px : nom geant au-dessus du vinyle, le bas des lettres glisse
+   derriere (sur les cotes, le vinyle et ses voisins le cacheraient
+   entierement). A partir de 600px : toute la largeur, derriere le vinyle. */
+@media (max-width:599px){
+  .uv-giant{top:calc(var(--uv-cy) - var(--uv-d) / 2);--uv-gy:-72%}
 }
