@@ -17,7 +17,7 @@
     opts=opts||{};
     // Depuis /a-propos ou /comment-jouer : le parcours (et le retour a
     // l'accueil apres la partie) repart de l'adresse de l'accueil
-    if(vue!=='accueil'){try{history.replaceState(null,'','/');}catch(e){}setVue('accueil');}
+    if(vue!=='accueil'){try{history.replaceState(null,'','/');}catch(e){}setVue('accueil');entre();}
     if(window.uvLanding&&uvLanding.inView())opts.theme=uvLanding.current().slug;
     if(window.SonaraFlow)SonaraFlow.toUnivers(opts);
   }
@@ -122,7 +122,7 @@
     lightWords();
     // b. Etapes de "Comment jouer" : a l'entree a l'ecran (des qu'une partie
     // est visible). Le "SONARA" du footer : entete.js, commun aux pages.
-    var ins=document.querySelectorAll('.nb-steps');
+    var ins=document.querySelectorAll('.nb-steps:not(.nb-cj-steps)');   // vue Comment jouer : anim-pages.js
     if(!('IntersectionObserver' in window)){[].forEach.call(ins,function(el){el.classList.add('is-in');});return;}
     var io=new IntersectionObserver(function(es){
       es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target);}});
@@ -149,22 +149,29 @@
     });
     document.title=TITRES[v];
   }
-  function goTo(path,hash){
+  // Changement de vue : disque ouvert depuis le point clique et entree de
+  // la page (anim-pages.js ; sans ce script : changement direct)
+  function entre(){if(window.nbPages)nbPages.enter(landing.querySelector('.nb-page:not([hidden])'));}
+  function transition(maj,e){if(window.nbPages)nbPages.go(maj,e);else maj();}
+  function goTo(path,hash,e){
     closeMenus();
-    history.pushState(null,'',path+(hash||''));
-    if(landing.style.display==='none'&&window.showPage)showPage('landing');
-    setVue(vueDe(path));
-    var t=hash&&document.getElementById(hash.slice(1));
-    if(t&&!t.hidden)t.scrollIntoView();else window.scrollTo(0,0);
+    transition(function(){
+      history.pushState(null,'',path+(hash||''));
+      if(landing.style.display==='none'&&window.showPage)showPage('landing');
+      setVue(vueDe(path));
+      var t=hash&&document.getElementById(hash.slice(1));
+      if(t&&!t.hidden)t.scrollIntoView();else window.scrollTo(0,0);
+      entre();
+    },e);
   }
   document.addEventListener('click',function(e){
     var a=e.target.closest&&e.target.closest('a[href]');
     if(!a||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||a.target)return;
     if(a.origin!==location.origin||!vueDe(a.pathname))return;
     e.preventDefault();
-    goTo(a.pathname.replace(/\/+$/,'')||'/',a.hash);
+    goTo(a.pathname.replace(/\/+$/,'')||'/',a.hash,e);
   });
-  window.addEventListener('popstate',function(){var v=vueDe(location.pathname);if(v&&v!==vue)setVue(v);});
+  window.addEventListener('popstate',function(){var v=vueDe(location.pathname);if(v&&v!==vue)transition(function(){setVue(v);entre();});});
   (function(){
     var v=vueDe(location.pathname)||'accueil';
     if(v==='accueil'&&location.pathname==='/'&&ANCRES[location.hash]){

@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="/jeu.css">
 <link rel="stylesheet" href="/prep.css">
 <link rel="stylesheet" href="/cadre.css">
+<script src="/anim-pages.js"></script>
 <!-- Lien d'invitation (/?salle=CODE) : la landing n'est jamais affichee,
      l'ecran d'invitation la remplace des que sonara.js a lu la salle -->
 <script>if(/[?&]salle=[A-Za-z0-9]{4}(?![A-Za-z0-9])/.test(location.search))document.documentElement.classList.add('sn-invite');</script>
@@ -412,6 +413,8 @@
        (bloc "Vues") affiche la vue qui correspond a l'adresse. Textes repris
        des anciennes sections 01 (histoire, mission) et 04 (etapes, points). -->
   <section class="nb-sec nb-page nb-page--ap" id="a-propos" data-vue="a-propos" aria-labelledby="ap-t" hidden>
+    <!-- Vinyle decoratif (composant .vy, sans pochette) : tourne derriere le texte -->
+    <span class="vy vy--spin nb-ap-vy" aria-hidden="true"><span class="vy-spin"><span class="vy-disc"></span><span class="vy-label"><span class="jg-vy-logo"></span></span></span><span class="vy-sheen"></span></span>
     <div class="nb-page-head">
       <p class="nb-label">Sonara /</p>
       <h1 class="nb-page-t" id="ap-t">À propos</h1>
@@ -458,10 +461,10 @@
       <div class="nb-cj-points">
         <h2 class="nb-label">Les points</h2>
         <ul class="nb-s04-pts">
-          <li>Artiste ou titre : 15 points chacun.</li>
-          <li>Les deux d'un coup : 30 points.</li>
-          <li>Réponds vite pour multiplier tes points : ×3 dans les 5 premières secondes, ×2 entre 5 et 10 secondes.</li>
-          <li>Jusqu'à 90 points par morceau.</li>
+          <li>Artiste ou titre : <span class="nb-cnt">15</span> points chacun.</li>
+          <li>Les deux d'un coup : <span class="nb-cnt">30</span> points.</li>
+          <li>Réponds vite pour multiplier tes points : <span class="nb-cnt">×3</span> dans les 5 premières secondes, <span class="nb-cnt">×2</span> entre 5 et 10 secondes.</li>
+          <li>Jusqu'à <span class="nb-cnt">90</span> points par morceau.</li>
         </ul>
       </div>
     </div>

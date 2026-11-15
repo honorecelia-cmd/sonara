@@ -945,9 +945,54 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-ft-l:nth-child(5){transition-delay:.28s}
 .nb-ft-l:nth-child(6){transition-delay:.35s}
 /* Comment jouer : etapes 1 a 5 l'une apres l'autre */
-.nb-anim .nb-steps li{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease-nb),transform .6s var(--ease-nb)}
-.nb-anim .nb-steps.is-in li{opacity:1;transform:none}
+.nb-anim .nb-steps:not(.nb-cj-steps) li{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease-nb),transform .6s var(--ease-nb)}
+.nb-anim .nb-steps:not(.nb-cj-steps).is-in li{opacity:1;transform:none}
 .nb-steps li:nth-child(2){transition-delay:.09s}
 .nb-steps li:nth-child(3){transition-delay:.18s}
 .nb-steps li:nth-child(4){transition-delay:.27s}
 .nb-steps li:nth-child(5){transition-delay:.36s}
+
+/* ═══════════════════════════════════════════════════════════════
+   Animations des pages A propos, Comment jouer et pages legales
+   (anim-pages.js). Transform, opacity et clip-path seulement.
+   ═══════════════════════════════════════════════════════════════ */
+/* Transition entre documents (pages legales <-> sonara.html) */
+@view-transition{navigation:auto}
+/* L'en-tete reste en place pendant la transition : son groupe ne bouge
+   pas. Seul le lien de la page en cours change (fondu du navigateur).
+   Ne pas mettre animation:none sur ::view-transition-new/old(nb-header) :
+   WebKit n'affiche alors plus l'en-tete. */
+.nb-header{view-transition-name:nb-header}
+::view-transition-group(nb-header){animation:none}
+/* Disque de la page d'arrivee : clip-path anime par anim-pages.js.
+   Sans animation : fondu enchaine du navigateur. */
+@media (prefers-reduced-motion:no-preference){
+  ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+}
+/* Avant l'entree : contenu des pages masque (retire par anim-pages.js) */
+html.ap-wait .nb-page > *,html.ap-wait .lg-main > *{opacity:0}
+.ap-h{opacity:0}
+/* Masque d'une ligne de titre ou d'un mot de la mission : marge interieure
+   compensee pour ne couper ni accents ni jambages */
+.ap-line{display:block;overflow:hidden;padding:.14em 0 .12em;margin:-.14em 0 -.12em}
+.ap-line-in{display:block}
+/* Parent des masques en colonne flex : aucune fusion de marges, ni avec
+   lui ni entre lignes voisines ; titre et phrase gardent leur place exacte */
+.ap-split{display:flex;flex-direction:column}
+/* Rouleau d'un chiffre des points : largeur d'un chiffre tabulaire */
+.ap-digit{display:inline-block;height:1lh;overflow:hidden;vertical-align:top;font-variant-numeric:tabular-nums}
+.ap-reel{display:block}
+.ap-reel > span{display:block;height:1lh}
+
+/* A propos : grand vinyle decoratif a droite, derriere le texte */
+.nb-page--ap{isolation:isolate}
+.nb-ap-vy{
+  position:absolute;z-index:-1;pointer-events:none;
+  width:min(64vw,1000px);right:-14vw;top:calc(var(--hd-h) + 3vw);
+  opacity:.32;--vy-color:var(--sn-ink-raised);--vy-label:var(--sn-ink-high);--vy-hole:var(--neb-black);
+}
+.nb-ap-vy .vy-label{display:flex;align-items:center;justify-content:center}
+.nb-ap-vy .jg-vy-logo{width:58%;background:var(--neb-black)}
+@media (max-width:760px){
+  .nb-ap-vy{width:130vw;right:-80vw;top:auto;bottom:16%;opacity:.24}
+}
