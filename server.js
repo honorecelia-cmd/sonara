@@ -17,7 +17,9 @@ function onlineCount() {
   return seen.size;
 }
 
-function slug(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 12) || 'mix'; }
+// Tirets conserves (dennery-segment) ; les cles existantes n'en ont pas et
+// font 12 caracteres au plus : elles restent identiques
+function slug(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9-]+/g, '').replace(/^-+|-+$/g, '').slice(0, 20) || 'mix'; }
 function genCustomCode() {
   let c;
   do { c = crypto.randomBytes(6).toString('base64').replace(/[^a-z0-9]/gi, '').toLowerCase().slice(0, 6); } while (c.length < 6 || store.data.customLinks[c]);
@@ -287,7 +289,7 @@ const server = http.createServer(function(req, res) {
   if (p.pathname === '/room/create' && req.method === 'POST') {
     if (limited(req, 'salle')) { tooMany(res); return; }
     readBody(req, function (err, data) {
-      if (err || !data || !validId(data.playerId) || !/^[a-z]{2,16}$/.test(String(data.theme || ''))) { sendJson(res, 400, {}); return; }
+      if (err || !data || !validId(data.playerId) || !/^(?=.{2,20}$)[a-z]+(?:-[a-z]+)*$/.test(String(data.theme || ''))) { sendJson(res, 400, {}); return; }
       const code = genCode();
       rooms[code] = { code, theme: data.theme, host: data.playerId, players: [], started: false, phase: 'lobby', question: 0 };
       keepRoom(code, EMPTY_TTL);
@@ -403,7 +405,7 @@ const server = http.createServer(function(req, res) {
   }
 
   // Fichiers statiques CSS / JS
-  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js' || p.pathname === '/landing.css' || p.pathname === '/landing.js' || p.pathname === '/univers.css' || p.pathname === '/univers.js' || p.pathname === '/footer.js' || p.pathname === '/sonara-kit.css' || p.pathname === '/sonara-kit.js' || p.pathname === '/ecrans.css' || p.pathname === '/ecran-univers.js' || p.pathname === '/ecran-sonnom.js' || p.pathname === '/ecran-resultats.js' || p.pathname === '/jeu.css' || p.pathname === '/ecran-jeu.js' || p.pathname === '/prep.css' || p.pathname === '/ecran-prep.js' || p.pathname === '/cadre.css' || p.pathname === '/cadre.js' || p.pathname === '/rgpd.js') {
+  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js' || p.pathname === '/landing.css' || p.pathname === '/landing.js' || p.pathname === '/univers.css' || p.pathname === '/univers.js' || p.pathname === '/footer.js' || p.pathname === '/entete.js' || p.pathname === '/anim-pages.js' || p.pathname === '/sonara-kit.css' || p.pathname === '/sonara-kit.js' || p.pathname === '/ecrans.css' || p.pathname === '/ecran-univers.js' || p.pathname === '/ecran-sonnom.js' || p.pathname === '/ecran-resultats.js' || p.pathname === '/jeu.css' || p.pathname === '/ecran-jeu.js' || p.pathname === '/prep.css' || p.pathname === '/ecran-prep.js' || p.pathname === '/cadre.css' || p.pathname === '/cadre.js' || p.pathname === '/rgpd.js') {
     fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
       if (err) { res.writeHead(404); res.end('Not found'); return; }
       var ct = p.pathname.endsWith('.css') ? 'text/css' : 'application/javascript';
@@ -605,7 +607,7 @@ server.on('upgrade', function(req, socket) {
       }
       // Retour de tout le groupe dans la salle (meme code, memes joueurs), scores a zero
       if (msg.type === 'new_game' && isHost && over) {
-        if (typeof msg.theme === 'string' && /^[a-z]{2,16}$/.test(msg.theme)) room.theme = msg.theme;
+        if (typeof msg.theme === 'string' && /^(?=.{2,20}$)[a-z]+(?:-[a-z]+)*$/.test(msg.theme)) room.theme = msg.theme;
         clearRoomTimer(room);
         room.started = false; room.phase = 'lobby'; room.question = 0;
         room.players.forEach(function(x){ x.score = 0; x.answered = false; });

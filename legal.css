@@ -1,23 +1,28 @@
-/* Pages legales : style du site (MuseoModerno titres, Inter texte, aplats) */
-:root{--ink:#2d1002;--cream:#fdddb8;--accent:#C34503;--black:#080808}
+/* Pages legales : en-tete et footer du site (landing.css, memes balises que
+   sonara.html), texte sur creme. MuseoModerno 800 pour les titres, Inter
+   pour le reste. Regles limitees a <main> : l'en-tete et le footer gardent
+   leurs styles. */
+/* alias des tokens du kit (comme sonara.css, non charge ici) */
+:root{--accent:var(--sn-accent);--cream:var(--sn-cream);--ink:var(--sn-ink)}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif}
-.lg-header{display:flex;align-items:center;justify-content:space-between;padding:20px 4.85vw;background:var(--black)}
-.lg-header img{height:32px;width:auto;display:block}
-.lg-back{color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:999px;background:var(--accent)}
-.lg-back:hover{background:#fff;color:var(--ink)}
-main{max-width:760px;margin:0 auto;padding:72px 16px 96px}
-h1{font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:clamp(36px,6vw,64px);line-height:1;letter-spacing:-.02em;margin:0 0 12px}
-.lg-update{margin:0 0 48px;color:rgba(45,16,2,.6);font-size:14px}
-h2{font-family:'MuseoModerno',sans-serif;font-weight:700;font-size:22px;margin:40px 0 12px}
-p,li{font-size:16px;line-height:1.6}
-ul{padding-left:20px}
+/* Marges des vues A propos / Comment jouer (.nb-page, landing.css) */
+.lg-main{padding:calc(var(--hd-h) + 6vw) var(--neb-margin) 7vw}
+/* En-tete de page comme les vues (.nb-page-head, .nb-page-t : meme taille
+   de titre) ; texte en colonne de lecture */
+.lg-main .nb-label{color:rgba(45,16,2,.6)}   /* comme .nb-sec--light */
+.lg-main > :not(.nb-page-head){max-width:760px}
+.lg-update{margin:16px 0 0;color:rgba(45,16,2,.6);font-size:14px}
+.lg-main .nb-page-head + h2{margin-top:0}
+.lg-main h2{font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.01em;margin:40px 0 12px}
+.lg-main > p,.lg-main li,.sn-erase p{font-size:16px;line-height:1.6}   /* texte courant, hors en-tete de page */
+.lg-main ul{margin:0 0 16px;padding-left:20px}
+.lg-main li{margin-bottom:8px}
+.lg-main a{color:var(--accent);font-weight:600}
 .todo{background:#fff;border-radius:6px;padding:1px 6px;font-weight:600;color:var(--accent)}
-footer{background:var(--black);color:rgba(255,255,255,.6);text-align:center;font-size:13px;padding:28px 16px}
-a{color:var(--accent)}
-ul{margin:0 0 16px}
-li{margin-bottom:8px}
-main a{color:var(--accent);font-weight:600}
+@media (max-width:760px){
+  .lg-main{padding:calc(var(--hd-h) + 40px) 16px 56px}
+}
 
 /* « Supprimer mes scores » (rgpd.js) : bouton orange sur creme, confirmation dessous */
 .sn-erase{margin:8px 0 24px}

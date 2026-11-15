@@ -40,7 +40,12 @@ var UNIVERS = [
    texte:"En 1955, le saxophoniste haïtien Nemours Jean-Baptiste crée le « konpa dirèk », un rythme de danse régulier et chaloupé inspiré du méringue. Guitares, cuivres, puis claviers : le kompa voyage avec la diaspora haïtienne et s'installe durablement aux Antilles, où il a nourri la cadence et le zouk. Aujourd'hui encore, c'est la danse en couple par excellence."},
   {nom:'Shatta', slug:'shatta', couleur:'var(--univers-shatta)', image:'/img/pochettes/shatta.webp',
    origine:'Martinique', epoque:'années 2010', signature:'minimaliste, percussif, fait pour le dancefloor',
-   texte:"Né en Martinique, le shatta est un enfant du dancehall : plus minimaliste, plus percussif, pensé pour faire bouger le dancefloor, avec des textes crus et beaucoup d'humour. Longtemps réservé aux soirées locales, il explose dans l'Hexagone au début des années 2020, porté notamment par Maureen et Bamby. C'est la touche martiniquaise de Sonara."}
+   texte:"Né en Martinique, le shatta est un enfant du dancehall : plus minimaliste, plus percussif, pensé pour faire bouger le dancefloor, avec des textes crus et beaucoup d'humour. Longtemps réservé aux soirées locales, il explose dans l'Hexagone au début des années 2020, porté notamment par Maureen et Bamby. C'est la touche martiniquaise de Sonara."},
+  // Pochette a venir : deposer /img/pochettes/dennery-segment.webp (et son
+  // .jpg), puis remplacer image:null par '/img/pochettes/dennery-segment.webp'
+  {nom:'Dennery Segment', slug:'dennery-segment', couleur:'var(--univers-dennery)', image:null,
+   origine:'Sainte-Lucie', epoque:'années 2010', signature:'la soca saint-lucienne, à toute vitesse et en kwéyòl',
+   texte:"Le Dennery Segment porte le nom de Dennery, une commune de la côte est de Sainte-Lucie. Héritier de la soca, il en garde l'énergie et la pousse à l'extrême : tempo rapide, percussions martelées, refrains courts répétés en boucle, souvent chantés en kwéyòl, le créole saint-lucien. Il traverse vite le canal jusqu'à la Martinique voisine, où ses riddims enflamment les soirées."}
 ];
 
 // ── Pochettes : tout passe par le tableau UNIVERS ───────────────
@@ -97,6 +102,10 @@ function uvVinyl(u,spin,neutral,named){
 //   auto     defilement automatique + bouton pause (landing)
 //   panel    panneau "Decouvrir" present dans `sec` (landing)
 //   cta      libelle du bouton sous le vinyle ("Découvrir", "Choisir cet univers")
+//   play     bouton principal "Jouer en [univers]" (creme) a cote du bouton
+//            cta, qui passe en secondaire (contour) ; clic : onCenter (accueil)
+//   fit      accroche, vinyle et boutons tiennent dans la hauteur de la
+//            section : diametre et position du vinyle calcules (accueil)
 //   onCta(u)         clic sur ce bouton (defaut : ouvrir le panneau)
 //   onCenter(u)      clic sur le vinyle central
 //   onSide(u,dir)    clic sur un vinyle voisin (dir -1 ou 1)
@@ -125,7 +134,9 @@ function uvSkeleton(o){
             '<svg class="uv-ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>'+
             '<svg class="uv-ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg></button>':'')+
         '</div>'+
+        (o.play?'<div class="uv-ctas"><button class="nb-pill uv-playnow" type="button"></button>':'')+
         '<button class="nb-pill uv-discover" type="button">'+uvEsc(o.cta||'Découvrir')+'</button>'+
+        (o.play?'</div>':'')+
         '<nav class="uv-tabs" aria-label="Choisir un univers"></nav>'+
       '</div>'
   };
@@ -140,14 +151,18 @@ function uvCarrousel(sec,o){
   else sec.insertAdjacentHTML('beforeend',sk.front);
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
   var mobile=window.matchMedia('(max-width: 767px)');
+  // Nom geant au-dessus du vinyle seulement sur les ecrans etroits ; a partir
+  // de 600px, il passe sur toute la largeur, derriere le vinyle
+  var stack=window.matchMedia('(max-width: 599px)');
   var EASE='cubic-bezier(.65,0,.35,1)';
   var q=function(s){return sec.querySelector(s);};
   var bg=q('.uv-bg'), giant=q('.uv-giant'), center=q('.uv-center'), flip=q('.uv-flip');
   var prevVy=q('.uv-side--prev'), nextVy=q('.uv-side--next'), sleeve=q('.uv-sleeve'), ui=q('.uv-ui');
   var num=q('.uv-count b'), discover=q('.uv-discover'), panel=o.panel?panelEl:null;
   var pTitle=q('.uv-p-title'), pMeta=q('.uv-p-meta'), pText=q('.uv-p-text'), pInfos=q('.uv-p-infos');
-  var pPlay=q('.uv-play'), pBack=q('.uv-back');
+  var pPlay=q('.uv-play'), pBack=q('.uv-back'), playNow=q('.uv-playnow');
   var idx=0, busy=false, open=false, timers=[], held=[];
+  var pending=null;   // univers demande pendant une transition (pastille)
   var countEl=q('.uv-count'), autoBtn=q('.uv-auto'), inView=false;
 
   // Precharge des pochettes
@@ -167,27 +182,108 @@ function uvCarrousel(sec,o){
   function pad(n){return (n<10?'0':'')+n;}
 
   function paintColor(){sec.style.setProperty('--uv-c',at(idx).couleur);}
+
+  // ── Couleur du nom geant : decor lisible sur toutes les couleurs ──
+  // Fond sombre : version plus claire du fond (melange avec du blanc) ;
+  // fond clair : plus foncee (avec du noir). Proportion cherchee pour un
+  // contraste de 2,2 avec le fond (decor : entre 1,8 et 2,6).
+  var UV_GIANT_CONTRASTE=2.2;
+  function rgbOf(css){
+    var el=document.createElement('span');el.style.color=css;el.style.display='none';
+    sec.appendChild(el);var m=getComputedStyle(el).color.match(/[\d.]+/g);el.remove();
+    return m?[+m[0],+m[1],+m[2]]:null;
+  }
+  function lum(c){
+    var f=function(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);};
+    return .2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2]);
+  }
+  function contrast(a,b){var x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
+  var giantColors={};
+  function giantColor(u){
+    if(giantColors[u.slug])return giantColors[u.slug];
+    var c=rgbOf(u.couleur);if(!c)return '';
+    var dark=lum(c)<.179;   // seuil ou le blanc et le noir contrastent autant
+    var to=dark?[255,255,255]:[0,0,0];
+    var mix=function(t){return c.map(function(v,i){return Math.round(v+(to[i]-v)*t);});};
+    var lo=0,hi=1;
+    for(var k=0;k<24;k++){var m=(lo+hi)/2;if(contrast(c,mix(m))<UV_GIANT_CONTRASTE)lo=m;else hi=m;}
+    var g=mix(hi);
+    return (giantColors[u.slug]='rgb('+g.join(',')+')');
+  }
+  // Largeur du nom a 100px, mesuree sur un canvas (l'ecran peut etre
+  // encore cache), espacement -.02em compris
+  function giantW100(nom){
+    var ctx=(paintGiant.cv||(paintGiant.cv=document.createElement('canvas'))).getContext('2d');
+    ctx.font="800 100px 'MuseoModerno',sans-serif";   // meme graisse que .uv-giant
+    return Math.max(1,ctx.measureText(nom).width-2*nom.length);
+  }
   function paintGiant(){
     var u=at(idx);
     giant.textContent=u.nom;
-    if(!mobile.matches){giant.style.setProperty('--uv-fs',Math.min(24,150/u.nom.length).toFixed(2)+'vw');return;}
-    // Mobile : le nom tient dans la largeur (marges de 16px). Mesure a 100px
-    // sur un canvas (l'ecran peut etre encore cache), espacement -.02em compris.
-    var ctx=(paintGiant.cv||(paintGiant.cv=document.createElement('canvas'))).getContext('2d');
-    ctx.font="900 100px 'MuseoModerno',sans-serif";
-    var w=Math.max(1,ctx.measureText(u.nom).width-2*u.nom.length);
-    var W=sec.clientWidth||window.innerWidth, cap=Math.min(W*.22,window.innerHeight*.11);
+    giant.style.color=giantColor(u);
+    var W=sec.clientWidth||window.innerWidth, w=giantW100(u.nom);
+    if(!stack.matches){
+      if(!o.fit){giant.style.setProperty('--uv-fs',Math.min(24,150/u.nom.length).toFixed(2)+'vw');return;}
+      // Accueil, a partir de 600px : le nom deborde nettement du vinyle (au moins
+      // 1,75 fois son diametre) quelle que soit la largeur, sans sortir de
+      // l'ecran ; hauteur des lettres bornee par le vinyle.
+      var D=center.offsetWidth||W*.3;
+      var fit=(W-48)*100/w, fs=Math.min(W*.24,D*.95,fit);
+      fs=Math.max(fs,Math.min(fit,D*1.75*100/w));
+      giant.style.setProperty('--uv-fs',fs.toFixed(1)+'px');
+      return;
+    }
+    // Sous 600px : au-dessus du vinyle, dans la largeur (marges de 16px)
+    var cap=Math.min(W*.22,window.innerHeight*.11);
     giant.style.setProperty('--uv-fs',Math.min(cap,(W-32)*100/w).toFixed(1)+'px');
   }
   // Mobile : la taille depend de la police chargee et de la largeur
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(paintGiant);
-  if(mobile.addEventListener)mobile.addEventListener('change',paintGiant);
-  window.addEventListener('resize',function(){if(mobile.matches)paintGiant();});
+  // (accueil : la mise en page aussi, l'accroche change de hauteur)
+  function relayout(){layout();paintGiant();}
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(relayout);
+  [mobile,stack].forEach(function(mq){if(mq.addEventListener)mq.addEventListener('change',relayout);});
+  window.addEventListener('resize',function(){if(stack.matches)paintGiant();});
+
+  // ── Accueil : tout le premier ecran ─────────────────────────
+  // Entre le bas de l'accroche et le haut de la rangee des univers : (mobile)
+  // le nom geant au-dessus du vinyle, le vinyle, puis les boutons. Le vinyle
+  // prend la place disponible, sans depasser sa taille habituelle.
+  var hook=sec.querySelector('.nb-hook');
+  function layout(){
+    if(!o.fit||open)return;
+    var H=sec.clientHeight, W=sec.clientWidth;
+    if(!H||!W)return;
+    var mob=mobile.matches, rect=sec.getBoundingClientRect();
+    var rel=function(el){return el.getBoundingClientRect().top-rect.top;};
+    var top=(hook?rel(hook)+hook.offsetHeight:0)+(mob?12:Math.max(16,H*.025));
+    // haut de la rangee des univers et du compteur (masque sur ordinateur)
+    var bar=[tabs,countEl.parentNode].filter(function(el){return el.getClientRects().length;}).map(rel);
+    var bottom=(bar.length?Math.min.apply(null,bar):H)-(mob?14:Math.max(16,H*.03));
+    var ctas=q('.uv-ctas')||discover, ctaGap=mob?14:24;
+    // sous 600px : place du nom geant au-dessus du vinyle (72 % de sa hauteur)
+    var above=stack.matches?(parseFloat(giant.style.getPropertyValue('--uv-fs'))||W*.2)*.85*.72:0;
+    var avail=bottom-top-above-ctaGap-ctas.offsetHeight;
+    // vinyle : 70 % de la largeur sous 600px (nom au-dessus) ; au-dela, taille
+    // de l'ordinateur pour que le nom geant deborde de chaque cote
+    var max=stack.matches?W*.7:Math.min(W,H)*.45, min=mob?140:200;
+    var D=Math.max(min,Math.min(max,avail));
+    var cy=top+above+D/2+Math.max(0,avail-D)/2;
+    sec.style.setProperty('--uv-d',D.toFixed(1)+'px');
+    sec.style.setProperty('--uv-cy',cy.toFixed(1)+'px');
+  }
+  // Section affichee (vue accueil), redimensionnee, ou accroche qui change
+  // de hauteur (message d'un lien de Defi) : nouvelle mise en page
+  if(o.fit&&window.ResizeObserver){
+    var roTick=0;
+    var ro=new ResizeObserver(function(){cancelAnimationFrame(roTick);roTick=requestAnimationFrame(relayout);});
+    ro.observe(sec);if(hook)ro.observe(hook);
+  }
   function paintCenter(){
     var u=at(idx);
     flip.innerHTML=vinyl(u,true);
     center.setAttribute('aria-label',(o.centerLabel||'Jouer en ')+u.nom);
     discover.setAttribute('aria-label',(o.ctaLabel||'Découvrir l\'univers ')+u.nom);
+    if(playNow)playNow.textContent='Jouer en '+u.nom;
   }
   function paintSides(){prevVy.innerHTML=vinyl(at(idx-1),false);nextVy.innerHTML=vinyl(at(idx+1),false);}
   // Rangee des 9 univers : l'actif est mis en evidence
@@ -196,19 +292,37 @@ function uvCarrousel(sec,o){
   tabs.addEventListener('click',function(e){
     var b=e.target.closest('.uv-tab');if(!b)return;
     var k=+b.getAttribute('data-k');
+    // transition en cours : le dernier univers demande est retenu (flushPending)
+    if(busy&&!open){pending=k;holdAuto();return;}
     go(k>idx?1:-1,false,k);
   });
+  // Fin d'une transition : univers demande entre-temps
+  function flushPending(){
+    if(pending==null||open)return;
+    var k=pending;pending=null;
+    if(k!==idx)go(k>idx?1:-1,false,k);
+  }
+  // Rangee plus large que la place : elle defile, fondu sur le bord
+  // droit tant qu'il reste des univers a voir
+  function tabsEdge(){
+    var over=tabs.scrollWidth>tabs.clientWidth+1;
+    tabs.classList.toggle('is-scroll',over);
+    tabs.classList.toggle('is-more',over&&tabs.scrollLeft+tabs.clientWidth<tabs.scrollWidth-2);
+  }
+  tabs.addEventListener('scroll',tabsEdge,{passive:true});
+  window.addEventListener('resize',tabsEdge);
   function paintTabs(){
     [].forEach.call(tabs.children,function(b,k){
       var on=k===idx;b.classList.toggle('is-on',on);
       if(on)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');
     });
-    // rangee defilante (mobile) : l'univers actif reste visible, sans bouger la page
+    // rangee defilante : l'univers actif reste visible, sans bouger la page
+    tabsEdge();
     var on=tabs.children[idx];
     if(on&&tabs.scrollWidth>tabs.clientWidth)tabs.scrollTo({left:on.offsetLeft-(tabs.clientWidth-on.offsetWidth)/2,behavior:reduce.matches?'auto':'smooth'});
   }
   function paintCount(){num.textContent=pad(idx+1);paintTabs();}
-  function paintAll(){paintColor();paintGiant();paintCenter();paintSides();paintCount();}
+  function paintAll(){paintColor();paintCenter();paintSides();paintCount();paintGiant();layout();paintGiant();}
 
   function anim(el,frames,opt){return el.animate(frames,Object.assign({duration:400,easing:EASE,fill:'forwards'},opt||{}));}
   function later(fn,ms){timers.push(setTimeout(fn,ms));}
@@ -227,7 +341,7 @@ function uvCarrousel(sec,o){
       anim(flip,[{opacity:1},{opacity:0}],{duration:200,easing:'linear'}).finished.then(function(){
         paintCenter();paintSides();paintGiant();paintCount();
         anim(flip,[{opacity:0},{opacity:1}],{duration:200,easing:'linear'}).finished.then(function(){
-          flip.getAnimations().forEach(function(a){a.cancel();});busy=false;
+          flip.getAnimations().forEach(function(a){a.cancel();});busy=false;flushPending();
         });
       });
       return;
@@ -253,7 +367,7 @@ function uvCarrousel(sec,o){
       out.cancel();
       back.finished.then(function(){
         [giant,prevVy,nextVy].forEach(function(el){el.getAnimations().forEach(function(a){a.cancel();});});
-        busy=false;
+        busy=false;flushPending();
       });
     });
   }
@@ -261,11 +375,13 @@ function uvCarrousel(sec,o){
   // ── Transition B : ouvrir un univers ────────────────────────
   function geometry(){
     var D=center.offsetWidth, W=sec.clientWidth, H=sec.clientHeight;
+    // centre du vinyle dans la section (accueil : pas forcement au milieu)
+    var cy=center.getBoundingClientRect().top-sec.getBoundingClientRect().top+D/2;
     if(mobile.matches){
       var s=.55;
-      return {s:s,tx:W*.62-W/2,ty:-H/2+D*s/2+84,D:D};
+      return {s:s,tx:W*.62-W/2,ty:-cy+D*s/2+84,D:D,cy:cy};
     }
-    return {s:1,tx:W*.33-W/2,ty:0,D:D};
+    return {s:1,tx:W*.33-W/2,ty:o.fit?H/2-cy:0,D:D,cy:cy};
   }
   function fillPanel(u){
     pTitle.setAttribute('aria-label',u.nom);
@@ -314,7 +430,7 @@ function uvCarrousel(sec,o){
       return;
     }
     // 1. l'aplat se retracte en cercle vers le vinyle
-    held.push(anim(bg,[{clipPath:'circle(150% at 50% 50%)'},{clipPath:'circle('+(g.D/2)+'px at 50% 50%)'}],{duration:500}));
+    held.push(anim(bg,[{clipPath:'circle(150% at 50% '+g.cy+'px)'},{clipPath:'circle('+(g.D/2)+'px at 50% '+g.cy+'px)'}],{duration:500}));
     later(function(){bg.style.opacity=0;},500);
     // 2. le vinyle glisse vers la gauche en continuant de tourner
     held.push(anim(center,[{transform:'none'},{transform:vinylTo}],{duration:550,delay:450}));
@@ -345,7 +461,7 @@ function uvCarrousel(sec,o){
         bg.style.opacity=1;
         var grow=reduce.matches
           ? anim(bg,[{opacity:0,clipPath:'circle(150% at 50% 50%)'},{opacity:1,clipPath:'circle(150% at 50% 50%)'}],{duration:300})
-          : anim(bg,[{clipPath:'circle('+(g.D/2)+'px at 50% 50%)'},{clipPath:'circle(150% at 50% 50%)'}],{duration:600});
+          : anim(bg,[{clipPath:'circle('+(g.D/2)+'px at 50% '+g.cy+'px)'},{clipPath:'circle(150% at 50% '+g.cy+'px)'}],{duration:600});
         grow.finished.then(function(){
           ui.style.visibility='';
           [ui,giant,prevVy,nextVy].forEach(function(el){
@@ -402,6 +518,7 @@ function uvCarrousel(sec,o){
   prevVy.addEventListener('click',function(){if(!open&&!busy&&o.onSide)o.onSide(at(idx-1),-1);});
   nextVy.addEventListener('click',function(){if(!open&&!busy&&o.onSide)o.onSide(at(idx+1),1);});
   discover.addEventListener('click',function(){if(o.onCta){if(!busy)o.onCta(at(idx));}else openUniverse();});
+  if(playNow)playNow.addEventListener('click',function(){if(!open&&!busy&&o.onCenter)o.onCenter(at(idx));});
   if(panel){
     pBack.addEventListener('click',closeUniverse);
     pPlay.addEventListener('click',function(){if(o.onCenter)o.onCenter(at(idx));});
@@ -440,7 +557,7 @@ function uvCarrousel(sec,o){
     setIndex:function(k){
       if(open)return;
       [flip,giant,prevVy,nextVy].forEach(function(el){el.getAnimations().forEach(function(a){a.cancel();});});
-      busy=false;idx=(k+N)%N;paintAll();
+      busy=false;pending=null;idx=(k+N)%N;paintAll();
     },
     inView:function(){return inView;},
     go:function(dir){go(dir);}
@@ -454,5 +571,5 @@ function uvCarrousel(sec,o){
   // Clic sur un vinyle (ou "Jouer en ..." du panneau) : parcours, ecran
   // Son-nom avec cet univers preselectionne
   function playIn(u){if(window.SonaraFlow)SonaraFlow.toSonnom(u.slug);}
-  window.uvLanding=uvCarrousel(sec,{auto:true,panel:true,cta:'Découvrir',onCenter:playIn,onSide:playIn});
+  window.uvLanding=uvCarrousel(sec,{auto:true,panel:true,fit:true,play:true,cta:'Découvrir',onCenter:playIn,onSide:playIn});
 })();

@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="/jeu.css">
 <link rel="stylesheet" href="/prep.css">
 <link rel="stylesheet" href="/cadre.css">
+<script src="/anim-pages.js"></script>
 <!-- Lien d'invitation (/?salle=CODE) : la landing n'est jamais affichee,
      l'ecran d'invitation la remplace des que sonara.js a lu la salle -->
 <script>if(/[?&]salle=[A-Za-z0-9]{4}(?![A-Za-z0-9])/.test(location.search))document.documentElement.classList.add('sn-invite');</script>
@@ -32,103 +33,37 @@
      landing.js. L'ancienne intro pilotee au defilement est retiree. -->
 <section class="page" id="landing">
 
-  <!-- Header fixe : apparait au defilement ; le telephone du hero vient se
-       loger dans .nb-hd-slot (voir landing.js). -->
-  <header class="nb-header" id="nb-header">
-    <a class="nb-hd-logo" href="#landing" aria-label="Sonara"><img src="/img/logo_sonara.svg" alt="Sonara"></a>
+  <!-- Header fixe, toujours visible : logo, menu, Jouer. Le menu mene aux
+       vues de la landing (landing.js, bloc "Vues") : liens sur ordinateur,
+       liste deroulante sur mobile. -->
+  <header class="nb-header is-on" id="nb-header">
+    <a class="nb-hd-logo" href="/" aria-label="Sonara, accueil"><img src="/img/logo_sonara.svg" alt="Sonara"></a>
+    <nav class="nb-hd-nav" aria-label="Menu principal">
+      <a class="nb-hd-link" href="/#univers">Univers</a>
+      <a class="nb-hd-link" href="/comment-jouer">Comment jouer</a>
+      <a class="nb-hd-link" href="/a-propos">À propos</a>
+      <div class="nb-menu nb-hd-menu">
+        <button class="nb-menu-btn" type="button" aria-expanded="false" aria-controls="nb-menu-hd">Menu<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <ul class="nb-menu-list" id="nb-menu-hd" hidden>
+          <li><a href="/#univers">Univers</a></li>
+          <li><a href="/comment-jouer">Comment jouer</a></li>
+          <li><a href="/a-propos">À propos</a></li>
+        </ul>
+      </div>
+    </nav>
     <div class="nb-hd-right">
-      <span class="nb-hd-slot" id="nb-hd-slot" aria-hidden="true"></span>
       <button class="nb-pill nb-pill--cta nb-pill--sm" type="button" data-nb-play>Jouer</button>
     </div>
   </header>
 
-  <!-- ── HERO ── -->
-  <div class="nb-hero" id="nb-hero">
-    <!-- Calque decoupe : degrade, grain, lettrage geant, main. Le telephone
-         reste hors de ce calque pour pouvoir le quitter au defilement. -->
-    <div class="nb-hero-clip" aria-hidden="true">
-      <div class="nb-hero-bg"></div>
-      <!-- Logo geant en filigrane, a gauche du telephone, derriere la main -->
-      <img class="nb-giant" id="nb-giant" src="/img/logo_sonara.svg" alt="">
-      <!-- Main en silhouette (aplat --ink) : paume et bras derriere le telephone -->
-      <svg class="nb-hand" id="nb-hand" viewBox="0 0 160 280" preserveAspectRatio="none">
-        <path d="M60 280C58 240 56 200 52 172C44 150 30 140 25 112C18 82 21 44 30 22L127 6C140 3 147 12 140 18L133 20C145 20 149 32 139 36L133 38C145 39 148 51 137 55L133 57C143 59 144 70 133 74C129 104 126 150 125 190C124 230 124 260 126 280Z"/>
-      </svg>
-      <div class="nb-grain"></div>
-    </div>
+  <!-- ══ ANCIENNES SECTIONS, RETIREES DE L'ACCUEIL ══
+       01 Qu'est-ce que Sonara, 02 Les possibilites, 04 Comment jouer,
+       05 La revelation : gardees dans le code (attribut hidden) pour pouvoir
+       les reutiliser. Leurs textes sont repris dans les vues /a-propos et
+       /comment-jouer, plus bas. -->
 
-
-    <nav class="nb-meta" aria-label="Menu principal">
-      <a class="nb-meta-logo" href="#landing"><img src="/img/logo_sonara.svg" alt="Sonara"></a>
-      <a class="nb-meta-col nb-menu-link nb-menu-link--univ" href="#univers">Univers</a>
-      <div class="nb-meta-col nb-menu">
-        <button class="nb-menu-btn" type="button" aria-expanded="false" aria-controls="nb-menu-mode">Mode<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
-        <ul class="nb-menu-list" id="nb-menu-mode" hidden>
-          <li><button type="button" data-nb-mode="solo">Solo</button></li>
-          <li><button type="button" data-nb-mode="multi">Entre proches</button></li>
-        </ul>
-      </div>
-      <a class="nb-meta-col nb-menu-link" href="#comment-jouer">Comment jouer ?</a>
-    </nav>
-
-    <h1 class="nb-hero-title"><span>Le blind test</span><span>qui fait vibrer</span><span>la Caraïbe</span></h1>
-
-    <div class="nb-hero-lede">
-      <p>Écoute un extrait, trouve le titre et l'artiste, et défie tes proches où qu'ils soient.</p>
-      <div class="nb-hero-ctas">
-        <button class="nb-pill nb-pill--cta" type="button" data-nb-play>Jouer</button>
-        <button class="nb-pill nb-pill--line" type="button" data-nb-proches>Jouer entre proches</button>
-      </div>
-      <button class="nb-code-link" type="button" data-nb-code>J'ai un code de salle</button>
-      <!-- Message "Rejoins [univers]" d'un lien de Defi : masque par
-           defaut, affiche par sonara.js (bloc "Lien partage entrant"). -->
-      <div class="ld-badge-row" id="ld-badge-row" style="display:none">
-        <div class="ld-badge"><span class="ld-dot"></span><span id="ltxt"></span></div>
-      </div>
-    </div>
-
-
-    <!-- Telephone : partie en cours (pochette floutee, manche, temps) -->
-    <div class="nb-phone-wrap" id="nb-phone-wrap">
-      <div class="nb-phone" id="nb-phone">
-        <div class="nb-screen">
-          <div class="nb-scr-cover" id="nb-scr-cover" data-uv-cover="zouk"></div>
-          <div class="nb-scr-tint"></div>
-          <div class="nb-island"></div>
-          <div class="nb-scr-status"><span>9:41</span><span class="nb-scr-bat"></span></div>
-          <div class="nb-scr-top">
-            <span class="nb-scr-round"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span>
-            <span class="nb-scr-round"><svg viewBox="0 0 24 24"><path d="M12 15V4M7 9l5-5 5 5M5 14v5h14v-5"/></svg></span>
-          </div>
-          <div class="nb-scr-side">
-            <span class="nb-scr-round"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 010 6"/></svg></span>
-            <span class="nb-scr-round"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>
-            <span class="nb-scr-round nb-scr-round--accent">x2</span>
-          </div>
-          <div class="nb-scr-info">
-            <p class="nb-scr-manche" id="nb-scr-manche">Manche 3/10</p>
-            <p class="nb-scr-q">Qui chante ?</p>
-            <div class="nb-scr-prog"><span class="nb-scr-fill" id="nb-scr-fill"></span></div>
-            <div class="nb-scr-times"><span id="nb-scr-t">0:12</span><span>0:30</span></div>
-            <div class="nb-scr-ctrls">
-              <span><svg viewBox="0 0 24 24"><path d="M7 6v12M18 6l-8 6 8 6z"/></svg></span>
-              <span><svg viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg></span>
-              <span><svg viewBox="0 0 24 24"><path d="M17 6v12M6 6l8 6-8 6z"/></svg></span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Pouce devant le telephone (le reste de la main est derriere) -->
-      <svg class="nb-thumb" id="nb-thumb" viewBox="0 0 160 200" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M24 118C20 98 22 80 27 66C29 59 36 59 36 67C35 82 35 96 35 110C33 121 27 125 24 118Z"/>
-      </svg>
-    </div>
-
-
-  </div>
-
-  <!-- ── 01 / QU'EST-CE QUE SONARA ── (Nebula : 01 The Core Idea + The Problem) -->
-  <section class="nb-sec nb-s01" id="nb-s01" aria-labelledby="nb-s01-t">
+  <!-- ── 01 / QU'EST-CE QUE SONARA ── (retiree de l'accueil) -->
+  <section class="nb-sec nb-s01" id="nb-s01" aria-labelledby="nb-s01-t" hidden>
 
     <!-- Rangee A : numero, icone, grande phrase -->
     <div class="nb-s01-intro">
@@ -253,8 +188,8 @@
     </div>
   </section>
 
-  <!-- ── 02 / LES POSSIBILITES ── (Nebula : 04 UI Design + Artists) -->
-  <section class="nb-sec nb-sec--light nb-s02" id="nb-s02" aria-labelledby="nb-s02-t">
+  <!-- ── 02 / LES POSSIBILITES ── (retiree de l'accueil) -->
+  <section class="nb-sec nb-sec--light nb-s02" id="nb-s02" aria-labelledby="nb-s02-t" hidden>
 
     <!-- Rangee A : numero, grande phrase, phrase droite -->
     <div class="nb-s02-intro">
@@ -314,11 +249,22 @@
 
   </section>
 
-  <!-- ── LES UNIVERS : carrousel de vinyles ── (univers.css / univers.js) -->
-  <section class="uv" id="univers" aria-labelledby="uv-sec-t" aria-roledescription="carrousel">
+  <!-- ── LES UNIVERS : carrousel de vinyles ── (univers.css / univers.js)
+       Premier ecran de l'accueil : accroche, vinyle et boutons tiennent
+       dans la hauteur de l'ecran (option fit de uvCarrousel). -->
+  <section class="uv uv--accueil" id="univers" data-vue="accueil" aria-labelledby="uv-sec-t" aria-roledescription="carrousel">
     <!-- Aplat, nom geant, vinyles, fleches, compteur et pastilles : generes
          par uvCarrousel() (univers.js), partage avec l'ecran du parcours -->
-    <div class="nb-secnum uv-secnum"><span>03 /</span><h2 id="uv-sec-t">Nos univers</h2></div>
+    <!-- Accroche : en haut de la section, sur l'aplat de l'univers -->
+    <div class="nb-hook">
+      <h1 class="nb-hook-t" id="uv-sec-t">THE Blind test caribéen.</h1>
+      <p class="nb-hook-s">Écoute un extrait, trouve l'artiste et le titre.</p>
+      <!-- Message "Rejoins [univers]" d'un lien de Defi : masque par
+           defaut, affiche par sonara.js (bloc "Lien partage entrant"). -->
+      <div class="ld-badge-row" id="ld-badge-row" style="display:none">
+        <div class="ld-badge"><span class="ld-dot"></span><span id="ltxt"></span></div>
+      </div>
+    </div>
     <div class="uv-panel" id="uv-panel" role="region" aria-labelledby="uv-p-title" hidden>
       <h2 class="uv-p-title" id="uv-p-title" tabindex="-1"></h2>
       <p class="uv-p-meta" id="uv-p-meta"></p>
@@ -331,8 +277,8 @@
     </div>
   </section>
 
-  <!-- ── 04 / COMMENT JOUER ── (Nebula : 3D Audio + Stem Splitter) -->
-  <section class="nb-sec nb-sec--light nb-s04" id="comment-jouer" aria-labelledby="nb-s04-t">
+  <!-- ── 04 / COMMENT JOUER ── (retiree de l'accueil ; id libere pour la vue /comment-jouer) -->
+  <section class="nb-sec nb-sec--light nb-s04" id="nb-s04" aria-labelledby="nb-s04-t" hidden>
     <div class="nb-s04-head">
       <div class="nb-secnum"><span>04 /</span><h2 id="nb-s04-t">Comment jouer ?</h2></div>
     </div>
@@ -410,8 +356,8 @@
 
   </section>
 
-  <!-- ── 05 / LA REVELATION ── (Nebula : AI Search, sans orbe ni faisceaux) -->
-  <section class="nb-sec nb-s05" id="la-revelation" aria-labelledby="nb-s05-t">
+  <!-- ── 05 / LA REVELATION ── (retiree de l'accueil) -->
+  <section class="nb-sec nb-s05" id="la-revelation" aria-labelledby="nb-s05-t" hidden>
     <div class="nb-s05-intro">
       <div class="nb-secnum"><span>05 /</span><h2 id="nb-s05-t">La révélation</h2></div>
       <p class="nb-s05-title nb-title"><span>Le moment</span><span>où tout</span><span>se révèle.</span></p>
@@ -462,6 +408,69 @@
 
 
 
+  <!-- ══ VUES /a-propos ET /comment-jouer ══
+       Meme page que l'accueil (header et footer communs) ; landing.js
+       (bloc "Vues") affiche la vue qui correspond a l'adresse. Textes repris
+       des anciennes sections 01 (histoire, mission) et 04 (etapes, points). -->
+  <section class="nb-sec nb-page nb-page--ap" id="a-propos" data-vue="a-propos" aria-labelledby="ap-t" hidden>
+    <!-- Vinyle decoratif (composant .vy, sans pochette) : tourne derriere le texte -->
+    <span class="vy vy--spin nb-ap-vy" aria-hidden="true"><span class="vy-spin"><span class="vy-disc"></span><span class="vy-label"><span class="jg-vy-logo"></span></span></span><span class="vy-sheen"></span></span>
+    <div class="nb-page-head">
+      <p class="nb-label">Sonara /</p>
+      <h1 class="nb-page-t" id="ap-t">À propos</h1>
+    </div>
+    <div class="nb-ap-grid">
+      <div class="nb-ap-story">
+        <span class="nb-secicon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <h2 class="nb-label">L'histoire /</h2>
+        <p class="nb-ap-txt">Tout est parti d'une soirée entre frère et sœur, autour d'un blind test. On s'est dit qu'il nous fallait un jeu fait pour nous, avec les sons qu'on aime et qui nous font vibrer. Sonara est né ce soir-là.</p>
+      </div>
+      <div class="nb-ap-mission">
+        <h2 class="nb-label">Notre mission</h2>
+        <p class="nb-phrase nb-phrase--list nb-title">
+          <span>Transmettre</span>
+          <span>Rassembler</span>
+          <span>Faire découvrir</span>
+          <span>S'amuser</span>
+        </p>
+      </div>
+    </div>
+    <div class="nb-page-cta"><button class="nb-pill nb-pill--cta" type="button" data-nb-play>Jouer</button></div>
+  </section>
+
+  <section class="nb-sec nb-sec--light nb-page nb-page--cj" id="comment-jouer" data-vue="comment-jouer" aria-labelledby="cj-t" hidden>
+    <div class="nb-page-head">
+      <p class="nb-label">Sonara /</p>
+      <h1 class="nb-page-t" id="cj-t">Comment jouer ?</h1>
+    </div>
+    <!-- 5 etapes -->
+    <h2 class="nb-label nb-cj-h">En 5 étapes /</h2>
+    <ol class="nb-steps nb-cj-steps">
+      <li><span>1</span>Choisis ton univers</li>
+      <li><span>2</span>Choisis ton son-nom</li>
+      <li><span>3</span>Écoute l'extrait</li>
+      <li><span>4</span>Trouve titre et artiste</li>
+      <li><span>5</span>Monte sur le podium</li>
+    </ol>
+    <div class="nb-cj-grid">
+      <div class="nb-cj-rules">
+        <!-- Icone sur la ligne de "Les points" (meme hauteur, landing.css) -->
+        <span class="nb-secicon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <p class="nb-body">Écoute l'extrait et tape l'artiste, le titre, ou les deux. La manche s'arrête dès que tout le monde a trouvé, ou au bout de 30 secondes.</p>
+      </div>
+      <div class="nb-cj-points">
+        <h2 class="nb-label">Les points</h2>
+        <ul class="nb-s04-pts">
+          <li>Artiste ou titre : <span class="nb-cnt">15</span> points chacun.</li>
+          <li>Les deux d'un coup : <span class="nb-cnt">30</span> points.</li>
+          <li>Réponds vite pour multiplier tes points : <span class="nb-cnt">×3</span> dans les 5 premières secondes, <span class="nb-cnt">×2</span> entre 5 et 10 secondes.</li>
+          <li>Jusqu'à <span class="nb-cnt">90</span> points par morceau.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="nb-page-cta"><button class="nb-pill nb-pill--cta" type="button" data-nb-play>Jouer</button></div>
+  </section>
+
   <!-- ── FOOTER ── carte creme sur fond brun (footer.js : heure de Martinique) -->
   <footer class="nb-footer">
     <div class="nb-ft-card">
@@ -469,9 +478,10 @@
         <p class="nb-ft-tagline">Sonara, le blind test qui fait vibrer la Caraïbe.</p>
         <nav class="nb-ft-col" aria-label="Explorer">
           <p class="nb-ft-h">Explorer</p>
-          <a href="#univers">Univers</a>
-          <a href="#comment-jouer">Comment jouer</a>
-          <button type="button" class="nb-ft-linkbtn" data-on="footerDefi">Défi à partager</button>
+          <a href="/#univers">Univers</a>
+          <a href="/comment-jouer">Comment jouer</a>
+          <a href="/a-propos">À propos</a>
+          <button type="button" class="nb-ft-linkbtn" data-nb-proches>Entre proches</button>
         </nav>
         <div class="nb-ft-col nb-ft-follow">
           <p class="nb-ft-h">Suivez-nous</p>
@@ -679,6 +689,19 @@
     <a class="bback" href="#landing">Annuler</a>
   </div>
 </div>
+<div class="modal-bg" id="modal-dennery-segment">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div class="mhead">
+      <div class="mico"></div>
+      <div><div class="mname">Dennery Segment</div><div class="msub">Extraits audio · 10 questions</div></div>
+    </div>
+    <label class="flbl">Ton pseudo</label>
+    <input class="finp pseudo-inp" type="text" placeholder="Ex: ZoukMaster97" maxlength="20" autocomplete="off" data-theme="dennery-segment">
+    <button class="bgo" data-action="launch" data-theme="dennery-segment">Jouer →</button>
+    <a class="bback" href="#landing">Annuler</a>
+  </div>
+</div>
 
 <!-- ═══ LOADING ═══ -->
 <!-- ═══ CHARGEMENT (prep.css, ecran-prep.js) ═══
@@ -854,6 +877,7 @@
             <button class="pp-pill" type="button" style="--pp-u:var(--univers-shatta)" data-on="soloTheme" data-arg="shatta">Shatta</button>
             <button class="pp-pill" type="button" style="--pp-u:var(--univers-trap)" data-on="soloTheme" data-arg="trap">Trap</button>
             <button class="pp-pill" type="button" style="--pp-u:var(--univers-rap)" data-on="soloTheme" data-arg="rap">Rap</button>
+            <button class="pp-pill" type="button" style="--pp-u:var(--univers-dennery)" data-on="soloTheme" data-arg="dennery-segment">Dennery Segment</button>
           </div>
         </div>
       </div>
@@ -897,6 +921,7 @@
           <button class="tc t-shatta" type="button" style="--pp-u:var(--univers-shatta)" data-on="multiTheme" data-arg="shatta"><span class="tn">Shatta</span></button>
           <button class="tc t-trap" type="button" style="--pp-u:var(--univers-trap)" data-on="multiTheme" data-arg="trap"><span class="tn">Trap</span></button>
           <button class="tc t-rap" type="button" style="--pp-u:var(--univers-rap)" data-on="multiTheme" data-arg="rap"><span class="tn">Rap</span></button>
+          <button class="tc t-dennery-segment" type="button" style="--pp-u:var(--univers-dennery)" data-on="multiTheme" data-arg="dennery-segment"><span class="tn">Dennery Segment</span></button>
           </div>
         </div>
         <div class="pp-actions">
@@ -978,6 +1003,7 @@
 
 <script src="/sonara.js"></script>
 <script src="/rgpd.js"></script>
+<script src="/entete.js"></script>
 <script src="/landing.js"></script>
 <script src="/univers.js"></script>
 <script src="/sonara-kit.js"></script>

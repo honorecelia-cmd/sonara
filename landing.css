@@ -87,20 +87,28 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-header .nb-pill--cta{background:var(--neb-orange)}
 .nb-header .nb-pill--cta:hover{background:var(--accent)}
 .nb-hd-right{display:flex;align-items:center;gap:18px}
-/* Emplacement du telephone une fois loge (meme proportion que .nb-phone) */
-.nb-hd-slot{display:block;width:22px;height:46px}
 
-/* ── HERO ── */
-.nb-hero{
-  /* Telephone : largeur, position (reutilisees par la main) */
-  --pw:24vw; --px:38vw; --pt:31vw;
-  position:relative;
-  height:90vw;                   /* resserre : la section 01 arrive juste apres le telephone */
-  min-height:100vh;
-  flex-shrink:0;
-}
-.nb-hero-clip{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-/* Exception aux aplats : le hero garde son degrade (demande explicite) */
+/* Menu du header : liens sur ordinateur, liste deroulante sur mobile */
+.nb-hd-nav{width:auto;max-width:none;padding:0;margin:0 auto 0 48px;display:flex;align-items:center;gap:32px}  /* annule nav{} de sonara.css */
+.nb-hd-link{font-family:var(--f-text);font-size:14px;font-weight:500;color:#fff;text-decoration:none;padding:4px 0}
+.nb-hd-link:hover,.nb-hd-link[aria-current="page"]{text-decoration:underline;text-underline-offset:5px}
+.nb-hd-link[aria-current="page"]{text-decoration-color:var(--neb-orange);text-decoration-thickness:2px}
+.nb-hd-link:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:4px}
+.nb-hd-menu{display:none;position:relative}
+.nb-hd-menu .nb-menu-btn{font-size:14px}
+
+/* Accroche : en haut de la section des univers (#univers), sur son aplat ;
+   masquee quand un univers est ouvert (panneau Decouvrir) */
+.nb-hook{position:relative;z-index:5;padding:calc(var(--hd-h) + clamp(18px,3vh,40px)) var(--neb-margin) 0;transition:opacity .3s ease,visibility .3s}
+.uv.is-open .nb-hook{opacity:0;visibility:hidden}
+.nb-hook-t{margin:0;font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:clamp(30px,min(4.2vw,6.5vh),68px);line-height:1;letter-spacing:-.02em;color:#fff;text-wrap:balance}
+.nb-hook-s{margin:10px 0 0;font-family:var(--f-text);font-size:clamp(15px,1.35vw,20px);line-height:1.4;color:rgba(255,255,255,.85)}
+.nb-hook .ld-badge-row{justify-content:flex-start;padding:0;margin:20px 0 0}
+/* Sections retirees de l'accueil (gardees dans le code) et vues inactives */
+#landing > [hidden]{display:none !important}
+
+/* ── Fond degrade et grain ── (parcours, jeu, resultats : .nb-hero-bg, .nb-grain) */
+/* Exception aux aplats : degrade anime (demande explicite) */
 .nb-hero-bg{
   position:absolute;inset:0;
   background:
@@ -121,55 +129,13 @@ html{scroll-padding-top:var(--hd-h)}
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Logo geant en filigrane : toute la largeur libre a gauche du telephone
-   (proportions gardees : c'est la largeur qui le limite), centre dans la
-   hauteur libre sous le titre. Il passe derriere la main. */
-.nb-hero{--logo-w:calc(var(--hx, var(--px)) - var(--neb-margin) - 1vw)}
+/* Logo geant en filigrane (bande du bas des resultats, ecrans.css) */
 .nb-giant{
   position:absolute;left:var(--neb-margin);
   top:calc(var(--hy, var(--pt)) + var(--pw) * 1.06);
   width:var(--logo-w);height:auto;opacity:.2;
   will-change:transform;
 }
-/* Slogan sous le logo, sur toute sa largeur */
-.nb-slogan{
-  position:absolute;left:var(--neb-margin);z-index:2;margin:0;
-  top:calc(var(--hy, var(--pt)) + var(--pw) * 1.06 + var(--logo-w) * .713 + 1.6vw);
-  font-family:var(--f-display);font-weight:800;font-size:2.7vw;line-height:1;letter-spacing:-.02em;white-space:nowrap;
-  color:#F3E3DC;
-  will-change:transform;
-}
-
-/* Main en silhouette qui monte du bas (derriere le telephone) */
-/* Main en silhouette qui monte du bas (derriere le telephone) */
-/* Main : silhouette en aplat sombre de la palette (comme Nebula), sans effet */
-.nb-hand,.nb-thumb{position:absolute;fill:var(--ink)}
-.nb-hand{
-  left:calc(var(--hx, var(--px)) - var(--pw) * .3);
-  top:calc(var(--hy, var(--pt)) + var(--pw) * .96);
-  width:calc(var(--pw) * 1.6);
-  height:calc(var(--pw) * 2.8);
-  /* centre du telephone : la main suit exactement son deplacement au defilement */
-  transform-origin:calc(var(--pw) * .8) calc(var(--pw) * .1233);
-  will-change:transform,opacity;
-}
-.nb-thumb{
-  left:-30%;top:calc(var(--pw) * .96);
-  width:160%;height:calc(var(--pw) * 2);
-  pointer-events:none;
-}
-
-/* Ligne meta (4 colonnes) */
-.nb-meta{position:absolute;left:0;right:0;top:2.1vw;z-index:60;
-  width:auto;max-width:none;padding:0 var(--neb-margin);  /* annule nav{} de sonara.css */
-  display:flex;align-items:center;justify-content:flex-start;gap:36px}
-/* Menu : logo, puis Univers et Mode cote a cote ; le vinyle part a droite */
-.nb-meta-col{
-  position:relative;
-  font-family:var(--f-text);font-size:13px;line-height:1.35;
-}
-.nb-meta-logo{display:block;margin-right:12px}
-.nb-meta-logo img{display:block;height:2.9vw;min-height:30px;width:auto}
 .nb-menu-btn{
   display:inline-flex;align-items:center;gap:6px;padding:4px 0;
   background:none;border:none;cursor:pointer;
@@ -186,71 +152,24 @@ html{scroll-padding-top:var(--hd-h)}
   border:1px solid rgba(255,255,255,.08);border-radius:20px;
 }
 .nb-menu-list[hidden]{display:none}
-.nb-menu-list button{
+.nb-menu-list button,.nb-menu-list a{
   display:block;width:100%;padding:10px 14px;border:none;border-radius:999px;
-  background:none;cursor:pointer;text-align:left;
+  background:none;cursor:pointer;text-align:left;text-decoration:none;
   font-family:var(--f-text);font-size:14px;color:rgba(255,255,255,.82);
   transition:background-color .2s ease,color .2s ease;
 }
-.nb-menu-list button:hover,.nb-menu-list button:focus-visible{background:var(--neb-orange);color:#fff;outline:none}
+.nb-menu-list button:hover,.nb-menu-list button:focus-visible,.nb-menu-list a:hover,.nb-menu-list a:focus-visible{background:var(--neb-orange);color:#fff;outline:none}
 
-/* Titre 3 lignes : blanc chaud qui s'estompe vers le rose-orange translucide */
-.nb-hero-title{
-  position:absolute;left:var(--neb-margin);top:12.1vw;z-index:2;margin:0;
-  font-family:var(--f-display);font-weight:800;font-size:5.3vw;line-height:.95;letter-spacing:-.03em;
-}
-.nb-hero-title > span{display:block}
-.nb-hero-title > span{color:#fff}
-/* Seul fondu de la page : une teinte unie par ligne, la derniere en blanc plein */
-.nb-hero-title > span:nth-child(1){color:rgba(255,255,255,.55)}
-.nb-hero-title > span:nth-child(2){color:rgba(255,255,255,.75)}
-
-/* Accroche a droite (colonne 67 %) */
-.nb-hero-lede{position:absolute;left:67%;right:var(--neb-margin);top:12.4vw;z-index:2}
-.nb-hero-lede p{
-  margin:0 0 2.2vw;
-  font-family:var(--f-text);font-weight:300;font-size:1.95vw;line-height:1.15;letter-spacing:-.01em;
-  color:#fff;
-}
-.nb-hero-lede .nb-pill--cta{background:var(--cream);color:var(--ink)}
-.nb-hero-ctas{display:flex;flex-wrap:wrap;gap:10px}
-/* Action secondaire : contour creme sur le fond du hero */
-.nb-pill--line{background:transparent;color:var(--cream);border:1.5px solid var(--cream);padding:14.5px 28.5px}
-.nb-pill--line:hover{background:var(--cream);color:var(--ink)}
-.nb-code-link{
-  display:inline-block;margin-top:16px;padding:0;border:none;background:none;cursor:pointer;
-  font-family:var(--f-text);font-size:14px;font-weight:500;color:var(--cream);
-  text-decoration:underline;text-underline-offset:3px;
-}
-.nb-code-link:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:4px}
-.nb-hero-lede .nb-pill--cta:hover{background:#fff;color:var(--ink)}
-.nb-hero-lede .ld-badge-row{justify-content:flex-start;padding:0;margin:18px 0 0}
 /* Message "Rejoins [univers]" (lien de Defi) : pastille aux codes de la landing */
-.nb-hero-lede .ld-badge{
+.nb-hook .ld-badge{
   display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 12px;border-radius:999px;
   background:var(--ink);color:var(--cream);
   font-family:var(--f-text);font-size:13px;font-weight:600;
 }
-.nb-hero-lede #ltxt{color:var(--cream)}
-.nb-hero-lede .ld-dot{width:8px;height:8px;background:var(--neb-orange)}
-
-/* Metadonnees flottantes */
-.nb-float{
-  position:absolute;z-index:2;margin:0;
-  font-family:var(--f-text);font-size:14px;line-height:1.35;color:#fff;
-}
-.nb-float span{display:block;color:rgba(255,255,255,.62)}
-.nb-float--l{left:var(--neb-margin);top:40.4vw}
-.nb-float--r{right:var(--neb-margin);top:66vw;text-align:right}
-.nb-float--c{left:20.4%;top:52.5vw}
+.nb-hook #ltxt{color:var(--cream)}
+.nb-hook .ld-dot{width:8px;height:8px;background:var(--neb-orange)}
 
 /* Telephone (iPhone 15 Pro) — toutes les mesures internes suivent --pw */
-.nb-phone-wrap{
-  position:absolute;z-index:50;
-  left:var(--px);top:var(--pt);width:var(--pw);
-  transform-origin:50% 50%;
-  will-change:transform;
-}
 .nb-phone{
   position:relative;width:100%;aspect-ratio:9/19.5;
   border-radius:calc(var(--pw) * .143);
@@ -258,7 +177,6 @@ html{scroll-padding-top:var(--hd-h)}
   background:#2b2a29;
   box-shadow:0 0 0 1px rgba(0,0,0,.6);
 }
-.nb-wrap-docked .nb-phone{cursor:pointer}
 .nb-screen{
   position:relative;height:100%;overflow:hidden;
   border-radius:calc(var(--pw) * .121);
@@ -266,14 +184,6 @@ html{scroll-padding-top:var(--hd-h)}
   font-family:var(--f-text);color:#fff;
   font-weight:600;   /* maquettes : Inter 600, titres d'ecran 700 */
 }
-/* Pochette plein ecran (equivalent object-fit:cover) */
-.nb-scr-cover{
-  position:absolute;inset:0;
-  background-size:cover;background-position:center;
-}
-/* Voile en aplat (ecrans a pochette) : panneau bas pour lire les infos */
-.nb-scr-tint{position:absolute;inset:0;pointer-events:none}
-.nb-scr-tint::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:rgba(12,2,0,.84)}
 .nb-island{
   position:absolute;top:calc(var(--pw) * .035);left:50%;transform:translateX(-50%);
   width:32%;height:calc(var(--pw) * .09);border-radius:999px;background:#000;z-index:3;
@@ -285,127 +195,23 @@ html{scroll-padding-top:var(--hd-h)}
 }
 .nb-scr-bat{width:calc(var(--pw) * .07);height:calc(var(--pw) * .034);border-radius:3px;border:1px solid rgba(255,255,255,.8);position:relative}
 .nb-scr-bat::after{content:"";position:absolute;inset:1px 30% 1px 1px;background:#fff;border-radius:1px}
-.nb-scr-top{
-  position:absolute;top:calc(var(--pw) * .17);left:6%;right:6%;z-index:2;
-  display:flex;justify-content:space-between;align-items:center;
-}
-.nb-scr-round{
-  width:calc(var(--pw) * .12);height:calc(var(--pw) * .12);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.14);
-  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-  font-size:calc(var(--pw) * .042);font-weight:700;
-}
-.nb-scr-round svg{width:48%;height:48%;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.nb-scr-round--accent{background:var(--neb-orange);color:#fff}
-.nb-scr-side{
-  position:absolute;right:6%;top:42%;z-index:2;
-  display:flex;flex-direction:column;gap:calc(var(--pw) * .03);
-}
-.nb-scr-info{position:absolute;left:7%;right:7%;bottom:calc(var(--pw) * .1);z-index:2}
-.nb-scr-manche{margin:0;font-size:calc(var(--pw) * .042);color:rgba(255,255,255,.55)}
-.nb-scr-q{margin:calc(var(--pw) * .01) 0 calc(var(--pw) * .06);font-family:var(--f-text);font-weight:700;font-size:calc(var(--pw) * .085);line-height:1;letter-spacing:-.02em}
-.nb-scr-prog{position:relative;height:2px;background:rgba(255,255,255,.22);border-radius:2px}
-.nb-scr-fill{
-  position:absolute;left:0;top:0;bottom:0;width:40%;
-  background:#fff;border-radius:2px;
-}
-.nb-scr-fill::after{
-  content:"";position:absolute;right:calc(var(--pw) * -.015);top:50%;
-  width:calc(var(--pw) * .03);height:calc(var(--pw) * .03);margin-top:calc(var(--pw) * -.015);
-  border-radius:50%;background:var(--neb-orange);
-}
-.nb-scr-times{
-  display:flex;justify-content:space-between;margin-top:calc(var(--pw) * .025);
-  font-size:calc(var(--pw) * .036);color:rgba(255,255,255,.55);font-variant-numeric:tabular-nums;
-}
-.nb-scr-ctrls{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--pw) * .03);margin-top:calc(var(--pw) * .06)}
-.nb-scr-ctrls span{
-  height:calc(var(--pw) * .16);border-radius:calc(var(--pw) * .045);
-  background:var(--neb-ctrl);display:flex;align-items:center;justify-content:center;
-}
-.nb-scr-ctrls svg{width:34%;height:34%;fill:none;stroke:var(--neb-orange);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-
-/* Liste bas droite, sur la zone peche */
-.nb-hero-list{position:absolute;left:67%;top:93vw;z-index:2;font-family:var(--f-text);color:#111}
-.nb-hero-list ul{list-style:none;margin:0 0 2.2vw;padding:0;font-size:16px;line-height:1.45;font-weight:500}
-.nb-hero-list p{margin:0;font-size:14px;line-height:1.4}
-.nb-hero-list p span{display:block;color:rgba(17,17,17,.6)}
-
-/* Trio lecteur signature (hero : 3 cercles creme empiles) */
-.nb-trio{display:flex;gap:12px}
-.nb-trio button{
-  border:none;border-radius:50%;cursor:pointer;padding:0;
-  display:flex;align-items:center;justify-content:center;
-  transition:transform .25s ease, background-color .25s ease;
-  -webkit-tap-highlight-color:transparent;
-}
-.nb-trio svg{fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .25s ease, fill .25s ease}
-.nb-trio--hero{
-  position:absolute;right:var(--neb-margin);top:86vw;z-index:2;
-  flex-direction:column;gap:14px;
-}
-.nb-trio--hero button{
-  width:clamp(56px,5.71vw,96px);height:clamp(56px,5.71vw,96px);
-  background:var(--neb-btn-cream);
-}
-.nb-trio--hero svg{width:34%;height:34%;stroke:var(--neb-orange)}
-.nb-trio--hero button:hover{transform:translateY(-3px);background:var(--neb-orange)}
-.nb-trio--hero button:hover svg{stroke:var(--neb-btn-cream)}
-.nb-trio button:focus-visible{outline:2px solid #fff;outline-offset:3px}
-.nb-trio .nb-ic-play{display:none}
-.nb-trio [aria-pressed="true"] .nb-ic-play{display:block}
-.nb-trio [aria-pressed="true"] .nb-ic-pause{display:none}
-
-/* ── Tablette ── */
-@media (max-width:1100px){
-  .nb-hero-lede p{font-size:2.3vw}
-  .nb-meta-col,.nb-float{font-size:12px}
-}
 
 /* ── Mobile : les colonnes se replient ── */
 @media (max-width:760px){
   :root{--hd-h:56px}
+  .nb-hd-link{display:none}
+  .nb-hd-menu{display:block}
+  .nb-hd-nav{margin:0 16px 0 auto}
+  .nb-hd-menu .nb-menu-list{left:auto;right:-8px}
+  .nb-hook{padding:calc(var(--hd-h) + 16px) 16px 0}
   .nb-header{padding:0 16px}
   .nb-hd-logo img{height:24px}
-  .nb-hd-slot{width:19px;height:40px}
   .nb-hd-right{gap:12px}
-
-  .nb-hero{
-    --pw:58vw;
-    height:auto;min-height:0;
-    padding:20px 16px 18vw;
-    display:flex;flex-direction:column;
-  }
-  .nb-meta{position:relative;top:auto;height:auto;display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;margin-bottom:36px}
-  .nb-meta-col{position:static;font-size:12px}
-  .nb-meta{grid-template-columns:auto auto 1fr;align-items:center;gap:12px 22px;padding:0}
-  .nb-meta-logo{position:static}
-  .nb-meta-logo img{height:28px}
-  .nb-meta .nb-meta-col{position:relative;left:auto}
-  .nb-meta-col:last-child .nb-menu-list{left:auto;right:0}
-  .nb-hero-title{position:relative;left:auto;top:auto;font-size:9.2vw;margin-bottom:24px}
-  .nb-hero-lede{position:relative;left:auto;right:auto;top:auto}
-  .nb-hero-lede p{font-size:20px;margin-bottom:22px}
-  .nb-float{display:none}
-  /* Pas de place a gauche du telephone : logo geant masque, le slogan
-     passe au-dessus du titre */
-  .nb-meta{order:0}
-  .nb-giant{display:none}
-  .nb-slogan{position:static;order:1;margin:0 0 14px;font-size:22px;transform:none !important}
-  .nb-hero-title{order:2}
-  .nb-hero-lede{order:3}
-  .nb-phone-wrap{order:4}
-  .nb-phone-wrap{position:relative;left:auto;top:auto;margin:44px auto 0}
-  .nb-hero-list{display:none}
-  .nb-trio--hero{top:auto;bottom:40px;right:16px;gap:10px}
-  .nb-trio--hero button{width:48px;height:48px}
-
 }
 
 @media (prefers-reduced-motion:reduce){
   .nb-hero-bg{animation:none}
-  .nb-pill,.nb-trio button{transition:none}
+  .nb-pill{transition:none}
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -758,7 +564,7 @@ html{scroll-padding-top:var(--hd-h)}
 
 /* Mega-titre brun translucide sur l'orange */
 .nb-mega{
-  margin:0;font-family:var(--f-display);font-weight:900;
+  margin:0;font-family:var(--f-display);font-weight:800;
   font-size:11vw;line-height:.9;letter-spacing:-.04em;text-align:center;
 }
 .nb-mega span{display:block}
@@ -865,17 +671,10 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-secfoot--light .nb-globe{stroke:rgba(17,17,17,.7)}
 .nb-secfoot--light p{color:rgba(17,17,17,.55)}
 
-/* Lien simple du menu */
-.nb-menu-link{
-  font-family:var(--f-text);font-size:13px;font-weight:500;color:#fff;text-decoration:none;padding:4px 0;
-}
-.nb-menu-link:hover{text-decoration:underline;text-underline-offset:4px}
 
 /* Ecran moyen : pas la place pour la carte des potards a cote des orbites */
 @media (max-width:1100px){.nb-s04-knobs{display:none}}
 @media (max-width:760px){
-  .nb-menu-link{display:none}
-  .nb-menu-link--univ{display:inline}
   .nb-s04-head{padding:76px 16px 0}
   .nb-s04-head .nb-secnum{margin:0}
   .nb-mega{font-size:14vw}
@@ -1019,6 +818,44 @@ html{scroll-padding-top:var(--hd-h)}
 .nb-s05 .nb-pill--cta:hover{background:#fff;color:var(--ink)}
 
 /* ═══════════════════════════════════════════════════════════════
+   VUES /a-propos ET /comment-jouer (meme page que l'accueil)
+   ═══════════════════════════════════════════════════════════════ */
+.nb-page{padding:calc(var(--hd-h) + 6vw) var(--neb-margin) 7vw}
+.nb-page h2.nb-label{font-weight:400}
+.nb-page-head{margin-bottom:5vw}
+.nb-page-head .nb-label{margin:0 0 14px}
+.nb-page-t{margin:0;font-family:'MuseoModerno',sans-serif;font-weight:800;font-size:clamp(44px,7vw,120px);line-height:.92;letter-spacing:-.03em;color:inherit;text-wrap:balance}
+.nb-page-cta{margin-top:6vw}
+.nb-page-cta .nb-pill--cta{background:var(--neb-orange);color:#fff}
+.nb-page-cta .nb-pill--cta:hover{background:var(--accent)}
+/* A propos : l'histoire a gauche, la mission a droite */
+.nb-ap-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:8vw;align-items:start}
+.nb-ap-txt{margin:0;max-width:34ch;font-family:var(--f-text);font-weight:300;font-size:clamp(20px,1.9vw,30px);line-height:1.35;color:#fff}
+.nb-page .nb-phrase--list.nb-title{font-size:clamp(40px,4.6vw,80px)}
+/* Comment jouer : creme, comme l'ancienne section 04 */
+.nb-page--cj{background:var(--fond-creme)}
+.nb-cj-h{margin:0 0 18px !important}
+.nb-cj-steps{margin:0;justify-content:flex-start}
+.nb-cj-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6vw;max-width:1100px;margin-top:5vw}
+.nb-cj-rules .nb-body{max-width:46ch;font-size:17px}
+/* Icone de la colonne des regles alignee sur "Les points" : meme hauteur
+   de ligne (32px, celle de l'icone) et meme marge, les textes partent ensemble */
+.nb-cj-rules .nb-secicon{display:block;margin:0 0 18px}
+.nb-cj-points > .nb-label{display:flex;align-items:center;min-height:32px;margin:0 0 18px !important}
+.nb-page--cj .nb-s04-pts{color:var(--ink)}
+.nb-page--cj .nb-s04-pts li{border-top-color:rgba(45,16,2,.15)}
+@media (max-width:760px){
+  .nb-page{padding:calc(var(--hd-h) + 40px) 16px 56px}
+  .nb-page-head{margin-bottom:40px}
+  .nb-ap-grid,.nb-cj-grid{grid-template-columns:minmax(0,1fr);gap:40px}
+  .nb-cj-rules .nb-secicon{display:none}   /* colonnes empilees : l'icone ne serait plus sur la ligne de "Les points" */
+  .nb-ap-txt{font-size:5.2vw}
+  .nb-page .nb-phrase--list.nb-title{font-size:11vw}
+  .nb-cj-grid{margin-top:48px}
+  .nb-page-cta{margin-top:48px}
+}
+
+/* ═══════════════════════════════════════════════════════════════
    FOOTER : carte creme sur le brun de la derniere section
    ═══════════════════════════════════════════════════════════════ */
 .nb-footer{background:var(--fond-brun);color:var(--cream);padding:4vw var(--neb-margin) 28px;font-family:var(--f-text)}
@@ -1095,19 +932,67 @@ html{scroll-padding-top:var(--hd-h)}
 /* bouton Jouer : glisse depuis la droite une fois la phrase allumee */
 .nb-anim .nb-s05-cta{opacity:0;transform:translateX(48px);transition:opacity .6s var(--ease-nb),transform .6s var(--ease-nb)}
 .nb-anim .nb-s05-cta.is-in{opacity:1;transform:none}
-/* footer : "SONARA" monte depuis le bas de la carte, lettre par lettre */
-.nb-ft-l{transform-box:fill-box}
-.nb-anim .nb-ft-l{transform:translateY(115%);transition:transform .6s var(--ease-nb)}
-.nb-anim .nb-ft-word.is-in .nb-ft-l{transform:none}
+/* footer : "SONARA" monte depuis le bas de la carte, lettre par lettre.
+   Decalage en unites du dessin (le px vaut une unite du viewBox, haut de
+   279) plutot qu'en % de transform-box, interprete differemment selon les
+   navigateurs : les lettres partent sous le cadre du SVG, qui les masque. */
+.nb-ft-word{overflow:hidden}
+.nb-anim .nb-ft-l{transform:translateY(300px);transition:transform .7s var(--ease-nb)}
+.nb-anim .nb-ft-word.is-in .nb-ft-l{transform:translateY(0)}
 .nb-ft-l:nth-child(2){transition-delay:.07s}
 .nb-ft-l:nth-child(3){transition-delay:.14s}
 .nb-ft-l:nth-child(4){transition-delay:.21s}
 .nb-ft-l:nth-child(5){transition-delay:.28s}
 .nb-ft-l:nth-child(6){transition-delay:.35s}
 /* Comment jouer : etapes 1 a 5 l'une apres l'autre */
-.nb-anim .nb-steps li{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease-nb),transform .6s var(--ease-nb)}
-.nb-anim .nb-steps.is-in li{opacity:1;transform:none}
+.nb-anim .nb-steps:not(.nb-cj-steps) li{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease-nb),transform .6s var(--ease-nb)}
+.nb-anim .nb-steps:not(.nb-cj-steps).is-in li{opacity:1;transform:none}
 .nb-steps li:nth-child(2){transition-delay:.09s}
 .nb-steps li:nth-child(3){transition-delay:.18s}
 .nb-steps li:nth-child(4){transition-delay:.27s}
 .nb-steps li:nth-child(5){transition-delay:.36s}
+
+/* ═══════════════════════════════════════════════════════════════
+   Animations des pages A propos, Comment jouer et pages legales
+   (anim-pages.js). Transform, opacity et clip-path seulement.
+   ═══════════════════════════════════════════════════════════════ */
+/* Transition entre documents (pages legales <-> sonara.html) */
+@view-transition{navigation:auto}
+/* L'en-tete reste en place pendant la transition : son groupe ne bouge
+   pas. Seul le lien de la page en cours change (fondu du navigateur).
+   Ne pas mettre animation:none sur ::view-transition-new/old(nb-header) :
+   WebKit n'affiche alors plus l'en-tete. */
+.nb-header{view-transition-name:nb-header}
+::view-transition-group(nb-header){animation:none}
+/* Disque de la page d'arrivee : clip-path anime par anim-pages.js.
+   Sans animation : fondu enchaine du navigateur. */
+@media (prefers-reduced-motion:no-preference){
+  ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+}
+/* Avant l'entree : contenu des pages masque (retire par anim-pages.js) */
+html.ap-wait .nb-page > *,html.ap-wait .lg-main > *{opacity:0}
+.ap-h{opacity:0}
+/* Masque d'une ligne de titre ou d'un mot de la mission : marge interieure
+   compensee pour ne couper ni accents ni jambages */
+.ap-line{display:block;overflow:hidden;padding:.14em 0 .12em;margin:-.14em 0 -.12em}
+.ap-line-in{display:block}
+/* Parent des masques en colonne flex : aucune fusion de marges, ni avec
+   lui ni entre lignes voisines ; titre et phrase gardent leur place exacte */
+.ap-split{display:flex;flex-direction:column}
+/* Rouleau d'un chiffre des points : largeur d'un chiffre tabulaire */
+.ap-digit{display:inline-block;height:1lh;overflow:hidden;vertical-align:top;font-variant-numeric:tabular-nums}
+.ap-reel{display:block}
+.ap-reel > span{display:block;height:1lh}
+
+/* A propos : grand vinyle decoratif a droite, derriere le texte */
+.nb-page--ap{isolation:isolate}
+.nb-ap-vy{
+  position:absolute;z-index:-1;pointer-events:none;
+  width:min(64vw,1000px);right:-14vw;top:calc(var(--hd-h) + 3vw);
+  opacity:.32;--vy-color:var(--sn-ink-raised);--vy-label:var(--sn-ink-high);--vy-hole:var(--neb-black);
+}
+.nb-ap-vy .vy-label{display:flex;align-items:center;justify-content:center}
+.nb-ap-vy .jg-vy-logo{width:58%;background:var(--neb-black)}
+@media (max-width:760px){
+  .nb-ap-vy{width:130vw;right:-80vw;top:auto;bottom:16%;opacity:.24}
+}

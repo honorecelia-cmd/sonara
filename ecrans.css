@@ -292,7 +292,7 @@
 .rs-step--3{order:3;min-height:196px}
 /* Place sur le podium (le 1er au centre) ; la hauteur suit le rang : egalite = meme marche */
 .rs-slot--1{order:2}.rs-slot--2{order:1}.rs-slot--3{order:3}
-.rs-rank{font-family:var(--f-display);font-weight:900;font-size:44px;line-height:.9}
+.rs-rank{font-family:var(--f-display);font-weight:800;font-size:44px;line-height:.9}
 .rs-step .sn-avatar{width:48px;height:48px;font-size:20px}
 .rs-step--1 .sn-avatar{width:58px;height:58px;font-size:24px;animation:rs-ring .35s var(--sn-ease) var(--d-end,0ms) both}
 /* Nom jamais tronque : jusqu'a 2 lignes ; "(toi)" sur sa propre ligne */
@@ -313,7 +313,7 @@
   animation:rs-rise .6s var(--sn-ease) var(--d,0ms) both;
 }
 .rs-solo[hidden]{display:none}
-.rs-solo-score{display:block;font-family:var(--f-display);font-weight:900;font-size:clamp(88px,12vw,160px);line-height:.85;letter-spacing:-.04em;color:var(--cream)}
+.rs-solo-score{display:block;font-family:var(--f-display);font-weight:800;font-size:clamp(88px,12vw,160px);line-height:.85;letter-spacing:-.04em;color:var(--cream)}
 .rs-solo-pts{display:block;margin-top:6px;font-size:16px;font-weight:600}
 .rs-solo-found{margin:12px 0 0;font-size:15px;color:rgba(255,255,255,.88)}
 

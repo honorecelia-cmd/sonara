@@ -30,7 +30,8 @@
     rap:['Flow Radar','Rime Pilote','Punchline Tempo'],
     mix:['Mix Boussole','Playlist Pilote','Caraïbe Radar'],
     kompa:['Kompa Tempo','Konpa Radar','Kompa Boussole'],
-    shatta:['Shatta Radar','Shatta Pilote','Shatta Tempo']
+    shatta:['Shatta Radar','Shatta Pilote','Shatta Tempo'],
+    'dennery-segment':['Segment Radar','Dennery Tempo','Kwéyòl Pilote']
   };
 
   var form=$('sn-form'), inp=$('sn-name'), hint=$('sn-hint'), count=$('sn-count'), play=$('sn-play');

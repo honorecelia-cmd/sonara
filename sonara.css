@@ -32,7 +32,7 @@
 /* ─────────────────────────────── */
 
 /* FIGMA MANQUANTS */
-.fig-section-lbl{font-family:'Inter',sans-serif;font-size:12px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px;width:100%;}
+.fig-section-lbl{font-family:'MuseoModerno',sans-serif;font-size:12px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px;width:100%;}
 
 /* FIGMA PAGES */
 #s-res{padding:0;align-items:stretch}
@@ -57,9 +57,9 @@
 .glb-top{padding:4px 20px 0;}
 .glb-top .fig-section-lbl{margin:10px 0 6px;}
 .glb-row{display:flex;align-items:center;gap:10px;background:rgba(253,221,184,0.5);border-radius:4px;padding:7px 12px;margin-bottom:4px;font-family:'Inter',sans-serif;font-size:12px;color:#2d1002;}
-.glb-rk{width:18px;font-weight:800;}
+.glb-rk{width:18px;font-weight:700;}
 .glb-nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.glb-sc{font-weight:800;}
+.glb-sc{font-weight:700;}
 
 /* ── #s-defi : ecran "Defi a partager" (maquette Figma 52:201) ── */
 #s-defi{flex-direction:column;align-items:stretch;padding:0;position:relative;overflow-x:clip;}

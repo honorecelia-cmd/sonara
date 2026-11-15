@@ -1,8 +1,7 @@
 // ═══════════════════════════════════════════════════════════════
 // SONARA — landing (refonte d'apres la maquette Nebula)
-// 1. "Jouer" et menu Mode : vers le choix de l'univers (ecrans.js)
-// 2. Telephone du hero qui monte puis se loge dans le header au defilement
-// 3. Trio lecteur : pilote l'apercu de partie du telephone (aucun son)
+// 1. "Jouer" : vers le choix de l'univers (ecrans.js) ; menu : entete.js
+// 4 a 6. Animations des anciennes sections et du footer ; 7. Vues
 // Spec : nebula-analyse-pour-sonara.md
 // ═══════════════════════════════════════════════════════════════
 (function(){
@@ -16,164 +15,20 @@
   function play(opts){
     closeMenus();
     opts=opts||{};
+    // Depuis /a-propos ou /comment-jouer : le parcours (et le retour a
+    // l'accueil apres la partie) repart de l'adresse de l'accueil
+    if(vue!=='accueil'){try{history.replaceState(null,'','/');}catch(e){}setVue('accueil');entre();}
     if(window.uvLanding&&uvLanding.inView())opts.theme=uvLanding.current().slug;
     if(window.SonaraFlow)SonaraFlow.toUnivers(opts);
   }
   landing.addEventListener('click',function(e){
-    var t=e.target, b;
+    var t=e.target;
     if(t.closest('[data-nb-play]'))play(null);
     else if(t.closest('[data-nb-proches]'))play({mode:'multi',proches:true});
-    else if(t.closest('[data-nb-code]')){closeMenus();showPage('s-join');}
-    else if((b=t.closest('[data-nb-mode]'))){var m=b.getAttribute('data-nb-mode');play({mode:m,proches:m==='multi'});}
   });
-  document.addEventListener('keydown',function(e){
-    if(e.key==='Escape')closeMenus(true);
-  });
-
-  // ── Menu Mode ──
-  var menuBtns=landing.querySelectorAll('.nb-menu-btn');
-  function closeMenus(refocus){
-    menuBtns.forEach(function(btn){
-      if(btn.getAttribute('aria-expanded')!=='true')return;
-      btn.setAttribute('aria-expanded','false');
-      document.getElementById(btn.getAttribute('aria-controls')).hidden=true;
-      if(refocus)btn.focus();
-    });
-  }
-  menuBtns.forEach(function(btn){
-    btn.addEventListener('click',function(){
-      var open=btn.getAttribute('aria-expanded')==='true';
-      closeMenus();
-      if(!open){
-        btn.setAttribute('aria-expanded','true');
-        var list=document.getElementById(btn.getAttribute('aria-controls'));
-        list.hidden=false;
-        list.querySelector('button').focus();
-      }
-    });
-  });
-  document.addEventListener('click',function(e){if(!e.target.closest('.nb-menu'))closeMenus();});
-
-  // ── 2. Telephone -> header ──────────────────────────────────
-  var hero=document.getElementById('nb-hero');
-  var wrap=document.getElementById('nb-phone-wrap');
-  var slot=document.getElementById('nb-hd-slot');
-  var header=document.getElementById('nb-header');
-  var hand=document.getElementById('nb-hand');
-  var thumb=document.getElementById('nb-thumb');
-  var giant=document.getElementById('nb-giant');
-  var nat=null,ticking=false,pS=0,snap=true;
-
-  function measure(){
-    wrap.style.transform='';hand.style.transform='';
-    // La main et le lettrage geant suivent la position reelle du telephone
-    hero.style.setProperty('--hx',wrap.offsetLeft+'px');
-    hero.style.setProperty('--hy',wrap.offsetTop+'px');
-    snap=true;
-    var r=wrap.getBoundingClientRect();
-    nat={x:r.left,y:r.top+window.scrollY,w:r.width,h:r.height};
-    update();
-  }
-  function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
-  function update(){
-    ticking=false;
-    if(!nat||landing.offsetParent===null)return;
-    var y=window.scrollY;
-    if(reduce.matches){
-      wrap.style.transform='';hand.style.transform='';
-      header.classList.toggle('is-on',y>nat.y*.5);
-      return;
-    }
-    // Sortie etalee sur deux fois la distance qui amene le centre du
-    // telephone en haut de l'ecran (ou moins si la page est trop courte)
-    var maxY=document.documentElement.scrollHeight-window.innerHeight;
-    var end=Math.max(1,Math.min((nat.y+nat.h*.5)*2,maxY));
-    var target=Math.min(1,Math.max(0,y/end));
-    // Lissage : la progression rattrape le defilement en douceur
-    if(snap){pS=target;snap=false;}
-    else pS+=(target-pS)*.14;
-    if(Math.abs(target-pS)<.0005)pS=target;
-    else if(!ticking){ticking=true;requestAnimationFrame(update);}
-    var p=pS;
-    var e=ease(p);
-    var s=slot.getBoundingClientRect();
-    var cx=nat.x+nat.w/2, cy=nat.y-y+nat.h/2;
-    var tx=(s.left+s.width/2-cx)*e;
-    var ty=(s.top+s.height/2-cy)*e;
-    var k=1+(s.height/nat.h-1)*e;
-    var tf='translate3d('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px,0) scale('+k.toFixed(4)+')';
-    wrap.style.transform=tf;
-    hand.style.transform=tf;   // la main part avec le telephone (meme centre, voir CSS)
-    wrap.classList.toggle('nb-wrap-docked',p>=1);
-    header.classList.toggle('is-on',p>.45);
-    var fade=Math.max(0,1-p*3);
-    hand.style.opacity=fade;
-    thumb.style.opacity=fade;
-    // Parallaxe : le lettrage geant glisse plus lentement que la page
-    if(y<hero.offsetHeight&&giant.offsetParent){
-      var par='translate3d(0,'+(y*.25).toFixed(1)+'px,0)';
-      giant.style.transform=par;
-    }
-  }
-  function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(update);}}
-  window.addEventListener('scroll',onScroll,{passive:true});
-  window.addEventListener('resize',measure);
-  window.addEventListener('load',measure);
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(measure);
-  measure();
-  // Telephone loge dans le header : raccourci vers "Jouer"
-  wrap.addEventListener('click',function(){if(wrap.classList.contains('nb-wrap-docked'))play(null);});
-  // Retour sur la landing (showPage) : la page reapparait, on remesure
-  new MutationObserver(function(){if(landing.style.display!=='none')measure();})
-    .observe(landing,{attributes:true,attributeFilter:['style']});
-
-  // ── 3. Trio lecteur -> apercu de partie ─────────────────────
-  // Pochettes : chemins du tableau UNIVERS (univers.js, uvCover)
-  var UNIV=['zouk','kompa','dancehall','reggae','soca','rap'];
-  var cover=document.getElementById('nb-scr-cover');
-  var manche=document.getElementById('nb-scr-manche');
-  var fill=document.getElementById('nb-scr-fill');
-  var clock=document.getElementById('nb-scr-t');
-  var round=3,u=0,t=12,paused=false,last=0;
-  var DUR=30;
-
-  function render(){
-    manche.textContent='Manche '+round+'/10';
-    if(window.uvSetBg)uvSetBg(cover,uvCover(UNIV[u]));
-  }
-  function step(dir){
-    round=(round-1+dir+10)%10+1;
-    u=(u+dir+UNIV.length)%UNIV.length;
-    t=0;render();tickClock();
-  }
-  function tickClock(){
-    fill.style.width=(t/DUR*100).toFixed(2)+'%';
-    var sec=Math.floor(t);
-    clock.textContent='0:'+(sec<10?'0':'')+sec;
-  }
-  function loop(now){
-    if(last&&!paused&&!reduce.matches&&!document.hidden){
-      t+=(now-last)/1000;
-      if(t>=DUR){step(1);}
-      tickClock();
-    }
-    last=now;
-    requestAnimationFrame(loop);
-  }
-  landing.querySelectorAll('[data-nb-trio]').forEach(function(b){
-    b.addEventListener('click',function(){
-      var a=b.getAttribute('data-nb-trio');
-      if(a==='prev')step(-1);
-      else if(a==='next')step(1);
-      else{
-        paused=!paused;
-        b.setAttribute('aria-pressed',String(paused));
-        b.setAttribute('aria-label',paused?'Lecture':'Pause');
-      }
-    });
-  });
-  tickClock();
-  requestAnimationFrame(loop);
+  // Menu deroulant de l'en-tete (et Echap, clic ailleurs) : entete.js,
+  // commun avec les pages legales
+  function closeMenus(refocus){if(window.nbCloseMenus)nbCloseMenus(refocus);}
 
   // ── 4. Satellites : vitesse propre a chacun (0.8x a 1.2x) ──
   var sats=[].slice.call(landing.querySelectorAll('[data-speed]'));
@@ -265,10 +120,73 @@
     window.addEventListener('scroll',onWords,{passive:true});
     window.addEventListener('resize',onWords);
     lightWords();
-    // b. "SONARA" du footer et etapes de "Comment jouer" : a l'entree a l'ecran
+    // b. Etapes de "Comment jouer" : a l'entree a l'ecran (des qu'une partie
+    // est visible). Le "SONARA" du footer : entete.js, commun aux pages.
+    var ins=document.querySelectorAll('.nb-steps:not(.nb-cj-steps)');   // vue Comment jouer : anim-pages.js
+    if(!('IntersectionObserver' in window)){[].forEach.call(ins,function(el){el.classList.add('is-in');});return;}
     var io=new IntersectionObserver(function(es){
       es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target);}});
-    },{threshold:.35});
-    ['.nb-ft-word','.nb-steps'].forEach(function(s){var el=document.querySelector(s);if(el)io.observe(el);});
+    },{threshold:0});
+    [].forEach.call(ins,function(el){io.observe(el);});
+  })();
+
+  // ── 7. Vues : accueil, /a-propos, /comment-jouer ─────────────
+  // Une seule page (header et footer communs) : le contenu affiche suit
+  // l'adresse. Les anciennes ancres des sections retirees menent a la vue
+  // qui reprend leur contenu. Toute autre adresse (lien de Defi...) : accueil.
+  var VUES={'/':'accueil','/a-propos':'a-propos','/comment-jouer':'comment-jouer'};
+  var TITRES={'accueil':document.title,'a-propos':'À propos · Sonara','comment-jouer':'Comment jouer · Sonara'};
+  var ANCRES={'#comment-jouer':'/comment-jouer','#nb-s04':'/comment-jouer','#la-revelation':'/comment-jouer','#nb-s02':'/comment-jouer','#nb-s01':'/a-propos'};
+  var vue='accueil';
+  function vueDe(path){return VUES[path.replace(/\/+$/,'')||'/'];}
+  function setVue(v){
+    vue=v;
+    landing.querySelectorAll('[data-vue]').forEach(function(el){el.hidden=el.getAttribute('data-vue')!==v;});
+    // Page en cours dans le menu et le footer ("Univers" n'est pas une page)
+    landing.querySelectorAll('.nb-hd-link,.nb-menu-list a,.nb-ft-col a').forEach(function(a){
+      if(a.pathname!=='/'&&vueDe(a.pathname)===v)a.setAttribute('aria-current','page');
+      else a.removeAttribute('aria-current');
+    });
+    document.title=TITRES[v];
+  }
+  // Changement de vue : disque ouvert depuis le point clique et entree de
+  // la page (anim-pages.js ; sans ce script : changement direct)
+  function entre(){if(window.nbPages)nbPages.enter(landing.querySelector('.nb-page:not([hidden])'));}
+  function transition(maj,e){if(window.nbPages)nbPages.go(maj,e);else maj();}
+  function goTo(path,hash,e){
+    closeMenus();
+    transition(function(){
+      history.pushState(null,'',path+(hash||''));
+      if(landing.style.display==='none'&&window.showPage)showPage('landing');
+      setVue(vueDe(path));
+      var t=hash&&document.getElementById(hash.slice(1));
+      if(t&&!t.hidden)t.scrollIntoView();else window.scrollTo(0,0);
+      entre();
+    },e);
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href]');
+    if(!a||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||a.target)return;
+    if(a.origin!==location.origin||!vueDe(a.pathname))return;
+    e.preventDefault();
+    goTo(a.pathname.replace(/\/+$/,'')||'/',a.hash,e);
+  });
+  window.addEventListener('popstate',function(){var v=vueDe(location.pathname);if(v&&v!==vue)transition(function(){setVue(v);entre();});});
+  (function(){
+    var v=vueDe(location.pathname)||'accueil';
+    if(v==='accueil'&&location.pathname==='/'&&ANCRES[location.hash]){
+      var path=ANCRES[location.hash];
+      try{history.replaceState(null,'',path);}catch(e){}
+      v=vueDe(path);
+    }
+    setVue(v);
+    // Depuis une page legale : /#jouer et /#entre-proches lancent le parcours
+    // (entete.js) une fois tous les ecrans charges
+    var DEPART={'#jouer':null,'#entre-proches':{mode:'multi',proches:true}};
+    if(location.pathname==='/'&&location.hash in DEPART){
+      var opts=DEPART[location.hash];
+      try{history.replaceState(null,'','/');}catch(e){}
+      document.addEventListener('DOMContentLoaded',function(){play(opts);});
+    }
   })();
 })();
