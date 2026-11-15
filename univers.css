@@ -41,8 +41,8 @@
   text-align:center;white-space:nowrap;pointer-events:none;
   font-family:'MuseoModerno',sans-serif;font-weight:800;line-height:.85;letter-spacing:-.02em;
   font-size:var(--uv-fs,22vw);
-  /* decor lisible : plus clair que les fonds sombres, plus fonce que les
-     fonds clairs, contraste 2,2 (couleur calculee par univers.js) */
+  /* plus clair que les fonds sombres, plus fonce que les fonds clairs,
+     contraste 3 avec le fond (couleur calculee par univers.js) */
   color:color-mix(in srgb, var(--uv-c) 58%, #000);
 }
 
@@ -238,3 +238,6 @@
 @media (max-width:599px){
   .uv-giant{top:calc(var(--uv-cy) - var(--uv-d) / 2);--uv-gy:-72%}
 }
+/* Accueil, toutes largeurs : nom au-dessus du vinyle, jamais derriere ;
+   bas du nom a --uv-gb (calcule par univers.js, layout) */
+.uv--accueil .uv-giant{top:var(--uv-gb,calc(var(--uv-cy) - var(--uv-d) / 2));--uv-gy:-100%}

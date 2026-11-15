@@ -29,7 +29,7 @@ var THEMES = {
     {t:'Les couleurs de l\'amour',a:'Christelle Rosette',preview:'/audio/Christelle_Rosette-Les_couleurs_de_lamour.mp3',cover:''},
     {t:'Ki jan kè fè',a:'Patrick St-Eloi',preview:'/audio/Patrick_St_Eloi-Ki_jan_ke_fe.mp3',cover:''},
     {t:'Ghetto face à face',a:'Jim Rama',preview:'/audio/Jim_Rama-Ghetto_face_a_face.mp3',cover:''},
-    {t:'Cette nuit',a:'Ridge',preview:'/audio/Ridge-Cette_nuit.mp3',cover:''}
+    {t:'Cette nuit',a:'Ridge ft Joyce',preview:'/audio/Ridge-Cette_nuit.mp3',cover:''}
   ]},
   'kompa':    {n:'Kompa',          ic:'', dq:'tabou combo kompa haiti', tracks:[
     {t:'Tu es là',a:'Djapot',preview:'/audio/Djapot-Tu_es_la.mp3',cover:''},
@@ -42,10 +42,10 @@ var THEMES = {
     {t:'Wasn\'t meant to be',a:'Nu-Look',preview:'/audio/Nu_Look-Wasnt_meant_to_be.mp3',cover:''},
     {t:'À qui la faute',a:'Nu-Look',preview:'/audio/Nu_Look-A_qui_la_faute.mp3',cover:''},
     {t:'Mete\'m alez',a:'Daan Junior',preview:'/audio/Daan_Junior-Metem_alez.mp3',cover:''},
-    {t:'Pwomet mwen',a:'Bedjine',preview:'/audio/Bedjine-Pwomet_mwen.mp3',cover:''},
+    {t:'Pwomet mwen',a:'K-dilak Mesaje a ft Bedjine',preview:'/audio/Bedjine-Pwomet_mwen.mp3',cover:''},
     {t:'Fem voyé',a:'Joé Dwèt Filé',preview:'/audio/Joe_Dwet_File-Fem_voye.mp3',cover:''},
     {t:'Sensible à la gachette',a:'Carimi',preview:'/audio/Carimi-Sensible_a_la_gachette.mp3',cover:''},
-    {t:'Fè la pli',a:'Mikaben',preview:'/audio/Mikaben-Fe_la_pli.mp3',cover:''},
+    {t:'Fè la pli',a:'Mikaben ft Kenny Haiti',preview:'/audio/Mikaben-Fe_la_pli.mp3',cover:''},
     {t:'Incroyable',a:'Harmonik',preview:'/audio/Harmonik-Incroyable.mp3',cover:''},
     {t:'Sa wap fe avem',a:'Alan Cave',preview:'/audio/Alan_Cave-Sa_wap_fe_avem.mp3',cover:''},
     {t:'Se pa pou dat',a:'Alan Cave',preview:'/audio/Alan_Cave-Se_pa_pou_dat.mp3',cover:''},
@@ -54,7 +54,7 @@ var THEMES = {
     {t:'Illusion',a:'Arly Larivière',preview:'/audio/Arly_Lariviere-Illusion.mp3',cover:''},
     {t:'Relax',a:'Ti Kabzy',preview:'/audio/Ti_Kabzy-Relax.mp3',cover:''},
     {t:'One track mind',a:'Naika',preview:'/audio/Naika-One_track_mind.mp3',cover:''},
-    {t:'Ou pati',a:'Mika Benjamin',preview:'/audio/Mika_Benjamin-Ou_pati.mp3',cover:''},
+    {t:'Ou pati',a:'Mikaben',preview:'/audio/Mika_Benjamin-Ou_pati.mp3',cover:''},
     {t:'Haïti chérie',a:'Jacques Sauveur Jean',preview:'/audio/Jacques_Sauveur_Jean-Haiti_cherie.mp3',cover:''},
     {t:'Lakay',a:'Tabou Combo',preview:'/audio/Tabou_Combo-Lakay.mp3',cover:''},
     {t:'Pèdi kontwol',a:'Oswald ft Steves J. Bryan',preview:'/audio/Oswald_ft_Steves-Pedi_kontwol.mp3',cover:''}
@@ -88,18 +88,19 @@ var THEMES = {
     {t:'Big ship',a:'Freddie McGregor',preview:'/audio/Freddie_McGregor-Big_ship.mp3',cover:''},
     {t:'Steel pulse',a:'Steel Pulse',preview:'/audio/Steel_Pulse-Steel_pulse.mp3',cover:''},
     {t:'Sweet lies',a:'Beres Hammond',preview:'/audio/Beres_Hammond-Sweet_lies.mp3',cover:''},
-    {t:'Who say',a:'Beres Hammond',preview:'/audio/Beres_Hammond-Who_say.mp3',cover:''},
-    {t:'Can you play some more',a:'Beres Hammond',preview:'/audio/Beres_Hammond-Can_you_play_some_more.mp3',cover:''},
+    {t:'Who say',a:'Beres Hammond ft Buju Banton',preview:'/audio/Beres_Hammond-Who_say.mp3',cover:''},
+    {t:'Can you play some more',a:'Beres Hammond ft Buju Banton',preview:'/audio/Beres_Hammond-Can_you_play_some_more.mp3',cover:''},
     {t:'I feel good',a:'Beres Hammond',preview:'/audio/Beres_Hammond-I_feel_good.mp3',cover:''},
     {t:'Want you back',a:'Singing Melody',preview:'/audio/Singing_Melody-Want_you_back.mp3',cover:''},
+    {t:'Rapture',a:'Koffee',preview:'/audio/Koffee-Rapture.mp3',cover:''}
   ]},
   'dancehall':{n:'Dancehall',      ic:'', dq:'sean paul dancehall shaggy', tracks:[
     {t:'Poumpoumbambam',a:'Magic ft Magic',preview:'/audio/Magic_ft_Magic-Poumpoumbambam.mp3',cover:''},
-    {t:'What I like',a:'Moliy',preview:'/audio/Moliy-What_I_like.mp3',cover:''},
-    {t:'Guh dung',a:'Ayetian',preview:'/audio/Ayetian-Guh_dung.mp3',cover:''},
-    {t:'Wah yo deh pan',a:'Ayetian',preview:'/audio/Ayetian-Wah_yo_deh_pan.mp3',cover:''},
-    {t:'Passenger Princess',a:'Valiant',preview:'/audio/Valiant-Passenger_Princess.mp3',cover:''},
-    {t:'Kraff Gad',a:'Ikation',preview:'/audio/Ikation-Kraff_Gad.mp3',cover:''},
+    {t:'What I like',a:'Rvssian ft Moliy, Ayetian & Tyga',preview:'/audio/Moliy-What_I_like.mp3',cover:''},
+    {t:'Guh dung',a:'Ayetian ft Countree Hype',preview:'/audio/Ayetian-Guh_dung.mp3',cover:''},
+    {t:'Wah yo deh pan',a:'Ayetian ft Govana & Nvtzz',preview:'/audio/Ayetian-Wah_yo_deh_pan.mp3',cover:''},
+    {t:'Passenger Princess',a:'Valiant ft Rvssian',preview:'/audio/Valiant-Passenger_Princess.mp3',cover:''},
+    {t:'Ikation',a:'Kraff Gad',preview:'/audio/Ikation-Kraff_Gad.mp3',cover:''},
     {t:'Pretty please',a:'Aidonia',preview:'/audio/Aidonia-Pretty_please.mp3',cover:''},
     {t:'Born again virgin',a:'Vybz Kartel',preview:'/audio/Vybz_Kartel-Born_again_virgin.mp3',cover:''},
     {t:'Happy pum pum',ta:['Happy pum pump'],a:'Vybz Kartel',preview:'/audio/Vybz_Kartel-Happy_pum_pum.mp3',cover:''},
@@ -114,87 +115,83 @@ var THEMES = {
     {t:'Douvan babylone',a:'Pompis',preview:'/audio/Pompis-Douvan_babylone.mp3',cover:''},
     {t:'Cho les vacabonds',a:'Tiblica',preview:'/audio/Tiblica-Cho_les_vacabonds.mp3',cover:''},
     {t:'Real wifey',a:'Bamby ft Jahyanai King',preview:'/audio/Bamby_ft_Jahyanai_King-Real_wifey.mp3',cover:''},
-    {t:'Hit & Run',a:'Shenseea ft Masicka',preview:'/audio/Shenseea_ft_Masicka-Hit_and_Run.mp3',cover:''},
+    {t:'Hit & Run',a:'Shenseea ft Masicka & Di Genius',preview:'/audio/Shenseea_ft_Masicka-Hit_and_Run.mp3',cover:''},
     {t:'Talibans',a:'Byron Messia',preview:'/audio/Byron_Messia-Talibans.mp3',cover:''},
     {t:'Everything is nice',a:'Popcaan',preview:'/audio/Popcaan-Everything_is_nice.mp3',cover:''},
     {t:'The comet',a:'Vybz Kartel',preview:'/audio/Vybz_Kartel-The_comet.mp3',cover:''},
-    {t:'Xrated',a:'Kalash ft Vybz Kartel',preview:'/audio/Kalash_ft_Vybz_Kartel-Xrated.mp3',cover:''},
+    {t:'Xrated',a:'Vybz Kartel ft Kalash',preview:'/audio/Kalash_ft_Vybz_Kartel-Xrated.mp3',cover:''},
     {t:'Beg yuh a fuck',a:'Vybz Kartel',preview:'/audio/Vybz_Kartel-Beg_yuh_a_fuck.mp3',cover:''},
     {t:'Ignite the world',a:'Vybz Kartel',preview:'/audio/Vybz_Kartel-Ignite_the_world.mp3',cover:''},
-    {t:'Tagada',a:'Kalash ft Kima',preview:'/audio/Kalash_ft_Kima-Tagada.mp3',cover:''},
-    {t:'Laptop',a:'Kalash ft Maureen',preview:'/audio/Kalash_ft_Maureen-Laptop.mp3',cover:''}
+    {t:'Tagada',a:'DJ Ken ft Kima & Kalash',preview:'/audio/Kalash_ft_Kima-Tagada.mp3',cover:''},
+    {t:'Laptop',a:'Kalash ft Maureen',preview:'/audio/Kalash_ft_Maureen-Laptop.mp3',cover:''},
+    {t:'Ghetto Story',a:'Baby Cham ft Alicia Keys',preview:'/audio/Baby_Cham_ft_Alicia_Keys-Ghetto_Story.mp3',cover:''},
+    {t:'Talk to me nuh',a:'Shenseea',preview:'/audio/Shenseea-Talk_to_me_nuh.mp3',cover:''}
   ]},
   'soca':     {n:'Soca',           ic:'', dq:'machel montano soca trinidad', tracks:[
-    {t:'Push your hand',a:'Ridge',preview:'/audio/Ridge-Push_your_hand.mp3',cover:''},
+    {t:'Push your hand',a:'Ridge ft Dirty Dawg Pudaz & Kenny 4 Life',preview:'/audio/Ridge-Push_your_hand.mp3',cover:''},
     {t:'So long',a:'Nadia Batson',preview:'/audio/Nadia_Batson-So_long.mp3',cover:''},
     {t:'Holiday',a:'Problem Child',preview:'/audio/Problem_Child-Holiday.mp3',cover:''},
     {t:'Mister fete',a:'Machel Montano',preview:'/audio/Machel_Montano-Mister_fete.mp3',cover:''},
-    {t:'The greatest bend over',a:'Young Bredda',preview:'/audio/Young_Bredda-Greatest_bend_over.mp3',cover:''},
+    {t:'The greatest bend over',a:'Full Blown ft Yung Bredda',preview:'/audio/Young_Bredda-Greatest_bend_over.mp3',cover:''},
     {t:'Sweet soca',a:'Sugar Daddy',preview:'/audio/Sugar_Daddy-Sweet_soca.mp3',cover:''},
-    {t:'Full blown',a:'Good Spirit',preview:'/audio/Good_Spirit-Full_blown.mp3',cover:''},
-    {t:'No sweetness',a:'Kes',preview:'/audio/Kes-No_sweetness.mp3',cover:''},
-    {t:'The truth',a:'Machel Montano',preview:'/audio/Machel_Montano-The_truth.mp3',cover:''},
-    {t:'Tack back',a:'Kes',preview:'/audio/Kes-Tack_back.mp3',cover:''},
+    {t:'Good Spirits',a:'Full Blown',preview:'/audio/Good_Spirit-Full_blown.mp3',cover:''},
+    {t:'No sweetness',a:'Full Blown ft Kes',preview:'/audio/Kes-No_sweetness.mp3',cover:''},
+    {t:'The truth',a:'Machel Montano ft Full Blown',preview:'/audio/Machel_Montano-The_truth.mp3',cover:''},
+    {t:'Tack back',a:'Kes ft Tano',preview:'/audio/Kes-Tack_back.mp3',cover:''},
     {t:'Pardy',a:'Machel Montano',preview:'/audio/Machel_Montano-Pardy.mp3',cover:''},
-    {t:'Cyah behave',a:'Machel Montano',preview:'/audio/Machel_Montano-Cyah_behave.mp3',cover:''},
+    {t:'Cyah behave',a:'Voice',preview:'/audio/Machel_Montano-Cyah_behave.mp3',cover:''},
     {t:'Market',a:'Nadia Batson',preview:'/audio/Nadia_Batson-Market.mp3',cover:''},
     {t:'Inch by inch',a:'Yung Bredda',preview:'/audio/Yung_Bredda-Inch_by_inch.mp3',cover:''},
     {t:'Nah let go',a:'Kes',preview:'/audio/Kes-Nah_let_go.mp3',cover:''},
-    {t:'Dansa',a:'Klassik Frescobar',preview:'/audio/Klassik_Frescobar-Dansa.mp3',cover:''},
     {t:'Overdue',a:'Erphaan Alves',preview:'/audio/Erphaan_Alves-Overdue.mp3',cover:''},
     {t:'Coco a ti',a:'Kes',preview:'/audio/Kes-Coco_a_ti.mp3',cover:''},
     {t:'Take me home',a:'Freetown Collective',preview:'/audio/Freetown_Collective-Take_me_home.mp3',cover:''},
     {t:'In my Maserati',a:'Olakira',preview:'/audio/Olakira-In_my_Maserati.mp3',cover:''},
     {t:'Blessing',a:'Blaka Dan',preview:'/audio/Blaka_Dan-Blessing.mp3',cover:''},
-    {t:'Like it like that',a:'Kes & Patrice Roberts',preview:'/audio/Kes_Patrice_Roberts-Like_it_like_that.mp3',cover:''},
-    {t:'Its carnival',a:'Machel Montano',preview:'/audio/Machel_Montano-Its_carnival.mp3',cover:''},
-    {t:'Mind my business',a:'Patrice Roberts',preview:'/audio/Patrice_Roberts-Mind_my_business.mp3',cover:''},
+    {t:'Like it like that',a:'Patrice Roberts ft Kes',preview:'/audio/Kes_Patrice_Roberts-Like_it_like_that.mp3',cover:''},
+    {t:'Its carnival',a:'Destra ft Machel Montano',preview:'/audio/Machel_Montano-Its_carnival.mp3',cover:''},
+    {t:'Mind my business',a:'Travis World ft Dan Evens & Patrice Roberts',preview:'/audio/Patrice_Roberts-Mind_my_business.mp3',cover:''},
     {t:'Hard fete',a:'Bunji Garlin',preview:'/audio/Bunji_Garlin-Hard_fete.mp3',cover:''},
     {t:'Famalay',a:'Skinny Fabulous ft Machel Montano & Bunji Garlin',preview:'/audio/Famalay-Skinny_Machel_Bunji.mp3',cover:''},
     {t:'We ready',a:'Nailah Blackman ft Shenseea',preview:'/audio/Nailah_Blackman_ft_Shenseea-We_ready.mp3',cover:''},
     {t:'Congrats Te Amo',a:'Mr. Vegas',preview:'/audio/Mr_Vegas-Congrats_Te_Amo.mp3',cover:''},
-    {t:'Close to me',a:'Kes ft Shenseea',preview:'/audio/Kes_ft_Shenseea-Close_to_me.mp3',cover:''},
-    {t:'Go ask yuh mudda',a:'Bunji Garlin',preview:'/audio/Bunji_Garlin-Go_ask_yuh_mudda.mp3',cover:''},
-    {t:'Showtime',a:'Machel Montano',preview:'/audio/Machel_Montano-Showtime.mp3',cover:''},
-    {t:'Dip',a:'Shal Marshall',preview:'/audio/Shal_Marshall-Dip.mp3',cover:''},
-    {t:'Lost and found',a:'Preedy',preview:'/audio/Preedy-Lost_and_found.mp3',cover:''}
+    {t:'Close to me',a:'Kes ft Shenseea',preview:'/audio/Kes_ft_Shenseea-Close_to_me.mp3',cover:''}
   ]},
   'shatta':   {n:'Shatta',         ic:'', dq:'kalash martinique admiral t', tracks:[
-    {t:'Talk to me nuh',a:'Shenseea',preview:'/audio/Shenseea-Talk_to_me_nuh.mp3',cover:''},
-    {t:'OPA',a:'Sage',preview:'/audio/Sage-OPA.mp3',cover:''},
-    {t:'Coco Chanel',a:'Meryl',preview:'/audio/Meryl-Coco_Chanel.mp3',cover:''},
+    {t:'OPA',a:'Natoxie ft Kenjox & Sage FWI',preview:'/audio/Sage-OPA.mp3',cover:''},
+    {t:'Coco Chanel',a:'Meryl ft Eva',preview:'/audio/Meryl-Coco_Chanel.mp3',cover:''},
     {t:'Instructions',a:'Meryl ft Theodora',preview:'/audio/Meryl_ft_Theodora-Instructions.mp3',cover:''},
     {t:'Click',a:'Meryl ft Blackboy',preview:'/audio/Meryl_ft_Blackboy-Click.mp3',cover:''},
-    {t:'Shatta confessions',a:'N\'ken',preview:'/audio/Nken-Shatta_confessions.mp3',cover:''},
-    {t:'Je pars',a:'N\'ken',preview:'/audio/Nken-Je_pars.mp3',cover:''},
+    {t:'Shatta confessions',a:'Meryl ft N\'Ken',preview:'/audio/Nken-Shatta_confessions.mp3',cover:''},
+    {t:'Je pars',a:'N\'Ken ft Lé Will & Deuspi, Mikado',preview:'/audio/Nken-Je_pars.mp3',cover:''},
     {t:'Sé Miimii',a:'Miimii ft Dj Skycee',preview:'/audio/Miimii_ft_Dj_Skycee-Se_Miimii.mp3',cover:''},
     {t:'Bouwey',a:'1T1 ft Théomaa',preview:'/audio/1T1_ft_Theomaa-Bouwey.mp3',cover:''},
-    {t:'Y\'a quoi',a:'N\'ken',preview:'/audio/Nken-Ya_quoi.mp3',cover:''},
-    {t:'Jetski',a:'Meryl',preview:'/audio/Meryl-Jetski.mp3',cover:''},
-    {t:'Grosse bécane',a:'Latop',preview:'/audio/Latop-Grosse_becane.mp3',cover:''},
+    {t:'Y\'a quoi',a:'Le Jèm\'ss ft N\'Ken & Mikado',preview:'/audio/Nken-Ya_quoi.mp3',cover:''},
+    {t:'Jetski',a:'DJ Tutuss ft Meryl',preview:'/audio/Meryl-Jetski.mp3',cover:''},
+    {t:'Grosse bécane',a:'Latop ft Mikado',preview:'/audio/Latop-Grosse_becane.mp3',cover:''},
     {t:'Batché a boy',a:'Kryssy',preview:'/audio/Kryssy-Batche_a_boy.mp3',cover:''},
-    {t:'Manawa',a:'Aknose',preview:'/audio/Aknose-Manawa.mp3',cover:''},
+    {t:'Manawa',a:'Aknose ft YSN',preview:'/audio/Aknose-Manawa.mp3',cover:''},
     {t:'Tic',a:'Maureen',preview:'/audio/Maureen-Tic.mp3',cover:''},
     {t:'Pum fat',a:'Maureen',preview:'/audio/Maureen-Pum_fat.mp3',cover:''},
     {t:'Applaudissement',a:'Mikado',preview:'/audio/Mikado-Applaudissement.mp3',cover:''},
     {t:'Pété tol',a:'Ti Blica',preview:'/audio/Ti_Blica-Pete_tol.mp3',cover:''},
-    {t:'Pété tchouw',a:'Lejems',preview:'/audio/Lejems-Pete_tchouw.mp3',cover:''},
-    {t:'Badmind',a:'Meryl',preview:'/audio/Meryl-Badmind.mp3',cover:''},
-    {t:'Lambi',a:'Jahlys',preview:'/audio/Jahlys-Lambi.mp3',cover:''},
-    {t:'Boss lady',a:'Jahlys ft Theodora',preview:'/audio/Jahlys_ft_Theodora-Boss_lady.mp3',cover:''},
+    {t:'Pété tchouw',a:'DJ LO\'IC EYY ft Le jem\'s',preview:'/audio/Lejems-Pete_tchouw.mp3',cover:''},
+    {t:'Badmind',a:'DJ Tutuss ft Mikado & Meryl',preview:'/audio/Meryl-Badmind.mp3',cover:''},
+    {t:'Lambi',a:'Jahlys ft DJ Tutuss',preview:'/audio/Jahlys-Lambi.mp3',cover:''},
+    {t:'Boss lady',a:'Theodora ft Jahlys',preview:'/audio/Jahlys_ft_Theodora-Boss_lady.mp3',cover:''},
     {t:'Ou pani',a:'Mikado ft Lejems',preview:'/audio/Mikado-Ou_pani.mp3',cover:''},
-    {t:'Gregoire',a:'Natoxie',preview:'/audio/Natoxie-Gregoire.mp3',cover:''},
-    {t:'Vieux clébard',a:'Natoxie',preview:'/audio/Natoxie-Vieux_clebard.mp3',cover:''},
+    {t:'Gregoire',a:'Natoxie ft Kenjox & Twinsizz',preview:'/audio/Natoxie-Gregoire.mp3',cover:''},
+    {t:'Vieux clébard',a:'TKD ft Natoxie',preview:'/audio/Natoxie-Vieux_clebard.mp3',cover:''},
     {t:'Comme à la maison',a:'QLM',preview:'/audio/QLM-Comme_a_la_maison.mp3',cover:''},
-    {t:'Horny',ta:['Hornie'],a:'Kalash',preview:'/audio/Kalash-Horny.mp3',cover:''}
+    {t:'Horny',ta:['Hornie'],a:'Natoxie ft Kalash & Mafio House',preview:'/audio/Kalash-Horny.mp3',cover:''}
   ]},
   'trap':     {n:'Trap Antillais', ic:'', dq:'kalash criminel trap antillais', tracks:[
     {t:'Trap Back',a:'Railfé',preview:'/audio/Railfe-Trap_Back.mp3',cover:''},
     {t:'ABCD',a:'CLR',preview:'/audio/CLR-ABCD.mp3',cover:''},
     {t:'Kaméha',a:'Railfé',preview:'/audio/Railfe-Kameha.mp3',cover:''},
-    {t:'Kotésit',a:'Railfé',preview:'/audio/Railfe-Kotesit.mp3',cover:''},
+    {t:'Kotésit',a:'Railfé ft Pepyth',preview:'/audio/Railfe-Kotesit.mp3',cover:''},
     {t:'Guadeloupe',a:'Railfé',preview:'/audio/Railfe-Guadeloupe.mp3',cover:''},
-    {t:'Chaos',a:'Meryl',preview:'/audio/Meryl-Chaos.mp3',cover:''},
+    {t:'Chaos',a:'Meryl ft Zequin, Latop, ZT Elsinky, Smally King & Lawskie',preview:'/audio/Meryl-Chaos.mp3',cover:''},
     {t:'Mohamed Ali',a:'Don Snoop',preview:'/audio/Don_Snoop-Mohamed_Ali.mp3',cover:''},
     {t:'Mal vu',a:'Kerosn',preview:'/audio/Kerosn-Mal_vu.mp3',cover:''},
     {t:'Filé',a:'Sour\'x',preview:'/audio/Sourx-File.mp3',cover:''},
@@ -205,7 +202,7 @@ var THEMES = {
     {t:'La frapp',a:'Mercenaire',preview:'/audio/Mercenaire-La_Frapp.mp3',cover:''},
     {t:'Gomorra',a:'Mercenaire',preview:'/audio/Mercenaire-Gomorra.mp3',cover:''},
     {t:'An sé',a:'Gambi G',preview:'/audio/Gambi_G-An_se.mp3',cover:''},
-    {t:'Pakonnou',a:'Railfé',preview:'/audio/Railfe-Pakonnou.mp3',cover:''},
+    {t:'Pakonnou',a:'Railfé ft Awno Josué',preview:'/audio/Railfe-Pakonnou.mp3',cover:''},
     {t:'Gwan gou',a:'Kalash ft Jkevlar',preview:'/audio/Kalash_ft_Jkevlar-Gwan_gou.mp3',cover:''},
     {t:'Side shit',a:'TITIS',preview:'/audio/TITIS-Side_shit.mp3',cover:''},
     {t:'Bando',a:'Kalash',preview:'/audio/Kalash-Bando.mp3',cover:''},
@@ -214,60 +211,64 @@ var THEMES = {
     {t:'Koussi koussa',a:'Kalash ft Niska',preview:'/audio/Kalash_ft_Niska-Koussi_koussa.mp3',cover:''},
     {t:'Mada',a:'Kalash',preview:'/audio/Kalash-Mada.mp3',cover:''},
     {t:'Work and chill',a:'DEBROUYA',preview:'/audio/DEBROUYA-Work_and_chill.mp3',cover:''},
-    {t:'HD',a:'Railfé ft Titis',preview:'/audio/Railfe_ft_Titis-HD.mp3',cover:''}
+    {t:'HD',a:'Titis ft Railfé',preview:'/audio/Railfe_ft_Titis-HD.mp3',cover:''}
   ]},
   'rap':      {n:'Rap Caribéen',   ic:'', dq:'wyclef jean rap caribbean', tracks:[
     {t:'Sa bizar',a:'Mali',preview:'/audio/Mali-Sa_bizar.mp3',cover:''},
     {t:'An ti vwa',a:'Lyrrixx',preview:'/audio/Lyrrixx-An_ti_vwa.mp3',cover:''},
     {t:'Combien',a:'Jozii',preview:'/audio/Jozii-Combien.mp3',cover:''},
     {t:'Bwè et fimé',a:'Débrouya',preview:'/audio/Debrouya-Bwe_et_fime.mp3',cover:''},
-    {t:'Mwen an sa',a:'Tiitof',preview:'/audio/Tiitof-Mwen_an_sa.mp3',cover:''},
+    {t:'Mwen an sa',a:'Skunk ft Tiitof & Leto',preview:'/audio/Tiitof-Mwen_an_sa.mp3',cover:''},
     {t:'Mwaka moon',a:'Kalash ft Damso',preview:'/audio/Kalash_ft_Damso-Mwaka_moon.mp3',cover:''},
     {t:'Tennesse',a:'Kalash ft Ninho',preview:'/audio/Kalash_ft_Ninho-Tennesse.mp3',cover:''},
     {t:'GM',a:'Booba ft Pichon ft Gato da bato',preview:'/audio/Booba_ft_Pichon-GM.mp3',cover:''},
     {t:'Princes',a:'26 Keuss',preview:'/audio/26_Keuss-Princes.mp3',cover:''},
     {t:'Bad up who',a:'Busy Signal',preview:'/audio/Busy_Signal-Bad_up_who.mp3',cover:''},
-    {t:'Crime lord',a:'Notnice & Jafrasse',preview:'/audio/Notnice_Jafrasse-Crime_lord.mp3',cover:''},
+    {t:'Crime lord',a:'NotNice ft Jafrass',preview:'/audio/Notnice_Jafrasse-Crime_lord.mp3',cover:''},
     {t:'Sa to ka wè',a:'Jahyanai King',preview:'/audio/Jahyanai_King-Sa_to_ka_we.mp3',cover:''},
-    {t:'Tu le sais',a:'Gazo ft Kalash',preview:'/audio/Gazo_ft_Kalash-Tu_le_sais.mp3',cover:''},
+    {t:'Tu le sais',a:'Kalash ft Gazo',preview:'/audio/Gazo_ft_Kalash-Tu_le_sais.mp3',cover:''},
     {t:'Né pour réussir',a:'Ken Vybz',preview:'/audio/Ken_Vybz-Ne_pour_reussir.mp3',cover:''},
-    {t:'Rapture',a:'Koffee',preview:'/audio/Koffee-Rapture.mp3',cover:''},
-    {t:'Sixteen',a:'Vybz Kartel ft Trippie Red',preview:'/audio/Vybz_Kartel_ft_Trippie_Red-Sixteen.mp3',cover:''},
+    {t:'Sixteen',a:'Rvssian ft Vybz Kartel & Trippie Redd',preview:'/audio/Vybz_Kartel_ft_Trippie_Red-Sixteen.mp3',cover:''},
     {t:'Stay so',a:'Busy Signal',preview:'/audio/Busy_Signal-Stay_so.mp3',cover:''},
-    {t:'Ghetto Story',a:'Baby Cham ft Alicia Keys',preview:'/audio/Baby_Cham_ft_Alicia_Keys-Ghetto_Story.mp3',cover:''},
     {t:'2 ti mo',a:'Warped',preview:'/audio/Warped-2_ti_mo.mp3',cover:''}
   ]},
   // Dennery Segment (Sainte-Lucie). Artiste ou titre a corriger : ne changer
-  // que t / a (preview = nom du fichier, inchange) ; voir docs/a-verifier-dennery.md
+  // que t / a (preview = nom du fichier, inchange) ; morceaux encore douteux
+  // de tous les univers : docs/a-verifier-morceaux.md
   'dennery-segment':{n:'Dennery Segment', ic:'', dq:'dennery segment saint lucia soca', tracks:[
-    {t:'Fighting for a biscuit',a:'Andrew',preview:'/audio/Andrew-Fighting_for_a_biscuit.mp3',cover:''},   // A VERIFIER (docs/a-verifier-dennery.md)
-    {t:'Wed (remix)',ta:['Wed'],a:'Breezethru ft Tallyboy',preview:'/audio/Breezethru_ft_Tallyboy-Wed_remix.mp3',cover:''},   // A VERIFIER (docs/a-verifier-dennery.md)
-    {t:'Bumpa down',a:'Release',preview:'/audio/Release-Bumpa_down.mp3',cover:''},   // A VERIFIER (docs/a-verifier-dennery.md)
-    {t:'Daysan dwet',a:'Krome',preview:'/audio/Krome-Daysan_dwet.mp3',cover:''},
+    {t:'Fighting for a biscuit',a:'Andrew',preview:'/audio/Andrew-Fighting_for_a_biscuit.mp3',cover:''},
+    {t:'Wed (remix)',ta:['Wed'],a:'Breezethru ft Tallyboy',preview:'/audio/Breezethru_ft_Tallyboy-Wed_remix.mp3',cover:''},
+    {t:'Bumpa down',a:'Edwin',preview:'/audio/Release-Bumpa_down.mp3',cover:''},
+    {t:'Daysan dwet',a:'Krome ft Prado',preview:'/audio/Krome-Daysan_dwet.mp3',cover:''},
     {t:'Hello',a:'Meryl ft Deejay Asap',preview:'/audio/Meryl_ft_Deejay_Asap-Hello.mp3',cover:''},
     {t:'Kedek kedek',a:'Mighty',preview:'/audio/Mighty-Kedek_kedek.mp3',cover:''},
     {t:'Fouté li',a:'Mighty ft Mikado',preview:'/audio/Mighty_ft_Mikado-Foute_li.mp3',cover:''},
-    {t:'Nuh nuh',a:'Mighty ft Mikado',preview:'/audio/Mighty_ft_Mikado-Nuh_nuh.mp3',cover:''},
-    {t:'Apiyé',a:'Subance ft Mikado',preview:'/audio/Subance_ft_Mikado-Apiye.mp3',cover:''},
-    {t:'Vivre la vie',a:'Tallyboy ft Jasse',preview:'/audio/Tallyboy_ft_Jasse-Vivre_la_vie.mp3',cover:''},
-    {t:'Uh T Tak',a:'Tallyboy ft Samo',preview:'/audio/Tallyboy_ft_Samo-Uh_t_tak.mp3',cover:''},   // A VERIFIER (docs/a-verifier-dennery.md)
+    {t:'Nuh nuh',a:'Jammin\' ft Mikado & Mighty',preview:'/audio/Mighty_ft_Mikado-Nuh_nuh.mp3',cover:''},
+    {t:'Apiyé',a:'Jammin\' ft Mikado & Subance',preview:'/audio/Subance_ft_Mikado-Apiye.mp3',cover:''},
+    {t:'Vivre la vie',a:'Teamfoxx ft Tallyboy & Jasse',preview:'/audio/Tallyboy_ft_Jasse-Vivre_la_vie.mp3',cover:''},
+    {t:'Uh T Tak',a:'Tallyboy ft Samo',preview:'/audio/Tallyboy_ft_Samo-Uh_t_tak.mp3',cover:''},
     {t:'Dennery anthem',a:'Umpa',preview:'/audio/Umpa-Dennery_anthem.mp3',cover:''},
     {t:'Plat',a:'Umpa',preview:'/audio/Umpa-Plat.mp3',cover:''},
     {t:'One drop',a:'Umpa ft Sully',preview:'/audio/Umpa_ft_Sully-One_drop.mp3',cover:''},
     {t:'Pain killer',a:'Umpa ft Mikado',preview:'/audio/Umpa_ft_Mikado-Pain_killer.mp3',cover:''},
-    {t:'Bend dong for di hmm',ta:['Bend dong'],a:'Krome ft Nassis',preview:'/audio/Krome_ft_Nassis-Bend_dong_for_di_hmm.mp3',cover:''},   // A VERIFIER (docs/a-verifier-dennery.md)
+    {t:'Bend dong for di hmm',ta:['Bend dong'],a:'Krome ft Nassis',preview:'/audio/Krome_ft_Nassis-Bend_dong_for_di_hmm.mp3',cover:''},
     {t:'Bend dong (remix)',ta:['Bend dong'],a:'Motto ft Problem Child & Mr. Legz',preview:'/audio/Motto_ft_Problem_Child_Mr_Legz-Bend_dong_remix.mp3',cover:''},
     {t:'That shot pt2',ta:['That shot'],a:'Dub Master J',preview:'/audio/Dub_Master_J-That_shot_pt2.mp3',cover:''},
     {t:'Firefighter (Whine & go dong)',ta:['Firefighter'],a:'Blackboy',preview:'/audio/Blackboy-Firefighter.mp3',cover:''},
     {t:'Mata',a:'Frassman',preview:'/audio/Frassman-Mata.mp3',cover:''},
     {t:'Split in di middle',a:'Freezy',preview:'/audio/Freezy-Split_in_di_middle.mp3',cover:''},
     {t:'Bend di banana',a:'Freezy',preview:'/audio/Freezy-Bend_di_banana.mp3',cover:''},
-    {t:'Maltet freestyle',ta:['Maltet'],a:'Freezy ft Motto',preview:'/audio/Freezy_ft_Motto-Maltet_freestyle.mp3',cover:''},   // A VERIFIER (docs/a-verifier-dennery.md)
+    {t:'Maltet (Ca)',ta:['Maltet freestyle','Maltet'],a:'Freezy ft Motto',preview:'/audio/Freezy_ft_Motto-Maltet_freestyle.mp3',cover:''},
     {t:'Drama',a:'Hollywood HP',preview:'/audio/Hollywood_HP-Drama.mp3',cover:''},
     {t:'Bad in bumbum',a:'Mighty ft Subance',preview:'/audio/Mighty_ft_Subance-Bad_in_bumbum.mp3',cover:''},
     {t:'Pick your position',a:'Motto ft Skinny Fabulous',preview:'/audio/Motto_ft_Skinny_Fabulous-Pick_your_position.mp3',cover:''},
     {t:'Party lit',a:'Motto ft Lyrikal',preview:'/audio/Motto_ft_Lyrikal-Party_lit.mp3',cover:''},
-    {t:'Back bend (remix)',ta:['Back bend'],a:'Subance ft Uncle Ellis',preview:'/audio/Subance_ft_Uncle_Ellis-Back_bend_remix.mp3',cover:''}
+    {t:'Back bend (remix)',ta:['Back bend'],a:'Subance ft Uncle Ellis',preview:'/audio/Subance_ft_Uncle_Ellis-Back_bend_remix.mp3',cover:''},
+    {t:'Go ask yuh mudda',a:'Bunji Garlin',preview:'/audio/Bunji_Garlin-Go_ask_yuh_mudda.mp3',cover:''},
+    {t:'Showtime',a:'Machel Montano',preview:'/audio/Machel_Montano-Showtime.mp3',cover:''},
+    {t:'Dip',a:'Shal Marshall',preview:'/audio/Shal_Marshall-Dip.mp3',cover:''},
+    {t:'Lost and found',a:'Preedy',preview:'/audio/Preedy-Lost_and_found.mp3',cover:''},
+    {t:'Dansa',a:'Klassik Frescobar',preview:'/audio/Klassik_Frescobar-Dansa.mp3',cover:''}
   ]},
 };
 
@@ -792,6 +793,12 @@ function titleOk(s,q){
     return lev(s,ref)<=Math.max(2,Math.min(4,Math.floor(ref.length/4)));
   });
 }
+// Artistes d'un credit : separes par « ft », « feat » (mots entiers), « & »
+// ou une virgule (ex. « Rvssian ft Moliy, Ayetian & Tyga »)
+var ARTISTES_SEP=/(?:^|\s)(?:ft|feat)\.?(?=\s)|&|,/i;
+function splitArtists(a){
+  return a.split(/\s+(?:ft|feat)\.?\s+|\s*&\s*|\s*,\s*/i).map(function(s){return s.trim();}).filter(function(s){return s.length>1;});
+}
 function tryGuess(v,byUser){
   if(!v.trim())return;
   var q=G.qs[G.cq];if(!q)return;
@@ -801,9 +808,9 @@ function tryGuess(v,byUser){
 
   // ── Match artiste (Levenshtein) ──
   var matchA=!G.foundA&&lev(v,q.a)<=tolA;
-  // Pour les feats et les duos ("&") : un seul artiste suffit
-  if(!matchA&&!G.foundA&&q.a.match(/ft|feat|&/i)){
-    var artists=q.a.split(/ft\.?|feat\.?|&/i).map(function(s){return s.trim()});
+  // Plusieurs artistes credites (ft, feat, &, virgule) : un seul suffit
+  if(!matchA&&!G.foundA&&ARTISTES_SEP.test(q.a)){
+    var artists=splitArtists(q.a);
     matchA=artists.some(function(art){
       return art.length>1&&lev(v,art)<=Math.max(2,Math.min(4,Math.floor(art.length/4)));
     });
@@ -825,12 +832,12 @@ function tryGuess(v,byUser){
       var p2matchA = lev(part2,q.a)<=Math.max(2,Math.min(4,Math.floor(q.a.length/4)));
       var p2matchT = titleOk(part2,q);
       // Aussi vérifier avec les artistes feat
-      if(!p1matchA&&q.a.match(/ft|feat|&/i)){
-        var arts=q.a.split(/ft\.?|feat\.?|&/i).map(function(s){return s.trim()});
+      if(!p1matchA&&ARTISTES_SEP.test(q.a)){
+        var arts=splitArtists(q.a);
         p1matchA=arts.some(function(a){return a.length>1&&lev(part1,a)<=Math.max(2,Math.floor(a.length/4));});
       }
-      if(!p2matchA&&q.a.match(/ft|feat|&/i)){
-        var arts=q.a.split(/ft\.?|feat\.?|&/i).map(function(s){return s.trim()});
+      if(!p2matchA&&ARTISTES_SEP.test(q.a)){
+        var arts=splitArtists(q.a);
         p2matchA=arts.some(function(a){return a.length>1&&lev(part2,a)<=Math.max(2,Math.floor(a.length/4));});
       }
       if((p1matchA&&p2matchT)||(p1matchT&&p2matchA)){
