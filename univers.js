@@ -40,7 +40,12 @@ var UNIVERS = [
    texte:"En 1955, le saxophoniste haïtien Nemours Jean-Baptiste crée le « konpa dirèk », un rythme de danse régulier et chaloupé inspiré du méringue. Guitares, cuivres, puis claviers : le kompa voyage avec la diaspora haïtienne et s'installe durablement aux Antilles, où il a nourri la cadence et le zouk. Aujourd'hui encore, c'est la danse en couple par excellence."},
   {nom:'Shatta', slug:'shatta', couleur:'var(--univers-shatta)', image:'/img/pochettes/shatta.webp',
    origine:'Martinique', epoque:'années 2010', signature:'minimaliste, percussif, fait pour le dancefloor',
-   texte:"Né en Martinique, le shatta est un enfant du dancehall : plus minimaliste, plus percussif, pensé pour faire bouger le dancefloor, avec des textes crus et beaucoup d'humour. Longtemps réservé aux soirées locales, il explose dans l'Hexagone au début des années 2020, porté notamment par Maureen et Bamby. C'est la touche martiniquaise de Sonara."}
+   texte:"Né en Martinique, le shatta est un enfant du dancehall : plus minimaliste, plus percussif, pensé pour faire bouger le dancefloor, avec des textes crus et beaucoup d'humour. Longtemps réservé aux soirées locales, il explose dans l'Hexagone au début des années 2020, porté notamment par Maureen et Bamby. C'est la touche martiniquaise de Sonara."},
+  // Pochette a venir : deposer /img/pochettes/dennery-segment.webp (et son
+  // .jpg), puis remplacer image:null par '/img/pochettes/dennery-segment.webp'
+  {nom:'Dennery Segment', slug:'dennery-segment', couleur:'var(--univers-dennery)', image:null,
+   origine:'Sainte-Lucie', epoque:'années 2010', signature:'la soca saint-lucienne, à toute vitesse et en kwéyòl',
+   texte:"Le Dennery Segment porte le nom de Dennery, une commune de la côte est de Sainte-Lucie. Héritier de la soca, il en garde l'énergie et la pousse à l'extrême : tempo rapide, percussions martelées, refrains courts répétés en boucle, souvent chantés en kwéyòl, le créole saint-lucien. Il traverse vite le canal jusqu'à la Martinique voisine, où ses riddims enflamment les soirées."}
 ];
 
 // ── Pochettes : tout passe par le tableau UNIVERS ───────────────
