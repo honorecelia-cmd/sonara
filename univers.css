@@ -238,6 +238,9 @@
 @media (max-width:599px){
   .uv-giant{top:calc(var(--uv-cy) - var(--uv-d) / 2);--uv-gy:-72%}
 }
-/* Accueil, toutes largeurs : nom au-dessus du vinyle, jamais derriere ;
-   bas du nom a --uv-gb (calcule par univers.js, layout) */
-.uv--accueil .uv-giant{top:var(--uv-gb,calc(var(--uv-cy) - var(--uv-d) / 2));--uv-gy:-100%}
+/* Accueil sous 600px : nom au-dessus du vinyle, jamais derriere ;
+   bas du nom a --uv-gb (calcule par univers.js, layout). A partir de
+   600px : derriere le vinyle central, comme ailleurs. */
+@media (max-width:599px){
+  .uv--accueil .uv-giant{top:var(--uv-gb,calc(var(--uv-cy) - var(--uv-d) / 2));--uv-gy:-100%}
+}

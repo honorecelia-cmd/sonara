@@ -228,22 +228,32 @@ function uvCarrousel(sec,o){
     giant.textContent=u.nom;
     giant.style.color=giantColor(u);
     var W=sec.clientWidth||window.innerWidth, w=giantW100(u.nom);
-    // Accueil (toutes largeurs) : nom au-dessus du vinyle, taille plafonnee
-    // par la hauteur reservee (fitBox.cap) et par la largeur libre entre
-    // les vinyles voisins (fitBox.maxW), calculees par layout()
-    if(o.fit&&fitBox){
+    giant.style.removeProperty('--uv-gy');   // decalage du CSS, sauf accueil >= 600px
+    // Accueil, sous 600px : nom au-dessus du vinyle, taille plafonnee par la
+    // hauteur reservee (fitBox.cap) et par la largeur libre (fitBox.maxW)
+    if(o.fit&&fitBox&&stack.matches&&fitBox.cap){
       giant.style.setProperty('--uv-fs',Math.min(fitBox.cap,fitBox.maxW*100/w).toFixed(1)+'px');
       return;
     }
     if(!stack.matches){
       if(!o.fit){giant.style.setProperty('--uv-fs',Math.min(24,150/u.nom.length).toFixed(2)+'vw');return;}
-      // Accueil, a partir de 600px : le nom deborde nettement du vinyle (au moins
-      // 1,75 fois son diametre) quelle que soit la largeur, sans sortir de
-      // l'ecran ; hauteur des lettres bornee par le vinyle.
-      var D=center.offsetWidth||W*.3;
-      var fit=(W-48)*100/w, fs=Math.min(W*.24,D*.95,fit);
+      // Accueil, a partir de 600px : nom derriere le vinyle central, qui en
+      // cache le milieu ; il deborde nettement du vinyle (au moins 1,75 fois
+      // son diametre) mais tient entre les vinyles voisins (fitBox.maxW,
+      // calcule par layout) : aucune lettre cachee par eux. Hauteur des
+      // lettres bornee par le vinyle (noms courts : Rap, Mix, Zouk).
+      var D=fitBox&&fitBox.D||center.offsetWidth||W*.3;
+      var fit=(fitBox&&fitBox.maxW||W-48)*100/w, fs=Math.min(W*.24,D*.95,fit);
       fs=Math.max(fs,Math.min(fit,D*1.75*100/w));
       giant.style.setProperty('--uv-fs',fs.toFixed(1)+'px');
+      // centre vertical des lettres (et non de la boite de texte) sur le
+      // centre du vinyle : Rap ou Kompa n'ont pas de jambage, Segment si
+      var ctx=paintGiant.cv.getContext('2d');ctx.font="800 "+fs+"px 'MuseoModerno',sans-serif";
+      var mt=ctx.measureText(u.nom), A=mt.fontBoundingBoxAscent, Ds=mt.fontBoundingBoxDescent;
+      if(A){
+        var off=(fs*.85-(A+Ds))/2+A+(mt.actualBoundingBoxDescent-mt.actualBoundingBoxAscent)/2;
+        giant.style.setProperty('--uv-gy',(-off).toFixed(1)+'px');
+      }
       return;
     }
     // Sous 600px : au-dessus du vinyle, dans la largeur (marges de 16px)
@@ -262,10 +272,11 @@ function uvCarrousel(sec,o){
   // le nom geant au-dessus du vinyle, le vinyle, puis les boutons. Le vinyle
   // prend la place disponible, sans depasser sa taille habituelle.
   var hook=sec.querySelector('.nb-hook');
-  // Accueil : bloc nom + vinyle + boutons, centre verticalement entre
-  // l'accroche et la rangee des univers. Le nom est au-dessus du vinyle
+  // Accueil sous 600px : bloc nom + vinyle + boutons, centre verticalement
+  // entre l'accroche et la rangee des univers. Le nom est au-dessus du vinyle
   // (jamais derriere) : zone de hauteur fixe (cap), nom cale en bas de la
   // zone, a GAP du vinyle (place des jambages, ex. « g » de Segment).
+  // A partir de 600px : nom derriere le vinyle central.
   var fitBox=null;
   function layout(){
     if(!o.fit||open)return;
@@ -279,6 +290,20 @@ function uvCarrousel(sec,o){
     var bottom=(bar.length?Math.min.apply(null,bar):H)-(mob?14:Math.max(16,H*.03));
     var ctas=q('.uv-ctas')||discover, ctaGap=mob?14:24;
     var avail=bottom-top-ctaGap-ctas.offsetHeight;
+    if(!stack.matches){
+      // a partir de 600px : vinyle a sa taille habituelle, nom geant derriere,
+      // centre sur le vinyle (CSS : top = --uv-cy, decalage -50 %)
+      var Dd=Math.max(mob?140:200,Math.min(Math.min(W,H)*.45,avail));
+      var cyd=top+Dd/2+Math.max(0,avail-Dd)/2;
+      // largeur libre entre les vinyles voisins (univers.css .uv-side),
+      // moins 20px de chaque cote, et dans l'ecran (marges de 24px)
+      var dsd=Dd*(mob?.55:.62), libre=mob?W-2*dsd*.18:W-dsd;
+      fitBox={D:Dd,maxW:Math.min(libre-2*20,W-48)};
+      sec.style.setProperty('--uv-d',Dd.toFixed(1)+'px');
+      sec.style.setProperty('--uv-cy',cyd.toFixed(1)+'px');
+      sec.style.removeProperty('--uv-gb');
+      return;
+    }
     // taille maximale du nom : proportionnelle a la largeur et a la place
     var cap=mob?Math.min(W*.22,avail*.14):Math.min(W*.1,avail*.2,150);
     var gap=function(c){return Math.max(14,c*.32);};
@@ -376,12 +401,13 @@ function uvCarrousel(sec,o){
       return;
     }
     var out=anim(flip,[{transform:'rotateY(0deg)'},{transform:'rotateY('+(90*dir)+'deg)'}],{duration:UV_DUREE_TRANSITION/2,easing:'cubic-bezier(.65,0,1,1)'});
-    // decalage vertical du nom (--uv-gy : -50% ordinateur, -72% mobile)
+    // decalage vertical du nom (--uv-gy : CSS, ou px sur l'accueil a partir de 600px)
     var gy=getComputedStyle(giant).getPropertyValue('--uv-gy').trim()||'-50%';
     [giant].forEach(function(el){
       anim(el,[{opacity:1,transform:'translate(0,'+gy+')'},{opacity:0,transform:'translate('+(-6*dir)+'vw,'+gy+')'}],{duration:UV_DUREE_TRANSITION/2}).finished.then(function(){
         paintGiant();
-        anim(el,[{opacity:0,transform:'translate('+(6*dir)+'vw,'+gy+')'},{opacity:1,transform:'translate(0,'+gy+')'}],{duration:UV_DUREE_TRANSITION/2,fill:'none'});
+        var gy2=getComputedStyle(giant).getPropertyValue('--uv-gy').trim()||'-50%';   // nouveau nom
+        anim(el,[{opacity:0,transform:'translate('+(6*dir)+'vw,'+gy2+')'},{opacity:1,transform:'translate(0,'+gy2+')'}],{duration:UV_DUREE_TRANSITION/2,fill:'none'});
       });
     });
     [prevVy,nextVy].forEach(function(el){
