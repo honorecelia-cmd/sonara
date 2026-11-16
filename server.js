@@ -8,13 +8,30 @@ const PORT = process.env.PORT || 3000;
 
 const rooms = {};
 
-// ── Compteur "en ligne" reel : sessions vues dans les 70 dernieres secondes ──
-const seen = new Map(); // clientId -> timestamp
-function touch(id) { if (id) seen.set(id, Date.now()); }
-function onlineCount() {
-  const cut = Date.now() - 70000;
-  for (const [k, t] of seen) if (t < cut) seen.delete(k);
-  return seen.size;
+// ── Domaine ──
+// Adresse officielle du site (balises canonical et Open Graph, sitemap).
+const SITE = 'https://sonarablindtest.fr';
+const SITE_HOST = 'sonarablindtest.fr';
+// Hotes autorises : le domaine, sa variante www, l'adresse railway.app du
+// service, et le poste local. Les autres (en-tete Host forge) ne servent
+// jamais a construire la CSP ni a accepter un WebSocket.
+function hostOf(req) { return String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim().toLowerCase(); }
+function bareHost(h) { return String(h || '').toLowerCase().replace(/:\d+$/, ''); }
+function isLocalHost(h) { return /^(localhost|127\.0\.0\.1|\[::1\])$/.test(bareHost(h)); }
+function hostAllowed(h) {
+  const b = bareHost(h);
+  return b === SITE_HOST || b === 'www.' + SITE_HOST || /^[a-z0-9-]+\.up\.railway\.app$/.test(b) ||
+    b === bareHost(process.env.RAILWAY_PUBLIC_DOMAIN) || isLocalHost(h);
+}
+// Redirection 301 vers SITE de www.sonarablindtest.fr et de l'adresse
+// railway.app. Activee par REDIRECT_CANONICAL=1 (variable Railway), a poser
+// une fois le domaine branche et son certificat emis : sinon le site
+// deviendrait inaccessible.
+function redirectTarget(req) {
+  if (process.env.REDIRECT_CANONICAL !== '1') return null;
+  const b = bareHost(hostOf(req));
+  if (b === 'www.' + SITE_HOST || /\.up\.railway\.app$/.test(b) || (process.env.RAILWAY_PUBLIC_DOMAIN && b === bareHost(process.env.RAILWAY_PUBLIC_DOMAIN))) return SITE + req.url;
+  return null;
 }
 
 // Tirets conserves (dennery-segment) ; les cles existantes n'en ont pas et
@@ -41,7 +58,7 @@ function sendJson(res, code, obj) {
 // ── Limitation des requetes, par adresse IP et par minute ──
 // L'adresse n'est ni enregistree ni journalisee : en memoire seulement, sous
 // forme d'empreinte (sel aleatoire tire au demarrage), oubliee apres 1 minute.
-const LIMITS = { score: 20, effacement: 5, salle: 10, rejoindre: 30, nom: 40, defi: 10, ping: 20 };
+const LIMITS = { score: 20, effacement: 5, salle: 10, rejoindre: 30, nom: 40, defi: 10 };
 const SEL_IP = crypto.randomBytes(16);
 const hits = new Map();   // empreinte|famille -> { n, t }
 function clientKey(req) {
@@ -74,23 +91,121 @@ function securityHeaders(req, res) {
   res.setHeader('X-Frame-Options', 'DENY');
 }
 function csp(req, html) {
-  const host = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim();
+  // WebSocket vers l'hote de la page, s'il est autorise (sinon le domaine) ;
+  // ws:// (sans chiffrement) seulement en local
+  const h = hostOf(req), host = hostAllowed(h) ? h : SITE_HOST;
   const hashes = [];
   String(html).replace(/<script>([\s\S]*?)<\/script>/g, function (m, code) {
     hashes.push("'sha256-" + crypto.createHash('sha256').update(code).digest('base64') + "'");
   });
   return ["default-src 'self'", "script-src 'self' " + hashes.join(' '), "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob:", "media-src 'self' data: blob:", "font-src 'self'",
-    "connect-src 'self' wss://" + host + ' ws://' + host, "manifest-src 'self'", "object-src 'none'",
+    "connect-src 'self' wss://" + host + (isLocalHost(host) ? ' ws://' + host : ''), "manifest-src 'self'", "object-src 'none'",
     "base-uri 'self'", "form-action 'self'", "frame-ancestors 'none'"].join('; ');
 }
-function sendHtml(req, res, file) {
-  fs.readFile(path.join(__dirname, file), function (err, data) {
+// ── Pages : titre, description, adresse canonique (balises <head>) ──
+// Les fichiers HTML portent deja ces balises ; le serveur y met les valeurs
+// de la page demandee (sonara.html sert l'accueil, /a-propos et /comment-jouer).
+const PAGES = {
+  '/': { file: 'sonara.html', title: 'Sonara · THE Blind test caribéen',
+    desc: "Le blind test caribéen : écoute un extrait de dancehall, soca, zouk, kompa ou shatta, trouve l'artiste et le titre. Seul ou entre proches, gratuit." },
+  '/a-propos': { file: 'sonara.html', title: 'À propos · Sonara',
+    desc: "L'histoire de Sonara, le blind test caribéen né d'une soirée entre frère et sœur : transmettre, rassembler, faire découvrir les sons de la Caraïbe et s'amuser." },
+  '/comment-jouer': { file: 'sonara.html', title: 'Comment jouer · Sonara',
+    desc: "Les règles de Sonara : choisis ton univers et ton son-nom, écoute l'extrait, trouve l'artiste et le titre. Jusqu'à 90 points par morceau, ×3 si tu réponds vite." },
+  '/mentions-legales': { file: 'mentions-legales.html', title: 'Mentions légales · Sonara',
+    desc: "Mentions légales de Sonara, le blind test caribéen : éditeur, hébergeur, propriété intellectuelle et contact." },
+  '/politique-de-confidentialite': { file: 'politique-confidentialite.html', title: 'Politique de confidentialité · Sonara',
+    desc: "Ce que Sonara garde sur toi, pourquoi, combien de temps, et comment tout effacer. Sans compte, sans cookie." }
+};
+function escAttr(v) { return String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+function withMeta(html, page, pathname) {
+  const url = SITE + (pathname === '/' ? '/' : pathname), t = escAttr(page.title), d = escAttr(page.desc);
+  return html
+    .replace(/<title>[^<]*<\/title>/, '<title>' + t + '</title>')
+    .replace(/(<meta (?:name|property)="(?:description|og:description|twitter:description)" content=")[^"]*"/g, '$1' + d + '"')
+    .replace(/(<meta (?:name|property)="(?:og:title|twitter:title)" content=")[^"]*"/g, '$1' + t + '"')
+    .replace(/(<meta property="og:url" content=")[^"]*"/, '$1' + url + '"')
+    .replace(/(<link rel="canonical" href=")[^"]*"/, '$1' + url + '"');
+}
+function sendHtml(req, res, file, opts) {
+  opts = opts || {};
+  fs.readFile(path.join(__dirname, file), 'utf8', function (err, html) {
     if (err) { res.writeHead(404); res.end('Not found'); return; }
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': csp(req, data) });
-    res.end(data);
+    if (opts.page) html = withMeta(html, opts.page, opts.pathname);
+    html = versionAssets(html);
+    // HTML jamais garde en cache sans verification : une mise a jour est vue tout de suite
+    res.writeHead(opts.status || 200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': csp(req, html), 'Cache-Control': 'no-cache' });
+    res.end(req.method === 'HEAD' ? undefined : html);
   });
 }
+function sendPage(req, res, pathname) { const pg = PAGES[pathname]; sendHtml(req, res, pg.file, { page: pg, pathname: pathname }); }
+function send404(req, res) { sendHtml(req, res, '404.html', { status: 404 }); }
+
+// ── Fichiers statiques : adresse -> fichier, type, cache ──
+const CODE_FILES = ['/sonara.css', '/sonara.js', '/landing.css', '/landing.js', '/univers.css', '/univers.js', '/footer.js', '/entete.js',
+  '/anim-pages.js', '/sonara-kit.css', '/sonara-kit.js', '/ecrans.css', '/ecran-univers.js', '/ecran-sonnom.js', '/ecran-resultats.js',
+  '/jeu.css', '/ecran-jeu.js', '/prep.css', '/ecran-prep.js', '/cadre.css', '/cadre.js', '/rgpd.js', '/legal.css'];
+const ICONS = { '/favicon.ico': 'image/x-icon', '/favicon-96.png': 'image/png', '/apple-touch-icon.png': 'image/png',
+  '/icon-192.png': 'image/png', '/icon-512.png': 'image/png', '/site.webmanifest': 'application/manifest+json' };
+const IMG_TYPES = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml' };
+const UN_AN = 'public, max-age=31536000';
+function staticFile(pathname) {
+  if (CODE_FILES.indexOf(pathname) >= 0)
+    return { file: path.join(__dirname, pathname), type: (pathname.endsWith('.css') ? 'text/css' : 'application/javascript') + '; charset=utf-8', kind: 'code' };
+  if (ICONS[pathname]) return { file: path.join(__dirname, 'icons', pathname), type: ICONS[pathname], kind: 'icon' };
+  if (/^\/fonts\/[a-z0-9-]+\.(woff2|css)$/.test(pathname))
+    return { file: path.join(__dirname, pathname), type: pathname.endsWith('.css') ? 'text/css; charset=utf-8' : 'font/woff2', kind: pathname.endsWith('.css') ? 'code' : 'font' };
+  const m = /^\/img\/([\w\/-]+\.([a-z]+))$/i.exec(pathname);
+  if (m && IMG_TYPES[m[2].toLowerCase()] && m[1].indexOf('..') < 0)
+    return { file: path.join(__dirname, 'img', m[1]), type: IMG_TYPES[m[2].toLowerCase()], kind: 'img' };
+  return null;
+}
+// Images, polices : un an (noms stables ; une pochette modifiee change de
+// parametre ?v=, univers.js). Code et icones : un an avec ?v= (pose par le
+// serveur dans le HTML), sinon verification a chaque fois (code) ou 1 jour.
+function cacheFor(kind, versioned) {
+  if (versioned) return UN_AN + ', immutable';
+  if (kind === 'img' || kind === 'font') return UN_AN;
+  if (kind === 'icon') return 'public, max-age=86400';
+  return 'no-cache';
+}
+// Parametre de version des fichiers cites par le HTML : empreinte du contenu
+// (recalculee si le fichier change), une mise a jour change donc l'adresse
+const versions = new Map();
+function versionOf(pathname) {
+  const sf = staticFile(pathname);
+  if (!sf) return null;
+  let st;
+  try { st = fs.statSync(sf.file); } catch (e) { return null; }
+  const c = versions.get(pathname);
+  if (c && c.m === st.mtimeMs && c.s === st.size) return c.v;
+  const v = crypto.createHash('sha256').update(fs.readFileSync(sf.file)).digest('hex').slice(0, 10);
+  versions.set(pathname, { m: st.mtimeMs, s: st.size, v: v });
+  return v;
+}
+function versionAssets(html) {
+  return html.replace(/(\s(?:href|src)=")(\/[\w\/.-]+\.(?:css|js|png|ico|svg|webp|jpg|webmanifest))"/g, function (all, pre, url) {
+    const v = versionOf(url);
+    return v ? pre + url + '?v=' + v + '"' : all;
+  });
+}
+function sendStatic(req, res, sf, versioned) {
+  fs.readFile(sf.file, function (err, data) {
+    if (err) { res.writeHead(404); res.end('Not found'); return; }
+    res.writeHead(200, { 'Content-Type': sf.type, 'Cache-Control': cacheFor(sf.kind, versioned) });
+    res.end(req.method === 'HEAD' ? undefined : data);
+  });
+}
+
+// Le kit de design (kit.html) n'est servi qu'en local, jamais en production
+const PROD = process.env.NODE_ENV === 'production' || !!process.env.RAILWAY_ENVIRONMENT || !!process.env.RAILWAY_ENVIRONMENT_NAME;
+
+const ROBOTS = 'User-agent: *\nAllow: /\n\nSitemap: ' + SITE + '/sitemap.xml\n';
+const SITEMAP = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  ['/', '/a-propos', '/comment-jouer', '/mentions-legales', '/politique-de-confidentialite'].map(function (u) {
+    return '  <url><loc>' + SITE + u + '</loc></url>\n';
+  }).join('') + '</urlset>\n';
 
 // ── Classement : 10 meilleurs scores par univers, 12 mois au plus ──
 // Champs stockes : son-nom, score, univers, date, empreinte du code d'effacement.
@@ -282,7 +397,9 @@ const server = http.createServer(function(req, res) {
     p = { pathname: u.pathname, query: Object.fromEntries(u.searchParams) };
   } catch (e) { res.writeHead(400); res.end(); return; }
   securityHeaders(req, res);
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  const to = redirectTarget(req);
+  if (to) { res.writeHead(301, { Location: to, 'Cache-Control': 'public, max-age=3600' }); res.end(); return; }
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');   // API ; fichiers : voir cacheFor
 
   // ── Salles (en memoire) : creer, verifier avant d'entrer ──
   // Le code circule dans le corps de la requete, jamais dans l'URL (journaux).
@@ -320,16 +437,6 @@ const server = http.createServer(function(req, res) {
       if (err || !data) { sendJson(res, 400, {}); return; }
       const v = moderation.verifie(data.name);
       sendJson(res, 200, v.ok ? { ok: true, name: v.nom } : { ok: false, reason: v.raison });
-    });
-    return;
-  }
-
-  // ── Compteur en ligne (identifiant de visite dans le corps, pas dans l'URL) ──
-  if (p.pathname === '/ping' && req.method === 'POST') {
-    if (limited(req, 'ping')) { tooMany(res); return; }
-    readBody(req, function (err, data) {
-      if (!err && data && typeof data.id === 'string' && /^[a-z0-9]{8,40}$/.test(data.id)) touch(data.id);
-      sendJson(res, 200, { online: onlineCount() });
     });
     return;
   }
@@ -404,62 +511,22 @@ const server = http.createServer(function(req, res) {
     return;
   }
 
-  // Fichiers statiques CSS / JS
-  if (p.pathname === '/sonara.css' || p.pathname === '/sonara.js' || p.pathname === '/landing.css' || p.pathname === '/landing.js' || p.pathname === '/univers.css' || p.pathname === '/univers.js' || p.pathname === '/footer.js' || p.pathname === '/entete.js' || p.pathname === '/anim-pages.js' || p.pathname === '/sonara-kit.css' || p.pathname === '/sonara-kit.js' || p.pathname === '/ecrans.css' || p.pathname === '/ecran-univers.js' || p.pathname === '/ecran-sonnom.js' || p.pathname === '/ecran-resultats.js' || p.pathname === '/jeu.css' || p.pathname === '/ecran-jeu.js' || p.pathname === '/prep.css' || p.pathname === '/ecran-prep.js' || p.pathname === '/cadre.css' || p.pathname === '/cadre.js' || p.pathname === '/rgpd.js') {
-    fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
-      if (err) { res.writeHead(404); res.end('Not found'); return; }
-      var ct = p.pathname.endsWith('.css') ? 'text/css' : 'application/javascript';
-      res.writeHead(200, {'Content-Type': ct + '; charset=utf-8'});
-      res.end(data);
-    });
-    return;
-  }
+  // Fichiers statiques : code, images, icones, polices
+  const sf = staticFile(p.pathname);
+  if (sf) { sendStatic(req, res, sf, !!p.query.v); return; }
 
-  if (p.pathname.startsWith('/img/')) {
-    var ext2 = p.pathname.split('.').pop().toLowerCase();
-    var mimes = {'jpg':'image/jpeg','jpeg':'image/jpeg','png':'image/png','webp':'image/webp','gif':'image/gif','svg':'image/svg+xml'};
-    var ct2 = mimes[ext2] || 'application/octet-stream';
-    fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
-      if (err) { res.writeHead(404); res.end('Not found'); return; }
-      res.writeHead(200, {'Content-Type': ct2});
-      res.end(data);
-    });
-    return;
-  }
-
-  // Icones (favicon, ecran d'accueil, manifeste) : fichiers du dossier icons/
-  var icons={'/favicon.ico':'image/x-icon','/favicon-96.png':'image/png','/apple-touch-icon.png':'image/png',
-    '/icon-192.png':'image/png','/icon-512.png':'image/png','/site.webmanifest':'application/manifest+json'};
-  if (icons[p.pathname]) {
-    fs.readFile(path.join(__dirname, 'icons', p.pathname), function(err, data) {
-      if (err) { res.writeHead(404); res.end('Not found'); return; }
-      res.writeHead(200, {'Content-Type': icons[p.pathname]});
-      res.end(data);
-    });
-    return;
-  }
-
-  // Pages legales (+ demo du kit de design, non liee sur le site)
-  var legal={'/mentions-legales':'mentions-legales.html','/politique-de-confidentialite':'politique-confidentialite.html','/kit.html':'kit.html'};
-  if (legal[p.pathname]) { sendHtml(req, res, legal[p.pathname]); return; }
-  if (p.pathname === '/legal.css') {
-    fs.readFile(path.join(__dirname, 'legal.css'), function(err, data) {
-      if (err) { res.writeHead(404); res.end('Not found'); return; }
-      res.writeHead(200, {'Content-Type': 'text/css; charset=utf-8'});
-      res.end(data);
-    });
-    return;
-  }
-
-  // Polices hebergees localement (fonts.css + fichiers woff2)
-  if (/^\/fonts\/[a-z0-9-]+\.(woff2|css)$/.test(p.pathname)) {
-    fs.readFile(path.join(__dirname, p.pathname), function(err, data) {
-      if (err) { res.writeHead(404); res.end('Not found'); return; }
-      var css = p.pathname.endsWith('.css');
-      res.writeHead(200, {'Content-Type': css ? 'text/css; charset=utf-8' : 'font/woff2', 'Cache-Control': 'public, max-age=31536000'});
-      res.end(data);
-    });
-    return;
+  // Pages
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    const page = p.pathname.length > 1 ? p.pathname.replace(/\/+$/, '') : '/';
+    if (PAGES[page]) { sendPage(req, res, page); return; }
+    // Lien de Defi : /custom-xxxx ou /fr/custom-xxxx (accueil, univers preselectionne)
+    if (/^\/(?:fr\/)?custom-[a-z0-9]{4,12}\/?$/i.test(p.pathname)) { sendPage(req, res, '/'); return; }
+    if (p.pathname === '/kit.html' && !PROD) { sendHtml(req, res, 'kit.html'); return; }
+    if (p.pathname === '/robots.txt' || p.pathname === '/sitemap.xml') {
+      res.writeHead(200, { 'Content-Type': p.pathname === '/robots.txt' ? 'text/plain; charset=utf-8' : 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=86400' });
+      res.end(p.pathname === '/robots.txt' ? ROBOTS : SITEMAP);
+      return;
+    }
   }
 
   // Audio : Safari sur iPhone charge les extraits par morceaux (en-tete Range)
@@ -471,7 +538,8 @@ const server = http.createServer(function(req, res) {
     fs.stat(audioFile, function(err, st) {
       if (err || !st.isFile()) { res.writeHead(404); res.end('Not found'); return; }
       var size = st.size, range = req.headers.range, m = range && /^bytes=(\d*)-(\d*)$/.exec(range);
-      var head = {'Content-Type':'audio/mpeg', 'Accept-Ranges':'bytes'};
+      // extraits : noms jamais reutilises, un an de cache
+      var head = {'Content-Type':'audio/mpeg', 'Accept-Ranges':'bytes', 'Cache-Control': UN_AN};
       if (m && (m[1] || m[2])) {
         var start = m[1] ? parseInt(m[1], 10) : Math.max(0, size - parseInt(m[2], 10));
         var end = m[1] && m[2] ? Math.min(parseInt(m[2], 10), size - 1) : size - 1;
@@ -491,7 +559,9 @@ const server = http.createServer(function(req, res) {
     return;
   }
 
-  sendHtml(req, res, 'sonara.html');
+  // Toute autre adresse : vraie page 404
+  if (req.method === 'GET' || req.method === 'HEAD') { send404(req, res); return; }
+  res.writeHead(404); res.end();
 });
 
 // ── WebSocket : le premier message { type:'join', code, id, name } fait entrer
@@ -504,7 +574,7 @@ server.on('upgrade', function(req, socket) {
   // Meme site seulement (l'en-tete Origin est toujours envoye par les navigateurs)
   const origin = req.headers.origin, hosts = [req.headers.host, req.headers['x-forwarded-host']].filter(Boolean).map(function(h){ return String(h).split(',')[0].trim(); });
   let originOk = !origin;
-  try { if (origin) originOk = hosts.indexOf(new URL(origin).host) >= 0; } catch (e) {}
+  try { if (origin) { const oh = new URL(origin).host; originOk = hostAllowed(oh) && hosts.indexOf(oh) >= 0; } } catch (e) {}
   if (pathname !== '/ws' || !key || !originOk || limited(req, 'rejoindre')) { socket.destroy(); return; }
   const accept = crypto.createHash('sha1').update(key + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11').digest('base64');
   socket.write('HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ' + accept + '\r\n\r\n');

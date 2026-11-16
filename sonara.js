@@ -1325,9 +1325,9 @@ function shareDefiLink(){
     if(d&&d.theme&&THEMES[d.theme]){
       G._sharedTheme=d.theme;
       var el=document.getElementById('ltxt');
-      if(el){el.classList.remove('online-count');el.textContent='Rejoins '+(d.themeName||THEMES[d.theme].n);}
+      if(el){el.textContent='Rejoins '+(d.themeName||THEMES[d.theme].n);}
       var row=document.getElementById('ld-badge-row');
-      if(row)row.style.display='flex'; // compteur reste masque par defaut, mais ce message reste visible
+      if(row)row.style.display='flex'; // message du lien de Defi
     }
   }).catch(function(){});
 })();
@@ -1351,20 +1351,6 @@ function shareDefiLink(){
     var f=ON[el.getAttribute('data-on')];
     if(f)f(el.getAttribute('data-arg'),el);
   });
-})();
-
-// ── Compteur "en ligne" reel ──
-(function(){
-  var id=Math.random().toString(36).slice(2,10)+Date.now().toString(36);
-  function tick(){
-    fetch('/ping',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){return r.json();}).then(function(d){
-      var n=Math.max(1,d.online||1);
-      document.querySelectorAll('.online-count').forEach(function(e){
-        e.textContent=n+(e.dataset.short?' en ligne':' joueur'+(n>1?'s':'')+' en ligne');
-      });
-    }).catch(function(){});
-  }
-  tick();setInterval(tick,30000);
 })();
 
 // ── INIT : générer modals et câbler boutons ──

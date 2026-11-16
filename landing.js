@@ -135,7 +135,7 @@
   // l'adresse. Les anciennes ancres des sections retirees menent a la vue
   // qui reprend leur contenu. Toute autre adresse (lien de Defi...) : accueil.
   var VUES={'/':'accueil','/a-propos':'a-propos','/comment-jouer':'comment-jouer'};
-  var TITRES={'accueil':document.title,'a-propos':'À propos · Sonara','comment-jouer':'Comment jouer · Sonara'};
+  var TITRES={'accueil':'Sonara · THE Blind test caribéen','a-propos':'À propos · Sonara','comment-jouer':'Comment jouer · Sonara'};
   var ANCRES={'#comment-jouer':'/comment-jouer','#nb-s04':'/comment-jouer','#la-revelation':'/comment-jouer','#nb-s02':'/comment-jouer','#nb-s01':'/a-propos'};
   var vue='accueil';
   function vueDe(path){return VUES[path.replace(/\/+$/,'')||'/'];}
