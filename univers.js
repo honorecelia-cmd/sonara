@@ -4,9 +4,11 @@
 // (variables --univers-* de univers.css) et pochettes. C'est la seule
 // reference des pochettes du site : carrousel, telephones de la landing
 // (le jeu montre le vinyle neutre de l'univers, uvVinyl). Pour changer une pochette,
-// remplacer son chemin `image` (WebP, avec un JPG de meme nom a cote pour
-// les navigateurs sans WebP) ; `image:null` affiche le placeholder (aplat
-// de la couleur + nom en MuseoModerno).
+// remplacer son chemin `image` (WebP 1200px, avec un JPG de meme nom a cote
+// pour les navigateurs sans WebP, et les deux en 400px dans pochettes/400/,
+// pour les vinyles), puis changer UV_POCHETTES_V (les images sont gardees un
+// an en cache) ; `image:null` affiche le placeholder (aplat de la couleur +
+// nom en MuseoModerno).
 // Transitions : A (changer d'univers), B (ouvrir), C (fermer).
 // ═══════════════════════════════════════════════════════════════
 // Reglages du carrousel
@@ -48,11 +50,17 @@ var UNIVERS = [
 
 // ── Pochettes : tout passe par le tableau UNIVERS ───────────────
 // Chemin de la pochette d'un univers (null si inconnu)
-function uvCover(slug){
-  for(var k=0;k<UNIVERS.length;k++)if(UNIVERS[k].slug===slug)return UNIVERS[k].image||null;
+// Version des pochettes : a changer quand une pochette est remplacee
+var UV_POCHETTES_V='20261116';
+function uvV(src){return src?src+'?v='+UV_POCHETTES_V:src;}
+// Version 400px (vinyles du carrousel et du parcours, petites vignettes)
+function uvSmall(src){return src?String(src).replace(/\/img\/pochettes\/([\w-]+\.webp)$/,'/img/pochettes/400/$1'):src;}
+// small : version 400px (affichage de 400px au plus a l'ecran)
+function uvCover(slug,small){
+  for(var k=0;k<UNIVERS.length;k++)if(UNIVERS[k].slug===slug){var im=UNIVERS[k].image;return im?uvV(small?uvSmall(im):im):null;}
   return null;
 }
-function uvJpg(src){return String(src).replace(/\.webp$/,'.jpg');}
+function uvJpg(src){return String(src).replace(/\.webp(?=\?|$)/,'.jpg');}
 // Pochette en fond d'un element : JPG d'abord, remplace par le WebP si le
 // navigateur comprend image-set (sinon la declaration est ignoree)
 function uvSetBg(el,src){
@@ -63,14 +71,14 @@ function uvSetBg(el,src){
 // <img> en WebP illisible : repli sur le JPG (avant tout autre ecouteur)
 document.addEventListener('error',function(e){
   var im=e.target;
-  if(!im||im.tagName!=='IMG'||!/\/img\/pochettes\/[\w-]+\.webp$/.test(im.getAttribute('src')||''))return;
+  if(!im||im.tagName!=='IMG'||!/\/img\/pochettes\/(?:400\/)?[\w-]+\.webp(?:\?[\w=]*)?$/.test(im.getAttribute('src')||''))return;
   e.stopPropagation();
   im.src=uvJpg(im.getAttribute('src'));
 },true);
 // Elements marques data-uv-cover="slug" (telephones de la landing, kit) :
-// fond, ou source pour une <img>
+// fond, ou source pour une <img> ; data-uv-big : pochette affichee en grand (1200px)
 [].forEach.call(document.querySelectorAll('[data-uv-cover]'),function(el){
-  var src=uvCover(el.getAttribute('data-uv-cover'));
+  var src=uvCover(el.getAttribute('data-uv-cover'),!el.hasAttribute('data-uv-big'));
   if(!src)return;
   if(el.tagName==='IMG')el.src=src;else uvSetBg(el,src);
 });
@@ -83,7 +91,7 @@ function uvVinyl(u,spin,neutral,named){
   // named : etiquette neutre avec le nom de l'univers sous le logo (revelation)
   var label=neutral&&named?'<span class="vy-label-named"><span class="jg-vy-logo" role="img" aria-label="Sonara"></span><span class="vy-label-nom">'+uvEsc(u.nom)+'</span></span>'
     :neutral?'<span class="jg-vy-logo" role="img" aria-label="Sonara"></span>':u.image
-    ? '<img src="'+u.image+'" alt="" data-ph="'+uvEsc(u.nom)+'">'
+    ? '<img src="'+uvV(uvSmall(u.image))+'" alt="" data-ph="'+uvEsc(u.nom)+'">'
     : '<span class="vy-label-txt">'+uvEsc(u.nom)+'</span>';
   return '<span class="vy'+(spin?' vy--spin':'')+'" style="--vy-color:'+disc+';--vy-label:'+u.couleur+'">'+
     '<span class="vy-spin"><span class="vy-disc"></span><span class="vy-label">'+label+'</span><span class="vy-hole"></span></span>'+
@@ -163,8 +171,9 @@ function uvCarrousel(sec,o){
   var pending=null;   // univers demande pendant une transition (pastille)
   var countEl=q('.uv-count'), autoBtn=q('.uv-auto'), inView=false;
 
-  // Precharge des pochettes
-  UNIVERS.forEach(function(u){if(u.image){var im=new Image();im.src=u.image;}});
+  // Precharge des pochettes des vinyles (400px) ; la grande (1200px, panneau
+  // Decouvrir) est prechargee pour l'univers affiche (paintCenter)
+  UNIVERS.forEach(function(u){if(u.image){var im=new Image();im.src=uvV(uvSmall(u.image));}});
 
   var esc=uvEsc, vinyl=function(u,spin){return uvVinyl(u,spin,o.neutral);};
   // Image absente ou en erreur : placeholder propre
@@ -338,6 +347,7 @@ function uvCarrousel(sec,o){
     center.setAttribute('aria-label',(o.centerLabel||'Jouer en ')+u.nom);
     discover.setAttribute('aria-label',(o.ctaLabel||'Découvrir l\'univers ')+u.nom);
     if(playNow)playNow.textContent='Jouer en '+u.nom;
+    if(o.panel&&u.image){var big=new Image();big.src=uvV(u.image);}
   }
   function paintSides(){prevVy.innerHTML=vinyl(at(idx-1),false);nextVy.innerHTML=vinyl(at(idx+1),false);}
   // Rangee des 9 univers : l'actif est mis en evidence
@@ -451,7 +461,7 @@ function uvCarrousel(sec,o){
       '<div><dt>Époque</dt><dd>'+esc(u.epoque)+'</dd></div>'+
       '<div><dt>Signature</dt><dd>'+esc(u.signature)+'</dd></div>';
     pPlay.textContent='Jouer en '+u.nom;
-    sleeve.innerHTML=u.image?'<img src="'+u.image+'" alt="" data-ph="'+esc(u.nom)+'">':'<span class="uv-sleeve-ph">'+esc(u.nom)+'</span>';
+    sleeve.innerHTML=u.image?'<img src="'+uvV(u.image)+'" alt="" data-ph="'+esc(u.nom)+'">':'<span class="uv-sleeve-ph">'+esc(u.nom)+'</span>';
   }
   function typeTitle(name,delay){
     var step=reduce.matches?0:30;

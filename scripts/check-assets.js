@@ -54,6 +54,20 @@ try {
   if (!missing) ok(refs.size + ' images /img/ referencees, toutes presentes');
 } catch (e) { fail('verif images impossible : ' + e.message); }
 
+// 3 bis. Pages : balises de partage et de referencement, page 404
+['sonara.html', 'mentions-legales.html', 'politique-confidentialite.html'].forEach((f) => {
+  try {
+    const h = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    const manque = ['name="description"', 'rel="canonical"', 'property="og:title"', 'property="og:description"', 'property="og:image"',
+      'property="og:url"', 'property="og:type"', 'property="og:locale"', 'name="twitter:card"'].filter((b) => h.indexOf(b) < 0);
+    if (manque.length) fail(f + ' : balise(s) manquante(s) ' + manque.join(', '));
+    const img = /property="og:image" content="https:\/\/[^/]+\/img\/([^"]+)"/.exec(h);
+    if (img && !fs.existsSync(path.join(ROOT, 'img', img[1]))) fail(f + ' : image de partage absente /img/' + img[1]);
+  } catch (e) { fail(f + ' illisible : ' + e.message); }
+});
+if (!fs.existsSync(path.join(ROOT, '404.html'))) fail('404.html manquant');
+ok('balises de partage et page 404 verifiees');
+
 // 4. Pochettes des univers (tableau UNIVERS, univers.js) : WebP et repli JPG
 try {
   const uv = fs.readFileSync(path.join(ROOT, 'univers.js'), 'utf8');
@@ -61,12 +75,13 @@ try {
   let m, n = 0, missing = 0;
   while ((m = re.exec(uv))) {
     n++;
-    [m[1], m[1].replace(/\.webp$/, '.jpg')].forEach((f) => {
+    const small = m[1].replace(/^pochettes\//, 'pochettes/400/');   // version 400px des vinyles
+    [m[1], m[1].replace(/\.webp$/, '.jpg'), small, small.replace(/\.webp$/, '.jpg')].forEach((f) => {
       if (!fs.existsSync(path.join(ROOT, 'img', f))) { fail('pochette manquante : /img/' + f); missing++; }
     });
   }
   if (!n) fail('univers.js : aucune pochette trouvee dans UNIVERS');
-  else if (!missing) ok(n + ' pochettes d\'univers, WebP et JPG presents');
+  else if (!missing) ok(n + ' pochettes d\'univers, WebP et JPG presents, en 1200 et 400px');
   // Univers sans pochette (image:null, placeholder) : chemin attendu
   // /img/pochettes/<slug>.webp et son .jpg
   const reNull = /slug:'([a-z-]+)'[^\n]*image:null/g;

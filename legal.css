@@ -36,3 +36,8 @@ html,body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',
 .sn-erase-msg{margin:10px 0 0;min-height:1.6em;font-weight:600}
 .sn-erase button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .sn-erase button:disabled{opacity:.6;cursor:default}
+
+/* Page 404 : bouton noir du site (nb-pill--cta) vers l'accueil */
+.lg-404{min-height:60vh}
+.lg-main.lg-404 .lg-404-cta{margin-top:32px}
+.lg-main.lg-404 .lg-404-cta a{color:#fff;text-decoration:none}
