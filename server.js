@@ -390,7 +390,7 @@ function revealQuestion(code) {
   }, isLast ? REVEAL_MS - 1000 : REVEAL_MS);
 }
 
-const server = http.createServer(function(req, res) {
+function handleRequest(req, res) {
   let p;
   try {
     const u = new URL(req.url, 'http://localhost');
@@ -534,6 +534,9 @@ const server = http.createServer(function(req, res) {
   if (p.pathname.startsWith('/audio/')) {
     var audioName;
     try { audioName = path.basename(decodeURIComponent(p.pathname)); } catch (e) { res.writeHead(400); res.end(); return; }
+    // noms des extraits : lettres, chiffres, _ . - (un octet nul ou tout autre
+    // caractere faisait planter fs.stat, donc tout le serveur)
+    if (!/^[A-Za-z0-9_.-]+\.mp3$/.test(audioName)) { res.writeHead(404); res.end('Not found'); return; }
     var audioFile = path.join(__dirname, 'audio', audioName);
     fs.stat(audioFile, function(err, st) {
       if (err || !st.isFile()) { res.writeHead(404); res.end('Not found'); return; }
@@ -562,6 +565,15 @@ const server = http.createServer(function(req, res) {
   // Toute autre adresse : vraie page 404
   if (req.method === 'GET' || req.method === 'HEAD') { send404(req, res); return; }
   res.writeHead(404); res.end();
+}
+// Filet de securite : une erreur imprevue dans une requete repond 500 et
+// est journalisee, sans arreter le serveur (salles en cours preservees)
+const server = http.createServer(function (req, res) {
+  try { handleRequest(req, res); }
+  catch (e) {
+    console.error('[requete] erreur', req.method, String(req.url).slice(0, 200), e && e.stack || e);
+    try { if (!res.headersSent) res.writeHead(500); res.end(); } catch (e2) {}
+  }
 });
 
 // ── WebSocket : le premier message { type:'join', code, id, name } fait entrer
