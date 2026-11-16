@@ -41,9 +41,7 @@ var UNIVERS = [
   {nom:'Shatta', slug:'shatta', couleur:'var(--univers-shatta)', image:'/img/pochettes/shatta.webp',
    origine:'Martinique', epoque:'années 2010', signature:'minimaliste, percussif, fait pour le dancefloor',
    texte:"Né en Martinique, le shatta est un enfant du dancehall : plus minimaliste, plus percussif, pensé pour faire bouger le dancefloor, avec des textes crus et beaucoup d'humour. Longtemps réservé aux soirées locales, il explose dans l'Hexagone au début des années 2020, porté notamment par Maureen et Bamby. C'est la touche martiniquaise de Sonara."},
-  // Pochette a venir : deposer /img/pochettes/dennery-segment.webp (et son
-  // .jpg), puis remplacer image:null par '/img/pochettes/dennery-segment.webp'
-  {nom:'Dennery Segment', slug:'dennery-segment', couleur:'var(--univers-dennery)', image:null,
+  {nom:'Dennery Segment', slug:'dennery-segment', couleur:'var(--univers-dennery)', image:'/img/pochettes/dennery-segment.webp', geant:'fonce',
    origine:'Sainte-Lucie', epoque:'années 2010', signature:'la soca saint-lucienne, à toute vitesse et en kwéyòl',
    texte:"Le Dennery Segment porte le nom de Dennery, une commune de la côte est de Sainte-Lucie. Héritier de la soca, il en garde l'énergie et la pousse à l'extrême : tempo rapide, percussions martelées, refrains courts répétés en boucle, souvent chantés en kwéyòl, le créole saint-lucien. Il traverse vite le canal jusqu'à la Martinique voisine, où ses riddims enflamment les soirées."}
 ];
@@ -183,11 +181,10 @@ function uvCarrousel(sec,o){
 
   function paintColor(){sec.style.setProperty('--uv-c',at(idx).couleur);}
 
-  // ── Couleur du nom geant : decor lisible sur toutes les couleurs ──
-  // Fond sombre : version plus claire du fond (melange avec du blanc) ;
-  // fond clair : plus foncee (avec du noir). Proportion cherchee pour un
-  // contraste de 2,2 avec le fond (decor : entre 1,8 et 2,6).
-  var UV_GIANT_CONTRASTE=2.2;
+  // ── Couleur du nom geant : lisible sur toutes les couleurs ──
+  // Fond sombre : version plus claire du fond ; fond clair : plus foncee.
+  // Luminosite cherchee pour un contraste de 3 avec le fond.
+  var UV_GIANT_CONTRASTE=3;
   function rgbOf(css){
     var el=document.createElement('span');el.style.color=css;el.style.display='none';
     sec.appendChild(el);var m=getComputedStyle(el).color.match(/[\d.]+/g);el.remove();
@@ -202,14 +199,23 @@ function uvCarrousel(sec,o){
   function giantColor(u){
     if(giantColors[u.slug])return giantColors[u.slug];
     var c=rgbOf(u.couleur);if(!c)return '';
-    var dark=lum(c)<.179;   // seuil ou le blanc et le noir contrastent autant
-    var to=dark?[255,255,255]:[0,0,0];
-    var mix=function(t){return c.map(function(v,i){return Math.round(v+(to[i]-v)*t);});};
-    var lo=0,hi=1;
-    for(var k=0;k<24;k++){var m=(lo+hi)/2;if(contrast(c,mix(m))<UV_GIANT_CONTRASTE)lo=m;else hi=m;}
-    var g=mix(hi);
-    return (giantColors[u.slug]='rgb('+g.join(',')+')');
+    // ton clair sur fond sombre, fonce sur fond clair ; un univers peut imposer
+    // le sien (UNIVERS : geant:'fonce' ou 'clair')
+    var dark=u.geant==='fonce'?false:u.geant==='clair'?true:lum(c)<.179;   // .179 : blanc et noir contrastent autant
+    // meme teinte et meme saturation que le fond, seule la luminosite change
+    // (TSL) : peche sur l'orange, brun fonce sur la terre de Sienne...
+    var r=c[0]/255,g=c[1]/255,b=c[2]/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),L=(mx+mn)/2,d=mx-mn,H=0,S=0;
+    if(d){S=d/(1-Math.abs(2*L-1));H=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;H*=60;if(H<0)H+=360;}
+    var hsl=function(l){var C=(1-Math.abs(2*l-1))*S,X=C*(1-Math.abs((H/60)%2-1)),m=l-C/2,k=Math.floor(H/60)%6;
+      var t=[[C,X,0],[X,C,0],[0,C,X],[0,X,C],[X,0,C],[C,0,X]][k];
+      return t.map(function(v){return Math.round((v+m)*255);});};
+    var lo=dark?L:0,hi=dark?1:L;
+    for(var k=0;k<24;k++){var m=(lo+hi)/2,ok=contrast(c,hsl(m))>=UV_GIANT_CONTRASTE;
+      if(dark){if(ok)hi=m;else lo=m;}else{if(ok)lo=m;else hi=m;}}
+    var out=hsl(dark?hi:lo);
+    return (giantColors[u.slug]='rgb('+out.join(',')+')');
   }
+
   // Largeur du nom a 100px, mesuree sur un canvas (l'ecran peut etre
   // encore cache), espacement -.02em compris
   function giantW100(nom){
@@ -222,6 +228,13 @@ function uvCarrousel(sec,o){
     giant.textContent=u.nom;
     giant.style.color=giantColor(u);
     var W=sec.clientWidth||window.innerWidth, w=giantW100(u.nom);
+    // Accueil (toutes largeurs) : nom au-dessus du vinyle, taille plafonnee
+    // par la hauteur reservee (fitBox.cap) et par la largeur libre entre
+    // les vinyles voisins (fitBox.maxW), calculees par layout()
+    if(o.fit&&fitBox){
+      giant.style.setProperty('--uv-fs',Math.min(fitBox.cap,fitBox.maxW*100/w).toFixed(1)+'px');
+      return;
+    }
     if(!stack.matches){
       if(!o.fit){giant.style.setProperty('--uv-fs',Math.min(24,150/u.nom.length).toFixed(2)+'vw');return;}
       // Accueil, a partir de 600px : le nom deborde nettement du vinyle (au moins
@@ -249,6 +262,11 @@ function uvCarrousel(sec,o){
   // le nom geant au-dessus du vinyle, le vinyle, puis les boutons. Le vinyle
   // prend la place disponible, sans depasser sa taille habituelle.
   var hook=sec.querySelector('.nb-hook');
+  // Accueil : bloc nom + vinyle + boutons, centre verticalement entre
+  // l'accroche et la rangee des univers. Le nom est au-dessus du vinyle
+  // (jamais derriere) : zone de hauteur fixe (cap), nom cale en bas de la
+  // zone, a GAP du vinyle (place des jambages, ex. « g » de Segment).
+  var fitBox=null;
   function layout(){
     if(!o.fit||open)return;
     var H=sec.clientHeight, W=sec.clientWidth;
@@ -260,16 +278,27 @@ function uvCarrousel(sec,o){
     var bar=[tabs,countEl.parentNode].filter(function(el){return el.getClientRects().length;}).map(rel);
     var bottom=(bar.length?Math.min.apply(null,bar):H)-(mob?14:Math.max(16,H*.03));
     var ctas=q('.uv-ctas')||discover, ctaGap=mob?14:24;
-    // sous 600px : place du nom geant au-dessus du vinyle (72 % de sa hauteur)
-    var above=stack.matches?(parseFloat(giant.style.getPropertyValue('--uv-fs'))||W*.2)*.85*.72:0;
-    var avail=bottom-top-above-ctaGap-ctas.offsetHeight;
-    // vinyle : 70 % de la largeur sous 600px (nom au-dessus) ; au-dela, taille
-    // de l'ordinateur pour que le nom geant deborde de chaque cote
-    var max=stack.matches?W*.7:Math.min(W,H)*.45, min=mob?140:200;
-    var D=Math.max(min,Math.min(max,avail));
-    var cy=top+above+D/2+Math.max(0,avail-D)/2;
+    var avail=bottom-top-ctaGap-ctas.offsetHeight;
+    // taille maximale du nom : proportionnelle a la largeur et a la place
+    var cap=mob?Math.min(W*.22,avail*.14):Math.min(W*.1,avail*.2,150);
+    var gap=function(c){return Math.max(14,c*.32);};
+    var zone=function(c){return c*.85+gap(c);};   // hauteur du nom + ecart
+    var max=mob?W*.8:Math.min(W*.5,H*.52), min=mob?140:200;
+    var D=Math.min(max,avail-zone(cap));
+    if(D<min){   // ecran bas : le nom retrecit avant le vinyle
+      D=Math.max(min,Math.min(max,avail*.75));
+      cap=Math.max(24,Math.min(cap,(avail-D)/1.17));
+    }
+    var Z=zone(cap), extra=Math.max(0,avail-Z-D);
+    var cy=top+extra/2+Z+D/2;
+    // largeur libre : entre les vinyles voisins (moins une marge de chaque
+    // cote), et dans l'ecran (marges de 16px mobile, 24px ordinateur)
+    var ds=D*(mob?.55:.62), inner=mob?W-2*ds*.18:W-ds;
+    var maxW=Math.min(inner-(mob?2*12:2*32),W-(mob?32:48));
+    fitBox={cap:cap,maxW:maxW};
     sec.style.setProperty('--uv-d',D.toFixed(1)+'px');
     sec.style.setProperty('--uv-cy',cy.toFixed(1)+'px');
+    sec.style.setProperty('--uv-gb',(cy-D/2-gap(cap)).toFixed(1)+'px');
   }
   // Section affichee (vue accueil), redimensionnee, ou accroche qui change
   // de hauteur (message d'un lien de Defi) : nouvelle mise en page
