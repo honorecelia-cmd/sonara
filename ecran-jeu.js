@@ -94,20 +94,25 @@
   }).observe(load,{attributes:true,attributeFilter:['class']});
   function runCd(box,ms){
     var continued=fromLoad&&box.id==='cds';fromLoad=false;
-    var a0=continued?spinner.angle:0, v0=continued?spinner.speed:0;
+    // Hors chargement : le vinyle tourne deja lentement des la 1re image
+    var a0=continued?spinner.angle:0, v0=continued?spinner.speed:SLOW;
     box.getAnimations({subtree:true}).forEach(function(a){a.cancel();});
     var el=paintVinyl(box);
     if(el&&!reduce.matches)el.style.transform='rotate('+a0+'deg)';   // meme angle des la 1re image
     ringFill(box,ms);
     if(reduce.matches){spin(null);return;}   // mouvement reduit : vinyle fixe, seul l'anneau se remplit
-    // Depuis le chargement : aucun fondu, le vinyle continue et accelere
+    // Le vinyle reste visible du debut a la fin (aucun fondu sur lui) : seuls
+    // les textes et l'anneau apparaissent en fondu. Depuis le chargement : rien,
+    // le vinyle continue et accelere.
     if(!continued){
-      box.animate([{opacity:0},{opacity:1}],{duration:300,easing:'ease-out'});
-      box.querySelector('.jg-cd-disc').animate([{transform:'scale(.82)',opacity:0},{transform:'none',opacity:1}],{duration:500,easing:'cubic-bezier(.2,.8,.2,1)'});
+      [].forEach.call(box.querySelectorAll('.jg-cd-th,.jg-cd-t,.jg-cd-ring'),function(n){
+        n.animate([{opacity:0},{opacity:1}],{duration:300,easing:'ease-out'});
+      });
     }
+    // Pas de fondu de sortie : l'ecran de la manche remplace directement la
+    // pause. Si le passage tarde (telephone occupe), le vinyle continue de
+    // tourner a pleine vitesse au lieu de laisser le fond seul.
     spin(el,a0,v0,TOP,ms);
-    // Fin : fondu vers la manche (le fond se retire en fondu quand l'ecran change)
-    box.animate([{opacity:1},{opacity:0}],{duration:300,delay:ms-300,easing:'ease-in',fill:'forwards'});
   }
   // hideG() retire "on" puis doCD() le remet aussitot : on regarde l'ancienne valeur
   [[$('cds'),CD_MS],[$('brksc'),BRK_MS]].forEach(function(x){
