@@ -85,15 +85,62 @@ document.addEventListener('error',function(e){
 
 // Vinyle d'un univers (aussi utilise par l'ecran Choix de l'univers, ecrans.js)
 function uvEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+// Nom seul sur l'etiquette (variante named) : taille et coupure de ligne.
+// Unite : le diametre de l'etiquette (1). Au plus 31 % (« Zouk ») ; plus
+// petit si le nom ne tient pas dans le cercle (marge de 6 % au bord). Un nom
+// de plusieurs mots peut passer sur deux lignes, coupe entre deux mots, jamais
+// dans un mot : on garde la disposition qui permet le plus grand texte.
+var uvNomCache={};
+function uvNomFit(nom){
+  var key=String(nom);
+  if(uvNomCache[key])return uvNomCache[key];
+  var ready=!document.fonts||document.fonts.check("800 20px 'MuseoModerno'");
+  var ctx=ready&&document.createElement('canvas').getContext('2d');
+  if(ctx)ctx.font="800 100px 'MuseoModerno'";
+  function w(s){   // largeur en em, letter-spacing -0.01em compris
+    return (ctx?ctx.measureText(s).width/100:s.length*.62)-.01*s.length;
+  }
+  var R=.44, LH=1, INK=.36, MAX=.31;
+  function fit(lines){
+    var ws=lines.map(w), n=lines.length;
+    for(var fs=MAX;fs>.05;fs-=.0025){
+      var ok=true;
+      for(var i=0;i<n&&ok;i++){
+        var y=Math.abs(i-(n-1)/2)*fs*LH+INK*fs;
+        ok=y<R&&ws[i]*fs/2<=Math.sqrt(R*R-y*y);
+      }
+      if(ok)return fs;
+    }
+    return .05;
+  }
+  var words=key.trim().split(/\s+/), best={lines:[key],fs:fit([key])};
+  for(var k=1;k<words.length;k++){
+    var l2=[words.slice(0,k).join(' '),words.slice(k).join(' ')], f2=fit(l2);
+    if(f2>best.fs+.005)best={lines:l2,fs:f2};
+  }
+  // Centrage de l'encre (et non de la boite de ligne) : une hampe (k, l, h)
+  // ou un jambage (g, y) decale les lettres visibles ; on compense en em.
+  best.dy=0;
+  if(ctx){
+    var n=best.lines.length, m0=ctx.measureText(best.lines[0]), m1=ctx.measureText(best.lines[n-1]);
+    var base=(m0.fontBoundingBoxAscent-m0.fontBoundingBoxDescent)/200;   // ligne-de-base sous le centre de la boite
+    var top=-(n-1)/2+base-m0.actualBoundingBoxAscent/100, bot=(n-1)/2+base+m1.actualBoundingBoxDescent/100;
+    if(isFinite(top+bot))best.dy=-(top+bot)/2;
+  }
+  if(ready)uvNomCache[key]=best;
+  return best;
+}
 // neutral : etiquette neutre (couleur de l'univers + logo Sonara), aucune pochette
 function uvVinyl(u,spin,neutral,named){
   var disc='color-mix(in srgb, '+u.couleur+' 70%, #000)';
-  // named : etiquette neutre avec le nom de l'univers sous le logo (revelation)
-  var label=neutral&&named?'<span class="vy-label-named"><span class="jg-vy-logo" role="img" aria-label="Sonara"></span><span class="vy-label-nom">'+uvEsc(u.nom)+'</span></span>'
+  // named : etiquette neutre avec le nom de l'univers seul, centre (manche et
+  // revelation), sans trou central (classe vy--named)
+  var nf=neutral&&named&&uvNomFit(u.nom);
+  var label=nf?'<span class="vy-label-named"><span class="vy-label-nom" style="font-size:'+(nf.fs*33).toFixed(2)+'cqw;transform:translateY('+nf.dy.toFixed(3)+'em)">'+nf.lines.map(uvEsc).join('<br>')+'</span></span>'
     :neutral?'<span class="jg-vy-logo" role="img" aria-label="Sonara"></span>':u.image
     ? '<img src="'+uvV(uvSmall(u.image))+'" alt="" data-ph="'+uvEsc(u.nom)+'">'
     : '<span class="vy-label-txt">'+uvEsc(u.nom)+'</span>';
-  return '<span class="vy'+(spin?' vy--spin':'')+'" style="--vy-color:'+disc+';--vy-label:'+u.couleur+'">'+
+  return '<span class="vy'+(spin?' vy--spin':'')+(nf?' vy--named':'')+'" style="--vy-color:'+disc+';--vy-label:'+u.couleur+'">'+
     '<span class="vy-spin"><span class="vy-disc"></span><span class="vy-label">'+label+'</span><span class="vy-hole"></span></span>'+
     '<span class="vy-sheen"></span></span>';
 }
