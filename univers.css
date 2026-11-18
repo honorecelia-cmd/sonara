@@ -231,6 +231,17 @@
   .uv-p-title{font-size:13vw}
   .uv-p-infos{grid-template-columns:1fr}
 }
+/* Accueil, telephone : la section commence en haut de la page, sous l'en-tete
+   fixe (l'accroche reserve sa hauteur), et suit la hauteur reelle de l'ecran
+   (100dvh), barre de Safari ouverte ou repliee : le pied de page n'apparait
+   qu'en faisant defiler. 100vh pour les anciens navigateurs. */
+@media (max-width:767px){
+  .uv--accueil{height:100vh;height:100dvh}
+}
+/* Temoin de la hauteur stable (100svh), lu par univers.js : la taille du
+   vinyle ne change pas quand la barre de Safari se replie */
+.uv-svh{position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none}
+@supports (height:100svh){.uv-svh{height:100svh}}
 
 /* Sous 600px : nom geant au-dessus du vinyle, le bas des lettres glisse
    derriere (sur les cotes, le vinyle et ses voisins le cacheraient
