@@ -334,6 +334,26 @@ function uvCarrousel(sec,o){
   // zone, a GAP du vinyle (place des jambages, ex. « g » de Segment).
   // A partir de 600px : nom derriere le vinyle central.
   var fitBox=null;
+  // Sous 600px, nom geant cale par le bas de sa boite (line-height .85) :
+  // hauteur visible au-dessus de ce bas, jusqu'au haut des majuscules
+  function giantInkAbove(fs){
+    var ctx=(paintGiant.cv||(paintGiant.cv=document.createElement('canvas'))).getContext('2d');
+    ctx.font="800 "+fs+"px 'MuseoModerno',sans-serif";
+    var m=ctx.measureText('H'), A=m.fontBoundingBoxAscent, Df=m.fontBoundingBoxDescent;
+    if(!A)return fs*.72;
+    var box=fs*.85, capTop=(box-(A+Df))/2+A-m.actualBoundingBoxAscent;
+    return box-capTop;
+  }
+  // Hauteur stable de l'ecran (100svh), lue sur un temoin invisible ; 0 si le
+  // navigateur ne connait pas svh
+  var svhProbe=null;
+  function stableHeight(){
+    if(!svhProbe){
+      svhProbe=document.createElement('div');svhProbe.className='uv-svh';svhProbe.setAttribute('aria-hidden','true');
+      document.body.appendChild(svhProbe);
+    }
+    return svhProbe.offsetHeight;
+  }
   function layout(){
     if(!o.fit||open)return;
     var H=sec.clientHeight, W=sec.clientWidth;
@@ -360,18 +380,32 @@ function uvCarrousel(sec,o){
       sec.style.removeProperty('--uv-gb');
       return;
     }
+    // Tailles (nom, vinyle) calculees sur la hauteur stable de l'ecran (100svh,
+    // barre de Safari ouverte) : quand la barre se replie, la section (100dvh)
+    // grandit mais seuls les espacements changent, pas le vinyle
+    var sH=stableHeight();
+    if(sH&&sH<H)avail-=H-sH;
     // taille maximale du nom : proportionnelle a la largeur et a la place
     var cap=mob?Math.min(W*.22,avail*.14):Math.min(W*.1,avail*.2,150);
     var gap=function(c){return Math.max(14,c*.32);};
     var zone=function(c){return c*.85+gap(c);};   // hauteur du nom + ecart
-    var max=mob?W*.8:Math.min(W*.5,H*.52), min=mob?140:200;
+    var max=mob?W*.85:Math.min(W*.5,H*.52), min=mob?140:200;
     var D=Math.min(max,avail-zone(cap));
     if(D<min){   // ecran bas : le nom retrecit avant le vinyle
       D=Math.max(min,Math.min(max,avail*.75));
       cap=Math.max(24,Math.min(cap,(avail-D)/1.17));
     }
-    var Z=zone(cap), extra=Math.max(0,avail-Z-D);
-    var cy=top+extra/2+Z+D/2;
+    // Groupe nom + vinyle + boutons centre entre le bas de l'accroche et le
+    // haut des pastilles, sur ce qui se voit : du haut des majuscules du nom
+    // (taille maximale, la meme pour tous les univers : pas de saut d'un
+    // univers a l'autre) au bas des boutons. Ecarts egaux au-dessus et en
+    // dessous, au moins 12px (mobile) ; sinon le vinyle retrecit.
+    var inkAbove=giantInkAbove(cap), g=gap(cap), ctasH=ctas.offsetHeight, edge=mob?12:16;
+    var topL=hook?rel(hook)+hook.offsetHeight:0, botL=bar.length?Math.min.apply(null,bar):H;
+    var free=botL-topL-(inkAbove+g+D+ctaGap+ctasH);
+    if(free<2*edge){D=Math.max(min,D-(2*edge-free));free=botL-topL-(inkAbove+g+D+ctaGap+ctasH);}
+    var vt=topL+Math.max(0,free)/2+inkAbove+g;   // haut du vinyle
+    var cy=vt+D/2;
     // largeur libre : entre les vinyles voisins (moins une marge de chaque
     // cote), et dans l'ecran (marges de 16px mobile, 24px ordinateur)
     var ds=D*(mob?.55:.62), inner=mob?W-2*ds*.18:W-ds;
